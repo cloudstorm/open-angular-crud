@@ -1,0 +1,33 @@
+{
+  "name": "cloudstorm",
+  "version": "0.0.0",
+  "homepage": "http://cloudstorm.io",
+  "authors": [
+    "Mihaly Rozner <mihaly.rozner@cloudstorm.io>",
+    "David Salamon <david.salamon@cloudstorm.io>",
+    "Bence Nagy <bence.nagy@cloudstorm.io>"
+  ],
+  "description": "Frontend framework for automatically creating forms and workflows for AngularJS",
+  "main": [
+    "src/cloudstorm.js.coffee",
+    "src/cloudstorm.css.scss"
+  ],
+  "dependencies": {
+    "underscore": "1.8.3",
+    "angular": "1.5.8",
+    "angular-route": "1.5.8",
+    "angular-resource": "1.5.8",
+    "angular-i18n": "1.5.8",
+    "angular-mocks": "1.5.8",
+    "angular-cookies": "1.5.8",
+    "angular-sanitize": "1.5.8",
+    "angular-animate": "1.5.8",
+    "angular-ui-select": "0.19.4",
+    "angular-ui-bootstrap-bower": "1.3.3",
+    "ng-dialog": "0.6.4"
+  },
+  "license": "MIT",
+  "ignore": [
+    "**/.*"
+  ]
+}
