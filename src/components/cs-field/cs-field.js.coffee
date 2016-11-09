@@ -126,7 +126,7 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
   
   return {
     restrict: 'E'
-    templateUrl: 'cloudstorm/components/cs-field/cs-field-template.html'
+    templateUrl: 'cloudstorm/src/components/cs-field/cs-field-template.html'
     scope:
       field: '=?' # The resource item which the form is working with
       fieldName: '@' # The resource item which the form is working with

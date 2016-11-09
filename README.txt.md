@@ -3,26 +3,26 @@
 - [Dependencies](#dependencies)
 - [Using CloudStorm](#using-cloudstorm)
 - [CloudStorm Components](#cloudstorm-components)
-    - [CS Wizard](#cs-wizard)
-        - [Options](#options)
-        - [Lifecycle events](#lifecycle-events)
-    - [CS Form](#cs-form)
-        - [Options](#options-1)
-        - [Lifecycle events](#lifecycle-events-1)
-        - [Client-side validation](#client-side-validation)
-    - [CS Field](#cs-field)
-        - [Lifecycle events](#lifecycle-events-2)
-        - [Handling server-side validation](#handling-server-side-validation)
-        - [Overrides](#overrides)
-        - [Example usage:](#example-usage)
+  - [CS Wizard](#cs-wizard)
+    - [Options](#options)
+    - [Lifecycle events](#lifecycle-events)
+  - [CS Form](#cs-form)
+    - [Options](#options-1)
+    - [Lifecycle events](#lifecycle-events-1)
+    - [Client-side validation](#client-side-validation)
+  - [CS Field](#cs-field)
+    - [Lifecycle events](#lifecycle-events-2)
+    - [Handling server-side validation](#handling-server-side-validation)
+    - [Overrides](#overrides)
+    - [Example usage:](#example-usage)
 - [example.html](#examplehtml)
 - [example.js](#examplejs)
-    - [CS Resource Service](#cs-resource-service)
-    - [CS Datastore](#cs-datastore)
-    - [CS REST API](#cs-rest-api)
-    - [CS Settings Provider](#cs-settings-provider)
-    - [CS Template Service](#cs-template-service)
-    - [CS Input Base](#cs-input-base)
+  - [CS Resource Service](#cs-resource-service)
+  - [CS Datastore](#cs-datastore)
+  - [CS REST API](#cs-rest-api)
+  - [CS Settings Provider](#cs-settings-provider)
+  - [CS Template Service](#cs-template-service)
+  - [CS Input Base](#cs-input-base)
 
 <!-- /MarkdownTOC -->
 
@@ -36,8 +36,8 @@
 
 # Using CloudStorm
 
-1. Require `cloudstorm/cloudstorm.js.coffee` in your app's main JS file
-1. Require `cloudstorm/cloudstorm.css.scss` in your app's main CSS file
+1. Require `cloudstorm/src/cloudstorm.js.coffee` in your app's main JS file
+1. Require `cloudstorm/src/cloudstorm.css.scss` in your app's main CSS file
 1. Inject `"cloudStorm"` as dependency in your Angular app
 1. Enjoy!
 

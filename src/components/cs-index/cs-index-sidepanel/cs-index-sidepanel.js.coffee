@@ -65,7 +65,7 @@ app.directive "csIndexSidepanel", ['$rootScope', 'CSAlertService', ($rootScope, 
   return {
     restrict: 'E'
     compile: compile
-    templateUrl: 'cloudstorm/components/cs-index/cs-index-sidepanel/cs-index-sidepanel-template.html'
+    templateUrl: 'cloudstorm/src/components/cs-index/cs-index-sidepanel/cs-index-sidepanel-template.html'
     scope:
       resourceType: '='
       item: '='

@@ -53,7 +53,7 @@ app.directive "csCheckbox", ['$rootScope', 'CSInputBase', ($rootScope, CSInputBa
   
   return {
     restrict: 'E'
-    templateUrl: 'cloudstorm/components/inputs/cs-checkbox/cs-checkbox-template.html'
+    templateUrl: 'cloudstorm/src/components/inputs/cs-checkbox/cs-checkbox-template.html'
     scope:
       field: '=' # The resource item which the form is working with
       formItem: '='
