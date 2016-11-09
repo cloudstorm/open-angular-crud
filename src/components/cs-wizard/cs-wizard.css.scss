@@ -1,0 +1,84 @@
+.cs-wizard {
+  position: relative;
+  left: 0px;
+  width: $wizard-width;
+  height: 100%;
+  overflow-x: hidden;
+
+  .form-panel {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    padding: 15px;
+
+    // Create CSS rules n panels deep
+    $wiard-max-depth: 5;  // NB! duplicated in JS
+    $form-base-margin: 100px;
+    $peek-width: 50px;
+
+    @for $i from 1 through $wiard-max-depth {
+
+      &:nth-child(#{$i}) {
+        // margin-left: 75px * $i;
+        background-color: white;
+        z-index: $i;
+
+        &:not(:first-of-type) {
+          @include cs-panel-shadow;
+
+          &.pre-hover {
+            margin-left: ($form-base-margin - $peek-width) * $i;
+          }
+
+          &.hover {
+            margin-left: ($form-base-margin - $peek-width) * $i;
+          }
+
+          &.post-hover {
+            margin-left: ($form-base-margin) * $i;
+          }
+        }
+      }
+    } // @for END
+
+    &:first-of-type {
+      margin-left: 0;
+    }
+
+    &.active{
+    }
+
+    &:not(.active){
+      padding-left: 5px;
+      background-color: lightgray;
+    }
+
+  } // .form-panel END
+
+} // .wizard END
+
+
+////// ANIMATION ////////////////////////////////
+
+.animation {
+  -moz-transition: ease-out 0.2s;
+  -webkit-transition: ease-out 0.2s;
+}
+
+.animation.ng-enter {
+  opacity: 0;
+}
+
+.animation.ng-leave {
+  opacity: 1;
+}
+
+.animation.ng-enter.ng-enter-active {
+  opacity: 1;
+}
+
+.animation.ng-leave.ng-leave-active {
+  opacity: 0;
+}

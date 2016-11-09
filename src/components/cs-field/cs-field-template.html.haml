@@ -1,0 +1,18 @@
+/ CloudStorm Form Field component
+/ Renders different kind of inputs for different types of items
+
+.cs-field-inner
+  
+  %label.control-label {{field.label}}
+  %span{ "ng-if" => "field.required" } *
+  
+  / CS will populate the correct input taking into account its overrides
+  .cs-input-wrapper
+
+  %span.help-block{ "ng-if" => "field.errors.length > 0" }
+    {{getError(field)}}
+  
+  %span.help-block{ "ng-if" => "(!(field.errors.length > 0) && (getHint(field)))" }
+    {{getHint(field)}}
+  
+  .cover

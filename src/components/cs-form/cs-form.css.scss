@@ -1,0 +1,65 @@
+.cs-form {
+  // TODO: IE compatibility issue 
+  // https://github.com/cloud-storm/CloudStormJS/issues/42
+  width: 60%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  
+  .form-header {
+    flex: 1;
+    
+    h4.divided {
+      border-bottom-style: solid;
+      border-bottom-width: 2px;
+      border-bottom-color: lightslategrey;
+      padding-bottom: 5px;
+      width: 372px;
+      margin-bottom: 20px;
+    }
+
+  }
+
+  form {
+    flex-basis: auto;
+    height:100%;
+    overflow: auto;
+  
+    
+    // This concerns cs-field only within a cs-form, so it seems ok to leave here
+    .cs-field {
+      position: relative;
+      margin-bottom: 0;
+      background-color: initial;
+
+      &.inactive {
+
+        .cover {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: lightgray;
+          opacity: 0.6;
+          z-index: 99999;
+        }
+      }
+    }
+  }
+
+  .form-actions {
+    margin-top: 15px;
+    margin-bottom: 0;
+
+    .actions-inner {
+      display: table-cell;
+      vertical-align: middle;
+
+      .btn-tooltip-wrapper {
+        display: inline-block;
+      }
+    }
+  }
+
+}

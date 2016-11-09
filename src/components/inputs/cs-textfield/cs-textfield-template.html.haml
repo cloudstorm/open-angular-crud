@@ -1,0 +1,23 @@
+/ ng-if creates an isolate scope so all data is available through $parent
+/ %ui-select-choices is only here to disable typeahed dropdown as there should be not typeahed in this controller
+
+%input.form-control{ "ng-if" => "field.cardinality == 'one'",
+                     "ng-disabled" => "fieldDisabled()",
+                     "ng-required" => "fieldRequired()",
+                     "ng-model" => "$parent.formItem.attributes[$parent.field.attribute]",
+                     "ng-keyup" => "keyPressed($event)",
+                     type: "text" }
+
+%ui-select{ "ng-if" => "field.cardinality == 'many'",
+            "ng-disabled" => "fieldDisabled()",
+            "ng-required" => "fieldRequired()",
+            "ng-model" => "$parent.formItem.attributes[$parent.field.attribute]",
+            "multiple" => "",
+            "search-enabled" => false,
+            "tagging" => "",
+            "tagging-label" => "newTag" }
+  %ui-select-match
+    %span
+      {{$item}}
+  %ui-select-choices{ :repeat => "item in []" }
+    

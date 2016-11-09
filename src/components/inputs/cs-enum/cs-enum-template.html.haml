@@ -1,0 +1,24 @@
+%ui-select{ "ng-if" => "field.cardinality == 'one'", 
+            "ng-required" => "fieldRequired()",
+            "ng-disabled" => "fieldDisabled()",
+            "ng-model" => "formItem.attributes[field.attribute]",
+            "close-on-select" => "true" }
+  %ui-select-match
+    %span
+      {{$select.selected.name}}
+  %ui-select-choices{ :repeat => "item.value as item in (field.enum | filter:$select.search) track by $index" }
+    %span
+      {{item.name}}
+
+%ui-select{ "ng-if" => "field.cardinality == 'many'",
+            "ng-required" => "fieldRequired()",
+            "ng-disabled" => "fieldDisabled()",
+            "ng-model" => "formItem.attributes[field.attribute]",
+            "multiple" => "",
+            "close-on-select" => false }
+  %ui-select-match
+    %span
+      {{$item.name}}
+  %ui-select-choices{ :repeat => "item.value as item in (field.enum | filter:$select.search) track by $index" }
+    %span
+      {{item.name}}

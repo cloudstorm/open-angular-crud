@@ -1,0 +1,14 @@
+.cs-resource-input-group {
+  width: 100%;
+}
+
+// ===== UI select fixes ==================================
+
+.ui-select-multiple.ui-select-bootstrap {
+  // variable from bootstrap/_forms.scss
+  min-height: $input-height-base;
+}
+
+body > .ui-select-bootstrap.open {
+  z-index: 1051; // float 1 level above $uibmodal in case we're using a CS form in modal view
+}

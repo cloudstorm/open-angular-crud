@@ -1,0 +1,29 @@
+@mixin cs-panel-shadow {
+  $h-shadow: 0px;
+  $v-shadow: 0px;
+  $blur: 25px;
+  $spread: 0px;
+  $shadow-color: #000;
+  -moz-box-shadow: $h-shadow $v-shadow $blur $spread $shadow-color;
+  -webkit-box-shadow: $h-shadow $v-shadow $blur $spread $shadow-color;
+  box-shadow: $h-shadow $v-shadow $blur $spread $shadow-color;
+};
+
+@mixin cs-drop-shadow {
+  $h-shadow: 0px;
+  $v-shadow: 0px;
+  $blur: 140px;
+  $spread: -10px;
+  $shadow-color: #000;
+  -moz-box-shadow: $h-shadow $v-shadow $blur $spread $shadow-color;
+  -webkit-box-shadow: $h-shadow $v-shadow $blur $spread $shadow-color;
+  box-shadow: $h-shadow $v-shadow $blur $spread $shadow-color;
+};
+
+@mixin cs-border-radius($radius) {
+  -webkit-border-radius: $radius;
+     -moz-border-radius: $radius;
+      -ms-border-radius: $radius;
+       -o-border-radius: $radius;
+          border-radius: $radius;
+}

@@ -1,0 +1,45 @@
+
+.cs-index-sidepanel {
+  position: fixed;
+  height: calc(100% - #{$navbar-and-page-header-height});
+  top: $sidebar-top;
+
+  .panel-close {
+    position: absolute;
+    width: 20px;
+    left: 382px;
+    top: 10px;
+    cursor: pointer;
+    background-color: white;
+    text-align: center;
+    z-index: 999;
+  }
+
+  .cs-wizard {
+    .form-panel {
+      padding-top: 0px;
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .cs-index-sidepanel {
+    @include cs-drop-shadow;
+
+    width: $wizard-width-narrow;
+    height: 75%;
+    left: 50%;
+    top: 10%;
+    padding: 0;
+    margin-left: - $wizard-width-narrow / 2;
+    z-index: 9999;
+
+    .panel-close {
+      left: 478px;
+    }
+
+    .cs-wizard {
+      width: $wizard-width-narrow;
+    }
+  }
+}

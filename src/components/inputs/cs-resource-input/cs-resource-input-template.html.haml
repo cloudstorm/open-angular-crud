@@ -1,0 +1,42 @@
+.input-group.cs-resource-input-group{ 'ng-if' => "field.cardinality == 'one'" }
+  %ui-select{ "ng-disabled" => "fieldDisabled()",
+              "ng-required" => "fieldRequired()",
+              "ng-model" => "model.object",
+              "close-on-select" => "true"}
+    %ui-select-match{"allow-clear" => true}
+      %span
+        {{$select.selected.$display_name()}}
+    %ui-select-choices{ "repeat" => "item in associates track by $index",
+                        "refresh" => "refresh($select.search)", 
+                        "refresh-delay" => "200" }
+      %span
+        {{item.$display_name()}}
+
+  %span.input-group-btn{"ng-if" => "canCreateResources() || createDisabled()"}
+    %button.btn.btn-default{ "ng-disabled" => "fieldDisabled()",
+                             "ng-click" => "pushPanel()",
+                             "type" => "button" } Új 
+
+.input-group.cs-resource-input-group{ 'ng-if' => "field.cardinality == 'many'" }
+  %ui-select{ "ui-select-override" => "",
+              "ng-disabled" => "fieldDisabled()",
+              "ng-required" => "fieldRequired()",
+              "ng-model" => "model.object",
+              "append-to-body" => "true",
+              "close-on-select" => "true",
+              "multiple" => true }
+    %ui-select-match{"allow-clear" => true}
+      %span
+        {{$item.$display_name()}}
+    %ui-select-choices{ "repeat" => "item in associates track by $index",
+                        "refresh" => "refresh($select.search)", 
+                        "refresh-delay" => "200" }
+      %span
+        {{item.$display_name()}}
+
+  %span.input-group-btn{"ng-if" => "createResources() && !createDisabled()"}
+    %button.btn.btn-default{ "ng-disabled" => "fieldDisabled()",
+                             "ng-click" => "pushPanel()",
+                             "type" => "button" } Új 
+
+.cover

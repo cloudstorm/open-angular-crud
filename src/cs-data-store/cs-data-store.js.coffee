@@ -1,0 +1,67 @@
+"use strict"
+
+####################################################################################################
+# Make sure that the components module is defined only once
+try
+  # Module already defined, use it
+  app = angular.module("cloudStorm")
+catch err
+  # Module not defined yet, define it
+ app = angular.module('cloudStorm', [])
+
+####################################################################################################
+app.factory 'csDataStore', [ ->
+####################################################################################################  
+
+  class DataStore
+
+    ################################################################################################
+    # Opts are
+    # (global)   If not parent is given the global datastore is used
+    # (child)    If a datastore if given then the repository of the given store will be the prototypical parnet of the repository
+    # (isolated) If an empty object is given, then it will be  the prototypical parnet of the repository
+    # (generic)  If {parent: object} is given, then `object` will be the prototypical parnet of the repository. Could be any type
+
+    constructor: (opts) ->
+      if !opts
+        parent = global
+      else if opts.repository
+        parent = opts.repository
+      else if opts == {}
+        parent = {}
+      else
+        parent = opts.parent || global
+              
+      parent_repository = parent.repository || parent
+      @repository = Object.create(parent_repository)
+
+    ################################################################################################
+
+    fork: () -> new csDataStore(@)
+
+    ################################################################################################
+
+    @global: () -> global    
+    global:  () -> global
+
+    ################################################################################################
+
+    put: (type, id, object) ->
+      @repository[type] ||= {}
+      @repository[type][id] = object
+
+    get: (type, id, object) ->
+      return null unless @repository[type]
+      return @repository[type][id]
+
+
+  ##################################################################################################
+
+  global = new DataStore(parent: {})
+
+  ##################################################################################################
+
+  return DataStore
+
+  ##################################################################################################
+]

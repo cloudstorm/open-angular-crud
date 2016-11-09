@@ -1,0 +1,61 @@
+.row
+  .col-lg-12
+    .row.page-header
+      %h1
+        {{ header }}
+        %small{ "ng-bind" => "subHeader" }
+        .header-actions.pull-right
+          .input-group-wrap
+            .input-group
+              .input-group-addon
+                %span.glyphicon.glyphicon-search
+              %input.form-control.cs-index-filter{ "ng-model" => "csIndexOptions.filterValue",
+                                                   :placeholder => "Szűrj bármire",
+                                                   :type => "text" }
+          
+          %button.btn.btn-default{ :type => "button", "ng-click" => "refreshIndex()" }
+            %span.glyphicon.glyphicon-refresh
+        
+          %button.btn.btn-primary.create-button{ :type => "button", 
+                                                 "ng-click" => "openNewResourcePanel()",
+                                                 "ng-disabled" => "createDisabled()" }
+            Új
+
+    .row
+      .index-table{ "ng-class" => "{ 'col-lg-8' : sidePanelIsVisible() && !viewIsCompressed(),
+                                     'col-lg-6' : viewIsCompressed() }" }
+        .table-responsive
+
+          %table.table.table-striped.table-hover
+            %thead
+              %tr
+                / TODO: static header
+                %th{ "ng-repeat" => "column in columns track by $index",
+                     "ng-if" => "columnVisible(column, $index)",
+                     "ng-click" => "changeSorting(column)" }
+                  {{column.label}}
+                  %span.glyphicon.glyphicon-triangle-top{ "ng-if" => "csIndexOptions.sortAttribute==column.attribute && !csIndexOptions.sortReverse" }
+                  %span.glyphicon.glyphicon-triangle-bottom{ "ng-if" => "csIndexOptions.sortAttribute==column.attribute && csIndexOptions.sortReverse" }
+                %th.actions{ "ng-hide" => "csIndexOptions['hide-actions']" }
+
+            %tbody
+              %tr{ "ng-repeat" => "item in collection | orderBy:comparisonValue:csIndexOptions.sortReverse | filter:filterComparison track by $index ",
+                   "ng-class" => "{'info' : csIndexOptions.selectedItem.id == item.id}",
+                   "ng-click" => "selectItem(item)",
+                   "ng-dblclick" => "selectItem(item)" }
+                %td{ "ng-repeat" => "column in columns track by $index",
+                     "ng-if" => "columnVisible(column, $index)" }
+                  {{ fieldValue(item, column) }}
+                %td.actions{ "ng-hide" => "csIndexOptions['hide-actions']" }
+                  / DELETE
+                  .action.delete-action{ "ng-click" => "destroyItem($event, item)" }<> Töröl
+
+      %cs-index-sidepanel{ "ng-if" => "sidePanelIsVisible()",
+                           "cs-index-sidepanel-options": "csIndexOptions",
+                           "resource-type" => "resourceType",
+                           "item" => "csIndexOptions.selectedItem",
+                           "close-panel" => "closePanel()",
+                           "unselect-item" => "unselectItem()",
+                           "ng-class" => "{ 'col-lg-4' : !viewIsCompressed() && sidePanelIsVisible(),
+                                            'col-lg-6' : viewIsCompressed() }",
+                           "panel-number-callback" => "getPanelNumber" }
