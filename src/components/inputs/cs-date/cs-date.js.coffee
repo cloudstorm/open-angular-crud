@@ -38,7 +38,7 @@ app.directive "csDate", ['uibDateParser', 'csSettings', 'CSInputBase', (uibDateP
     if format
       input_date = $scope.formItem.attributes[$scope.field.attribute]
       date = uibDateParser.parse(input_date, format)      
-      date.setHours(14) if date
+      date.setHours(14) if date # TODO: 14 is a timezone dependent value, see https://github.com/cloudstorm/cloudstorm/issues/44
       $scope.formItem.attributes[$scope.field.attribute] = date
 
   link = ($scope, element, attrs, controller) ->

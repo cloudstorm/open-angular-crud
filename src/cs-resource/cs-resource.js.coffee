@@ -7,7 +7,7 @@ try
   app = angular.module("cloudStorm")
 catch err
   # Module not defined yet, define it
- app = angular.module('cloudStorm', [])
+  app = angular.module('cloudStorm', [])
 
 ####################################################################################################
 app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', '$q', (csRestApi, csDataStore, ResourceService, $q) ->
