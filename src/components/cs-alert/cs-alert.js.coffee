@@ -42,7 +42,7 @@ app.directive "csAlert", ['CSAlertService', (CSAlertService) ->
   
   return {
     restrict: 'E'
-    templateUrl: 'cloudstorm/components/cs-alert/cs-alert-template.html'
+    templateUrl: 'cloudstorm/src/components/cs-alert/cs-alert-template.html'
     compile: compile
   }
 

@@ -159,7 +159,7 @@ app.directive "csForm", [ () ->
 
   return {
     restrict: 'A'
-    templateUrl: 'cloudstorm/components/cs-form/cs-form-template.html'
+    templateUrl: 'cloudstorm/src/components/cs-form/cs-form-template.html'
     transclude:
       fields: '?formFields'
       actions: '?formActions'
