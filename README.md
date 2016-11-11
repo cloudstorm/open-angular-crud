@@ -1,8 +1,13 @@
 #CloudStorm
 
-Check the project website: [cloudstorm.io](http://cloudstorm.io)  
-[Component documentation](doc/components/components.md)  
-[Advanced reference](doc/components/under_the_hood.md)
+<a href="http://cloudstorm.io"><img src="./doc/images/logo.png" height="80" align="left" hspace="1" vspace="1"></a>
+<br />
+<br />
+Project website: [cloudstorm.io](http://cloudstorm.io)  
+
+## Resources
+* [Component documentation](doc/components/components.md)  
+* [Advanced reference](doc/components/under_the_hood.md)
 
 ## Dependencies
 * Sass compiler
