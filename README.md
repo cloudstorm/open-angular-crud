@@ -1,5 +1,5 @@
 Check the project website: [cloudstorm.io](http://cloudstorm.io)  
-[Read more words!](doc/README.md)  
+[Read more words!](doc/components/components.md)  
 
 # Dependencies
 * Sass compiler
