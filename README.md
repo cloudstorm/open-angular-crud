@@ -1,4 +1,4 @@
-<a href="http://cloudstorm.io"><img src="./doc/images/logo.png" height="100"></a>
+<a href="http://cloudstorm.io"><img src="./doc/images/logo.png" height="100" target="_blank"></a>
 
 ## Resources
 * Project website: [cloudstorm.io](http://cloudstorm.io)  
