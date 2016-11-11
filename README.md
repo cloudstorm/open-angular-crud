@@ -1,6 +1,6 @@
 # [CloudStorm](http://cloudstorm.io)
 
-:exclamation: CloudStorm is currently looking for contributors and maintainers
+:octocat: We are currently looking for contributors and beta testers :octocat:
 
 <a href="http://cloudstorm.io"><img src="./docs/images/logo.png" height="140" align="right"></a>
 
@@ -9,10 +9,9 @@ Devagement
 Opinionated framework
 
 ## Resources
-* Project website: [cloudstorm.io](http://cloudstorm.io)  
 * [Reference](docs/README.md)  
-* [Releases](releases)
-* [JSONAPI reference](http://jsonapi.org)
+* [Releases](../../releases)
+* Examples
 * Tutorial
 
 ## Getting started
