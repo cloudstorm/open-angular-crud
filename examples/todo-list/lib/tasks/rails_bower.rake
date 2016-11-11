@@ -1,4 +1,4 @@
-namespace :b do
+namespace :rails_bower do
   desc "Install both dependencies and devDependencies from bower (tweeked)"
   task :install, :options do |_, args|
     args.with_defaults(:options => '')
