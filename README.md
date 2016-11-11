@@ -1,11 +1,8 @@
-#CloudStorm
-
-<a href="http://cloudstorm.io"><img src="./doc/images/logo.png" height="80" align="left" hspace="1" vspace="1"></a>
-<br />
-<br />
-Project website: [cloudstorm.io](http://cloudstorm.io)  
+<a href="http://cloudstorm.io"><img src="./doc/images/logo.png" height="100" align="left" hspace="1" vspace="1"></a>
+<br /> <br /> <br /> <br />
 
 ## Resources
+* Project website: [cloudstorm.io](http://cloudstorm.io)  
 * [Component documentation](doc/components/components.md)  
 * [Advanced reference](doc/components/under_the_hood.md)
 
