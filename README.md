@@ -5,10 +5,10 @@ If this is your first time hearing about CloudStorm, we recommend starting with 
 
 :octocat: We are currently looking for contributors and beta testers  
 
+<a href="http://cloudstorm.io"><img src="./docs/images/logo.png" height="140" align="right"></a>
+
 ## What is CloudStorm?
 CloudStorm creates all data manipulation screens and forms for you
-
-<a href="http://cloudstorm.io"><img src="./docs/images/logo.png" height="140" align="right"></a>
 
 ## Philosophy
 Devagement  
