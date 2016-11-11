@@ -1,4 +1,9 @@
-<a href="http://cloudstorm.io"><img src="./docs/images/logo.png" height="100"></a>
+CloudStorm
+=====
+
+:exclamation: CloudStorm is currently looking for contributors and maintainers
+
+<a href="http://cloudstorm.io"><img src="./docs/images/logo.png" height="140" align="right"></a>
 
 ## Resources
 * Project website: [cloudstorm.io](http://cloudstorm.io)  
