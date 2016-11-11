@@ -13,7 +13,10 @@ CloudStorm creates all data manipulation screens and forms for you
 Devagement  
 Opinionated framework
 
+## What does it do?
+
 ## Resources
+* [How-to](docs/basics.md)
 * [Reference](docs/README.md)  
 * [Releases](../../releases)
 * Examples
@@ -24,7 +27,7 @@ Opinionated framework
 1. Require `cloudstorm/src/cloudstorm.js.coffee` in your app's main JS file
 1. Require `cloudstorm/src/cloudstorm.css.scss` in your app's main CSS file
 1. Inject `"cloudStorm"` as dependency in your Angular app
-1. Enjoy!
+1. Enjoy! or read [the How-To](docs/basics.md)
 
 #### Dependencies
 * Sass compiler
