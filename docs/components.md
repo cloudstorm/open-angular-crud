@@ -1,5 +1,8 @@
-
 # CloudStorm Components
+> [**Home**](../README.md) ▸ [**Reference**](../docs/README.md) ▸ **CloudStorm Components**
+
+CloudStorm is a collection of components that are designed to work together; you can use the components independently, or you can use them together as part of the default setup.
+
 ## CS Wizard
 
 ### Options
