@@ -35,7 +35,7 @@ CloudStorm uses the [JSON API format](http://jsonapi.org/format/#document-struct
 
 You can use the angular `module.config` method to provide app-wide defaults.
 **Example**
-```
+```javascript
 angular.module("myApp").config([
   'csSettingsProvider', function(csSettingsProvider) {
     csSettingsProvider.set('date-format', 'yyy-MM-dd');
