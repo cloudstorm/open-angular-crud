@@ -10,7 +10,7 @@ Opinionated framework
 
 ## Resources
 * Project website: [cloudstorm.io](http://cloudstorm.io)  
-* [Reference](docs)  
+* [Reference](docs/README.md)  
 * [Releases](releases)
 * [JSONAPI reference](http://jsonapi.org)
 * Tutorial
