@@ -7,8 +7,10 @@ CloudStorm
 
 ## Resources
 * Project website: [cloudstorm.io](http://cloudstorm.io)  
-* [Component documentation](docs/components.md)  
-* [Advanced reference](docs/under_the_hood.md)
+* [Reference](docs)  
+* [Releases]
+* [JSONAPI reference](http://jsonapi.org)
+* Tutorial
 
 ## Getting started
 
@@ -42,3 +44,7 @@ angular.module("myApp").config([
 See the [list of available options](#cs-settings-provider) for CS Settings Provider
 
 > If an option is set in both a CS Setting and an attribute on the template chain (in either of csWizard -> csForm -> csField), **the attribute option has precedence over the CS Settings value**
+
+
+## License
+See the [LICENSE](./LICENSE.txt) file.
