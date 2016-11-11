@@ -1,9 +1,9 @@
-<a href="http://cloudstorm.io"><img src="./doc/images/logo.png" height="100"></a>
+<a href="http://cloudstorm.io"><img src="./docs/images/logo.png" height="100"></a>
 
 ## Resources
 * Project website: [cloudstorm.io](http://cloudstorm.io)  
-* [Component documentation](doc/components/components.md)  
-* [Advanced reference](doc/components/under_the_hood.md)
+* [Component documentation](docs/components.md)  
+* [Advanced reference](docs/under_the_hood.md)
 
 ## Dependencies
 * Sass compiler
