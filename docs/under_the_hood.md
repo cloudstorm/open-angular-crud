@@ -1,6 +1,5 @@
+#Under the hood
 > [**Home**](../README.md) ▸ [**Reference**](../doc/README.md) ▸ **Under the Hood**
-
-# Under the hood
 
 ## CS Resource
 
