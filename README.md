@@ -10,16 +10,16 @@ CloudStorm
 * [Component documentation](docs/components.md)  
 * [Advanced reference](docs/under_the_hood.md)
 
-## Dependencies
-* Sass compiler
-* CoffeeScript compiler
-
 ## Getting started
 
 1. Require `cloudstorm/src/cloudstorm.js.coffee` in your app's main JS file
 1. Require `cloudstorm/src/cloudstorm.css.scss` in your app's main CSS file
 1. Inject `"cloudStorm"` as dependency in your Angular app
 1. Enjoy!
+
+#### Dependencies
+* Sass compiler
+* CoffeeScript compiler
 
 #### Data format / required API
 CloudStorm uses the [JSON API format](http://jsonapi.org/format/#document-structure) and convetions for client-server communications.
