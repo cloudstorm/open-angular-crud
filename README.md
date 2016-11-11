@@ -1,14 +1,17 @@
-CloudStorm
-=====
+# [CloudStorm](http://cloudstorm.io)
 
 :exclamation: CloudStorm is currently looking for contributors and maintainers
 
 <a href="http://cloudstorm.io"><img src="./docs/images/logo.png" height="140" align="right"></a>
 
+## Philosophy
+Devagement  
+Opinionated framework
+
 ## Resources
 * Project website: [cloudstorm.io](http://cloudstorm.io)  
 * [Reference](docs)  
-* [Releases]
+* [Releases](releases)
 * [JSONAPI reference](http://jsonapi.org)
 * Tutorial
 
