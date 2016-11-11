@@ -1,4 +1,4 @@
-<a href="http://cloudstorm.io"><img src="./doc/images/logo.png" height="100" target="_blank"></a>
+<a href="http://cloudstorm.io"><img src="./doc/images/logo.png" height="100"></a>
 
 ## Resources
 * Project website: [cloudstorm.io](http://cloudstorm.io)  
@@ -9,7 +9,7 @@
 * Sass compiler
 * CoffeeScript compiler
 
-## Using CloudStorm
+## Getting started
 
 1. Require `cloudstorm/src/cloudstorm.js.coffee` in your app's main JS file
 1. Require `cloudstorm/src/cloudstorm.css.scss` in your app's main CSS file
