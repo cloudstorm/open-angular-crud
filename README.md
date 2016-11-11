@@ -1,4 +1,6 @@
 Check the project website: [cloudstorm.io](http://cloudstorm.io)
+[Read more words!](doc)
+[Read more words!](doc/README.md)
 
 # Dependencies
 * Sass compiler
