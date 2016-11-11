@@ -25,7 +25,7 @@ The resource descriptor contains the following information:
 * `display`
   * `name`
   * `search`
-* `attributes_to_hide` (optional): which attributes to hide for each action. If present for the given action, the listed attributes will NOT show up, even if they were listed in `attributes_to_show` as well.
+* `attributes_to_hide` (optional): which attributes to hide for each action..
 
 ```
 @descriptor = {
