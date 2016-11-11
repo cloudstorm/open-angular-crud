@@ -9,7 +9,7 @@ If this is your first time hearing about CloudStorm, we recommend starting with 
 ## What is CloudStorm?
 CloudStorm creates all data manipulation screens and forms for you
 
-## Philosophy
+### Philosophy
 Devagement  
 Opinionated framework
 
