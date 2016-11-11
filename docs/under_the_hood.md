@@ -1,5 +1,5 @@
 #Under the hood
-> [**Home**](../README.md) ▸ [**Reference**](../doc/README.md) ▸ **Under the Hood**
+> [**Home**](../README.md) ▸ [**Reference**](../docs/README.md) ▸ **Under the Hood**
 
 ## CS Resource
 
