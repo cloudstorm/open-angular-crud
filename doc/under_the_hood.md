@@ -1,4 +1,4 @@
-> [Home](./..) ▸ **Gallery**
+> [Home](..) ▸ **Gallery**
 
 # Under the hood
 
