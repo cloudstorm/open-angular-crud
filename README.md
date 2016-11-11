@@ -1,8 +1,6 @@
-# [CloudStorm](http://cloudstorm.io)
-
-:octocat: We are currently looking for contributors and beta testers :octocat:
-
 <a href="http://cloudstorm.io"><img src="./docs/images/logo.png" height="140" align="right"></a>
+# [CloudStorm](http://cloudstorm.io)
+:octocat: We are currently looking for contributors and beta testers
 
 ## Philosophy
 Devagement  
