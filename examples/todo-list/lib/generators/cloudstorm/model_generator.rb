@@ -28,7 +28,7 @@ module Cloudstorm
     #############################################################################
 
     def application_name
-      Rails.application.class.parent_name.underscore
+      Rails.application.class.parent_name.camelize(:lower)
     end
 
     def model_path
@@ -112,7 +112,7 @@ module Cloudstorm
       insert_into_file "app/assets/javascripts/applications/#{application_name}.js.coffee.erb", :before => "\n  # ----- /CloudStorm ---------------------------\n" do
         <<-HEREDOC.gsub /^ +/, ""
           \t).when("/#{plural_name}",
-          \t  templateUrl: "#{application_name}_index_base.html"
+          \t  templateUrl: "#{application_name.underscore}_index_base.html"
           \t  controller: "#{class_name}Ctrl"\n
         HEREDOC
       end
@@ -126,7 +126,11 @@ module Cloudstorm
 
     #############################################################################
 
+    def has_name_attribute?
+      !!attributes.find{ |a| a.name == 'name'}
     end
+
+
   end
 end
 
