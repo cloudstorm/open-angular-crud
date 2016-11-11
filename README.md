@@ -1,9 +1,9 @@
 # [CloudStorm](http://cloudstorm.io)
 Welcome to CloudStorm - the open-source enterprise software framework for web developers
 
-If this is your first time hearing about CloudStorm, we recommend starting with the [CloudStorm website](http://cloudstorm.io).
-
 <a href="http://cloudstorm.io"><img src="./docs/images/logo.png" height="140" align="right"></a>
+
+If this is your first time hearing about CloudStorm, we recommend starting with the [CloudStorm website](http://cloudstorm.io).
 
 :octocat: We are currently looking for contributors and beta testers  
 
