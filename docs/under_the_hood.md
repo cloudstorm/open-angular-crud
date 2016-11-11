@@ -5,8 +5,6 @@
 
 > TODO :warning: Document merge override
 
-A CSResource's object attributes are available through the `constructor` of the object. Eg: to get the resource descriptor of a form item in a CS Field, you should call `formItem.constructor.descriptor` instead of `formItem.descriptor`. Because javascript.
-
 ```javascript
 @descriptor = {
   type: 'products'
@@ -49,6 +47,8 @@ The resource descriptor contains the following information:
   * `name`
   * `search`
 * `attributes_to_hide` (optional): which attributes to hide for each action..
+
+> A CSResource's object attributes are available through the `constructor` of the object. Eg: to get the resource descriptor of a form item in a CS Field, you should call `formItem.constructor.descriptor` instead of `formItem.descriptor`. Because javascript.
 
 ## CS Resource Service
 
