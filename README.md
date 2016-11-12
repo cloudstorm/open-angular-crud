@@ -43,8 +43,10 @@ To run a demo app do the following:
 ```
 $ git clone git@github.com:cloudstorm/cloudstorm.git
 $ cd cloudstorm
-
 ```
+
+## Bugs and Feedback
+For bugs, questions and discussions please use [Github Issues](../../issues).
 
 ## License
 See the [LICENSE](./LICENSE.txt) file.
