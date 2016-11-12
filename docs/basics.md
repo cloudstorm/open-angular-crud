@@ -11,11 +11,10 @@
   name: 'A Product'
 
   fields: [
-    { attribute: 'substance_id', label: 'Anyag', type: 'resource', resource: 'substances', cardinality: 'one', relationship: 'substance', required: true, read_only: true }
-    { attribute: 'product_type_id', label: 'Mintatípus', type: 'resource', resource: 'product_types', cardinality: 'one', relationship: 'product_type', required: true, read_only: true }
-    { attribute: 'origin_date', label: 'Mintaindítás dátuma', type: 'date', cardinality: 'one', required: false, read_only: false }
+    { attribute: 'product_type_id', label: 'Product Type', type: 'resource', resource: 'product_types', cardinality: 'one', relationship: 'product_type', required: true, read_only: true }
+    { attribute: 'origin_date', label: 'Available since', type: 'date', cardinality: 'one', required: false, read_only: false }
     { attribute: 'deadline', label: 'Határidő', type: 'date', cardinality: 'one', required: false, read_only: false }
-    { attribute: 'priority', label: 'Prioritásos minta?', type: 'boolean', cardinality: 'one', required: false, read_only: false }
+    { attribute: 'availability', label: 'Available?', type: 'boolean', cardinality: 'one', required: false, read_only: false }
   ]
 
   display: {
@@ -24,7 +23,7 @@
   }
 
   attributes_to_hide: {
-    create:['priority']
+    create:['origin_date']
   }
 ```
 
