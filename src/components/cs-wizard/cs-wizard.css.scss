@@ -14,11 +14,11 @@
     padding: 15px;
 
     // Create CSS rules n panels deep
-    $wiard-max-depth: 5;  // NB! duplicated in JS
+    $wizard-max-depth: 5;  // NB! duplicated in JS
     $form-base-margin: 100px;
     $peek-width: 50px;
 
-    @for $i from 1 through $wiard-max-depth {
+    @for $i from 1 through $wizard-max-depth {
 
       &:nth-child(#{$i}) {
         // margin-left: 75px * $i;
