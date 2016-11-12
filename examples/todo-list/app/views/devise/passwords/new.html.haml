@@ -1,0 +1,9 @@
+.container
+  %h2 Elfelejtett jelszó?
+  = simple_form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post }) do |f|
+    = f.error_notification
+    .form-inputs
+      = f.input :email, :required => true, :autofocus => true, :label => "Regisztrált e-mail cím"
+    .form-actions
+      = f.button :submit, "Küldje el az instrukciókat e-mailben"
+  = render "devise/shared/links"

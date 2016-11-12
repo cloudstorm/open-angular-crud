@@ -1,0 +1,20 @@
+%nav.navbar.navbar-default.navbar-fixed-top{role: "navigation", "ng-controller" => "navbarController"}
+
+  %ul.nav.navbar-nav.main-functions
+    %li{ "ng-class" => "{'active': isActive('/items')}" }
+      %a{href: "#/items"} Items
+
+  %ul.nav.navbar-nav.navbar-right
+
+    %li.navbar-text.user-name
+      {{User.current.name}} &nbsp;
+
+    %li
+      - if user_signed_in?
+        = link_to destroy_user_session_path, :method => :delete, :class => "logout", :title => "Log out" do
+          %i.glyphicon.glyphicon-off
+
+      - else
+        = link_to new_user_session_path do
+          Log in
+          %i.glyphicon.glyphicon-user
