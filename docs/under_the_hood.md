@@ -3,7 +3,7 @@
 
 ## [CS Resource Service :open_file_folder:](../src/cs-resource-service)
 
-## [CS Datastore :open_file_folder:](../src/cs-data-store)
+## [CS Data Store :open_file_folder:](../src/cs-data-store)
 
 ## [CS REST API :open_file_folder:](../src/cs-rest-api)
 
