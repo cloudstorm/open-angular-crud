@@ -3,22 +3,25 @@
 
 CloudStorm is a collection of components that are designed to work together; you can use the components independently, or you can use them together as part of the default setup.
 
-## CS Wizard
+## [CS Wizard :open_file_folder:](../src/components/cs-wizard)
 
 ### Options
 **panel-number-callback**  
 * expects a function with one paremeter: `length`: To keep track of the number of panels open, callback is called with length as parameter
 
-**cs-wizard-options**
-* `resource-type`: the type of the form item. Should match the type of its csResource descriptor (string)
-* `max-depth`: How many panels deep should the wizard open. If the max depth is reached, there will be no "NEW" buttons on resources of the last open panel.
-* `form-item`: the object to edit
-* `form-mode`: what kind of form is this? Available options: 'create', 'edit'
-* `keep-first`: does not pop the panel on the root form submit
-* `template-overrides`: See at [CS Field](#cs-field)
-* `directive-overrides`: See at [CS Field](#cs-field)
-* `attributes-to-hide`: You can set attribute visibility at component level similarly to [CS Resource](#cs-resource) level.
-* `events`: you can add one callback per lifecycle event. Example:
+**cs-wizard-options**  
+
+Option                | Type       | Description
+--------------------- | ---------- | -----------
+`resource-type`       | string     | The type of the form item. Should match the type of its csResource descriptor
+`max-depth`           | integer    | How many panels deep should the wizard open. If the max depth is reached, there will be no "NEW" buttons on resources of the last open panel.
+`form-item`           | expression | The object to edit
+`form-mode`           | string     | What kind of form is this? Available options: 'create', 'edit'
+`keep-first`          | boolean    | Does not pop the panel on the root form submit
+`template-overrides`  | object     | See at [CS Field](#cs-field)
+`directive-overrides` | object     | See at [CS Field](#cs-field)
+`attributes-to-hide`  | object     | You can set attribute visibility at component level similarly to [CS Resource](#cs-resource) level.
+`events`              | object     | You can add one callback per lifecycle event. Example:
 ```
 "events": {
   'wizard-canceled': (resource) ->
@@ -32,52 +35,68 @@ CloudStorm is a collection of components that are designed to work together; you
 
 > Note: You can augment the list of CS Wizard Options with options of CS Form and CS Fields -> the options will trickle down to CS Forms and CS Fields, so you only need to set them at the root, where you place a CS Wizard.
 
+
 ### Lifecycle events
-* `wizard-finished` emited when a wizard completed, regardless of outcome
-* `wizard-canceled` emited when user cancels the wizard
-* `wizard-submited` emited when a wizard is successfully submited
-* `wizard-error` emited when there was an error submiting a form within the wizard
 
-**Downwards**
-The following events are broadcasted to children of the wizard
-* `wizard-cancel` when the form was canceled
-> The wizard cancels the current form on `ESC` key press.
+Event              | Direction | Description
+------------------ | --------- | -----------
+`wizard-finished`  | up        | Emited when a wizard completed, regardless of outcome
+`wizard-canceled`  | up        | Emited when user cancels the wizard
+`wizard-submited`  | up        | Emited when a wizard is successfully submited
+`wizard-error`     | up        | Emited when there was an error submiting a form within the wizard
+`wizard-cancel`    | down      | When the form was canceled
 
-## CS Form
+
+> Note: The wizard cancels the current form on `ESC` key press.
+
+[top:arrow_heading_up:](.)
+
+## [CS Form :open_file_folder:](../src/components/cs-form)
 
 ### Options
 **cs-form-options**
-* `reset-on-submit`: Resets all inputs in the form on form submit
-* `skip-on-enter`: Form should not be submited when hitting enter in a CS Textfield
-* `texts` (If a text attribute is not given, default text will be displayed)
-  * `validation-text`: Display this hint while the form is invalid
-  * `buttons`
-    * `submit`
-    * `cancel`
+
+Option            | Type     | Description
+----------------- | -------- | -----------
+`reset-on-submit` | boolean  | Resets all inputs in the form on form submit
+`skip-on-enter`   | boolean  | Form should not be submited when hitting enter in a CS Textfield
+`texts`           | object   | If attribute is not given, default text will be displayed
+
+#### Text object
+The text object is to be superseded  with i18n implementation
+
+```
+    `validation-text`: Display this hint while the form is invalid
+    `buttons`
+        `submit`
+        `cancel`
+```
 
 ### Lifecycle events
-**Upwards**
-* `form-init` emited when the form is linked. The scope of the form is passed as first argument.
-* `form-cancel` emited when user cancels a form (in a CS Wizard or a self-contained CS Form)
-* `form-submit` emited when a form is successfully submited
-* `form-error` emited when there was server side error with the submited form
 
-**Downwards**
-The following events are broadcasted to children of the form
-* `form-reset` when form should be reset
-* `form-scroll` when the form was scrolled
-* `field-error` when there was server side error with the submited form
-* `field-cancel` when the form was canceled
-* `field-submit` when the form was submited
+Event              | Direction | Description
+------------------ | --------- | -----------
+`form-init`        | up        | Emited when the form is linked. The scope of the form is passed as first argument.
+`form-cancel`      | up        | Emited when user cancels a form (in a CS Wizard or a self-contained CS Form)
+`form-submit`      | up        | Emited when a form is successfully submited
+`form-error`       | up        | Emited when there was server side error with the submited form
+`form-reset`       | down      | When form should be reset
+`form-scroll`      | down      | When the form was scrolled
+`field-error`      | down      | When there was server side error with the submited form
+`field-cancel`     | down      | When the form was canceled
+`field-submit`     | down      | When the form was submited
 
 ### Client-side validation
 CS Form implements basic Angular client-side validation. You can evaluate the form's validity in the template through the boolean expression `csForm.$invalid`
 
 
-## CS Field
+## [CS Field :open_file_folder:](../src/components/cs-field)
 ### Lifecycle events
-* `input-value-changed` emited when a value changes
-* `create-resource` emited when an input requests the CS Wizard to push a new form to the panel stack for creating a certain type of resource
+
+Event                 | Direction | Description
+--------------------- | --------- | -----------
+`input-value-changed` | up        | Emited when a value changes
+`create-resource`     | up        | Emited when an input requests the CS Wizard to push a new form to the panel stack for creating a certain type of resource
 
 ### Handling server-side validation
 * If a validation error is returned for an API call in the [correct JSON API format](http://jsonapi.org/format/#errors), the affected CS Fields automatically show bootstrap `has-error` behavior and a hint text is displayed with the description of the error for the particular fields.
@@ -111,6 +130,7 @@ The respective component options hash may have a `template-overrides` as well as
 > template-overrides expect a path to a template which will override the default template of the component, leaving the default directive logic intact. Additional logic can be included eg. using a child ng-controller introduced in the new template.
 
 ### Example usage:
+
 ```
 $scope.csWizardOptions =
   "resource-type": "products"
@@ -120,28 +140,34 @@ $scope.csWizardOptions =
   "directive-overrides": [ {attribute: 'serial-number', directive: "new-serial-number"},
                            {type: 'boolean' directive: "new-checkbox-directive"} ]
 ]
-  ```
+```
 
 > :warning: When overriding CSResourceInput, don't forget to: call `$scope.refresh()` at initialization, as we rely on this call to populate the selectable resource.
 
 > In order to get access to the helper functions of [CSInputBase](#cs-input-base), inject CSInputBase in your controller / directive and call `CSInputBase($scope)` in controller initialization / directive link of your custom template.
 
-### CS Checkbox
+### [CS Checkbox :open_file_folder:](../src/components/inputs/cs-checkbox)
 The `required` attribute has no effect on a CS Checkbox.
 
 
-### CS Date
+### [CS Date :open_file_folder:](../src/components/inputs/cs-date)
 **cs-field-options**
-* `date-format`: optional. If exist, the ng-model of date is parsed with this format through Angular UI's uibDateParser
-* `time-zone-offset`: optional. Defaults to 'utc'. If exist, the offset of the date is altered through the ng-model-options parameter of the uib-datepicker. Use a time zone offset, for example, '+0430' (4 hours, 30 minutes east of the Greenwich meridian). Read more at the [official Angular docs](https://docs.angularjs.org/api/ng/directive/ngModelOptions)
 
-### CS Enum
-### CS Number
-### CS Resource Input
+Option             | Type     | Description
+------------------ | -------- | -----------
+`date-format`      | string   | (optional) If exist, the ng-model of date is parsed with this format through Angular UI's uibDateParser
+`time-zone-offset` | string   | (optional) Defaults to 'utc'. If exist, the offset of the date is altered through the ng-model-options parameter of the uib-datepicker. Use a time zone offset, for example, '+0430' (4 hours, 30 minutes east of the Greenwich meridian). Read more at the [official Angular docs](https://docs.angularjs.org/api/ng/directive/ngModelOptions)
 
-### CS Textfield
+### [CS Enum :open_file_folder:](../src/components/inputs/cs-enum)
+### [CS Number :open_file_folder:](../src/components/inputs/cs-number)
+### [CS Resource Input :open_file_folder:](../src/components/inputs/cs-resource-input)
+
+### [CS Textfield :open_file_folder:](../src/components/inputs/cs-textfield)
 #### Lifecycle events
-* `submit-form-on-enter`: emited to programmatically submit a form on hitting enter in a `cardinality: one` CS Texfield
+
+Event                  | Direction | Description
+-----------------------| --------- | -----------
+`submit-form-on-enter` | up        | Emited to programmatically submit a form on hitting enter in a `cardinality: one` CS Texfield
 
 
 ## CS Input Base
@@ -149,28 +175,33 @@ Provides helper fuctions through decorating the scope of every directive that ca
 (poor man's directive inheritance - helps to keep the code of different CS Inputs DRY)
 
 
-## CS Index
+## [CS Index :open_file_folder:](../src/components/cs-index)
 
 If the resource's descriptor contains a `hint` attribute, it's value will be shown as the subheading of the component.
 
 **cs-index-options**
-* `resource-type`:  The type of the items to be listed. Should matchhe type of its csResource descriptor (string)
-* `attributes-to-hide`: You can set attribute visibility at component level similarly to [CS Resource](#cs-resource) level.
-* `hide_actions`: Whether to show the actions at the end of each row (`default: false`)
+
+Option               | Type     | Description
+-------------------- | -------- | -----------
+`resource-type`      | string   | The type of the items to be listed. Should match the type of its csResource descriptor
+`attributes-to-hide` | object   | You can set attribute visibility at component level similarly to [CS Resource](#cs-resource) level.
+`hide_actions`       | boolean  | Whether to show the actions at the end of each row (`default: false`)
 
 Example usage:
-```
-# example.html
-  <cs-index resource-type=resourceType cs-index-option=options />
 
-# example.js
+##### example.html
+```html
+  <cs-index resource-type=resourceType cs-index-option=options />
+```
+##### example.js
+```javascript
   $scope.resourceType = "procedures";
   $scope.options = { 'hide-attributes' : {index: 'eluent_stabilization_id'} };
 
 ```
 
 
-## CS Alert
+## [CS Alert :open_file_folder:](../src/components/cs-alert)
 
 **Usage**
 

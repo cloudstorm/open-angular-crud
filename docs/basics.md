@@ -12,9 +12,9 @@
 
   fields: [
     { attribute: 'product_type_id', label: 'Product Type', type: 'resource', resource: 'product_types', cardinality: 'one', relationship: 'product_type', required: true, read_only: true }
-    { attribute: 'origin_date', label: 'Available since', type: 'date', cardinality: 'one', required: false, read_only: false }
-    { attribute: 'deadline', label: 'Határidő', type: 'date', cardinality: 'one', required: false, read_only: false }
-    { attribute: 'availability', label: 'Available?', type: 'boolean', cardinality: 'one', required: false, read_only: false }
+    { attribute: 'price', label: 'Price', type: 'float', cardinality: 'one', required: true, read_only: false }
+    { attribute: 'available_date', label: 'Available from', type: 'date', cardinality: 'one', required: false, read_only: false }
+    { attribute: 'stock', label: 'In stock?', type: 'boolean', cardinality: 'one', required: false, read_only: false }
   ]
 
   display: {
