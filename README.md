@@ -14,6 +14,7 @@ Devagement
 Opinionated framework
 
 ## Resources
+This is the main source of documentation for **developers** working with (or contributing to) the CloudStorm project.   
 * [Basic How-To](docs/basics.md)
 * [Reference](docs/README.md)  
 * [Releases](../../releases)
