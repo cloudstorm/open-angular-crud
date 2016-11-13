@@ -28,6 +28,7 @@ This is the main source of documentation for **developers** working with (or con
 * Tutorial
 
 ## Getting started
+#### Installation
 1. Install via Bower `bower install cloudstorm`
 1. Require `cloudstorm/src/cloudstorm.js.coffee` in your app's main JS file
 1. Require `cloudstorm/src/cloudstorm.css.scss` in your app's main CSS file
@@ -35,8 +36,10 @@ This is the main source of documentation for **developers** working with (or con
 1. Enjoy! or read [the Basics](docs/basics.md)
 
 #### Dependencies
-* As of v0.0.1 CloudStorm depends on the Rails Asset Pipeline, we're removing this dependency in v0.1
-* 
+* As of v0.0.1 CloudStorm depends on the Rails Asset Pipeline  
+  _We're removing this dependency in v0.1, making CloudStorm backend-independent_
+* A JSON API serializer for the backend.  
+  _There are dozens of libraries to choose from, see the [Basic How-to](docs/basics.md) for more info._
 
 ## Run Demo
 To run a demo app, do the following:  
