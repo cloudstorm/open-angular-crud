@@ -20,7 +20,7 @@ Option                | Type       | Description
 `keep-first`          | boolean    | Does not pop the panel on the root form submit
 `template-overrides`  | object     | See at [CS Field](#cs-field-open_file_folder)
 `directive-overrides` | object     | See at [CS Field](#cs-field-open_file_folder)
-`attributes-to-hide`  | object     | You can set attribute visibility at component level similarly to [CS Resource](#cs-resource) level.
+`attributes-to-hide`  | object     | You can set attribute visibility at component level similarly to [CS Resource](basics.md) level.
 `events`              | object     | You can add one callback per lifecycle event. Example:
 ```
 "events": {
