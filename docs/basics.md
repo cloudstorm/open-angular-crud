@@ -5,7 +5,7 @@
 
 > TODO :warning: Document merge override
 
-```javascript
+```json
 @descriptor = {
   type: 'products'
   name: 'A Product'
