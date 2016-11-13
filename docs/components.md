@@ -3,6 +3,16 @@
 
 CloudStorm is a collection of components that are designed to work together; you can use the components independently, or you can use them together as part of the default setup.
 
+High-level components                       | Form Input components                    | Misc components
+------------------------------------------- | ---------------------------------------- | ---------------
+[CS Wizard](#cs-wizard-open_file_folder)    | [CS Field](#cs-field-open_file_folder)   | [CS Alert](#cs-alert-open_file_folder)
+[CS Form](#cs-form-open_file_folder)        | [CS Textfield](#cs-textfield-open_file_folder) 
+[CS Index](#cs-index-open_file_folder)      | [CS Checkbox](#cs-checkbox-open_file_folder)
+                                            | [CS Date](#cs-date-open_file_folder)
+                                            | [CS Enum](#cs-enum-open_file_folder)
+                                            | [CS Number](#cs-number-open_file_folder)
+                                            | [CS Resource Input](#cs-resource-input-open_file_folder)
+
 ## [CS Wizard :open_file_folder:](../src/components/cs-wizard)
 
 ### Options
