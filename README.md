@@ -1,17 +1,16 @@
 # [CloudStorm](http://cloudstorm.io)
 <a href="http://cloudstorm.io"><img src="./docs/images/logo.png" height="140" align="right"></a>
-Welcome to CloudStorm - the open-source enterprise software framework for web developers
-
-If this is your first time hearing about CloudStorm, we recommend starting with the [CloudStorm website](http://cloudstorm.io).
-
+Welcome to CloudStorm - the open-source enterprise software framework for web developers.  
 :octocat: We are currently looking for contributors and beta testers  
 
 ## What is CloudStorm?
-CloudStorm creates all data manipulation screens and forms for you
+CloudStorm creates all administration and data manipulation screens and forms for you.
+For documentation geared towards business and product, we recommend starting with the [CloudStorm website](http://cloudstorm.io).
 
 ### Philosophy
+While CloudStorm is an opinionated framework, we always strive for easy and straightforward customization.  
+If you find otherwise, please file an [Issue](../../issues) without hesitation.
 Devagement  
-Opinionated framework
 
 ## Resources
 This is the main source of documentation for **developers** working with (or contributing to) the CloudStorm project.   
