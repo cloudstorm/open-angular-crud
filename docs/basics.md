@@ -1,7 +1,7 @@
 # CloudStorm Basics
 > [**Home**](../README.md) ▸ [**Reference**](../docs/README.md) ▸ **CloudStorm Basics**
 
-## Data format / Backend API requirement
+## Data format / API requirement
 CloudStorm uses the [JSON API format](http://jsonapi.org/format/#document-structure) and convetions for client-server communications.
 
 > If you are unsure whether your backed serves data in the right format, there are [dozens of libraries](http://jsonapi.org/implementations/) to choose from which implement JSON API in Node.js, Ruby, PHP, Python, Java, .NET and more!
