@@ -14,7 +14,7 @@ High-level components                       | Form Input components             
                                             | [CS Resource Input](#cs-resource-input-open_file_folder)
 
 # CS Wizard
-> ▸ [**See source**](../src/components/cs-wizard)
+> [**See source**](../src/components/cs-wizard)
 
 ### Options
 **panel-number-callback**  
