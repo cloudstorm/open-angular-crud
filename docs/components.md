@@ -3,18 +3,18 @@
 
 CloudStorm is a collection of components that are designed to work together; you can use the components independently, or you can use them together as part of the default setup.
 
-High-level components                       | Form Input components                    | Misc components
-------------------------------------------- | ---------------------------------------- | ---------------
-[CS Wizard](#cs-wizard-open_file_folder)    | [CS Field](#cs-field-open_file_folder)   | [CS Alert](#cs-alert-open_file_folder)
-[CS Form](#cs-form-open_file_folder)        | [CS Textfield](#cs-textfield-open_file_folder) 
-[CS Index](#cs-index-open_file_folder)      | [CS Checkbox](#cs-checkbox-open_file_folder)
-                                            | [CS Date](#cs-date-open_file_folder)
-                                            | [CS Enum](#cs-enum-open_file_folder)
-                                            | [CS Number](#cs-number-open_file_folder)
-                                            | [CS Resource Input](#cs-resource-input-open_file_folder)
+High-level components   | Form Input components                  | Misc components
+----------------------- | -------------------------------------- | ---------------
+[CS Wizard](#cs-wizard) | [CS Field](#cs-field)                  | [CS Alert](#cs-alert)
+[CS Form](#cs-form)     | [CS Textfield](#cs-textfield) 
+[CS Index](#cs-index)   | [CS Checkbox](#cs-checkbox)
+                        | [CS Date](#cs-date)
+                        | [CS Enum](#cs-enum)
+                        | [CS Number](#cs-number)
+                        | [CS Resource Input](#cs-resource-input)
 
 # CS Wizard
-> [**See source**](../src/components/cs-wizard)
+<a href="../src/components/cs-wizard"><img src="images/go_to_source.png" align="right"></a>
 
 ### Options
 **panel-number-callback**  
@@ -29,8 +29,8 @@ Option                | Type       | Description
 `form-item`           | expression | The object to edit
 `form-mode`           | string     | What kind of form is this? Available options: 'create', 'edit'
 `keep-first`          | boolean    | Does not pop the panel on the root form submit
-`template-overrides`  | object     | See at [CS Field](#cs-field-open_file_folder)
-`directive-overrides` | object     | See at [CS Field](#cs-field-open_file_folder)
+`template-overrides`  | object     | See at [CS Field](#cs-field)
+`directive-overrides` | object     | See at [CS Field](#cs-field)
 `attributes-to-hide`  | object     | You can set attribute visibility at component level similarly to [CS Resource](basics.md) level.
 `events`              | object     | You can add one callback per lifecycle event. Example:
 ```
@@ -62,7 +62,8 @@ Event              | Direction | Description
 
 [to top ↑](./components.md)
 
-## [CS Form :open_file_folder:](../src/components/cs-form)
+## CS Form
+<a href="../src/components/cs-form"><img src="images/go_to_source.png" align="right"></a>
 
 ### Options
 **cs-form-options**
@@ -102,7 +103,9 @@ CS Form implements basic Angular client-side validation. You can evaluate the fo
 
 [to top ↑](./components.md)
 
-## [CS Field :open_file_folder:](../src/components/cs-field)
+## CS Field
+<a href="../src/components/cs-field"><img src="images/go_to_source.png" align="right"></a>
+
 ### Lifecycle events
 
 Event                 | Direction | Description
@@ -160,10 +163,14 @@ $scope.csWizardOptions =
 
 [to top ↑](./components.md)
 
-### [CS Checkbox :open_file_folder:](../src/components/inputs/cs-checkbox)
+### CS Checkbox
+<a href="../src/components/cs-checkbox"><img src="images/go_to_source.png" align="right"></a>
+
 The `required` attribute has no effect on a CS Checkbox.
 
-### [CS Date :open_file_folder:](../src/components/inputs/cs-date)
+### CS Date
+<a href="../src/components/cs-date"><img src="images/go_to_source.png" align="right"></a>
+
 **cs-field-options**
 
 Option             | Type     | Description
@@ -173,13 +180,20 @@ Option             | Type     | Description
 
 [to top ↑](./components.md)
 
-### [CS Enum :open_file_folder:](../src/components/inputs/cs-enum)
-### [CS Number :open_file_folder:](../src/components/inputs/cs-number)
-### [CS Resource Input :open_file_folder:](../src/components/inputs/cs-resource-input)
+### CS Enum
+<a href="../src/components/cs-enum"><img src="images/go_to_source.png" align="right"></a>
+
+### CS Number
+<a href="../src/components/cs-number"><img src="images/go_to_source.png" align="right"></a>
+
+### CS Resource Input
+<a href="../src/components/cs-resource-input"><img src="images/go_to_source.png" align="right"></a>
 
 [to top ↑](./components.md)
 
-### [CS Textfield :open_file_folder:](../src/components/inputs/cs-textfield)
+### CS Textfield
+<a href="../src/components/cs-textfield"><img src="images/go_to_source.png" align="right"></a>
+
 #### Lifecycle events
 
 Event                  | Direction | Description
@@ -194,7 +208,8 @@ Provides helper fuctions through decorating the scope of every directive that ca
 
 [to top ↑](./components.md)
 
-## [CS Index :open_file_folder:](../src/components/cs-index)
+## CS Index
+<a href="../src/components/cs-index"><img src="images/go_to_source.png" align="right"></a>
 
 If the resource's descriptor contains a `hint` attribute, it's value will be shown as the subheading of the component.
 
@@ -221,7 +236,8 @@ Example usage:
 
 [to top ↑](./components.md)
 
-## [CS Alert :open_file_folder:](../src/components/cs-alert)
+## CS Alert
+<a href="../src/components/cs-alert"><img src="images/go_to_source.png" align="right"></a>
 
 **Usage**
 
