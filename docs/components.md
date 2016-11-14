@@ -176,7 +176,7 @@ Option             | Type     | Description
 ### [CS Number :open_file_folder:](../src/components/inputs/cs-number)
 ### [CS Resource Input :open_file_folder:](../src/components/inputs/cs-resource-input)
 
-[top:arrow_heading_up:](./components.md)
+[to top ↑](./components.md)
 
 ### [CS Textfield :open_file_folder:](../src/components/inputs/cs-textfield)
 #### Lifecycle events
