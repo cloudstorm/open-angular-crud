@@ -164,12 +164,12 @@ $scope.csWizardOptions =
 [to top ↑](./components.md)
 
 ### CS Checkbox
-<a href="../src/components/cs-checkbox"><img src="images/go_to_source.png" align="right"></a>
+<a href="../src/components/inputs/cs-checkbox"><img src="images/go_to_source.png" align="right"></a>
 
 The `required` attribute has no effect on a CS Checkbox.
 
 ### CS Date
-<a href="../src/components/cs-date"><img src="images/go_to_source.png" align="right"></a>
+<a href="../src/components/inputs/cs-date"><img src="images/go_to_source.png" align="right"></a>
 
 **cs-field-options**
 
@@ -181,18 +181,18 @@ Option             | Type     | Description
 [to top ↑](./components.md)
 
 ### CS Enum
-<a href="../src/components/cs-enum"><img src="images/go_to_source.png" align="right"></a>
+<a href="../src/components/inputs/cs-enum"><img src="images/go_to_source.png" align="right"></a>
 
 ### CS Number
-<a href="../src/components/cs-number"><img src="images/go_to_source.png" align="right"></a>
+<a href="../src/components/inputs/cs-number"><img src="images/go_to_source.png" align="right"></a>
 
 ### CS Resource Input
-<a href="../src/components/cs-resource-input"><img src="images/go_to_source.png" align="right"></a>
+<a href="../src/components/inputs/cs-resource-input"><img src="images/go_to_source.png" align="right"></a>
 
 [to top ↑](./components.md)
 
 ### CS Textfield
-<a href="../src/components/cs-textfield"><img src="images/go_to_source.png" align="right"></a>
+<a href="../src/components/inputs/cs-textfield"><img src="images/go_to_source.png" align="right"></a>
 
 #### Lifecycle events
 
