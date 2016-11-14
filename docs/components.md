@@ -13,7 +13,7 @@ High-level components                       | Form Input components             
                                             | [CS Number](#cs-number-open_file_folder)
                                             | [CS Resource Input](#cs-resource-input-open_file_folder)
 
-## CS Wizard
+# CS Wizard
 > ▸ [**See source**](../src/components/cs-wizard)
 
 ### Options
