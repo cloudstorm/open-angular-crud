@@ -59,7 +59,7 @@ Event              | Direction | Description
 
 > Note: The wizard cancels the current form on `ESC` key press.
 
-[top:arrow_heading_up:](./components.md)
+[to top ↑](./components.md)
 
 ## [CS Form :open_file_folder:](../src/components/cs-form)
 
@@ -99,7 +99,7 @@ Event              | Direction | Description
 ### Client-side validation
 CS Form implements basic Angular client-side validation. You can evaluate the form's validity in the template through the boolean expression `csForm.$invalid`
 
-[top:arrow_heading_up:](./components.md)
+[to top ↑](./components.md)
 
 ## [CS Field :open_file_folder:](../src/components/cs-field)
 ### Lifecycle events
@@ -157,7 +157,7 @@ $scope.csWizardOptions =
 
 > In order to get access to the helper functions of [CSInputBase](#cs-input-base), inject CSInputBase in your controller / directive and call `CSInputBase($scope)` in controller initialization / directive link of your custom template.
 
-[top:arrow_heading_up:](./components.md)
+[to top ↑](./components.md)
 
 ### [CS Checkbox :open_file_folder:](../src/components/inputs/cs-checkbox)
 The `required` attribute has no effect on a CS Checkbox.
@@ -170,7 +170,7 @@ Option             | Type     | Description
 `date-format`      | string   | (optional) If exist, the ng-model of date is parsed with this format through Angular UI's uibDateParser
 `time-zone-offset` | string   | (optional) Defaults to 'utc'. If exist, the offset of the date is altered through the ng-model-options parameter of the uib-datepicker. Use a time zone offset, for example, '+0430' (4 hours, 30 minutes east of the Greenwich meridian). Read more at the [official Angular docs](https://docs.angularjs.org/api/ng/directive/ngModelOptions)
 
-[top:arrow_heading_up:](./components.md)
+[to top ↑](./components.md)
 
 ### [CS Enum :open_file_folder:](../src/components/inputs/cs-enum)
 ### [CS Number :open_file_folder:](../src/components/inputs/cs-number)
@@ -185,13 +185,13 @@ Event                  | Direction | Description
 -----------------------| --------- | -----------
 `submit-form-on-enter` | up        | Emited to programmatically submit a form on hitting enter in a `cardinality: one` CS Texfield
 
-[top:arrow_heading_up:](./components.md)
+[to top ↑](./components.md)
 
 ## CS Input Base
 Provides helper fuctions through decorating the scope of every directive that calls CSInputBase($scope) on it.
 (poor man's directive inheritance - helps to keep the code of different CS Inputs DRY)
 
-[top:arrow_heading_up:](./components.md)
+[to top ↑](./components.md)
 
 ## [CS Index :open_file_folder:](../src/components/cs-index)
 
@@ -218,7 +218,7 @@ Example usage:
 
 ```
 
-[top:arrow_heading_up:](./components.md)
+[to top ↑](./components.md)
 
 ## [CS Alert :open_file_folder:](../src/components/cs-alert)
 
