@@ -32,7 +32,7 @@
     top: 10%;
     padding: 0;
     margin-left: - $wizard-width-narrow / 2;
-    z-index: 9999;
+    z-index: 1050; // Same As Uib-modal
 
     .panel-close {
       left: 478px;
