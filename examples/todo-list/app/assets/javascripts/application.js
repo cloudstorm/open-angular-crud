@@ -14,7 +14,6 @@
 //= require jquery
 //= require jquery-ui
 //= require jquery_ujs
-//= require jquery-mousewheel
 //= require url-template/lib/url-template
 //= require angular
 //= require angular-rails-templates
