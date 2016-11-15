@@ -188,6 +188,7 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
           "resource-type": $scope.resourceType
           "form-item": {}
           "form-mode": "create"
+          "reset-on-submit": true
           'texts':
             'validation-text': "A csillaggal jelöltek kitöltése kötelező!"
             'buttons':
@@ -198,8 +199,8 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
               modalInstance.close()
               CSAlertService.addAlert "Nem jött létre új törzsadat", 'info'
             'wizard-submited': (resource) ->
-              $scope.collection.push resource
-              modalInstance.close()
+              pushNewItem($scope.collection, resource)
+              modalInstance.close() unless $scope.wizardOptions['keep-first']
               CSAlertService.addAlert "Új törzsadat sikeresen létrehozva!", 'success'
           }
 
@@ -218,6 +219,11 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
           $scope.selected = selectedItem
         ), ->
           console.info 'Modal dismissed at: ' + new Date
+
+      pushNewItem = (collection, item) ->
+        newItem = item.constructor.$new()
+        newItem.$clone(item)
+        collection.push newItem
 
 
   # ===== CONFIGURE ===========================================================

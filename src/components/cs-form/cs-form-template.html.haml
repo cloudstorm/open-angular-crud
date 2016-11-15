@@ -31,9 +31,15 @@
 
       %button.btn.btn-success{ "ng-class" => "{'disabled': csForm.$invalid}",
                                "ng-click" => "submit()",
-      						             "type" => "button" }
+                               "type" => "button" }
         {{ csFormOptions['texts']['buttons']['submit'] || 'Submit' }}
     %button.btn.btn-link{ "ng-click" => "cancel()",
-    						          "type" => "button" }
+                          "type" => "button" }
       {{ csFormOptions['texts']['buttons']['cancel'] || 'Cancel' }}
     %span.help-block{ "ng-if" => "field.errors.length > 0" }
+
+    .checkbox.create-another{ "ng-if" => "formMode == 'create' && wizardPanelIndex == 0" }
+      %label
+        %input{ "ng-model" => "csFormOptions['keep-first']",
+                type: "checkbox" }
+          Create another
