@@ -1,16 +1,23 @@
 #SERVICES
+#= require_tree ../services
 
 #CONTROLLERS
-#= require_tree ../controllers/
+#= require_tree ../controllers
+
+# DIRECTIVES
+#= require_tree ../directives
 
 # RESOURCES
 #= require_tree ../resources
 
+# TEMPLATES
+#= require_tree ../templates
+
 # CLOUDSTORM
-#= require cloudstorm/src/cloudstorm
+#= require cloudstorm
 
 todoList = angular.module("todoList", [
-  "ngRaven"
+  "templates"
   "ngRoute"
   "ngResource"
   "ngAnimate"
@@ -19,7 +26,6 @@ todoList = angular.module("todoList", [
   "ui.sortable"
   "ui.select"
   "ngDialog"
-  "spin.js"
   "cloudStorm"
   "todoList.resources"
 ])
@@ -27,6 +33,13 @@ todoList = angular.module("todoList", [
   $routeProvider.when("/items",
     templateUrl: "todo_list_index_base.html"
     controller: "ItemCtrl"
+	).when("/users",
+	  templateUrl: "todo_list_index_base.html"
+	  controller: "UserCtrl"
+
+	).when("/categories",
+	  templateUrl: "todo_list_index_base.html"
+	  controller: "CategoryCtrl"
 
 
   # ----- /CloudStorm ---------------------------
@@ -35,25 +48,51 @@ todoList = angular.module("todoList", [
 
 ])
 
+# ----- MAIN CONTROLLER -------------------------------------------------------
+
+todoList.controller "MainCtrl", [ "$scope"
+  ($scope) ->
+    console.log('blabla')
+]
+
+
+# ----- WAT? ------------------------------------------------------------------
+
+angular.module('todoList.services').config(['$httpProvider', ($httpProvider) ->
+  $httpProvider.defaults.headers.common['Accept'] = 'application/json, text/plain'
+
+  # $httpProvider.interceptors.push(['$q', '$injector', ($q, $injector) ->
+  #   return {
+  #     'responseError': (rejection) ->
+  #       if rejection.status is 500
+  #         CSAlertService = $injector.get('CSAlertService');
+  #         CSAlertService.addAlert "A kért művelet végrehajtása során hiba lépett fel. Kérem frissítse az oldalt.", 'danger'
+
+  #       $q.reject rejection
+  #   }
+  # ])
+])
+
+
 # ----- CS CONFIG -------------------------------------------------------------
 
-todoList.config([
-  'csSettingsProvider', 'localizationProvider'
-  (csSettingsProvider, LocalizationProvider) ->
-    csSettingsProvider.set('date-format', 'yyyy-MM-dd')
-    csSettingsProvider.set('time-zone-offset', '-1200')
-    csSettingsProvider.set('i18n-engine', LocalizationProvider.$get())
-])
+# todoList.config([
+#   'csSettingsProvider', 'todoListLocalizationProvider'
+#   (csSettingsProvider, LocalizationProvider) ->
+#     csSettingsProvider.set('date-format', 'yyyy-MM-dd')
+#     csSettingsProvider.set('time-zone-offset', '-1200')
+#     csSettingsProvider.set('i18n-engine', LocalizationProvider.$get())
+# ])
 
-.config(['localizationProvider', (LocalizationProvider) ->
-  localization = LocalizationProvider.$get()
-  localization.add('false', 'Nem')
-  localization.add('true',  'Igen')
-])
+# .config(['todoListLocalizationProvider', (LocalizationProvider) ->
+#   localization = LocalizationProvider.$get()
+#   localization.add('false', 'Nem')
+#   localization.add('true',  'Igen')
+# ])
 
 # ----- DEBUG INFO ------------------------------------------------------------
 
-misto.run ['$rootScope', ($rootScope) ->
+todoList.run ['$rootScope', ($rootScope) ->
 
   $rootScope.$on 'field-value-changed', () ->
     console.info 'field-value-changed event fired'

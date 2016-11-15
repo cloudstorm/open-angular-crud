@@ -1,0 +1,234 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ *
+ *= require angular-ui-select
+ *= require ng-dialog
+ *= require ng-dialog/css/ngDialog-theme-default
+ *= require_self
+ */
+
+
+//////// BOOTSTRAP &OVERRIDES ////////
+
+$brand-danger: tomato;
+$brand-success: #70C170;
+
+@import "bootstrap-sprockets";
+@import "bootstrap-variable-overrides";
+@import "bootstrap";
+@import "bootstrap-overrides";
+@import "glyphicon-fixes";
+
+//////// TODO LIST ////////
+
+@import "todo-list/_variables";
+@import "todo-list/_mixins";
+@import "todo-list/navbar";
+@import "todo-list/footer";
+
+//////// CLOUDSTORM ////////
+
+@import 'cloudstorm/src/cloudstorm';
+
+// TODO: refactor
+// https://github.com/cloud-storm/CloudStormJS/issues/38
+$uib-modal-margin: 30px;
+
+.modal-wizard {
+  .modal-dialog {
+    height: calc(100% - 2 * #{$uib-modal-margin});
+
+    .modal-content {
+      height: 100%;
+    }
+  }
+}
+
+////////    COMMON    ////////////
+
+.application-disabled {
+  opacity:    0.5;
+  width:      100%;
+  height:     100%;
+  z-index:    10;
+  top:        0;
+  left:       0;
+  position:   fixed;
+  pointer-events: none;
+  background: linen;
+}
+
+html{
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+}
+
+#todo-list {
+  position: relative;
+  @include max-height;
+  top: $navbar-height;
+}
+
+.overlay {
+  top: $navbar-height;
+  left: 0;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255,255,255,.46);
+  z-index: 99999;
+}
+
+.avatar {
+  display: inline-block;
+  width: $avatar-size;
+  height: $avatar-size;
+  margin-right: 10px;
+  text-align: center;
+  vertical-align: middle;
+  line-height: $avatar-size;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: lightblue;
+  @include border-radius(6px);
+  cursor: pointer;
+
+  &.ui-draggable-dragging {
+    @include box-shadow(5px 15px 20px rgba(0,0,0,.175));
+  }
+}
+
+.red {
+  background-color: tomato!important;
+  border-color: tomato!important;
+}
+
+.pale {
+  background-color: lightgray!important;
+  border-color:  lightgray!important;
+}
+
+.green {
+  background-color: lightgreen!important;
+  border-color:  lightgreen!important;
+}
+
+.black {
+  background-color: black!important;
+  border-color: black!important;
+}
+
+.droppable-receiver {
+  background-color: lightgreen!important;
+  border-color:  lightgreen!important;
+}
+
+.center {
+  text-align: center;
+}
+
+.red-text {
+  color: red!important;
+  font-weight: bold!important;
+}
+
+.progress-bar-muted {
+  background-color: transparent;
+}
+
+.progress-bar-warning-plus {
+  background-color: gold;
+}
+
+.progress-bar-primary {}
+
+.clearer {
+  clear: both;
+  line-height: 0;
+  height: 0;
+}
+
+.hidden {
+  display: none;
+}
+
+.disabled {
+  pointer-events: none;
+}
+
+/////////   MISC   ////////////
+
+#enable-realtime {
+  cursor: pointer;
+}
+
+
+.devise-error {
+  padding-bottom: 10px;
+  padding-top: 10px;
+  color: crimson;
+  padding-left: 0px;
+  font-size: larger;
+
+  li {
+    list-style-type: none;
+  }
+}
+
+/////////   Dialog   ////////////
+
+.ngdialog.ngdialog-theme-custom {
+  padding-top: 250px;
+  padding-bottom: 250px;
+}
+
+.ngdialog.ngdialog-theme-custom .ngdialog-overlay {
+  background: rgba(255,255,255,.7);
+}
+
+.ngdialog.ngdialog-theme-custom .ngdialog-content {
+  background: rgba(255,255,255,.9);
+  padding: 1em 2em 1em;
+  width: 500px;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  border-width: 1px;
+  border-color: blanchedalmond;
+  border-style: groove;
+  width: 500px;
+}
+
+.ngdialog.ngdialog-theme-custom .ngdialog-message h2 {
+  font-size: 26px;
+  font-family: 'Montserrat', 'Helvetica', Arial, sans-serif;
+  line-height: 30px;
+  margin-bottom: 20px;
+}
+
+.ngdialog.ngdialog-theme-custom .ngdialog-message {
+  font-size: 16px;
+  font-family: 'Source Sans Pro';
+  line-height: 22px;
+}
+
+.ngdialog.ngdialog-theme-custom .ngdialog-message ul {
+  padding: 0 0 5px 35px;
+}
+
+.ngdialog.ngdialog-theme-custom .ngdialog-button.ngdialog-button-primary {
+  background: #27ae60;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+

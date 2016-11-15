@@ -1,38 +1,12 @@
 class API::APIController < ActionController::Base
 
-
-  ####################################################################################################
-
-  before_action { Thread.current[:group] = current_group.id if current_user }
-
-  ####################################################################################################
-
-  before_action :set_raven_context
-
-  def set_raven_context
-    Raven.user_context(id: current_user.id, email: current_user.email, name: current_user.name) if current_user
-    Raven.extra_context(params: params.to_hash, url: request.url)
-  end
-
-  ####################################################################################################
-
-  before_action :check_asset_version
-
-  def check_asset_version
-    if request.headers["HTTP_X_MISTO_VERSION"] && (request.headers["HTTP_X_MISTO_VERSION"] != Revision.hash)
-      render :json => {requested: request.headers["HTTP_X_MISTO_VERSION"], actual: Revision.hash}, :status => 418
-    end
-  end
-
-  ####################################################################################################
-
   check_authorization
 
   respond_to :json
 
   before_action :set_collection, only: [:index]
   before_action :set_resource, only: [:show, :edit, :update, :destroy, :member_options]
-  
+
   before_action :deserialize_resource, only: [:update, :create]
 
   ####################################################################################################
@@ -41,18 +15,6 @@ class API::APIController < ActionController::Base
     define_method :resource_type, -> { resource }
   end
 
-  ####################################################################################################
-  ####################################################################################################
-
-  def current_group
-    current_user.current_group
-  end
-
-  def current_laboratory
-    current_user.current_group.laboratory
-  end  
-
-  ####################################################################################################
   ####################################################################################################
 
   def options
@@ -63,7 +25,7 @@ class API::APIController < ActionController::Base
 
     respond_to do |format|
       format.jsonapi { render jsonapi: @options }
-    end    
+    end
   end
 
   ####################################################################################################
@@ -75,16 +37,16 @@ class API::APIController < ActionController::Base
 
     respond_to do |format|
       format.jsonapi { render jsonapi: @options }
-    end    
-  end    
+    end
+  end
 
   ####################################################################################################
 
-  def index    
+  def index
     authorize! :index, resource_type
     respond_to do |format|
       format.jsonapi { render jsonapi: @resources, include: include_params }
-    end    
+    end
   end
 
   ####################################################################################################
@@ -102,59 +64,59 @@ class API::APIController < ActionController::Base
     @resource = resource_type.new
     respond_to do |format|
       format.jsonapi { render jsonapi: @resource }
-    end        
+    end
   end
 
   ####################################################################################################
 
-  def edit    
+  def edit
     respond_to do |format|
       format.jsonapi { render jsonapi: @resource }
-    end      
+    end
   end
 
   ####################################################################################################
 
   def create
-    authorize! :create, resource_type    
+    authorize! :create, resource_type
     build_resource
     @resource.save
     respond_to do |format|
-      format.jsonapi { 
+      format.jsonapi {
         if @resource.persisted?
-          render jsonapi: @resource 
+          render jsonapi: @resource
         else
           render jsonapi: @resource, status: 422, serializer: ActiveModel::Serializer::ErrorSerializer
         end
       }
-    end      
+    end
   end
 
   ####################################################################################################
 
   def update
     authorize! :update, @resource
-    
-    resource_type.transaction do     
+
+    resource_type.transaction do
       @resource.update(@object)
     end
 
     respond_to do |format|
-      format.jsonapi { 
+      format.jsonapi {
         if @resource.valid?
           render jsonapi: @resource, include: include_params
         else
           render jsonapi: @resource, status: 422, serializer: ActiveModel::Serializer::ErrorSerializer
         end
       }
-    end   
+    end
   end
 
   ####################################################################################################
 
   def destroy
     authorize! :destroy, @resource
-    @resource.destroy 
+    @resource.destroy
     respond_to do |format|
       format.jsonapi {
         if destroyed?(@resource)
@@ -163,7 +125,7 @@ class API::APIController < ActionController::Base
           render jsonapi: @resource, status: 422, serializer: ActiveModel::Serializer::ErrorSerializer
         end
       }
-    end       
+    end
   end
 
   ####################################################################################################
@@ -181,7 +143,7 @@ class API::APIController < ActionController::Base
   ####################################################################################################
 
   def set_collection
-    if @includes 
+    if @includes
       @collection ||= resource_type.includes(@includes)
     else
       @collection ||= resource_type
@@ -206,7 +168,7 @@ class API::APIController < ActionController::Base
     @object = ActiveModelSerializers::Deserialization.jsonapi_parse!({"data" => resource_params.to_hash})
   end
 
-  def build_resource    
+  def build_resource
     @resource = resource_type.new(@object)
   end
 
@@ -221,19 +183,19 @@ class API::APIController < ActionController::Base
 
   def filter_params
     params.permit(:name)
-  end  
+  end
 
   ####################################################################################################
 
   def include_params
     params[:include]
-  end  
+  end
 
   ####################################################################################################
 
   def search_params
     params[:q]
-  end  
+  end
 
   ####################################################################################################
 
