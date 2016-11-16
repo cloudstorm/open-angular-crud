@@ -33,9 +33,17 @@
                                "ng-click" => "submit()",
                                "type" => "button" }
         {{ csFormOptions['texts']['buttons']['submit'] || 'Submit' }}
+    
     %button.btn.btn-link{ "ng-click" => "cancel()",
-                          "type" => "button" }
-      {{ csFormOptions['texts']['buttons']['cancel'] || 'Cancel' }}
+                          "type" => "button",
+                          "ng-switch" => "csFormOptions['form-mode']" }
+
+      %span{ "ng-switch-when" => "create" }
+        {{ i18n.t('buttons.close') }}
+
+      %span{ "ng-switch-default" => "" }
+        {{ i18n.t('buttons.cancel') }}
+
     %span.help-block{ "ng-if" => "field.errors.length > 0" }
 
     .checkbox.create-another{ "ng-if" => "formMode == 'create' && wizardPanelIndex == 0" }
