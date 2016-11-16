@@ -11,9 +11,17 @@
       %a{href: "#/categories"} Categories
 
   %ul.nav.navbar-nav.navbar-right
+    %li.dropdown{ "uib-dropdown": "" }
+      %a.dropdown-toggle{"data-toggle" => "dropdown", href: "#", "uib-dropdown-toggle" => true}
+        Administration
+        %b.caret
+      %ul.dropdown-menu{"uib-dropdown-menu" => true}
+        %li{ "ng-class" => "{'active': isActive('/users')}" }
+          %a{href:  "#/users"}
+            Users
 
     %li.navbar-text.user-name
-      {{User.current.name}} &nbsp;
+      {{User.email}} &nbsp;
 
     %li
       - if user_signed_in?

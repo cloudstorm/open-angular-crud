@@ -2,16 +2,19 @@
 %html
   %head
     %meta{content: "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no", name: "viewport"}
-    :javascript
-      window.current_user  = '{"id" : #{current_user.id}, "email" : "#{current_user.email}" }'
-      window.current_env   = "#{Rails.env}"
-      window.root_url      = "#{root_url}"
     %title ToDo List
     = stylesheet_link_tag "application"
     = javascript_include_tag "application"
     = csrf_meta_tags
     = favicon_link_tag 'favicon.ico'
   %body{ "ng-app" => "todoList", "ng-controller" => "MainCtrl", "ng-strict-di" => ""}
-    = render 'layouts/navbar'
-    = yield
-    = render 'layouts/footer'
+    .row-fluid
+      .span10.offset1
+        .hero-unit.text-center
+          %h1
+            ToDo List
+          %p
+            A Cloudstorm Sample Application
+    .row-fluid
+      .span4.offset4
+        = yield

@@ -28,6 +28,7 @@ todoList = angular.module("todoList", [
   "ngDialog"
   "cloudStorm"
   "todoList.resources"
+  "todoList.localization"
 ])
 .config(["$routeProvider", ($routeProvider) ->
   $routeProvider.when("/items",
@@ -36,7 +37,6 @@ todoList = angular.module("todoList", [
 	).when("/users",
 	  templateUrl: "todo_list_index_base.html"
 	  controller: "UserCtrl"
-
 	).when("/categories",
 	  templateUrl: "todo_list_index_base.html"
 	  controller: "CategoryCtrl"
@@ -52,43 +52,31 @@ todoList = angular.module("todoList", [
 
 todoList.controller "MainCtrl", [ "$scope"
   ($scope) ->
-    console.log('blabla')
+    $scope.User = JSON.parse window.current_user
 ]
 
 
 # ----- WAT? ------------------------------------------------------------------
 
 angular.module('todoList.services').config(['$httpProvider', ($httpProvider) ->
-  $httpProvider.defaults.headers.common['Accept'] = 'application/json, text/plain'
-
-  # $httpProvider.interceptors.push(['$q', '$injector', ($q, $injector) ->
-  #   return {
-  #     'responseError': (rejection) ->
-  #       if rejection.status is 500
-  #         CSAlertService = $injector.get('CSAlertService');
-  #         CSAlertService.addAlert "A kért művelet végrehajtása során hiba lépett fel. Kérem frissítse az oldalt.", 'danger'
-
-  #       $q.reject rejection
-  #   }
-  # ])
-])
+  $httpProvider.defaults.headers.common['Accept'] = 'application/json, text/plain'])
 
 
 # ----- CS CONFIG -------------------------------------------------------------
 
-# todoList.config([
-#   'csSettingsProvider', 'todoListLocalizationProvider'
-#   (csSettingsProvider, LocalizationProvider) ->
-#     csSettingsProvider.set('date-format', 'yyyy-MM-dd')
-#     csSettingsProvider.set('time-zone-offset', '-1200')
-#     csSettingsProvider.set('i18n-engine', LocalizationProvider.$get())
-# ])
+todoList.config([
+  'csSettingsProvider', 'localizationProvider'
+  (csSettingsProvider, LocalizationProvider) ->
+    csSettingsProvider.set('date-format', 'yyyy-MM-dd')
+    csSettingsProvider.set('time-zone-offset', '-1200')
+    csSettingsProvider.set('i18n-engine', LocalizationProvider.$get())
+])
 
-# .config(['todoListLocalizationProvider', (LocalizationProvider) ->
-#   localization = LocalizationProvider.$get()
-#   localization.add('false', 'Nem')
-#   localization.add('true',  'Igen')
-# ])
+.config(['localizationProvider', (LocalizationProvider) ->
+  localization = LocalizationProvider.$get()
+  localization.add('false', '\u2718')
+  localization.add('true',  '\u2713')
+])
 
 # ----- DEBUG INFO ------------------------------------------------------------
 

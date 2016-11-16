@@ -33,7 +33,6 @@
 //= require jquery.ui.touch-punch.min
 //
 //= require inflection
-//= require spin.min
 //= require sortable
 //
 //= require ./applications/todoList

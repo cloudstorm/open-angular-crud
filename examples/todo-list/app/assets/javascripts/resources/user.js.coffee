@@ -20,7 +20,6 @@ angular.module('todoList.resources.user', ['cloudstorm.rest-api'])
 
       fields: [
         { attribute: 'email', label: 'email', type: 'string', cardinality: 'one', required: false, read_only: false }
-
       ]
 
     }

@@ -22,5 +22,5 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 # set work dir to run rake commands
 WORKDIR /home/app
 
-RUN bundle exec rake bower:install
+RUN bundle exec rake rails_bower:install
 RUN bundle exec rake assets:precompile
