@@ -218,8 +218,7 @@ If the resource's descriptor contains a `hint` attribute, it's value will be sho
 Option               | Type     | Description
 -------------------- | -------- | -----------
 `resource-type`      | string   | The type of the items to be listed. Should match the type of its csResource descriptor
-`attributes-to-hide` | object   | You can set attribute visibility at component level similarly to [CS Resource](#cs-resource) level.
-`hide_actions`       | boolean  | Whether to show the actions at the end of each row (`default: false`)
+`hide-actions`       | boolean  | Whether to show the actions at the end of each row (`default: false`)
 
 Example usage:
 
@@ -230,7 +229,7 @@ Example usage:
 ##### example.js
 ```javascript
   $scope.resourceType = "procedures";
-  $scope.options = { 'hide-attributes' : {index: 'eluent_stabilization_id'} };
+  $scope.options = { 'hide-actions' : true };
 
 ```
 
