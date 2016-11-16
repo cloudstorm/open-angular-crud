@@ -7,7 +7,14 @@ angular.module('cloudStorm')
   
 ####################################################################################################
 
-  translations = []
+  defaultTranslations = {
+    'false': 'Yes'
+    'true': 'No'
+    'buttons.cancel': 'Cancel'
+    'buttons.close': 'Close'
+  }
+  
+  translations = defaultTranslations
 
   ##################################################################################################
 

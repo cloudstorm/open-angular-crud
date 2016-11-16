@@ -10,9 +10,13 @@ catch err
 
 ###############################################################################
 
-app.provider 'csSettings', [() ->
+app.provider 'csSettings', ['csLocalizationProvider', (csLocalizationProvider) ->
   
-  @settings = {}
+  defaultSettings = {
+    'i18n-engine': csLocalizationProvider.$get()
+  }
+  
+  @settings = defaultSettings
 
   @set = (option, value) ->
     @settings[option] = value
