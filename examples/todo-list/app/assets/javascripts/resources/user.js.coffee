@@ -16,11 +16,16 @@ angular.module('todoList.resources.user', ['cloudstorm.rest-api'])
     @descriptor = {
       type: 'users'
       name: 'User'
-      hint: 'BLANK'
+      hint: 'list'
 
       fields: [
         { attribute: 'email', label: 'email', type: 'string', cardinality: 'one', required: false, read_only: false }
       ]
+
+      display: {
+        name:   'email'
+        search: 'email_x_cont'
+      }
 
     }
 

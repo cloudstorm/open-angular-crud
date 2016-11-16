@@ -17,7 +17,6 @@
 //= require url-template/lib/url-template
 //= require angular
 //= require angular-rails-templates
-//= require angular-custom
 //= require angular-route
 //= require angular-resource
 //= require angular-animate
@@ -29,10 +28,5 @@
 //= require ng-dialog
 //
 //= require bootstrap
-//
-//= require jquery.ui.touch-punch.min
-//
-//= require inflection
-//= require sortable
 //
 //= require ./applications/todoList

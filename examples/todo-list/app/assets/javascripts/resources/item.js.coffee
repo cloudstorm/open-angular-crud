@@ -16,7 +16,7 @@ angular.module('todoList.resources.item', ['cloudstorm.rest-api'])
     @descriptor = {
       type: 'items'
       name: 'Item'
-      hint: 'BLANK'
+      hint: 'list'
 
       fields: [
         { attribute: 'title', label: 'title', type: 'string', cardinality: 'one', required: true, read_only: false }
@@ -24,8 +24,19 @@ angular.module('todoList.resources.item', ['cloudstorm.rest-api'])
         { attribute: 'due_date', label: 'due_date', type: 'date', cardinality: 'one', required: true, read_only: false }
         { attribute: 'done', label: 'done', type: 'boolean', cardinality: 'one', required: false, read_only: false, default: false }
         { attribute: 'categories', label: 'categories', type: 'resource', resource: 'categories',  cardinality: 'many', relationship: 'categories', read_only: false }
-
+        { attribute: 'user_id', label: 'User', type: 'resource', resource: 'users', cardinality: 'one', relationship: 'user', read_only: true }
       ]
+
+      attributes_to_hide: {
+        index:  ['user_id']
+        create: ['user_id']
+        edit:   ['user_id']
+      }
+
+      display: {
+        name:   'title'
+        search: 'title_x_cont'
+      }
 
     }
 

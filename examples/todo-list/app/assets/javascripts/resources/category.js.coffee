@@ -16,11 +16,10 @@ angular.module('todoList.resources.categories', ['cloudstorm.rest-api'])
     @descriptor = {
       type: 'categories'
       name: 'Category'
-      hint: 'BLANK'
+      hint: 'list'
 
       fields: [
-        { attribute: 'name', label: 'name', type: 'string', cardinality: 'one', required: false, read_only: false }
-
+        { attribute: 'name', label: 'name', type: 'string', cardinality: 'one', required: true, read_only: false }
       ]
 
       display: {

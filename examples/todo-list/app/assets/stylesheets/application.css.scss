@@ -17,19 +17,13 @@
 
 //////// BOOTSTRAP OVERRIDES ////////
 
-$brand-danger: tomato;
-$brand-success: #70C170;
-
 @import "bootstrap-sprockets";
-@import "bootstrap-variable-overrides";
 @import "bootstrap";
-@import "bootstrap-overrides";
 @import "glyphicon-fixes";
 
 //////// TODO LIST ////////
 
 @import "todo-list/_variables";
-@import "todo-list/_mixins";
 @import "todo-list/navbar";
 @import "todo-list/footer";
 
@@ -53,18 +47,6 @@ $uib-modal-margin: 30px;
 
 ////////    COMMON    ////////////
 
-.application-disabled {
-  opacity:    0.5;
-  width:      100%;
-  height:     100%;
-  z-index:    10;
-  top:        0;
-  left:       0;
-  position:   fixed;
-  pointer-events: none;
-  background: linen;
-}
-
 html{
   height: 100%;
 }
@@ -76,51 +58,10 @@ body {
 
 #todo-list {
   position: relative;
-  @include max-height;
+  height: -webkit-calc(100% - 102px);
+  height: -moz-calc(100% - 102px);
+  height: calc(100% - 102px);
   top: $navbar-height;
-}
-
-.red {
-  background-color: tomato!important;
-  border-color: tomato!important;
-}
-
-.pale {
-  background-color: lightgray!important;
-  border-color:  lightgray!important;
-}
-
-.green {
-  background-color: lightgreen!important;
-  border-color:  lightgreen!important;
-}
-
-.black {
-  background-color: black!important;
-  border-color: black!important;
-}
-
-.center {
-  text-align: center;
-}
-
-.red-text {
-  color: red!important;
-  font-weight: bold!important;
-}
-
-.clearer {
-  clear: both;
-  line-height: 0;
-  height: 0;
-}
-
-.hidden {
-  display: none;
-}
-
-.disabled {
-  pointer-events: none;
 }
 
 /////////   MISC   ////////////
@@ -136,50 +77,3 @@ body {
     list-style-type: none;
   }
 }
-
-/////////   Dialog   ////////////
-
-.ngdialog.ngdialog-theme-custom {
-  padding-top: 250px;
-  padding-bottom: 250px;
-}
-
-.ngdialog.ngdialog-theme-custom .ngdialog-overlay {
-  background: rgba(255,255,255,.7);
-}
-
-.ngdialog.ngdialog-theme-custom .ngdialog-content {
-  background: rgba(255,255,255,.9);
-  padding: 1em 2em 1em;
-  width: 500px;
-  -webkit-border-radius: 0;
-  border-radius: 0;
-  border-width: 1px;
-  border-color: blanchedalmond;
-  border-style: groove;
-  width: 500px;
-}
-
-.ngdialog.ngdialog-theme-custom .ngdialog-message h2 {
-  font-size: 26px;
-  font-family: 'Montserrat', 'Helvetica', Arial, sans-serif;
-  line-height: 30px;
-  margin-bottom: 20px;
-}
-
-.ngdialog.ngdialog-theme-custom .ngdialog-message {
-  font-size: 16px;
-  font-family: 'Source Sans Pro';
-  line-height: 22px;
-}
-
-.ngdialog.ngdialog-theme-custom .ngdialog-message ul {
-  padding: 0 0 5px 35px;
-}
-
-.ngdialog.ngdialog-theme-custom .ngdialog-button.ngdialog-button-primary {
-  background: #27ae60;
-  -webkit-border-radius: 0;
-  border-radius: 0;
-}
-

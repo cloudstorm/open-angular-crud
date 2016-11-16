@@ -20,15 +20,15 @@ module TodoList
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
+    # Add cloudstorm templates to path:
     config.angular_templates.inside_paths = ['app/assets', 'vendor/assets/bower_components/cloudstorm/src']
 
-    config.autoload_paths << Rails.root.join('lib/model')
-
     config.assets.initialize_on_precompile = false
-
     config.assets.paths << "#{Rails}/vendor/assets/fonts"
 
     I18n.config.enforce_available_locales = true
+
+    # Precompile *.haml files
     Rails.application.assets.register_engine '.haml', Tilt::HamlTemplate
 
     # Do not swallow errors in after_commit/after_rollback callbacks.

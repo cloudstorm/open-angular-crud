@@ -1,3 +1,6 @@
+# CLOUDSTORM
+#= require cloudstorm
+
 #SERVICES
 #= require_tree ../services
 
@@ -13,9 +16,6 @@
 # TEMPLATES
 #= require_tree ../templates
 
-# CLOUDSTORM
-#= require cloudstorm
-
 todoList = angular.module("todoList", [
   "templates"
   "ngRoute"
@@ -23,7 +23,6 @@ todoList = angular.module("todoList", [
   "ngAnimate"
   "ngSanitize"
   "ui.bootstrap"
-  "ui.sortable"
   "ui.select"
   "ngDialog"
   "cloudStorm"
