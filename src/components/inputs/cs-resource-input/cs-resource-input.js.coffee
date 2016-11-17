@@ -13,7 +13,7 @@ catch err
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csResourceInput", ['$rootScope', 'ResourceService', 'CSTemplateService', 'CSInputBase', ($rootScope, ResourceService, CSTemplateService, CSInputBase) ->
+app.directive "csResourceInput", ['$rootScope', 'ResourceService', 'CSTemplateService', 'CSInputBase', 'csSettings', ($rootScope, ResourceService, CSTemplateService, CSInputBase, csSettings) ->
 
   # ===== COMPILE =============================================================
 
@@ -33,6 +33,8 @@ app.directive "csResourceInput", ['$rootScope', 'ResourceService', 'CSTemplateSe
   # ===== LINK ================================================================
 
   link = ($scope, element, attrs, controller) ->        
+    $scope.i18n = csSettings.settings['i18n-engine']
+    
     CSInputBase $scope
     $scope.CSTemplateService = CSTemplateService
     $scope.defaultTemplate = 'cloudstorm/src/components/inputs/cs-resource-input/cs-resource-input-template.html'

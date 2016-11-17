@@ -12,7 +12,7 @@ catch err
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csIndexSidepanel", ['$rootScope', 'CSAlertService', ($rootScope, CSAlertService) ->
+app.directive "csIndexSidepanel", ['$rootScope', 'CSAlertService', 'csSettings', ($rootScope, CSAlertService, csSettings) ->
 
   # ===== COMPILE =============================================================
 
@@ -31,25 +31,22 @@ app.directive "csIndexSidepanel", ['$rootScope', 'CSAlertService', ($rootScope, 
   # ===== LINK ==================================================================
 
     link = ( $scope, element, attrs ) ->
+  
+      $scope.i18n = csSettings.settings['i18n-engine']
 
       $scope.editWizardOptions = 
         "resource-type" : $scope.resourceType
         "form-item" : $scope.item
         "form-mode" : "edit"
         "keep-first": true
-        'texts':
-          'validation-text': "A csillaggal jelöltek kitöltése kötelező!"
-          'buttons':
-            'submit': "Mehet"
-            'cancel': "Mégse"
         "events":
           'wizard-canceled': (resource) -> 
             $scope.unselectItem()
-            CSAlertService.addAlert "Nem változott semmi", 'info'
+            CSAlertService.addAlert($scope.i18n?.t('alert.nothing_changed') || 'translation missing', 'info')
           'wizard-submited': (resource) -> 
-            CSAlertService.addAlert "Változtatások elmentve!", 'success'
+            CSAlertService.addAlert($scope.i18n?.t('alert.changes_saved') || 'translation missing', 'success')
           'wizard-error': (resource) ->
-            CSAlertService.addAlert 'Hiba történt.', 'danger'
+            CSAlertService.addAlert($scope.i18n?.t('alert.error_happened')  || 'translation missing', 'danger')
 
       angular.merge $scope.editWizardOptions, _.omit($scope.csIndexSidepanelOptions, "selectedItem")
 

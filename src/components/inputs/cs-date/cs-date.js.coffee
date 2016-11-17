@@ -42,6 +42,8 @@ app.directive "csDate", ['uibDateParser', 'csSettings', 'CSInputBase', (uibDateP
       $scope.formItem.attributes[$scope.field.attribute] = date
 
   link = ($scope, element, attrs, controller) ->
+    $scope.i18n = csSettings.settings['i18n-engine']
+
     CSInputBase $scope
     format_date($scope)
 

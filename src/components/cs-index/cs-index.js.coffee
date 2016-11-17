@@ -34,6 +34,8 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
 
       # ===== INIT ============================================
 
+      $scope.i18n = csSettings.settings['i18n-engine']
+      
       # Store the received data to be used in the template
       $scope.collection = []
       resource = ResourceService.get($scope.resourceType)
@@ -106,10 +108,7 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
           return enum_value.name if enum_value
           return item.attributes[field.attribute]
         else if field.type == 'boolean'
-          if i18n = csSettings.settings['i18n-engine']
-            i18n.t item.attributes[field.attribute]
-          else
-            return item.attributes[field.attribute]
+            return $scope.i18n?.t(item.attributes[field.attribute]) || item.attributes[field.attribute]
         else
           item.attributes[field.attribute]
 
@@ -188,19 +187,17 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
           "resource-type": $scope.resourceType
           "form-item": {}
           "form-mode": "create"
-          'texts':
-            'validation-text': "A csillaggal jelöltek kitöltése kötelező!"
-            'buttons':
-              'submit': "Mehet"
-              'cancel': "Mégse"
+          "reset-on-submit": true
           "events": {
             'wizard-canceled': (resource) ->
               modalInstance.close()
-              CSAlertService.addAlert "Nem jött létre új törzsadat", 'info'
+              CSAlertService.addAlert($scope.i18n?.t('alert.no_resource_created') || 'translation missing', 'info')
+
             'wizard-submited': (resource) ->
-              $scope.collection.push resource
-              modalInstance.close()
-              CSAlertService.addAlert "Új törzsadat sikeresen létrehozva!", 'success'
+              pushNewItem($scope.collection, resource)
+              modalInstance.close() unless $scope.wizardOptions['keep-first']
+              CSAlertService.addAlert($scope.i18n?.t('alert.new_resource_created') || 'translation missing', 'success')
+
           }
 
         angular.merge($scope.wizardOptions, $scope.csIndexOptions)
@@ -218,6 +215,11 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
           $scope.selected = selectedItem
         ), ->
           console.info 'Modal dismissed at: ' + new Date
+
+      pushNewItem = (collection, item) ->
+        newItem = item.constructor.$new()
+        newItem.$clone(item)
+        collection.push newItem
 
 
   # ===== CONFIGURE ===========================================================

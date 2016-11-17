@@ -15,7 +15,7 @@
   %span.input-group-btn{"ng-if" => "canCreateResources() || createDisabled()"}
     %button.btn.btn-default{ "ng-disabled" => "fieldDisabled()",
                              "ng-click" => "pushPanel()",
-                             "type" => "button" } Új 
+                             "type" => "button" } {{ i18n.t('buttons.new') }}
 
 .input-group.cs-resource-input-group{ 'ng-if' => "field.cardinality == 'many'" }
   %ui-select{ "ui-select-override" => "",
@@ -37,6 +37,6 @@
   %span.input-group-btn{"ng-if" => "createResources() && !createDisabled()"}
     %button.btn.btn-default{ "ng-disabled" => "fieldDisabled()",
                              "ng-click" => "pushPanel()",
-                             "type" => "button" } Új 
+                             "type" => "button" } {{ i18n.t('buttons.new') }} 
 
 .cover

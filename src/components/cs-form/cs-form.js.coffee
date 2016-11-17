@@ -12,8 +12,7 @@ catch err
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csForm", [ () ->
-
+app.directive "csForm", ['csSettings', (csSettings) ->
 
   # ===== COMPILE =============================================================
 
@@ -33,6 +32,8 @@ app.directive "csForm", [ () ->
 
   link = ($scope, element, attrs, controller) ->
 
+    $scope.i18n = csSettings.settings['i18n-engine']
+    
     $scope.fields = $scope.formResourceDescriptor.fields
 
     if $scope.formMode == 'create'
@@ -85,12 +86,6 @@ app.directive "csForm", [ () ->
         $scope.csFormOptions.events['field-value-changed'](field, $scope)
 
     # ===== GETTERS =======================================
-
-    $scope.validationText = () ->
-      if $scope.csFormOptions['texts'] && (val = $scope.csFormOptions['texts']['validation-text'])
-        val
-      else
-        'Some required fields (marked *) are not yet set'
 
     $scope.isFieldVisible = (field_attribute) ->
       true unless attributeToHide(field_attribute)

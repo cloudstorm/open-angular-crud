@@ -5,11 +5,10 @@
 
 .form-header{ "ng-switch" => "csFormOptions['form-mode']" }
   %h3{ "ng-switch-when" => "create" }
-    Új {{formResource.descriptor.name}} felvétele
+    {{i18n.t('new')}} {{formResource.descriptor.name}}
   %span{ "ng-switch-when" => "edit" }
     %h4.divided
       {{editableItem.$display_name()}}
-      %small szerkesztése
 
 %form{ "name" => "csForm",
        "novalidate" => "",
@@ -24,16 +23,30 @@
 
 .form-group.form-actions{ "ng-transclude" => "actions" }
   .actions-inner
-    .btn-tooltip-wrapper{ "uib-tooltip" => "{{validationText()}}",
+    .btn-tooltip-wrapper{ "uib-tooltip" => "{{i18n.t('validation_text')}}",
                           "tooltip-placement" => "right",
                           "tooltip-trigger" => "mouseenter",
                           "tooltip-enable"=> "csForm.$invalid" }
 
       %button.btn.btn-success{ "ng-class" => "{'disabled': csForm.$invalid}",
                                "ng-click" => "submit()",
-      						             "type" => "button" }
-        {{ csFormOptions['texts']['buttons']['submit'] || 'Submit' }}
+                               "type" => "button" }
+        {{ i18n.t('buttons.submit') }}
+    
     %button.btn.btn-link{ "ng-click" => "cancel()",
-    						          "type" => "button" }
-      {{ csFormOptions['texts']['buttons']['cancel'] || 'Cancel' }}
+                          "type" => "button",
+                          "ng-switch" => "csFormOptions['form-mode']" }
+
+      %span{ "ng-switch-when" => "create" }
+        {{ i18n.t('buttons.close') }}
+
+      %span{ "ng-switch-default" => "" }
+        {{ i18n.t('buttons.cancel') }}
+
     %span.help-block{ "ng-if" => "field.errors.length > 0" }
+
+    .checkbox.create-another{ "ng-if" => "formMode == 'create' && wizardPanelIndex == 0" }
+      %label
+        %input{ "ng-model" => "csFormOptions['keep-first']",
+                type: "checkbox" }
+          {{ i18n.t('create_another') }}

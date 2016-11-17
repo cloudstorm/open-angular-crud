@@ -1,6 +1,6 @@
 .cs-form {
   // TODO: IE compatibility issue 
-  // https://github.com/cloud-storm/CloudStormJS/issues/42
+  // https://github.com/cloudstorm/cloudstorm/issues/42
   width: 60%;
   height: 100%;
   display: flex;
@@ -59,6 +59,11 @@
       .btn-tooltip-wrapper {
         display: inline-block;
       }
+
+      .create-another{
+        display: inline-block;
+      }
+
     }
   }
 
