@@ -29,6 +29,7 @@
   },
   "license": "MIT",
   "ignore": [
-    "**/.*"
+    "**/.*",
+    "examples"
   ]
 }

@@ -1,0 +1,32 @@
+.navbar {
+  padding-right: $ms-padding-horizontal;
+
+  .brand-wrapper {
+    border-right: 1px solid transparent;
+  }
+
+  .navbar-brand {
+    cursor: pointer;
+    .triangle {
+      font-size: 9px;
+      top: -2px;
+    }
+  }
+
+  .main-functions {
+    li {
+      width: 100px;
+      text-align: center;
+
+      &.active {
+        font-weight: bold;
+        background-color: initial;
+      }
+    }
+  }
+
+  .user-name {
+    margin-right: 5px;
+    cursor: default;
+  }
+}

@@ -1,0 +1,34 @@
+%nav.navbar.navbar-default.navbar-fixed-top{role: "navigation", "ng-controller" => "navbarController"}
+
+  %ul.nav.navbar-nav.brand-wrapper{ "uib-dropdown" => "" }
+    %a.navbar-brand
+      ToDo List Sample App
+
+  %ul.nav.navbar-nav.main-functions
+    %li{ "ng-class" => "{'active': isActive('/items')}" }
+      %a{href: "#/items"} Items
+    %li{ "ng-class" => "{'active': isActive('/categories')}" }
+      %a{href: "#/categories"} Categories
+
+  %ul.nav.navbar-nav.navbar-right
+    %li.dropdown{ "uib-dropdown": "" }
+      %a.dropdown-toggle{"data-toggle" => "dropdown", href: "#", "uib-dropdown-toggle" => true}
+        Administration
+        %b.caret
+      %ul.dropdown-menu{"uib-dropdown-menu" => true}
+        %li{ "ng-class" => "{'active': isActive('/users')}" }
+          %a{href:  "#/users"}
+            Users
+
+    %li.navbar-text.user-name
+      {{User.email}} &nbsp;
+
+    %li
+      - if user_signed_in?
+        = link_to destroy_user_session_path, :method => :delete, :class => "logout", :title => "Log out" do
+          %i.glyphicon.glyphicon-off
+
+      - else
+        = link_to new_user_session_path do
+          Log in
+          %i.glyphicon.glyphicon-user

@@ -1,12 +1,12 @@
 # [CloudStorm](http://cloudstorm.io)
 <a href="http://cloudstorm.io"><img src="./docs/images/logo.png" height="140" align="right"></a>
-Welcome to CloudStorm - the open-source enterprise software framework for web developers.  
+Welcome to CloudStorm - the open-source enterprise software framework for web developers.
 
 :octocat: We are currently looking for contributors and beta testers :octocat:
 
 ## What is CloudStorm?
-CloudStorm creates all administration and data manipulation screens and forms for any resource in a database.  
-The following are automatically generated for You:  
+CloudStorm creates all administration and data manipulation screens and forms for any resource in a database.
+The following are automatically generated for You:
 * Index pages with in-place editing
 * Resource creation forms
 * Resource edit forms
@@ -15,17 +15,16 @@ The following are automatically generated for You:
 For documentation geared towards our automation and integration business, we recommend starting with the [CloudStorm website](http://cloudstorm.io).
 
 ### Philosophy
-While CloudStorm is an opinionated framework, we always strive for easy and straightforward customization.  
-If you find otherwise, please file an [Issue](../../issues) without hesitation.  
+While CloudStorm is an opinionated framework, we always strive for easy and straightforward customization.
+If you find otherwise, please file an [Issue](../../issues) without hesitation.
 We're promoting the _Devagement_ principle: empowering _developers_ to be their own project _managers_ in corporate relationships.
 
 ## Resources
-This is the main source of documentation for **developers** working with (or contributing to) the CloudStorm project.   
+This is the main source of documentation for **developers** working with (or contributing to) the CloudStorm project.
 * [Basic How-To](docs/basics.md)
-* [Reference](docs/README.md)  
+* [Reference](docs/README.md)
 * [Releases](../../releases)
-* Examples
-* Tutorial
+* [Example Rails App](examples/todo-list)
 
 ## Getting started
 #### Installation
@@ -36,18 +35,10 @@ This is the main source of documentation for **developers** working with (or con
 1. Enjoy! or read [the Basics](docs/basics.md)
 
 #### Dependencies
-* As of v0.0.1 CloudStorm depends on the Rails Asset Pipeline  
+* As of v0.0.1 CloudStorm depends on the Rails Asset Pipeline
   _We're removing this dependency in v0.1, making CloudStorm backend-independent_
-* A JSON API serializer for the backend.  
+* A JSON API serializer for the backend.
   _There are dozens of libraries to choose from, see the [Basic How-to](docs/basics.md) for more info._
-
-## Run Demo
-To run a demo app, do the following:  
-```
-$ git clone git@github.com:cloudstorm/cloudstorm.git
-$ cd cloudstorm
-$ ___________
-```
 
 ## Bugs and Feedback
 For bugs, questions and discussions please use [Github Issues](../../issues).

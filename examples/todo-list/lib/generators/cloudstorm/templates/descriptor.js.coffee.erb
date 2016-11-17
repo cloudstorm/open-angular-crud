@@ -1,0 +1,41 @@
+angular.module('<%= javascript_module_name %>', ['cloudstorm.rest-api'])
+
+####################################################################################################
+.factory '<%= javascript_resoruce_modul_name %>Resource', ['ResourceService', 'csRestApi', 'csResource', (ResourceService, csRestApi, csResource) ->
+####################################################################################################
+
+  class <%= class_name %>Resource extends csResource
+
+  ##################################################################################################
+
+    @endpoint = 'api/v1/<%= plural_name %>'
+    @member_endpoint = 'api/v1/<%= plural_name %>/{id}'
+
+  ##################################################################################################
+
+    @descriptor = {
+      type: '<%= javascript_resource_name %>'
+      name: '<%= class_name.humanize %>'
+      hint: 'BLANK'
+
+      fields: [
+        <%- attributes.each do |attribute| %>        { attribute: '<%= attribute.name %>', label: '<%= attribute.name %>', type: '<%= attribute.type %>', cardinality: 'one', required: false, read_only: false }
+        <%- end %>
+      ]
+      <%- if has_name_attribute? %>
+      display: {
+        name:   'name'
+        search: 'name_x_cont'
+      }
+      <%- end %>
+    }
+
+  ##################################################################################################
+
+  ResourceService.register(<%= class_name %>Resource.descriptor.type, <%= class_name %>Resource)
+
+  ##################################################################################################
+
+  return <%= class_name %>Resource
+
+]
