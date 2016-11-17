@@ -16,6 +16,9 @@ angular.module('cloudStorm')
     'buttons.cancel': 'Cancel'
     'buttons.close': 'Close'
     'buttons.submit': 'Submit'
+    'alert.nothing_changed': 'Nothing changed'
+    'alert.changes_saved': 'Changes saved'
+    'alert.error_happened': 'An error happened'
   }
   
   translations = defaultTranslations
