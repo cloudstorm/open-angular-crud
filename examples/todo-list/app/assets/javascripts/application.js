@@ -20,7 +20,6 @@
 //= require angular-route
 //= require angular-resource
 //= require angular-animate
-//= require angular-i18n/angular-locale_hu-hu
 //= require angular-sanitize
 //= require underscore
 //= require angular-ui-bootstrap-bower

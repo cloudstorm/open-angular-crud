@@ -25,7 +25,6 @@
 
 @import "todo-list/_variables";
 @import "todo-list/navbar";
-@import "todo-list/footer";
 
 //////// CLOUDSTORM ////////
 
@@ -61,7 +60,6 @@ body {
   height: -webkit-calc(100% - 102px);
   height: -moz-calc(100% - 102px);
   height: calc(100% - 102px);
-  top: $navbar-height;
 }
 
 /////////   MISC   ////////////

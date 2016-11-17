@@ -27,7 +27,6 @@ todoList = angular.module("todoList", [
   "ngDialog"
   "cloudStorm"
   "todoList.resources"
-  "todoList.localization"
 ])
 .config(["$routeProvider", ($routeProvider) ->
   $routeProvider.when("/items",
@@ -64,17 +63,13 @@ angular.module('todoList.services').config(['$httpProvider', ($httpProvider) ->
 # ----- CS CONFIG -------------------------------------------------------------
 
 todoList.config([
-  'csSettingsProvider', 'localizationProvider'
-  (csSettingsProvider, LocalizationProvider) ->
+  'csSettingsProvider', 'csLocalizationProvider'
+  (csSettingsProvider, csLocalizationProvider) ->
     csSettingsProvider.set('date-format', 'yyyy-MM-dd')
     csSettingsProvider.set('time-zone-offset', '-1200')
-    csSettingsProvider.set('i18n-engine', LocalizationProvider.$get())
-])
-
-.config(['localizationProvider', (LocalizationProvider) ->
-  localization = LocalizationProvider.$get()
-  localization.add('false', '\u2718')
-  localization.add('true',  '\u2713')
+    localization = csLocalizationProvider.$get()
+    localization.add('false', '\u2718')
+    localization.add('true',  '\u2713')
 ])
 
 # ----- DEBUG INFO ------------------------------------------------------------
