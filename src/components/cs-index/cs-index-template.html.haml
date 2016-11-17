@@ -48,7 +48,7 @@
                   {{ fieldValue(item, column) }}
                 %td.actions{ "ng-hide" => "csIndexOptions['hide-actions']" }
                   / DELETE
-                  .action.delete-action{ "ng-click" => "destroyItem($event, item)" }<> {{ i18n.t('delete') }}
+                  .action.delete-action{ "ng-click" => "destroyItem($event, item)" }<> {{ i18n.t('buttons.delete') }}
 
       %cs-index-sidepanel{ "ng-if" => "sidePanelIsVisible()",
                            "cs-index-sidepanel-options": "csIndexOptions",
