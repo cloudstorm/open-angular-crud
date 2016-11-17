@@ -10,7 +10,7 @@
               .input-group-addon
                 %span.glyphicon.glyphicon-search
               %input.form-control.cs-index-filter{ "ng-model" => "csIndexOptions.filterValue",
-                                                   :placeholder => "Szűrj bármire",
+                                                   :placeholder => "{{ i18n.t('filter_for_anything') }}",
                                                    :type => "text" }
           
           %button.btn.btn-default{ :type => "button", "ng-click" => "refreshIndex()" }
@@ -19,7 +19,7 @@
           %button.btn.btn-primary.create-button{ :type => "button", 
                                                  "ng-click" => "openNewResourcePanel()",
                                                  "ng-disabled" => "createDisabled()" }
-            Új
+            {{ i18n.t('new') }}
 
     .row
       .index-table{ "ng-class" => "{ 'col-lg-8' : sidePanelIsVisible() && !viewIsCompressed(),
@@ -48,7 +48,7 @@
                   {{ fieldValue(item, column) }}
                 %td.actions{ "ng-hide" => "csIndexOptions['hide-actions']" }
                   / DELETE
-                  .action.delete-action{ "ng-click" => "destroyItem($event, item)" }<> Töröl
+                  .action.delete-action{ "ng-click" => "destroyItem($event, item)" }<> {{ i18n.t('delete') }}
 
       %cs-index-sidepanel{ "ng-if" => "sidePanelIsVisible()",
                            "cs-index-sidepanel-options": "csIndexOptions",

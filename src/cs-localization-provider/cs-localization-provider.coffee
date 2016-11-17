@@ -11,6 +11,7 @@ angular.module('cloudStorm')
     'false': 'Yes'
     'true': 'No'
     'new': 'New'
+    'delete': 'Delete'
     'create_another': 'Create another'
     'validation_text': 'Some required fields (marked *) are not yet set'
     'buttons.cancel': 'Cancel'
@@ -19,6 +20,7 @@ angular.module('cloudStorm')
     'alert.nothing_changed': 'Nothing changed'
     'alert.changes_saved': 'Changes saved'
     'alert.error_happened': 'An error happened'
+    'filter_for_anything': 'Filter for anything'
   }
   
   translations = defaultTranslations

@@ -34,6 +34,8 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
 
       # ===== INIT ============================================
 
+      $scope.i18n = csSettings.settings['i18n-engine']
+      
       # Store the received data to be used in the template
       $scope.collection = []
       resource = ResourceService.get($scope.resourceType)
@@ -106,10 +108,7 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
           return enum_value.name if enum_value
           return item.attributes[field.attribute]
         else if field.type == 'boolean'
-          if i18n = csSettings.settings['i18n-engine']
-            i18n.t item.attributes[field.attribute]
-          else
-            return item.attributes[field.attribute]
+            return $scope.i18n?.t(item.attributes[field.attribute]) || item.attributes[field.attribute]
         else
           item.attributes[field.attribute]
 
