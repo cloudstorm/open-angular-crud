@@ -1,10 +1,10 @@
 angular.module('<%= javascript_module_name %>', ['cloudstorm.rest-api'])
 
 ####################################################################################################
-.factory '<%= javascript_resoruce_modul_name %>Resource', ['ResourceService', 'csRestApi', 'csResource', (ResourceService, csRestApi, csResource) ->
+.factory '<%= javascript_resource_modul_name %>Resource', ['ResourceService', 'csRestApi', 'csResource', (ResourceService, csRestApi, csResource) ->
 ####################################################################################################
 
-  class <%= class_name %>Resource extends csResource
+  class <%= class_name %> extends csResource
 
   ##################################################################################################
 
@@ -19,6 +19,7 @@ angular.module('<%= javascript_module_name %>', ['cloudstorm.rest-api'])
       hint: 'BLANK'
 
       fields: [
+        # TODO: handle 'references' attribute type
         <%- attributes.each do |attribute| %>        { attribute: '<%= attribute.name %>', label: '<%= attribute.name %>', type: '<%= attribute.type %>', cardinality: 'one', required: false, read_only: false }
         <%- end %>
       ]
@@ -32,10 +33,10 @@ angular.module('<%= javascript_module_name %>', ['cloudstorm.rest-api'])
 
   ##################################################################################################
 
-  ResourceService.register(<%= class_name %>Resource.descriptor.type, <%= class_name %>Resource)
+  ResourceService.register(<%= class_name %>.descriptor.type, <%= class_name %>)
 
   ##################################################################################################
 
-  return <%= class_name %>Resource
+  return <%= class_name %>
 
 ]

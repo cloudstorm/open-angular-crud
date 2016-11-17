@@ -1,0 +1,100 @@
+# CLOUDSTORM
+#= require cloudstorm
+
+#SERVICES
+#= require_tree ../services
+
+#CONTROLLERS
+#= require_tree ../controllers
+
+# DIRECTIVES
+#= require_tree ../directives
+
+# RESOURCES
+#= require_tree ../resources
+
+# TEMPLATES
+#= require_tree ../templates
+
+<%= application_name %> = angular.module("<%= application_name %>", [
+  "templates"
+  "ngRoute"
+  "ngResource"
+  "ngAnimate"
+  "ngSanitize"
+  "ui.bootstrap"
+  "ui.select"
+  "ngDialog"
+  "cloudStorm"
+  "<%= application_name %>.resources"
+])
+.config(["$routeProvider", ($routeProvider) ->
+  $routeProvider
+
+  # ----- /CloudStorm ---------------------------
+
+  ).otherwise redirectTo: "/"
+
+])
+
+# ----- MAIN CONTROLLER -------------------------------------------------------
+
+<%= application_name %>.controller "MainCtrl", [ "$scope"
+  ($scope) ->
+    console.log('CloudStorm ahead.')
+]
+
+
+# ----- WAT? ------------------------------------------------------------------
+
+angular.module('<%= application_name %>.services').config(['$httpProvider', ($httpProvider) ->
+  $httpProvider.defaults.headers.common['Accept'] = 'application/json, text/plain'])
+
+
+# ----- CS CONFIG -------------------------------------------------------------
+
+<%= application_name %>.config([
+  'csSettingsProvider', 'csLocalizationProvider'
+  (csSettingsProvider, csLocalizationProvider) ->
+    csSettingsProvider.set('date-format', 'yyyy-MM-dd')
+    csSettingsProvider.set('time-zone-offset', '-1200')
+])
+
+# ----- DEBUG INFO ------------------------------------------------------------
+
+<%= application_name %>.run ['$rootScope', ($rootScope) ->
+
+  $rootScope.$on 'field-value-changed', () ->
+    console.info 'field-value-changed event fired'
+
+  $rootScope.$on 'submit-form-on-enter', () ->
+    console.info 'submit-form-on-enter event fired'
+
+  $rootScope.$on 'input-value-changed', () ->
+    console.info 'input-value-changed event fired'
+
+  $rootScope.$on 'form-cancel', () ->
+    console.info 'form-cancel event fired'
+
+  $rootScope.$on 'form-init', () ->
+    console.info 'form-init event fired'
+
+  $rootScope.$on 'form-submit', () ->
+    console.info 'form-submit event fired'
+
+  $rootScope.$on 'form-error', () ->
+    console.info 'form-error event fired'
+
+  $rootScope.$on 'wizard-canceled', () ->
+    console.info 'wizard-canceled event fired'
+
+  $rootScope.$on 'wizard-submited', () ->
+    console.info 'wizard-submited event fired'
+
+  $rootScope.$on 'wizard-finished', () ->
+    console.info 'wizard-finished event fired'
+
+  $rootScope.$on 'wizard-error', () ->
+    console.info 'wizard-error event fired'
+
+]
