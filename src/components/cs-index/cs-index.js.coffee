@@ -191,11 +191,13 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
           "events": {
             'wizard-canceled': (resource) ->
               modalInstance.close()
-              CSAlertService.addAlert "Nem jött létre új törzsadat", 'info'
+              CSAlertService.addAlert($scope.i18n?.t('alert.no_resource_created') || 'translation missing', 'info')
+
             'wizard-submited': (resource) ->
               pushNewItem($scope.collection, resource)
               modalInstance.close() unless $scope.wizardOptions['keep-first']
-              CSAlertService.addAlert "Új törzsadat sikeresen létrehozva!", 'success'
+              CSAlertService.addAlert($scope.i18n?.t('alert.new_resource_created') || 'translation missing', 'success')
+
           }
 
         angular.merge($scope.wizardOptions, $scope.csIndexOptions)
