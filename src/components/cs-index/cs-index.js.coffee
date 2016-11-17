@@ -189,11 +189,6 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
           "form-item": {}
           "form-mode": "create"
           "reset-on-submit": true
-          'texts':
-            'validation-text': "A csillaggal jelöltek kitöltése kötelező!"
-            'buttons':
-              'submit': "Mehet"
-              'cancel': "Mégse"
           "events": {
             'wizard-canceled': (resource) ->
               modalInstance.close()

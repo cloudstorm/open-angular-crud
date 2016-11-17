@@ -10,8 +10,12 @@ angular.module('cloudStorm')
   defaultTranslations = {
     'false': 'Yes'
     'true': 'No'
+    'new': 'New'
+    'create_another': 'Create another'
+    'validation_text': 'Some required fields (marked *) are not yet set'
     'buttons.cancel': 'Cancel'
     'buttons.close': 'Close'
+    'buttons.submit': 'Submit'
   }
   
   translations = defaultTranslations

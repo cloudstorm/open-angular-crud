@@ -37,11 +37,6 @@ app.directive "csIndexSidepanel", ['$rootScope', 'CSAlertService', ($rootScope, 
         "form-item" : $scope.item
         "form-mode" : "edit"
         "keep-first": true
-        'texts':
-          'validation-text': "A csillaggal jelöltek kitöltése kötelező!"
-          'buttons':
-            'submit': "Mehet"
-            'cancel': "Mégse"
         "events":
           'wizard-canceled': (resource) -> 
             $scope.unselectItem()
