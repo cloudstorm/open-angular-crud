@@ -109,7 +109,7 @@ module Cloudstorm
     #############################################################################
 
     def add_to_js_routes
-      insert_into_file "app/assets/javascripts/applications/#{application_name}.js.coffee.erb", :before => "\n  # ----- /CloudStorm ---------------------------\n" do
+      insert_into_file "app/assets/javascripts/applications/#{application_name}.js.coffee", :before => "\n  # ----- /CloudStorm ---------------------------\n" do
         <<-HEREDOC.gsub /^ +/, ""
           \t).when("/#{plural_name}",
           \t  templateUrl: "#{application_name.underscore}_index_base.html"
