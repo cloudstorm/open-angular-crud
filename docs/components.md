@@ -72,17 +72,6 @@ Option            | Type     | Description
 ----------------- | -------- | -----------
 `reset-on-submit` | boolean  | Resets all inputs in the form on form submit
 `skip-on-enter`   | boolean  | Form should not be submited when hitting enter in a CS Textfield
-`texts`           | object   | If attribute is not given, default text will be displayed
-
-#### Text object
-The text object is to be superseded  with i18n implementation
-
-```
-    `validation-text`: Display this hint while the form is invalid
-    `buttons`
-        `submit`
-        `cancel`
-```
 
 ### Lifecycle events
 

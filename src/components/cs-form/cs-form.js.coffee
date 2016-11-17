@@ -87,12 +87,6 @@ app.directive "csForm", ['csSettings', (csSettings) ->
 
     # ===== GETTERS =======================================
 
-    $scope.validationText = () ->
-      if $scope.csFormOptions['texts'] && (val = $scope.csFormOptions['texts']['validation-text'])
-        val
-      else
-        'Some required fields (marked *) are not yet set'
-
     $scope.isFieldVisible = (field_attribute) ->
       true unless attributeToHide(field_attribute)
 
