@@ -35,7 +35,7 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
       # ===== INIT ============================================
 
       $scope.i18n = csSettings.settings['i18n-engine']
-      
+
       # Store the received data to be used in the template
       $scope.collection = []
       resource = ResourceService.get($scope.resourceType)
@@ -60,7 +60,7 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
         'condensedView'   : false # [private API]
         'hide-actions'    : false
         'hide-attributes' : resource.descriptor.attributes_to_hide || {}
-      
+
       $scope.csIndexOptions ||= {}
       indexOptions = angular.copy $scope.csIndexOptions
       angular.copy {}, $scope.csIndexOptions
@@ -73,11 +73,11 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
       # ===== SORT =========================================
 
       sortField = _.find resource.descriptor.fields, { attribute: $scope.csIndexOptions.sortAttribute }
-      
+
       $scope.comparisonValue = (item) ->
         $scope.fieldValue(item, sortField) if sortField
 
-      # ===== COMPARISON ======================================          
+      # ===== COMPARISON ======================================
 
       escapeRegExp = (str) ->
         return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
@@ -88,7 +88,7 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
           if (field_value = $scope.fieldValue(value, field))
             field_value.toString().match(search)
 
-      # ===== GETTERS =========================================                  
+      # ===== GETTERS =========================================
 
       $scope.fieldValue = (item, field) ->
         if field.resource
@@ -109,6 +109,10 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
           return item.attributes[field.attribute]
         else if field.type == 'boolean'
             return $scope.i18n?.t(item.attributes[field.attribute]) || item.attributes[field.attribute]
+        else if field.type == 'time'
+          display_time = new Date(item.attributes[field.attribute])
+          return display_time.getHours() + ':' + display_time.getMinutes()
+
         else
           item.attributes[field.attribute]
 
@@ -167,15 +171,15 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
         $scope.csIndexOptions.selectedItem = null
 
       # ===== WIZARD CALLBACKS ============================
-      
+
       $scope.getPanelNumber = (length) ->
-        if length > 1 
+        if length > 1
           $scope.csIndexOptions.condensedView = true
         else
           $scope.csIndexOptions.condensedView = false
 
       # ===== UX HANDLES ======================================
-      
+
       $scope.refreshIndex = () ->
         $scope.unselectItem()
         loadData()
@@ -234,5 +238,3 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
   }
 
 ]
-
-

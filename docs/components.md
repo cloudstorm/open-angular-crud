@@ -6,9 +6,10 @@ CloudStorm is a collection of components that are designed to work together; you
 High-level components   | Form Input components                  | Misc components
 ----------------------- | -------------------------------------- | ---------------
 [CS Wizard](#cs-wizard) | [CS Field](#cs-field)                  | [CS Alert](#cs-alert)
-[CS Form](#cs-form)     | [CS Textfield](#cs-textfield) 
+[CS Form](#cs-form)     | [CS Textfield](#cs-textfield)
 [CS Index](#cs-index)   | [CS Checkbox](#cs-checkbox)
                         | [CS Date](#cs-date)
+                        | [CS Time](#cs-time)
                         | [CS Enum](#cs-enum)
                         | [CS Number](#cs-number)
                         | [CS Resource Input](#cs-resource-input)
@@ -17,10 +18,10 @@ High-level components   | Form Input components                  | Misc componen
 <a href="../src/components/cs-wizard"><img src="images/go_to_source.png" align="right"></a>
 
 ### Options
-**panel-number-callback**  
+**panel-number-callback**
 * expects a function with one paremeter: `length`: To keep track of the number of panels open, callback is called with length as parameter
 
-**cs-wizard-options**  
+**cs-wizard-options**
 
 Option                | Type       | Description
 --------------------- | ---------- | -----------
@@ -168,6 +169,9 @@ Option             | Type     | Description
 `time-zone-offset` | string   | (optional) Defaults to 'utc'. If exist, the offset of the date is altered through the ng-model-options parameter of the uib-datepicker. Use a time zone offset, for example, '+0430' (4 hours, 30 minutes east of the Greenwich meridian). Read more at the [official Angular docs](https://docs.angularjs.org/api/ng/directive/ngModelOptions)
 
 [to top ↑](./components.md)
+
+## CS Time
+<a href="../src/components/inputs/cs-time"><img src="images/go_to_source.png" align="right"></a>
 
 ## CS Enum
 <a href="../src/components/inputs/cs-enum"><img src="images/go_to_source.png" align="right"></a>

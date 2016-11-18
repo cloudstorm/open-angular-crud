@@ -25,7 +25,7 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
     # Pre-link: gets called for parent first
     pre: ($scope, element, attrs, controller) ->
       return
-    
+
     # Post-link: gets called for children recursively after post() traversed the DOM tree
     post: link
 
@@ -38,9 +38,9 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
       $scope.field = _.find $scope.formItem.constructor.descriptor.fields, { attribute: $scope.fieldName }
 
     # ===== COMPILE DOM WITH APPROPRIATE DIRECTIVE ========
-    
+
     if override = getDirectiveOverride($scope)
-      directiveName = override      
+      directiveName = override
     else
       type = $scope.field.type
 
@@ -48,13 +48,14 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
         when type == 'resource' then 'cs-resource-input'
         when type == 'string'   then 'cs-textfield'
         when type == 'date'     then 'cs-date'
+        when type == 'time'     then 'cs-time'
         when type == 'integer'  then 'cs-number'
         when type == 'float'    then 'cs-number'
         when type == 'enum'     then 'cs-enum'
         when type == 'boolean'  then 'cs-checkbox'
 
     innerElement = angular.element(element[0].querySelector('.cs-input-wrapper'))
-    inputTemplate = "<#{directiveName} form-item='formItem' 
+    inputTemplate = "<#{directiveName} form-item='formItem'
                                        field-name='fieldName'
                                        field='field'
                                        form-mode='formMode'
@@ -64,20 +65,20 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
     innerElement.html($compile(inputTemplate)($scope));
 
     # ===== DOM MANIPULATION ON SCOPE CHANGE ==============
-    
+
     $scope.$watch 'field.inactive', (newValue, oldValue) ->
       if newValue != oldValue
         element.removeClass 'inactive'
         element.addClass 'inactive' if $scope.field.inactive
-    
+
     $scope.$watch 'field.errors', (newValue, oldValue) ->
       if newValue != oldValue
         element.removeClass 'has-error'
         element.addClass 'has-error' if $scope.getError($scope.field)
 
-    
+
     # ===== COMPONENT LIFECYCLE ===========================
-    
+
     $scope.$on 'field-error', (event, reason) ->
       errors = reason.data.errors
       $scope.field.errors = _.filter errors, (error) ->
@@ -97,7 +98,7 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
     # ===== GETTERS =======================================
 
     $scope.getError = (field) ->
-      field.errors.toString() if field.errors 
+      field.errors.toString() if field.errors
 
     $scope.getHint = (field) ->
       field.hint || null
@@ -108,9 +109,9 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
 
   getDirectiveOverride = ($scope) ->
     overrideName = null
-    
-    if (overrides = $scope.csFieldOptions['directive-overrides']) 
-    
+
+    if (overrides = $scope.csFieldOptions['directive-overrides'])
+
       _(overrides).forEach (override) ->
         if (override.type == $scope.field.type) && override.directive
           overrideName = override.directive
@@ -119,11 +120,11 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
       _(overrides).forEach (override) ->
         if (override.attribute == $scope.field.attribute) && override.directive
           overrideName = override.directive
-          
+
     overrideName
 
   # ===== CONFIGURE ===========================================================
-  
+
   return {
     restrict: 'E'
     templateUrl: 'cloudstorm/src/components/cs-field/cs-field-template.html'
