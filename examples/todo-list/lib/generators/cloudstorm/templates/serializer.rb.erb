@@ -2,5 +2,8 @@ class <%= class_name %>Serializer < ApiSerializer
   # Whitelist all attributes
   def attributes(requested_attrs = nil, reload = false)
     object.attributes
-  end 
+  end
+  <%- attributes.select { |a| a.type == :references }.each do |attribute| %>
+  belongs_to :<%= attribute.name %> # <%= attribute.type %>
+  <%- end %>
 end

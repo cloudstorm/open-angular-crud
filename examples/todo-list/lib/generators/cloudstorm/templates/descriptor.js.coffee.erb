@@ -19,8 +19,7 @@ angular.module('<%= javascript_module_name %>', ['cloudstorm.rest-api'])
       hint: 'BLANK'
 
       fields: [
-        # TODO: handle 'references' attribute type
-        <%- attributes.each do |attribute| %>        { attribute: '<%= attribute.name %>', label: '<%= attribute.name %>', type: '<%= attribute.type %>', cardinality: 'one', required: false, read_only: false }
+        <%- attributes.each do |attribute| %>        { attribute: '<%= attribute.name %>', label: '<%= attribute.name %>', <%= attribute_type(attribute) %>, cardinality: 'one', required: false, read_only: false }
         <%- end %>
       ]
       <%- if has_name_attribute? %>

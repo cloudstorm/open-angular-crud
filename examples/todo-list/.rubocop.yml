@@ -1,0 +1,40 @@
+AllCops:
+  Include:
+    - ./Rakefile
+  Exclude:
+    - db/**/*
+    - config/**/*
+    - vendor/**/*
+    - node_modules/**/*
+Documentation:
+  # Only document difficult algorithms. The code should readable
+  # enough to not require extensive docs, unless there is an
+  # exposed object API.
+  Enabled: false
+Style/GlobalVars:
+  # Redis is the special animal in our apps.
+  AllowedVariables: ['$redis']
+Metrics/AbcSize:
+  # Locking methods to specific complexity levels causes explosions
+  # of smaller, useless methods for no real reason.
+  Enabled: false
+Metrics/MethodLength:
+  # Similarly, methods should be as long as they need to be.
+  Enabled: false
+Metrics/ModuleLength:
+  # Same with modules.
+  Enabled: false
+Metrics/ClassLength:
+  # Same with classes.
+  Enabled: false
+Style/WordArray:
+  # Sometimes ['word', 'array'] is more readable for us than %w(word array).
+  Enabled: false
+Metrics/LineLength:
+  # 120 character lines across all projects.
+  Max: 120
+Style/RaiseArgs:
+  EnforcedStyle: compact
+Style/SignalException:
+  EnforcedStyle: only_fail
+
