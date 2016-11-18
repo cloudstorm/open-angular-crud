@@ -1,5 +1,2 @@
 .bowerrc
 bower.json
-examples/todo-list/log
-examples/todo-list/tmp
-examples/todo-list/vendor/assets/bower_components

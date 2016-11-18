@@ -24,7 +24,7 @@ This is the main source of documentation for **developers** working with (or con
 * [Basic How-To](docs/basics.md)
 * [Reference](docs/README.md)
 * [Releases](../../releases)
-* [Example Rails App](examples/todo-list)
+* [Example Rails Apps](https://github.com/cloudstorm/rails-examples)
 
 ## Getting started
 #### Installation
