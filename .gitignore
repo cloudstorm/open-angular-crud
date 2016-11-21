@@ -1,2 +1,4 @@
-.bowerrc
-bower.json
+build/
+bin/
+node_modules/
+vendor/
