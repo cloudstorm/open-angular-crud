@@ -1,77 +1,81 @@
 @import 'cs-index-sidepanel/cs-index-sidepanel';
+@import 'bootstrap/_variables.scss';
 
-// ========== VARIABLES =========================
+.cs-index {
 
-$action-bg-color: rgba(125, 125, 125, 0.3);
+  // ========== VARIABLES =========================
 
-// ==== OVERRIDE 100% WIDTH ON NARROW DEVICES ===
+  $action-bg-color: rgba(125, 125, 125, 0.3);
 
-.header-actions {
-  .input-group-wrap {
-    display: inline-block;
-    vertical-align: top;
-    .input-group {
-      .input-group-addon { width: 0; }
-      .form-control.cs-index-filter { width: auto; }
+  // ==== OVERRIDE 100% WIDTH ON NARROW DEVICES ===
+
+  .header-actions {
+    .input-group-wrap {
+      display: inline-block;
+      vertical-align: top;
+      .input-group {
+        .input-group-addon { width: 0; }
+        .form-control.cs-index-filter { width: auto; }
+      }
+    } 
+    .btn { vertical-align: top; }  
+  }
+
+  // ========== CS INDEX HEADER ===================
+
+  .header-actions {
+    top: 10px;
+    position: relative;
+
+    .create-button {
+      &.btn { padding: 6px 24px; }
     }
-  } 
-  .btn { vertical-align: top; }  
-}
 
-// ========== CS INDEX HEADER ===================
-
-.header-actions {
-  top: 10px;
-  position: relative;
-
-  .create-button {
-    &.btn { padding: 6px 24px; }
   }
 
-}
+  // ========== CS INDEX TABLE ====================
 
-// ========== CS INDEX TABLE ====================
+  table {
 
-table {
-
-  th {
-    // https://www.youtube.com/watch?v=x-BJiWY5gfc
-    cursor: pointer;
-    white-space: nowrap;
-  }
-
-  tbody {
-    tr {
+    th {
+      // https://www.youtube.com/watch?v=x-BJiWY5gfc
       cursor: pointer;
+      white-space: nowrap;
+    }
 
-      td {
-        // Action buttons at the end of each table row
-        &.actions {
-          text-align: right;
-          line-height: $line-height-computed + 2 * $table-cell-padding;
-          padding-top: 0;
-          padding-bottom: 0;
-          white-space: nowrap;
-          vertical-align: middle;
+    tbody {
+      tr {
+        cursor: pointer;
 
-          .action {
-            cursor: pointer;
-            display: inline-block;
-            padding: 0 8px; 
+        td {
+          // Action buttons at the end of each table row
+          &.actions {
+            text-align: right;
+            line-height: $line-height-computed + 2 * $table-cell-padding;
+            padding-top: 0;
+            padding-bottom: 0;
+            white-space: nowrap;
+            vertical-align: middle;
 
-            &.delete-action { color: $gray-light; }
+            .action {
+              cursor: pointer;
+              display: inline-block;
+              padding: 0 8px; 
 
-            &:hover {
-              text-decoration: underline;
-              background-color: $action-bg-color;
+              &.delete-action { color: $gray-light; }
 
-              &.delete-action { color: $brand-danger; }
+              &:hover {
+                text-decoration: underline;
+                background-color: $action-bg-color;
+
+                &.delete-action { color: $brand-danger; }
+              }
             }
           }
         }
-      }
-    }   
+      }   
+    }
+   
   }
- 
-}
 
+}

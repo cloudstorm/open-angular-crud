@@ -78,7 +78,12 @@ module.exports = function(grunt) {
         dest: '<%= build_dir %>/concat.scss',
       }
     },
-
+    
+    /**
+     * `grunt-contrib-less` handles our LESS compilation and uglification automatically.
+     * Only our `main.less` file is included in compilation; all other files
+     * must be imported from this file.
+     */
     sass: {
       dist: {     
         options:{
@@ -88,10 +93,24 @@ module.exports = function(grunt) {
           ]
         },
         files: {
-          '<%= build_dir %>/built.css': '<%= build_dir %>/concat.scss'
+          '<%= build_dir %>/test2.css': '<%= app_files.sass %>',
         }
       }
     },
+
+    // sass: {
+    //   dist: {     
+    //     options:{
+    //       loadPath: [
+    //         "vendor/bootstrap-sass/assets/stylesheets",
+    //         "src"
+    //       ]
+    //     },
+    //     files: {
+    //       '<%= build_dir %>/built.css': '<%= build_dir %>/concat.scss'
+    //     }
+    //   }
+    // },
 
     // GRUNT META TASKS
 
