@@ -21,7 +21,6 @@ module.exports = {
    */
   app_files: {
     coffee: [ 'src/**/*.js.coffee', 'src/**/*.coffee' ],
-    // sass: [ 'src/cs-variables.css.scss', 'src/cs-mixins.css.scss', 'src/**/*.css.scss' ],
     sass: [ 'src/cloudstorm.scss' ],
   },
 

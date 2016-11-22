@@ -80,12 +80,12 @@ module.exports = function(grunt) {
     },
     
     /**
-     * `grunt-contrib-less` handles our LESS compilation and uglification automatically.
-     * Only our `main.less` file is included in compilation; all other files
-     * must be imported from this file.
+     * `grunt-contrib-sass` handles SCSS compilation.
+     * Only the main cloudstorm stylesheet file is included in compilation;
+     * all other files must be imported from this file.
      */
     sass: {
-      dist: {     
+      build: {
         options:{
           loadPath: [
             "vendor/bootstrap-sass/assets/stylesheets",
@@ -93,24 +93,10 @@ module.exports = function(grunt) {
           ]
         },
         files: {
-          '<%= build_dir %>/test2.css': '<%= app_files.sass %>',
+          '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css': '<%= app_files.sass %>'
         }
       }
     },
-
-    // sass: {
-    //   dist: {     
-    //     options:{
-    //       loadPath: [
-    //         "vendor/bootstrap-sass/assets/stylesheets",
-    //         "src"
-    //       ]
-    //     },
-    //     files: {
-    //       '<%= build_dir %>/built.css': '<%= build_dir %>/concat.scss'
-    //     }
-    //   }
-    // },
 
     // GRUNT META TASKS
 
