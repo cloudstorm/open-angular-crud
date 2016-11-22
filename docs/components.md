@@ -10,6 +10,7 @@ High-level components   | Form Input components                  | Misc componen
 [CS Index](#cs-index)   | [CS Checkbox](#cs-checkbox)
                         | [CS Date](#cs-date)
                         | [CS Time](#cs-time)
+                        | [CS DateTime](#cs-datetime)
                         | [CS Enum](#cs-enum)
                         | [CS Number](#cs-number)
                         | [CS Resource Input](#cs-resource-input)
@@ -172,6 +173,9 @@ Option             | Type     | Description
 
 ## CS Time
 <a href="../src/components/inputs/cs-time"><img src="images/go_to_source.png" align="right"></a>
+
+## CS DateTime
+<a href="../src/components/inputs/cs-datetime"><img src="images/go_to_source.png" align="right"></a>
 
 ## CS Enum
 <a href="../src/components/inputs/cs-enum"><img src="images/go_to_source.png" align="right"></a>

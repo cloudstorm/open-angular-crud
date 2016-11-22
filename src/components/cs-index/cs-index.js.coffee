@@ -12,7 +12,7 @@ catch err
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSettings', '$uibModal', 'CSAlertService', (ResourceService, csDataStore, csRestApi, csSettings, $uibModal, CSAlertService) ->
+app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSettings', '$uibModal', 'CSAlertService', '$filter', (ResourceService, csDataStore, csRestApi, csSettings, $uibModal, CSAlertService, $filter) ->
 
   # ===== COMPILE =============================================================
 
@@ -111,8 +111,11 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
             return $scope.i18n?.t(item.attributes[field.attribute]) || item.attributes[field.attribute]
         else if field.type == 'time'
           display_time = new Date(item.attributes[field.attribute])
-          return display_time.getHours() + ':' + display_time.getMinutes()
-
+          return $filter('date')(display_time, 'HH:mm')
+        else if field.type == 'datetime'
+          # TODO: move formatting to fields, use moment.js
+          display_date = new Date(item.attributes[field.attribute])
+          return $filter('date')(display_date, 'EEEE, MMMM d, y HH:mm')
         else
           item.attributes[field.attribute]
 

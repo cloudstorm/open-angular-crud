@@ -13,14 +13,14 @@ catch err
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csDate", ['uibDateParser', 'csSettings', 'CSInputBase', (uibDateParser, csSettings, CSInputBase) ->
+app.directive "csDatetime", ['uibDateParser', 'csSettings', 'CSInputBase', (uibDateParser, csSettings, CSInputBase) ->
 
   # ===== COMPILE =============================================================
 
   compile = ($templateElement, $templateAttributes) ->
 
     # Only modify the DOM in compile, use (pre/post) link for others
-    $templateElement.addClass "cs-date"
+    $templateElement.addClass "cs-datetime"
 
     # Pre-link: gets called for parent first
     pre: (scope, element, attrs, controller) ->
@@ -33,19 +33,55 @@ app.directive "csDate", ['uibDateParser', 'csSettings', 'CSInputBase', (uibDateP
   # ===== LINK ================================================================
 
   format_date = ($scope) ->
-    format = $scope.options['date-format'] || csSettings.settings['date-format']
+    date_format = $scope.options['datetime-format'] || csSettings.settings['datetime-format']
 
-    if format
+    if date_format
       input_date = $scope.formItem.attributes[$scope.field.attribute]
-      date = uibDateParser.parse(input_date, format)
-      date.setHours(14) if date # TODO: 14 is a timezone dependent value, see https://github.com/cloudstorm/cloudstorm/issues/44
+      if !angular.isDate(input_date)
+        input_date = input_date.substring(0, input_date.length - 1);
+      console.log(input_date)
+      date = uibDateParser.parse(new Date(input_date), date_format)
       $scope.formItem.attributes[$scope.field.attribute] = date
 
   link = ($scope, element, attrs, controller) ->
     $scope.i18n = csSettings.settings['i18n-engine']
 
     CSInputBase $scope
+
+    # $scope.getSetTime = (value) ->
+    #   if arguments.length # Set
+    #     $scope.setTime(value)
+    #   else # Get
+    #     $scope.getTime()
+
+    # $scope.getTime = () ->
+    #   $scope.formItem.attributes[$scope.field.attribute]
+
+    # $scope.setTime = (value) ->
+    #   date_format = $scope.options['datetime-format'] || csSettings.settings['datetime-format']
+    #   date = uibDateParser.parse(new Date(value), date_format)
+    #   $scope.formItem.attributes[$scope.field.attribute] = date
+    #   # format_date($scope)
+
+
+    # $scope.getSetDate = (value) ->
+    #   if arguments.length # Set
+    #     $scope.setDate(value)
+    #   else # Get
+    #     $scope.getDate()
+
+    # $scope.getDate = () ->
+    #   $scope.formItem.attributes[$scope.field.attribute]
+
+    # $scope.setDate = (value) ->
+    #   date_format = $scope.options['datetime-format'] || csSettings.settings['datetime-format']
+    #   date = uibDateParser.parse(new Date(value), date_format)
+    #   $scope.formItem.attributes[$scope.field.attribute] = date
+    #   # format_date($scope)
+
     format_date($scope)
+    # $scope.setDate($scope.formItem.attributes[$scope.field.attribute])
+    # $scope.setTime($scope.formItem.attributes[$scope.field.attribute])
 
     # ===== WATCHES =======================================
 
@@ -58,7 +94,7 @@ app.directive "csDate", ['uibDateParser', 'csSettings', 'CSInputBase', (uibDateP
 
   return {
     restrict: 'E'
-    templateUrl: 'cloudstorm/src/components/inputs/cs-date/cs-date-template.html'
+    templateUrl: 'cloudstorm/src/components/inputs/cs-datetime/cs-datetime-template.html'
     priority: 1000
     scope:
       field: '=' # The resource item which the form is working with
