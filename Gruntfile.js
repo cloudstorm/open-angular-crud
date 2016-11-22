@@ -72,20 +72,23 @@ module.exports = function(grunt) {
           }
         },
         src: [
-          '<%= vendor_files.css %>','<%= app_files.sass %>',
+          '<%= vendor_files.css %>',
+          '<%= app_files.sass %>',
         ],
-        dest: 'sass/build.scss',
+        dest: '<%= build_dir %>/concat.scss',
       }
     },
 
     sass: {
       dist: {     
-        options: {
-          loadPath: '.'
+        options:{
+          loadPath: [
+            "vendor/bootstrap-sass/assets/stylesheets",
+            "src"
+          ]
         },
         files: {
-          // 'css/test.css':'sass/build.scss'
-          'css/test.css': '<%= app_files.sass %>'
+          '<%= build_dir %>/built.css': '<%= build_dir %>/concat.scss'
         }
       }
     },
@@ -112,7 +115,7 @@ module.exports = function(grunt) {
   /**
    * Sass should be first concated and then built
    */
-  grunt.registerTask('sass_concat', ['concat', 'sass']);
+  grunt.registerTask('concat_sass', ['concat', 'sass']);
 
   /**
    * The `build` task gets your app ready to run for development and testing.
