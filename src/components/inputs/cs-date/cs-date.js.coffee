@@ -58,7 +58,7 @@ app.directive "csDate", ['uibDateParser', 'csSettings', 'CSInputBase', (uibDateP
 
   return {
     restrict: 'E'
-    templateUrl: 'cloudstorm/src/components/inputs/cs-date/cs-date-template.html'
+    templateUrl: 'components/inputs/cs-date/cs-date-template.html'
     priority: 1000
     scope:
       field: '=' # The resource item which the form is working with

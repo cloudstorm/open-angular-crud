@@ -231,7 +231,7 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
   return {
     restrict: 'E'
     compile: compile
-    templateUrl: 'cloudstorm/src/components/cs-index/cs-index-template.html'
+    templateUrl: 'components/cs-index/cs-index-template.html'
     scope:
       csIndexOptions: '='
       resourceType: '='

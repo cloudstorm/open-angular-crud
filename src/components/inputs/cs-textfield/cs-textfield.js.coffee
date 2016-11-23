@@ -34,7 +34,7 @@ app.directive "csTextfield", ['$rootScope', 'CSTemplateService', 'CSInputBase', 
   link = ($scope, element, attrs, controller) ->    
     CSInputBase $scope
     $scope.CSTemplateService = CSTemplateService
-    $scope.defaultTemplate = 'cloudstorm/src/components/inputs/cs-textfield/cs-textfield-template.html'
+    $scope.defaultTemplate = 'components/inputs/cs-textfield/cs-textfield-template.html'
             
     # ===== WATCHES =======================================
 

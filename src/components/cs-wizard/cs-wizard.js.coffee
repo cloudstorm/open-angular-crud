@@ -222,7 +222,7 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', ($rootS
   
   return {
     restrict: 'A'
-    templateUrl: 'cloudstorm/src/components/cs-wizard/cs-wizard-template.html'
+    templateUrl: 'components/cs-wizard/cs-wizard-template.html'
     scope:
       csWizardOptions: '='
       panelNumberCallback: '='
@@ -258,7 +258,7 @@ app.directive "csWizardPanel", ['$rootScope', 'ResourceService', '$compile', ($r
 
   return {
     restrict: 'E'
-    templateUrl: 'cloudstorm/src/components/cs-wizard/cs-wizard-panel-template.html'
+    templateUrl: 'components/cs-wizard/cs-wizard-panel-template.html'
     link: link
   }
 ]

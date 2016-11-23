@@ -48,7 +48,7 @@ app.directive "csEnum", ['$rootScope', 'CSInputBase', ($rootScope, CSInputBase) 
   
   return {
     restrict: 'E'
-    templateUrl: 'cloudstorm/src/components/inputs/cs-enum/cs-enum-template.html'
+    templateUrl: 'components/inputs/cs-enum/cs-enum-template.html'
     scope:
       field: '=' # The resource item which the form is working with
       formItem: '='

@@ -37,7 +37,7 @@ app.directive "csResourceInput", ['$rootScope', 'ResourceService', 'CSTemplateSe
     
     CSInputBase $scope
     $scope.CSTemplateService = CSTemplateService
-    $scope.defaultTemplate = 'cloudstorm/src/components/inputs/cs-resource-input/cs-resource-input-template.html'
+    $scope.defaultTemplate = 'components/inputs/cs-resource-input/cs-resource-input-template.html'
 
     setup_associations($scope)
 
