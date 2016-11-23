@@ -22,6 +22,7 @@ module.exports = {
   app_files: {
     coffee: [ 'src/**/*.js.coffee', 'src/**/*.coffee' ],
     sass: [ 'src/cloudstorm.scss' ],
+    haml: [ 'src/**/*.haml' ],
   },
 
   /**

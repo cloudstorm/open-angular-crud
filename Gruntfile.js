@@ -8,6 +8,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-coffee');
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-haml2html');
 
   /**
    * Load in our build configuration file.
@@ -63,7 +64,26 @@ module.exports = function(grunt) {
         ext: '.js'
       }
     },
-
+    
+    /*
+     * http://stackoverflow.com/questions/27494340/how-to-use-grunt-to-recursively-compile-a-directory-of-haml-or-jade
+     */
+    haml: {
+      build: {
+        files : [
+          { expand: true,
+            cwd: '.',
+            src: [ '<%= app_files.haml %>' ],
+            dest: '<%= build_dir %>',
+            ext : '.html' 
+          }
+        ]
+      },
+      watch: {
+        files : {}
+      }
+    },
+    
     concat: {
       dist: {
         options: {
@@ -78,7 +98,8 @@ module.exports = function(grunt) {
         dest: '<%= build_dir %>/concat.scss',
       }
     },
-    
+     
+
     /**
      * `grunt-contrib-sass` handles SCSS compilation.
      * Only the main cloudstorm stylesheet file is included in compilation;
@@ -126,7 +147,7 @@ module.exports = function(grunt) {
    * The `build` task gets your app ready to run for development and testing.
    */
   grunt.registerTask( 'build', [
-    'clean', 'coffee', 'sass'
+    'clean', 'coffee', 'sass', 'haml'
 
     // 'clean', 'html2js', 'jshint', 'coffeelint', 'coffee', 'less:build',
     // 'concat:build_css', 'copy:build_app_assets', 'copy:build_vendor_assets',
