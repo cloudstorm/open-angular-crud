@@ -9,7 +9,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-haml2html');
-
+  grunt.loadNpmTasks('grunt-html2js');
   /**
    * Load in our build configuration file.
    */
@@ -84,6 +84,22 @@ module.exports = function(grunt) {
       }
     },
     
+    /**
+     * HTML2JS is a Grunt plugin that takes all of your template files and
+     * places them into JavaScript files as strings that are added to
+     * AngularJS's template cache. This means that the templates too become
+     * part of the initial payload as one JavaScript file. Neat!
+     */
+    html2js: {
+      build: {
+        options: {
+          base: 'build/src'
+        },
+        src: [ '<%= app_files.template %>' ],
+        dest: '<%= build_dir %>/templates.js'
+      }
+    },
+
     concat: {
       dist: {
         options: {
@@ -147,7 +163,7 @@ module.exports = function(grunt) {
    * The `build` task gets your app ready to run for development and testing.
    */
   grunt.registerTask( 'build', [
-    'clean', 'coffee', 'sass', 'haml'
+    'clean', 'coffee', 'sass', 'haml', 'html2js'
 
     // 'clean', 'html2js', 'jshint', 'coffeelint', 'coffee', 'less:build',
     // 'concat:build_css', 'copy:build_app_assets', 'copy:build_vendor_assets',
