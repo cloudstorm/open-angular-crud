@@ -1,4 +1,5 @@
 cloudStorm = angular.module('cloudStorm', [
+  'csCachedTemplates'
   'CSAlertService'
   'csAlert'
   'csForm'

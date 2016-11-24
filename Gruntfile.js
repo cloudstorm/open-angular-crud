@@ -93,7 +93,8 @@ module.exports = function(grunt) {
     html2js: {
       build: {
         options: {
-          base: 'build/src'
+          base: 'build/src',
+          module: 'csCachedTemplates'
         },
         src: [ '<%= app_files.template %>' ],
         dest: '<%= build_dir %>/templates.js'
