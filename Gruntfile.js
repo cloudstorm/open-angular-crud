@@ -29,21 +29,21 @@ module.exports = function(grunt) {
      */
     pkg: grunt.file.readJSON("package.json"),
     
-    // /**
-    //  * The banner is the comment that is placed at the top of our compiled 
-    //  * source files. It is first processed as a Grunt template, where the `<%=`
-    //  * pairs are evaluated based on this very configuration object.
-    //  */
-    // meta: {
-    //   banner: 
-    //     '/**\n' +
-    //     ' * <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
-    //     ' * <%= pkg.homepage %>\n' +
-    //     ' *\n' +
-    //     ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
-    //     ' * Licensed <%= pkg.licenses.type %> <<%= pkg.licenses.url %>>\n' +
-    //     ' */\n'
-    // },
+    /**
+     * The banner is the comment that is placed at the top of our compiled 
+     * source files. It is first processed as a Grunt template, where the `<%=`
+     * pairs are evaluated based on this very configuration object.
+     */
+    meta: {
+      banner: 
+        '/**\n' +
+        ' * <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
+        ' * <%= pkg.homepage %>\n' +
+        ' *\n' +
+        ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
+        ' * Licensed <%= pkg.licenses.type %> <<%= pkg.licenses.url %>>\n' +
+        ' */\n'
+    },
 
     // uglify: {
     //   options: {
@@ -120,12 +120,29 @@ module.exports = function(grunt) {
     },
     
     copy: {
+      compile_assets: {
+        files: [
+          {
+            src: [ '**' ],
+            cwd: '<%= build_dir %>/assets',
+            dest: '<%= compile_dir %>/assets',
+            expand: true
+          },
+          {
+            cwd: '.',
+            src: [ '<%= vendor_files.css %>' ],
+            dest: '<%= compile_dir %>/',
+            expand: true
+          }
+        ]
+      },
+      
       sample_app: {
         files: [
           { 
             cwd: '.',
             src: ['<%= app_files.sample %>'] ,
-            dest: '<%= build_dir %>/',
+            dest: '<%= compile_dir %>/',
           }
        ]   
       }
@@ -150,6 +167,26 @@ module.exports = function(grunt) {
       }
     },
 
+    concat: {
+      /**
+       * The `compile_js` target is the concatenation of our application source
+       * code and all specified vendor source code into a single file.
+       */
+      compile_js: {
+        options: {
+          banner: '<%= meta.banner %>'
+        },
+        src: [ 
+          // '<%= vendor_files.js %>', 
+          // 'module.prefix', 
+          '<%= build_dir %>/src/**/*.js', 
+          '<%= html2js.build.dest %>', 
+          // 'module.suffix' 
+        ],
+        dest: '<%= compile_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.js'
+      }
+    },
+
     /**
      * The directories to delete when `grunt clean` is executed.
      */
@@ -160,7 +197,7 @@ module.exports = function(grunt) {
 
     exec: {
       start_web_server: {
-        command: 'cd build && python -m SimpleHTTPServer 8000'
+        command: 'cd bin && python -m SimpleHTTPServer 8000'
       },
       list_files: {
         command: 'ls -l **',
@@ -179,13 +216,8 @@ module.exports = function(grunt) {
   /**
    * The default task is to build and compile.
    */
-  grunt.registerTask( 'default', [ 'build', 'compile' ] );
+  grunt.registerTask( 'default', [ 'build', 'compile', 'exec:start_web_server' ] );
   
-  /**
-   * Sass should be first concated and then built
-   */
-  grunt.registerTask('concat_sass', ['concat', 'sass']);
-
   /**
    * The `build` task gets your app ready to run for development and testing.
    */
@@ -203,6 +235,7 @@ module.exports = function(grunt) {
    * minifying your code.
    */
   grunt.registerTask( 'compile', [
+    'copy:compile_assets', 'concat:compile_js'
     // 'less:compile', 'copy:compile_assets', 'ngAnnotate', 'concat:compile_js', 'uglify', 'index:compile'
   ]);
 

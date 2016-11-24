@@ -18,7 +18,10 @@
     "forms"
   ],
   "author": "Virtual Solutions Ltd <info@cloudstorm.io>",
-  "license": "MIT",
+  "licenses": {
+    "type": "MIT",
+    "url": "https://raw.github.com/cloudstorm/cloudstorm/master/LICENSE.txt"
+  },
   "bugs": {
     "url": "https://github.com/cloudstorm/cloudstorm/issues"
   },
