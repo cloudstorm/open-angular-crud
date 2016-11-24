@@ -115,7 +115,6 @@ module.exports = function(grunt) {
       }
     },
      
-
     /**
      * `grunt-contrib-sass` handles SCSS compilation.
      * Only the main cloudstorm stylesheet file is included in compilation;
@@ -135,12 +134,10 @@ module.exports = function(grunt) {
       }
     },
 
-    // GRUNT META TASKS
-
     /**
      * The directories to delete when `grunt clean` is executed.
      */
-    clean: [ 
+    clean: [
       '<%= build_dir %>', 
       '<%= compile_dir %>'
     ]
