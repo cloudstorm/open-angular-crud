@@ -6,10 +6,13 @@ module.exports = function(grunt) {
   // grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-coffee');
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-haml2html');
   grunt.loadNpmTasks('grunt-html2js');
+  grunt.loadNpmTasks('grunt-exec');
+
   /**
    * Load in our build configuration file.
    */
@@ -115,7 +118,19 @@ module.exports = function(grunt) {
         dest: '<%= build_dir %>/concat.scss',
       }
     },
-     
+    
+    copy: {
+      sample_app: {
+        files: [
+          { 
+            cwd: '.',
+            src: ['<%= app_files.sample %>'] ,
+            dest: '<%= build_dir %>/',
+          }
+       ]   
+      }
+    },
+    
     /**
      * `grunt-contrib-sass` handles SCSS compilation.
      * Only the main cloudstorm stylesheet file is included in compilation;
@@ -141,7 +156,21 @@ module.exports = function(grunt) {
     clean: [
       '<%= build_dir %>', 
       '<%= compile_dir %>'
-    ]
+    ],
+
+    exec: {
+      start_web_server: {
+        command: 'cd build && python -m SimpleHTTPServer 8000'
+      },
+      list_files: {
+        command: 'ls -l **',
+        stdout: true
+      },
+      echo_grunt_version: {
+        command: function(grunt) { return 'echo ' + grunt.version; },
+        stdout: true
+      }
+    }
 
   };
 
@@ -161,7 +190,7 @@ module.exports = function(grunt) {
    * The `build` task gets your app ready to run for development and testing.
    */
   grunt.registerTask( 'build', [
-    'clean', 'coffee', 'sass', 'haml', 'html2js'
+    'clean', 'coffee', 'sass', 'haml', 'html2js', 'copy:sample_app'
 
     // 'clean', 'html2js', 'jshint', 'coffeelint', 'coffee', 'less:build',
     // 'concat:build_css', 'copy:build_app_assets', 'copy:build_vendor_assets',
