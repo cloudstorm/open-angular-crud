@@ -1,26 +1,3 @@
-cloudStorm = angular.module('cloudStorm', [
-  'csCachedTemplates'
-  'CSAlertService'
-  'csAlert'
-  'csForm'
-  'csField'
-  'csWizard'
-  'csIndex'
-  'csCheckbox'
-  'csDate'
-  'csEnum'
-  'csNumber'
-  'csResourceInput'
-  'csTextfield'
-  'csTime'
-  'csDataStore'
-  'csSettingsProvider'
-  'csLocalizationProvider'
-  'csResource'
-  'ResourceService'
-  'csRestApi'
-])
-
 # TODO: Remove / refactor module override. 
 # See GitHub issue https://github.com/cloudstorm/cloudstorm/issues/63
 do (angular) ->

@@ -9,6 +9,7 @@ module.exports = {
    */
   build_dir: 'build',
   compile_dir: 'bin',
+  sample_dir: 'sample',
 
   /**
    * This is a collection of file patterns that refer to our app code (the
@@ -23,7 +24,6 @@ module.exports = {
     coffee: [ 'src/**/*.js.coffee', 'src/**/*.coffee' ],
     sass: [ 'src/cloudstorm.scss' ],
     haml: [ 'src/**/*.haml' ],
-    sample: [ 'sample/**' ],
     template: [ '<%= build_dir %>/**/*-template.html' ]
   },
 

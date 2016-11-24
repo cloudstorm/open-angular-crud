@@ -97,7 +97,7 @@ module.exports = function(grunt) {
       build: {
         options: {
           base: 'build/src',
-          module: 'csCachedTemplates'
+          module: 'cloudStorm'
         },
         src: [ '<%= app_files.template %>' ],
         dest: '<%= build_dir %>/templates.js'
@@ -140,9 +140,10 @@ module.exports = function(grunt) {
       sample_app: {
         files: [
           { 
-            cwd: '.',
-            src: ['<%= app_files.sample %>'] ,
+            src: [ '**'] ,
+            cwd: '<%= sample_dir %>',
             dest: '<%= compile_dir %>/',
+            expand:true
           }
        ]   
       }

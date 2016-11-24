@@ -3,3 +3,4 @@ bin/
 node_modules/
 vendor/
 .sass-cache
+sample/CloudStorm Sample_files

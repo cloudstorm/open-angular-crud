@@ -1,6 +1,10 @@
-var app = angular.module('cloudStormSample', ['cloudStorm']);
+var app = angular.module('cloudStormSample', [
+  'cloudStorm', 
+  'ngAnimate',
+  'ui.bootstrap'
+  ]);
 
 app.controller('MainCtrl', function($scope, CSAlertService) {
-  $scope.name = 'World';
+  $scope.world = 'World';
   CSAlertService.addAlert('heyy', 'info');
 });
