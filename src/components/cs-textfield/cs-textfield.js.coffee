@@ -4,7 +4,7 @@ app = angular.module('cloudStorm.textfield', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csTextfield", ['$rootScope', 'CSTemplateService', 'CSInputBase', ($rootScope, CSTemplateService, CSInputBase) ->
+app.directive "csTextfield", ['$rootScope', 'csTemplateService', 'csInputBase', ($rootScope, csTemplateService, csInputBase) ->
 
   # ===== COMPILE =============================================================
 
@@ -23,8 +23,8 @@ app.directive "csTextfield", ['$rootScope', 'CSTemplateService', 'CSInputBase', 
   # ===== LINK ================================================================
 
   link = ($scope, element, attrs, controller) ->    
-    CSInputBase $scope
-    $scope.CSTemplateService = CSTemplateService
+    csInputBase $scope
+    $scope.csTemplateService = csTemplateService
     $scope.defaultTemplate = 'components/cs-textfield/cs-textfield-template.html'
             
     # ===== WATCHES =======================================
@@ -45,7 +45,7 @@ app.directive "csTextfield", ['$rootScope', 'CSTemplateService', 'CSInputBase', 
   
   return {
     restrict: 'E'
-    template: '<ng-include src="CSTemplateService.getTemplateUrl(field,options,defaultTemplate)"/>',
+    template: '<ng-include src="csTemplateService.getTemplateUrl(field,options,defaultTemplate)"/>',
     scope:
       field: '=' # The resource item which the form is working with
       formItem: '='

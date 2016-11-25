@@ -2,9 +2,9 @@
 
 app = angular.module("cloudStorm.templateService", [])
 
-app.factory 'CSTemplateService', [() ->
+app.factory 'csTemplateService', [() ->
 
-  class CSTemplateService
+  class csTemplateService
     
     getTemplateUrl: (field, options, defaultTemplate) ->
       template = defaultTemplate
@@ -22,5 +22,5 @@ app.factory 'CSTemplateService', [() ->
             
       template
 
-  return new CSTemplateService
+  return new csTemplateService
 ]

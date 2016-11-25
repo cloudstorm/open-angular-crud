@@ -8,7 +8,7 @@ app = angular.module('cloudStorm.inputBase', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.factory "CSInputBase", [ ->
+app.factory "csInputBase", [ ->
 
   build = ($scope) ->
 

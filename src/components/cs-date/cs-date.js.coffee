@@ -4,7 +4,7 @@ app = angular.module('cloudStorm.date', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csDate", ['uibDateParser', 'csSettings', 'CSInputBase', (uibDateParser, csSettings, CSInputBase) ->
+app.directive "csDate", ['uibDateParser', 'csSettings', 'csInputBase', (uibDateParser, csSettings, csInputBase) ->
 
   # ===== COMPILE =============================================================
 
@@ -35,7 +35,7 @@ app.directive "csDate", ['uibDateParser', 'csSettings', 'CSInputBase', (uibDateP
   link = ($scope, element, attrs, controller) ->
     $scope.i18n = csSettings.settings['i18n-engine']
 
-    CSInputBase $scope
+    csInputBase $scope
     format_date($scope)
 
     # ===== WATCHES =======================================

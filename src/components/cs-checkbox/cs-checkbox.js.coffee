@@ -4,7 +4,7 @@ app = angular.module('cloudStorm.checkbox', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csCheckbox", ['$rootScope', 'CSInputBase', ($rootScope, CSInputBase) ->
+app.directive "csCheckbox", ['$rootScope', 'csInputBase', ($rootScope, csInputBase) ->
 
 
   # ===== COMPILE =============================================================
@@ -25,7 +25,7 @@ app.directive "csCheckbox", ['$rootScope', 'CSInputBase', ($rootScope, CSInputBa
   # ===== LINK ================================================================
 
   link = ($scope, element, attrs, controller) ->    
-    CSInputBase $scope
+    csInputBase $scope
     
     $scope.formItem.attributes[$scope.field.attribute] = !!$scope.formItem.attributes[$scope.field.attribute]
     

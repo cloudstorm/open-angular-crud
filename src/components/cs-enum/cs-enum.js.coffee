@@ -4,7 +4,7 @@ app = angular.module('cloudStorm.enum', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csEnum", ['$rootScope', 'CSInputBase', ($rootScope, CSInputBase) ->
+app.directive "csEnum", ['$rootScope', 'csInputBase', ($rootScope, csInputBase) ->
 
 
   # ===== COMPILE =============================================================
@@ -25,7 +25,7 @@ app.directive "csEnum", ['$rootScope', 'CSInputBase', ($rootScope, CSInputBase) 
   # ===== LINK ================================================================
 
   link = ($scope, element, attrs, controller) ->    
-    CSInputBase $scope
+    csInputBase $scope
         
     # ===== WATCHES =======================================
 

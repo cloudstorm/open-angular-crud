@@ -4,7 +4,7 @@ app = angular.module('cloudStorm.number', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csNumber", ['$rootScope', 'CSInputBase', ($rootScope, CSInputBase) ->
+app.directive "csNumber", ['$rootScope', 'csInputBase', ($rootScope, csInputBase) ->
 
 
   # ===== COMPILE =============================================================
@@ -25,7 +25,7 @@ app.directive "csNumber", ['$rootScope', 'CSInputBase', ($rootScope, CSInputBase
   # ===== LINK ================================================================
 
   link = ($scope, element, attrs, controller) ->    
-    CSInputBase $scope
+    csInputBase $scope
             
     if $scope.formMode == 'create'
       if $scope.field.default?
