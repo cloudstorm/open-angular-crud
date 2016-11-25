@@ -18,10 +18,7 @@
     "forms"
   ],
   "author": "Virtual Solutions Ltd <info@cloudstorm.io>",
-  "licenses": {
-    "type": "MIT",
-    "url": "https://raw.github.com/cloudstorm/cloudstorm/master/LICENSE.txt"
-  },
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/cloudstorm/cloudstorm/issues"
   },
@@ -34,6 +31,7 @@
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-sass": "^1.0.0",
     "grunt-contrib-uglify": "^2.0.0",
+    "grunt-contrib-watch": "^1.0.0",
     "grunt-exec": "^1.0.1",
     "grunt-haml2html": "^0.3.1",
     "grunt-html2js": "^0.3.6"

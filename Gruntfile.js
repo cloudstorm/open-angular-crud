@@ -9,6 +9,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-haml2html');
   grunt.loadNpmTasks('grunt-html2js');
   grunt.loadNpmTasks('grunt-exec');
@@ -41,7 +42,7 @@ module.exports = function(grunt) {
         ' * <%= pkg.homepage %>\n' +
         ' *\n' +
         ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
-        ' * Licensed <%= pkg.licenses.type %> <<%= pkg.licenses.url %>>\n' +
+        ' * Licensed <%= pkg.license %> \n' +
         ' */\n'
     },
 
@@ -82,9 +83,6 @@ module.exports = function(grunt) {
           }
         ]
       },
-      watch: {
-        files : {}
-      }
     },
     
     /**
@@ -97,7 +95,7 @@ module.exports = function(grunt) {
       build: {
         options: {
           base: 'build/src',
-          module: 'cloudStorm'
+          module: 'csTemplates'
         },
         src: [ '<%= app_files.template %>' ],
         dest: '<%= build_dir %>/templates.js'
@@ -197,27 +195,69 @@ module.exports = function(grunt) {
     ],
 
     exec: {
-      start_web_server: {
-        command: 'cd bin && python -m SimpleHTTPServer 8000'
+      say: {
+        cmd: function(text) {
+          return 'say ' + text;
+        }
       },
-      list_files: {
-        command: 'ls -l **',
-        stdout: true
+      start_web: {
+        command: 'cd bin && python -m SimpleHTTPServer 8000 &> /dev/null &'
+        // command: 'cd bin && python -m SimpleHTTPServer 8000'
       },
-      echo_grunt_version: {
-        command: function(grunt) { return 'echo ' + grunt.version; },
-        stdout: true
-      }
-    }
+      stop_web: {
+        command: "kill -9 `ps -ef |grep SimpleHTTPServer |awk '{print $2}'`"
+      },
+    },
+
+    /** 
+     * Watches
+     * LiveReload is added through grunt-contrib-watch
+     * User LiveReload with a browser extension or if you prefer to not, 
+     * then make sure the following is added to the end of the body tag in HTML:
+     * <script src="http://localhost:35729/livereload.js"></script>
+     */
+    watch: {
+      /**
+       * By default, we want the Live Reload to work for all tasks; this is
+       * overridden in some tasks (like this file) where browser resources are
+       * unaffected. It runs by default on port 35729, which your browser
+       * plugin should auto-detect.
+       */
+      options: {
+        livereload: true
+      },
+
+      sample_app: {
+        files: [ 
+          '<%= sample_dir %>/**',
+        ],
+        tasks: [ 'exec:say:sample', 'copy:sample_app', 'restart_web' ]
+      },
+    },
 
   };
 
   grunt.initConfig( grunt.util._.extend( taskConfig, userConfig ) );
   
+  grunt.registerTask( 'restart_web', [ 'exec:stop_web', 'exec:start_web' ]);
+  
+  // *
+  //  * In order to make it safe to just compile or copy *only* what was changed,
+  //  * we need to ensure we are starting from a clean, fresh build. So we rename
+  //  * the `watch` task to `delta` (that's why the configuration var above is
+  //  * `delta`) and then add a new task called `watch` that does a clean build
+  //  * before watching for changes.
+   
+  // grunt.renameTask( 'watch', 'delta' );
+  // grunt.registerTask( 'watch', [ 
+  //   'build', 'delta' 
+  //   // 'build', 'karma:unit', 'delta' 
+  // ]);
+
   /**
    * The default task is to build and compile.
    */
-  grunt.registerTask( 'default', [ 'build', 'compile', 'exec:start_web_server' ] );
+  grunt.registerTask( 'default', [ 'build', 'compile', 'exec:start_web', 'watch' ] );
   
   /**
    * The `build` task gets your app ready to run for development and testing.
