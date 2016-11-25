@@ -249,6 +249,7 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', '$q',
           return @.$relationship(rel.data, opts)          
 
     $assign_association: (field, value, opts = {}) -> 
+      @relationships ||= {}
       if value
         if angular.isArray(value)
           @relationships[field.relationship] = { 
