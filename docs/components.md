@@ -217,7 +217,7 @@ Example usage:
 
 ##### example.html
 ```html
-  <cs-index resource-type=resourceType cs-index-option=options />
+  <cs-index resource-type=resourceType cs-index-option=options></cs-index>
 ```
 ##### example.js
 ```javascript
@@ -233,7 +233,7 @@ Example usage:
 
 **Usage**
 
-1. Place a `<cs-alert/>` element in your layout.
+1. Place a `<cs-alert></cs-alert>` element in your layout.
 1. Include `csAlertService` as dependency in controller/directive
 1. Add an alert by calling `csAlertService.addAlert(message,type)`. Available types are same as Bootstrap: 'success', 'info', 'warning', 'danger'.
 

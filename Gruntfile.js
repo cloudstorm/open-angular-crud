@@ -231,7 +231,7 @@ module.exports = function(grunt) {
         files: [ 
           '<%= sample_dir %>/**',
         ],
-        tasks: [ 'exec:say:sample', 'copy:sample_app', 'restart_web' ]
+        tasks: [ 'exec:say:sample', 'copy:sample_app' ]
       },
     },
 
@@ -241,8 +241,6 @@ module.exports = function(grunt) {
   
   grunt.registerTask( 'start_web', ['exec:say:web','exec:start_web' ]);
 
-  grunt.registerTask( 'restart_web', [ /*'exec:stop_web',*/ 'exec:start_web' ]);
-  
   // *
   //  * In order to make it safe to just compile or copy *only* what was changed,
   //  * we need to ensure we are starting from a clean, fresh build. So we rename

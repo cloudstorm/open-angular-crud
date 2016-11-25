@@ -24,11 +24,9 @@
   </head>
 
   <body ng-controller="MainCtrl">
-    <div>
-      <cs-alert></cs-alert>
-      <div>
-        <p>Hello {{world}}!</p>
-      </div>
+    <cs-alert></cs-alert>
+    <div class="container">
+      <cs-index resource-type=resourceType cs-index-options="options"></cs-index>
     </div>
     <script src="http://localhost:35729/livereload.js"></script>
   </body>
