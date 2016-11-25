@@ -1,10 +1,10 @@
 "use strict"
 
-app = angular.module('cloudStorm.enum', [])
+app = angular.module('cloudStorm.number', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csEnum", ['$rootScope', 'CSInputBase', ($rootScope, CSInputBase) ->
+app.directive "csNumber", ['$rootScope', 'CSInputBase', ($rootScope, CSInputBase) ->
 
 
   # ===== COMPILE =============================================================
@@ -12,7 +12,7 @@ app.directive "csEnum", ['$rootScope', 'CSInputBase', ($rootScope, CSInputBase) 
   compile = ($templateElement, $templateAttributes) ->
 
     # Only modify the DOM in compile, use (pre/post) link for others
-    $templateElement.addClass "cs-enum"
+    $templateElement.addClass "cs-number"
 
     # Pre-link: gets called for parent first
     pre: (scope, element, attrs, controller) ->
@@ -26,7 +26,11 @@ app.directive "csEnum", ['$rootScope', 'CSInputBase', ($rootScope, CSInputBase) 
 
   link = ($scope, element, attrs, controller) ->    
     CSInputBase $scope
-        
+            
+    if $scope.formMode == 'create'
+      if $scope.field.default?
+        $scope.formItem.attributes[$scope.field.attribute] = $scope.field.default
+
     # ===== WATCHES =======================================
 
     $scope.$watch 'formItem.attributes[field.attribute]', (newValue, oldValue) ->
@@ -39,7 +43,7 @@ app.directive "csEnum", ['$rootScope', 'CSInputBase', ($rootScope, CSInputBase) 
   
   return {
     restrict: 'E'
-    templateUrl: 'components/inputs/cs-enum/cs-enum-template.html'
+    templateUrl: 'components/cs-number/cs-number-template.html'
     scope:
       field: '=' # The resource item which the form is working with
       formItem: '='

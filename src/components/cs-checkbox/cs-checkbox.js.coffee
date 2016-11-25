@@ -1,10 +1,10 @@
 "use strict"
 
-app = angular.module('cloudStorm.number', [])
+app = angular.module('cloudStorm.checkbox', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csNumber", ['$rootScope', 'CSInputBase', ($rootScope, CSInputBase) ->
+app.directive "csCheckbox", ['$rootScope', 'CSInputBase', ($rootScope, CSInputBase) ->
 
 
   # ===== COMPILE =============================================================
@@ -12,7 +12,7 @@ app.directive "csNumber", ['$rootScope', 'CSInputBase', ($rootScope, CSInputBase
   compile = ($templateElement, $templateAttributes) ->
 
     # Only modify the DOM in compile, use (pre/post) link for others
-    $templateElement.addClass "cs-number"
+    $templateElement.addClass "cs-checkbox"
 
     # Pre-link: gets called for parent first
     pre: (scope, element, attrs, controller) ->
@@ -26,16 +26,17 @@ app.directive "csNumber", ['$rootScope', 'CSInputBase', ($rootScope, CSInputBase
 
   link = ($scope, element, attrs, controller) ->    
     CSInputBase $scope
-            
-    if $scope.formMode == 'create'
-      if $scope.field.default?
-        $scope.formItem.attributes[$scope.field.attribute] = $scope.field.default
-
+    
+    $scope.formItem.attributes[$scope.field.attribute] = !!$scope.formItem.attributes[$scope.field.attribute]
+    
     # ===== WATCHES =======================================
 
     $scope.$watch 'formItem.attributes[field.attribute]', (newValue, oldValue) ->
       if (newValue != oldValue)
         $scope.$emit 'input-value-changed', $scope.field
+
+    $scope.$on 'form-reset', () ->
+      $scope.formItem.attributes[$scope.field.attribute] = false
 
     return
 
@@ -43,12 +44,12 @@ app.directive "csNumber", ['$rootScope', 'CSInputBase', ($rootScope, CSInputBase
   
   return {
     restrict: 'E'
-    templateUrl: 'components/inputs/cs-number/cs-number-template.html'
+    templateUrl: 'components/cs-checkbox/cs-checkbox-template.html'
     scope:
       field: '=' # The resource item which the form is working with
       formItem: '='
       formMode: '='
-      options: '=' 
+      options: '='
     compile: compile
   }
 

@@ -1,17 +1,18 @@
 "use strict"
 
-app = angular.module('cloudStorm.textfield', [])
+app = angular.module('cloudStorm.enum', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csTextfield", ['$rootScope', 'CSTemplateService', 'CSInputBase', ($rootScope, CSTemplateService, CSInputBase) ->
+app.directive "csEnum", ['$rootScope', 'CSInputBase', ($rootScope, CSInputBase) ->
+
 
   # ===== COMPILE =============================================================
 
   compile = ($templateElement, $templateAttributes) ->
 
     # Only modify the DOM in compile, use (pre/post) link for others
-    $templateElement.addClass "cs-textfield"
+    $templateElement.addClass "cs-enum"
 
     # Pre-link: gets called for parent first
     pre: (scope, element, attrs, controller) ->
@@ -20,24 +21,17 @@ app.directive "csTextfield", ['$rootScope', 'CSTemplateService', 'CSInputBase', 
     # Post-link: gets called for children recursively after post() traversed the DOM tree
     post: link
 
+
   # ===== LINK ================================================================
 
   link = ($scope, element, attrs, controller) ->    
     CSInputBase $scope
-    $scope.CSTemplateService = CSTemplateService
-    $scope.defaultTemplate = 'components/inputs/cs-textfield/cs-textfield-template.html'
-            
+        
     # ===== WATCHES =======================================
 
     $scope.$watch 'formItem.attributes[field.attribute]', (newValue, oldValue) ->
       if (newValue != oldValue)
         $scope.$emit 'input-value-changed', $scope.field
-
-    # ===== UI HANDLES ====================================
-
-    $scope.keyPressed = ($event) ->
-      if $event.keyCode == 13
-        $scope.$emit 'submit-form-on-enter', $scope.field
 
     return
 
@@ -45,12 +39,12 @@ app.directive "csTextfield", ['$rootScope', 'CSTemplateService', 'CSInputBase', 
   
   return {
     restrict: 'E'
-    template: '<ng-include src="CSTemplateService.getTemplateUrl(field,options,defaultTemplate)"/>',
+    templateUrl: 'components/cs-enum/cs-enum-template.html'
     scope:
       field: '=' # The resource item which the form is working with
       formItem: '='
       formMode: '='
-      options: '='
+      options: '=' 
     compile: compile
   }
 
