@@ -1,5 +1,5 @@
 
-app = angular.module('cloudStorm', ['ui.bootstrap'])
+app = angular.module('cloudStorm', ['csTemplates','ui.bootstrap'])
 
 # TODO: Remove / refactor module override. 
 # See GitHub issue https://github.com/cloudstorm/cloudstorm/issues/63
