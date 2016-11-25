@@ -4,7 +4,7 @@
 
 "use strict"
 
-app = angular.module('cloudStorm')
+app = angular.module('cloudStorm.inputBase', [])
 
 # ===== DIRECTIVE =============================================================
 

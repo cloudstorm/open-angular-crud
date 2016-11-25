@@ -24,6 +24,7 @@ module.exports = {
     coffee: [ 'src/**/*.js.coffee', 'src/**/*.coffee' ],
     sass: [ 'src/cloudstorm.scss' ],
     haml: [ 'src/**/*.haml' ],
+    built_js: [ '<%= build_dir %>/src/**/*.js', '!<%= build_dir %>/src/cloudstorm.js', '<%= build_dir %>/src/cloudstorm.js' ],
     template: [ '<%= build_dir %>/**/*-template.html' ]
   },
 

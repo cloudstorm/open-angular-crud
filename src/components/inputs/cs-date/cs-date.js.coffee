@@ -1,6 +1,6 @@
 "use strict"
 
-app = angular.module('cloudStorm')
+app = angular.module('cloudStorm.date', [])
 
 # ===== DIRECTIVE =============================================================
 

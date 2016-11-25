@@ -1,4 +1,4 @@
-angular.module('cloudStorm')
+angular.module('cloudStorm.localizationProvider', [])
 
 ####################################################################################################
 # A simple key-value lookup base translation service

@@ -1,6 +1,6 @@
 "use strict"
 
-app = angular.module("cloudStorm")
+app = angular.module('cloudStorm.resource', [])
 
 ####################################################################################################
 app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', '$q', (csRestApi, csDataStore, ResourceService, $q) ->

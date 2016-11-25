@@ -1,6 +1,6 @@
 "use strict"
 
-angular.module('cloudstorm.rest-api', [])
+angular.module('cloudStorm.restApi', [])
 
 ####################################################################################################
 .factory 'csRestApi', [ '$q', '$http', ($q, $http) ->

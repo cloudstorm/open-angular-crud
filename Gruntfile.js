@@ -95,7 +95,7 @@ module.exports = function(grunt) {
       build: {
         options: {
           base: 'build/src',
-          module: 'csTemplates'
+          module: 'cloudStorm.templates'
         },
         src: [ '<%= app_files.template %>' ],
         dest: '<%= build_dir %>/templates.js'
@@ -178,7 +178,7 @@ module.exports = function(grunt) {
         src: [ 
           // '<%= vendor_files.js %>', 
           // 'module.prefix', 
-          '<%= build_dir %>/src/**/*.js', 
+          '<%= app_files.built_js %>',
           '<%= html2js.build.dest %>', 
           // 'module.suffix' 
         ],
@@ -201,7 +201,7 @@ module.exports = function(grunt) {
         }
       },
       start_web: {
-        command: 'cd bin && python -m SimpleHTTPServer 8000 &> /dev/null &'
+        command: 'cd bin && python -m SimpleHTTPServer 8000'
         // command: 'cd bin && python -m SimpleHTTPServer 8000'
       },
       stop_web: {
@@ -239,7 +239,9 @@ module.exports = function(grunt) {
 
   grunt.initConfig( grunt.util._.extend( taskConfig, userConfig ) );
   
-  grunt.registerTask( 'restart_web', [ 'exec:stop_web', 'exec:start_web' ]);
+  grunt.registerTask( 'start_web', ['exec:say:web','exec:start_web' ]);
+
+  grunt.registerTask( 'restart_web', [ /*'exec:stop_web',*/ 'exec:start_web' ]);
   
   // *
   //  * In order to make it safe to just compile or copy *only* what was changed,
@@ -257,7 +259,7 @@ module.exports = function(grunt) {
   /**
    * The default task is to build and compile.
    */
-  grunt.registerTask( 'default', [ 'build', 'compile', 'exec:start_web', 'watch' ] );
+  grunt.registerTask( 'default', [ 'build', 'compile', 'start_web' ] );
   
   /**
    * The `build` task gets your app ready to run for development and testing.

@@ -3,7 +3,7 @@
 
 "use strict"
 
-app = angular.module('cloudStorm')
+app = angular.module('cloudStorm.alert', [])
 
 
 # ===== DIRECTIVE =============================================================
