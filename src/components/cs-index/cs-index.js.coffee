@@ -12,7 +12,7 @@ catch err
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSettings', '$uibModal', 'CSAlertService', (ResourceService, csDataStore, csRestApi, csSettings, $uibModal, CSAlertService) ->
+app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSettings', '$uibModal', 'csAlertService', (ResourceService, csDataStore, csRestApi, csSettings, $uibModal, csAlertService) ->
 
   # ===== COMPILE =============================================================
 
@@ -161,7 +161,7 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
               $scope.collection.splice(index, 1)
             # errorCallback
             (reason) ->
-              CSAlertService.addAlert "#{reason.data.errors[0].detail}", 'danger'
+              csAlertService.addAlert "#{reason.data.errors[0].detail}", 'danger'
           )
 
       $scope.closePanel = () ->
@@ -195,12 +195,12 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
           "events": {
             'wizard-canceled': (resource) ->
               modalInstance.close()
-              CSAlertService.addAlert($scope.i18n?.t('alert.no_resource_created') || 'translation missing', 'info')
+              csAlertService.addAlert($scope.i18n?.t('alert.no_resource_created') || 'translation missing', 'info')
 
             'wizard-submited': (resource) ->
               pushNewItem($scope.collection, resource)
               modalInstance.close() unless $scope.wizardOptions['keep-first']
-              CSAlertService.addAlert($scope.i18n?.t('alert.new_resource_created') || 'translation missing', 'success')
+              csAlertService.addAlert($scope.i18n?.t('alert.new_resource_created') || 'translation missing', 'success')
 
           }
 

@@ -16,7 +16,7 @@ catch err
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csAlert", ['CSAlertService', (CSAlertService) ->
+app.directive "csAlert", ['csAlertService', (csAlertService) ->
 
   # ===== COMPILE =============================================================
 
@@ -35,7 +35,7 @@ app.directive "csAlert", ['CSAlertService', (CSAlertService) ->
   # ===== LINK ================================================================
 
   link = (scope, element, attrs, controller) ->    
-    scope.CSAlertService = CSAlertService
+    scope.csAlertService = csAlertService
     return
 
   # ===== CONFIGURE ===========================================================

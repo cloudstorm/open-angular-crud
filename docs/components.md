@@ -234,11 +234,11 @@ Example usage:
 **Usage**
 
 1. Place a `<cs-alert/>` element in your layout.
-1. Include `CSAlertService` as dependency in controller/directive
-1. Add an alert by calling `CSAlertService.addAlert(message,type)`. Available types are same as Bootstrap: 'success', 'info', 'warning', 'danger'.
+1. Include `csAlertService` as dependency in controller/directive
+1. Add an alert by calling `csAlertService.addAlert(message,type)`. Available types are same as Bootstrap: 'success', 'info', 'warning', 'danger'.
 
-> When used from template make `CSAlertService`accessible on $scope
-(eg: in `ng-click => CSAlertService.addAlert('alert','success')`)
+> When used from template make `csAlertService`accessible on $scope
+(eg: in `ng-click => csAlertService.addAlert('alert','success')`)
 
 :warning:
 > Place only one cs-alert element per app, or make sure that there is only one such element in your view at the same time (eg: by placing it in a shared header template)!

@@ -8,7 +8,7 @@ try
   app = angular.module("cloudStorm")
 catch err
   # Module not defined yet, define it
- app = angular.module('cloudStorm', ['ui.bootstrap'])
+ app = angular.module('cloudStorm', [])
 
 
 # ===== DIRECTIVE =============================================================

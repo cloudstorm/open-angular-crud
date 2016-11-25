@@ -10,7 +10,7 @@ catch err
 
 # ===== SERVICE ===============================================================
 
-app.service 'CSAlertService', [() ->
+app.service 'csAlertService', [() ->
   @sequence = 0
   @alerts = []
   

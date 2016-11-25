@@ -12,7 +12,7 @@ catch err
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csIndexSidepanel", ['$rootScope', 'CSAlertService', 'csSettings', ($rootScope, CSAlertService, csSettings) ->
+app.directive "csIndexSidepanel", ['$rootScope', 'csAlertService', 'csSettings', ($rootScope, csAlertService, csSettings) ->
 
   # ===== COMPILE =============================================================
 
@@ -42,11 +42,11 @@ app.directive "csIndexSidepanel", ['$rootScope', 'CSAlertService', 'csSettings',
         "events":
           'wizard-canceled': (resource) -> 
             $scope.unselectItem()
-            CSAlertService.addAlert($scope.i18n?.t('alert.nothing_changed') || 'translation missing', 'info')
+            csAlertService.addAlert($scope.i18n?.t('alert.nothing_changed') || 'translation missing', 'info')
           'wizard-submited': (resource) -> 
-            CSAlertService.addAlert($scope.i18n?.t('alert.changes_saved') || 'translation missing', 'success')
+            csAlertService.addAlert($scope.i18n?.t('alert.changes_saved') || 'translation missing', 'success')
           'wizard-error': (resource) ->
-            CSAlertService.addAlert($scope.i18n?.t('alert.error_happened')  || 'translation missing', 'danger')
+            csAlertService.addAlert($scope.i18n?.t('alert.error_happened')  || 'translation missing', 'danger')
 
       angular.merge $scope.editWizardOptions, _.omit($scope.csIndexSidepanelOptions, "selectedItem")
 
