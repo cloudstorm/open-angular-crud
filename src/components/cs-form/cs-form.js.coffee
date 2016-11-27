@@ -59,7 +59,8 @@ app.directive "csForm", ['csSettings', (csSettings) ->
     # --- Trigger events ------------------------
     
     scrollTrigger = _.throttle () -> $scope.$broadcast 'form-scroll', 300
-    $(element).find('form').on 'scroll', scrollTrigger
+    elem = element[0].querySelector('form')
+    angular.element(elem).on 'scroll', scrollTrigger
     
     # --- Handle events -------------------------
     
