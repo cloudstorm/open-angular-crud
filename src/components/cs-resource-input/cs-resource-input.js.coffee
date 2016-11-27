@@ -1,6 +1,6 @@
 "use strict"
 
-app = angular.module('cloudStorm.resourceInput', [])
+app = angular.module('cloudStorm.resourceInput', ['ui.select'])
 
 # ===== DIRECTIVE =============================================================
 

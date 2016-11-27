@@ -1,6 +1,6 @@
 "use strict"
 
-app = angular.module('cloudStorm.textfield', [])
+app = angular.module('cloudStorm.textfield', ['ui.select'])
 
 # ===== DIRECTIVE =============================================================
 

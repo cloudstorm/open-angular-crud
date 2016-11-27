@@ -1,6 +1,6 @@
 "use strict"
 
-app = angular.module('cloudStorm.enum', [])
+app = angular.module('cloudStorm.enum', ['ui.select'])
 
 # ===== DIRECTIVE =============================================================
 
