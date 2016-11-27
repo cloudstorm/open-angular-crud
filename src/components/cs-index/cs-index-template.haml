@@ -1,5 +1,5 @@
 .row
-  .col-lg-12
+  .col-lg-12{ "ng-switch" => "listIsEmpty()" }
     .row.page-header
       %h1
         {{ header }}
@@ -21,7 +21,11 @@
                                                  "ng-disabled" => "createDisabled()" }
             {{ i18n.t('buttons.new') }}
 
-    .row
+    .row{ "ng-switch-when" => "true" }
+      .well.well-lg
+        {{ i18n.t('index.empty') }}
+      
+    .row{ "ng-if" => "false" }
       .index-table{ "ng-class" => "{ 'col-lg-8' : sidePanelIsVisible() && !viewIsCompressed(),
                                      'col-lg-6' : viewIsCompressed() }" }
         .table-responsive

@@ -38,6 +38,7 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
             $scope.collection = items
           # errorCallback
           (reason) ->
+            $scope.collection = null
             console.log reason
           # notifyCallback
           () ->
@@ -82,6 +83,9 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
 
       # ===== GETTERS =========================================
 
+      $scope.listIsEmpty = () ->
+        $scope.collection == null
+        
       $scope.fieldValue = (item, field) ->
         if field.resource
           if field.cardinality == 'many'
