@@ -118,7 +118,17 @@ module.exports = function(grunt) {
     },
     
     copy: {
-      compile_assets: {
+      compiled_js: {
+        files: [
+          {
+            src: [ '**/*.js' ],
+            cwd: '<%= build_dir %>/assets',
+            dest: '<%= compile_dir %>/assets',
+            expand: true
+          }
+        ]
+      },
+      compiled_assets: {
         files: [
           {
             src: [ '**' ],
@@ -134,7 +144,6 @@ module.exports = function(grunt) {
           }
         ]
       },
-      
       sample_app: {
         files: [
           { 
@@ -173,7 +182,8 @@ module.exports = function(grunt) {
        */
       compile_js: {
         options: {
-          banner: '<%= meta.banner %>'
+          banner: '<%= meta.banner %>',
+          sourceMap: true
         },
         src: [ 
           // '<%= vendor_files.js %>', 
@@ -227,6 +237,17 @@ module.exports = function(grunt) {
         livereload: true
       },
 
+      /**
+       * When our CoffeeScript source files change, we want to  lint them and
+       * run our unit tests.
+       */
+      coffeesrc: {
+        files: [ 
+          '<%= app_files.coffee %>'
+        ],
+        tasks: [ 'exec:say:coffee', 'coffee', 'copy:compiled_js', 'concat:compile_js' ]
+        // tasks: [ 'coffeelint:src', 'coffee:source', 'karma:unit:run', 'copy:build_appjs' ]
+      },
       sample_app: {
         files: [ 
           '<%= sample_dir %>/**',
@@ -276,8 +297,8 @@ module.exports = function(grunt) {
    * minifying your code.
    */
   grunt.registerTask( 'compile', [
-    'copy:compile_assets', 'concat:compile_js'
-    // 'less:compile', 'copy:compile_assets', 'ngAnnotate', 'concat:compile_js', 'uglify', 'index:compile'
+    'copy:compiled_assets', 'concat:compile_js'
+    // 'less:compile', 'copy:compiled_assets', 'ngAnnotate', 'concat:compile_js', 'uglify', 'index:compile'
   ]);
 
 };
