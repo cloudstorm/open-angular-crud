@@ -248,6 +248,13 @@ module.exports = function(grunt) {
         tasks: [ 'exec:say:coffee', 'coffee', 'copy:compiled_js', 'concat:compile_js' ]
         // tasks: [ 'coffeelint:src', 'coffee:source', 'karma:unit:run', 'copy:build_appjs' ]
       },
+      hamlsrc: {
+        files: [ 
+          '<%= app_files.haml %>'
+        ],
+        tasks: [ 'exec:say:haml', 'haml', 'html2js', 'copy:compiled_js', 'concat:compile_js' ]
+        // tasks: [ 'coffeelint:src', 'coffee:source', 'karma:unit:run', 'copy:build_appjs' ]
+      },
       sample_app: {
         files: [ 
           '<%= sample_dir %>/**',
