@@ -12,11 +12,11 @@
               %input.form-control.cs-index-filter{ "ng-model" => "csIndexOptions.filterValue",
                                                    :placeholder => "{{ i18n.t('filter_for_anything') }}",
                                                    :type => "text" }
-          
+
           %button.btn.btn-default{ :type => "button", "ng-click" => "refreshIndex()" }
             %span.glyphicon.glyphicon-refresh
-        
-          %button.btn.btn-primary.create-button{ :type => "button", 
+
+          %button.btn.btn-primary.create-button{ :type => "button",
                                                  "ng-click" => "openNewResourcePanel()",
                                                  "ng-disabled" => "createDisabled()" }
             {{ i18n.t('buttons.new') }}
@@ -51,7 +51,7 @@
                   .action.delete-action{ "ng-click" => "destroyItem($event, item)" }<> {{ i18n.t('buttons.delete') }}
 
       %cs-index-sidepanel{ "ng-if" => "sidePanelIsVisible()",
-                           "cs-index-sidepanel-options": "csIndexOptions",
+                           "cs-index-sidepanel-options" => "csIndexOptions",
                            "resource-type" => "resourceType",
                            "item" => "csIndexOptions.selectedItem",
                            "close-panel" => "closePanel()",
