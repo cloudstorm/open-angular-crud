@@ -53,8 +53,8 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
                                        form-mode='formMode'
                                        create-resources='createResources()'
                                        options='csFieldOptions'>
-                     </#{directiveName}>";
-    innerElement.html($compile(inputTemplate)($scope));
+                     </#{directiveName}>"
+    innerElement.append($compile(inputTemplate)($scope))
 
     # ===== DOM MANIPULATION ON SCOPE CHANGE ==============
 
