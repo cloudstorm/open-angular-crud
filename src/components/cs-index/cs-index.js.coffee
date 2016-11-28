@@ -151,7 +151,7 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
 
       $scope.destroyItem = ($event, item) ->
         $event.stopPropagation()
-        if confirm "Biztosan törölni akarja az elemet?"
+        if confirm $scope.i18n?.t('confirm.delete')
           item.$destroy().then(
             # successCallback
             (result) ->
@@ -160,7 +160,8 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
               $scope.collection.splice(index, 1)
             # errorCallback
             (reason) ->
-              csAlertService.addAlert "#{reason.data.errors[0].detail}", 'danger'
+              alert = reason.data?.errors[0].detail
+              csAlertService.addAlert alert || $scope.i18n?.t('alert.error_happened'), 'danger'
           )
 
       $scope.closePanel = () ->

@@ -28,8 +28,7 @@ angular.module('cloudStormSample.resources.item', ['cloudStorm.restApi']).factor
       }
 
       Item.endpoint = 'api/v1/items';
-
-      Item.member_endpoint = 'api/v1/items/{id}';
+      Item.base_url = 'http://localhost:3000';
 
       Item.descriptor = {
         type: 'items',
@@ -113,8 +112,7 @@ angular.module('cloudStormSample.resources.categories', ['cloudStorm.restApi']).
       }
 
       Category.endpoint = 'api/v1/categories';
-
-      Category.member_endpoint = 'api/v1/categories/{id}';
+      Category.base_url = 'http://localhost:3000';
 
       Category.descriptor = {
         type: 'categories',
@@ -155,8 +153,7 @@ angular.module('cloudStormSample.resources.user', ['cloudStorm.restApi']).factor
       }
 
       User.endpoint = 'api/v1/users';
-
-      User.member_endpoint = 'api/v1/users/{id}';
+      User.base_url = 'http://localhost:3000';
 
       User.descriptor = {
         type: 'users',
