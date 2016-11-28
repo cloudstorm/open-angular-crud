@@ -40,6 +40,7 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
         when type == 'string'   then 'cs-textfield'
         when type == 'date'     then 'cs-date'
         when type == 'time'     then 'cs-time'
+        when type == 'datetime' then 'cs-datetime'
         when type == 'integer'  then 'cs-number'
         when type == 'float'    then 'cs-number'
         when type == 'enum'     then 'cs-enum'

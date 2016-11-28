@@ -23,19 +23,10 @@ app.directive "csTime", ['uibDateParser', 'csSettings', 'csInputBase', (uibDateP
 
   # ===== LINK ================================================================
 
-  format_time = ($scope) ->
-    format = $scope.options['time-format'] || csSettings.settings['time-format']
-
-    if format
-      input_time = $scope.formItem.attributes[$scope.field.attribute]
-      time = uibDateParser.parse(input_time, format)
-      $scope.formItem.attributes[$scope.field.attribute] = time
-
   link = ($scope, element, attrs, controller) ->
     $scope.i18n = csSettings.settings['i18n-engine']
 
     csInputBase $scope
-    format_date($scope)
 
     # ===== WATCHES =======================================
 
@@ -61,10 +52,6 @@ app.directive "csTime", ['uibDateParser', 'csSettings', 'csInputBase', (uibDateP
       $scope.getModelOptions = () ->
         offset = $scope.options['time-zone-offset'] || csSettings.settings['time-zone-offset'] || 'utc'
         options = { 'timezone': offset }
-
-      $scope.$watch 'formItem.id', (newValue, oldValue) ->
-        if (newValue != oldValue)
-          format_time($scope)
     ]
 
   }

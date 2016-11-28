@@ -1,17 +1,17 @@
 "use strict"
 
-app = angular.module('cloudStorm.date', [])
+app = angular.module('cloudStorm.datetime', ['ui.bootstrap'])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csDate", ['uibDateParser', 'csSettings', 'csInputBase', (uibDateParser, csSettings, csInputBase) ->
+app.directive "csDatetime", ['uibDateParser', 'csSettings', 'csInputBase', (uibDateParser, csSettings, csInputBase) ->
 
   # ===== COMPILE =============================================================
 
   compile = ($templateElement, $templateAttributes) ->
 
     # Only modify the DOM in compile, use (pre/post) link for others
-    $templateElement.addClass "cs-date"
+    $templateElement.addClass "cs-datetime"
 
     # Pre-link: gets called for parent first
     pre: (scope, element, attrs, controller) ->
@@ -24,18 +24,21 @@ app.directive "csDate", ['uibDateParser', 'csSettings', 'csInputBase', (uibDateP
   # ===== LINK ================================================================
 
   format_date = ($scope) ->
-    format = $scope.options['date-format'] || csSettings.settings['date-format']
+    date_format = $scope.options['datetime-format'] || csSettings.settings['datetime-format']
 
-    if format
+    if date_format
       input_date = $scope.formItem.attributes[$scope.field.attribute]
-      date = uibDateParser.parse(input_date, format)
-      date.setHours(14) if date # TODO: 14 is a timezone dependent value, see https://github.com/cloudstorm/cloudstorm/issues/44
+      if !angular.isDate(input_date)
+        input_date = input_date.substring(0, input_date.length - 1);
+      console.log(input_date)
+      date = uibDateParser.parse(new Date(input_date), date_format)
       $scope.formItem.attributes[$scope.field.attribute] = date
 
   link = ($scope, element, attrs, controller) ->
     $scope.i18n = csSettings.settings['i18n-engine']
 
     csInputBase $scope
+
     format_date($scope)
 
     # ===== WATCHES =======================================
@@ -49,7 +52,7 @@ app.directive "csDate", ['uibDateParser', 'csSettings', 'csInputBase', (uibDateP
 
   return {
     restrict: 'E'
-    templateUrl: 'components/cs-date/cs-date-template.html'
+    templateUrl: 'cloudstorm/src/components/cs-datetime/cs-datetime-template.html'
     priority: 1000
     scope:
       field: '=' # The resource item which the form is working with
