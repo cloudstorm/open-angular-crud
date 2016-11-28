@@ -18,6 +18,18 @@ High-level components   | Form Input components                  | Misc componen
 ## CS Wizard
 <a href="../src/components/cs-wizard"><img src="images/go_to_source.png" align="right"></a>
 
+If you want to open a CS Wizard in a modal view, use the following snippet:
+
+```javascript
+$uibModal.open({
+  scope: $scope,
+  keyboard: false,
+  backdrop: 'static',
+  windowTopClass: 'modal-wizard',
+  template: "<div cs-wizard cs-wizard-options=wizardOptions></div>",
+});
+```
+
 ### Options
 **panel-number-callback**
 * expects a function with one paremeter: `length`: To keep track of the number of panels open, callback is called with length as parameter
