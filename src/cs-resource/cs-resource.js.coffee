@@ -131,7 +131,8 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
     $create: (params = {}, options = {}) -> 
       throw "The id of the object is provided, but PUT is not yet supported. (Did you mean to use $save?)" if @id
 
-      endpoint = options.endpoint || @.constructor.endpoint      
+      endpoint = options.endpoint || @.constructor.endpoint
+      endpoint = "#{baseUrl(@.constructor)}/#{endpoint}"
       endpoint = "#{endpoint}/#{options.scope}" if options.scope
 
       entity   = _.pick(@, "type", "attributes", "relationships")

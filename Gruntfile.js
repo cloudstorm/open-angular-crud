@@ -111,23 +111,13 @@ module.exports = function(grunt) {
         },
         src: [
           '<%= vendor_files.css %>',
-          '<%= app_files.sass %>',
+          '<%= app_files.sass_main %>',
         ],
         dest: '<%= build_dir %>/concat.scss',
       }
     },
     
     copy: {
-      compiled_js: {
-        files: [
-          {
-            src: [ '**/*.js' ],
-            cwd: '<%= build_dir %>/assets',
-            dest: '<%= compile_dir %>/assets',
-            expand: true
-          }
-        ]
-      },
       compiled_assets: {
         files: [
           {
@@ -170,7 +160,7 @@ module.exports = function(grunt) {
           ]
         },
         files: {
-          '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css': '<%= app_files.sass %>'
+          '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css': '<%= app_files.sass_main %>'
         }
       }
     },
@@ -245,15 +235,21 @@ module.exports = function(grunt) {
         files: [ 
           '<%= app_files.coffee %>'
         ],
-        tasks: [ 'exec:say:coffee', 'coffee', 'copy:compiled_js', 'concat:compile_js' ]
+        tasks: [ 'exec:say:coffee', 'coffee', 'concat:compile_js' ]
         // tasks: [ 'coffeelint:src', 'coffee:source', 'karma:unit:run', 'copy:build_appjs' ]
       },
       hamlsrc: {
         files: [ 
           '<%= app_files.haml %>'
         ],
-        tasks: [ 'exec:say:haml', 'haml', 'html2js', 'copy:compiled_js', 'concat:compile_js' ]
+        tasks: [ 'exec:say:haml', 'haml', 'html2js', 'concat:compile_js' ]
         // tasks: [ 'coffeelint:src', 'coffee:source', 'karma:unit:run', 'copy:build_appjs' ]
+      },
+      sasssrc: {
+        files: [ 
+          '<%= app_files.sass %>'
+        ],
+        tasks: [ 'exec:say:sass', 'sass', 'copy:compiled_assets' ]
       },
       sample_app: {
         files: [ 

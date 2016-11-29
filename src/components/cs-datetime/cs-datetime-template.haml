@@ -1,6 +1,7 @@
 .container-flex
   %input.form-control.first{ "uib-datepicker-popup" => "",
                              "datepicker-options" => "{startingDay: 1, showWeeks: false}",
+                             "datepicker-append-to-body" => "true",
                              "is-open" => "dt.open",
                              "ng-disabled" => "fieldDisabled()",
                              "ng-required" => "fieldRequired()",
@@ -18,4 +19,3 @@
         "ng-required" => "fieldRequired()",
         "ng-model" => "formItem.attributes[field.attribute]",
         "ng-model-options" => "getModelOptions()"}
-
