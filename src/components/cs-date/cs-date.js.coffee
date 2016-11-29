@@ -1,19 +1,10 @@
 "use strict"
 
-# ===== SETUP =================================================================
-
-# Make sure that the components module is defined only once
-try
-  # Module already defined, use it
-  app = angular.module("cloudStorm")
-catch err
-  # Module not defined yet, define it
- app = angular.module('cloudStorm', ['ui.bootstrap'])
-
+app = angular.module('cloudStorm.date', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csDate", ['uibDateParser', 'csSettings', 'CSInputBase', (uibDateParser, csSettings, CSInputBase) ->
+app.directive "csDate", ['uibDateParser', 'csSettings', 'csInputBase', (uibDateParser, csSettings, csInputBase) ->
 
   # ===== COMPILE =============================================================
 
@@ -31,7 +22,7 @@ app.directive "csDate", ['uibDateParser', 'csSettings', 'CSInputBase', (uibDateP
 
 
   # ===== LINK ================================================================
-
+  
   format_date = ($scope) ->
     format = $scope.options['date-format'] || csSettings.settings['date-format']
 
@@ -44,11 +35,17 @@ app.directive "csDate", ['uibDateParser', 'csSettings', 'CSInputBase', (uibDateP
   link = ($scope, element, attrs, controller) ->
     $scope.i18n = csSettings.settings['i18n-engine']
 
-    CSInputBase $scope
+    $scope.getType = () ->
+      typeof $scope.formItem.attributes[$scope.field.attribute]
+
+    csInputBase $scope
     format_date($scope)
 
     # ===== WATCHES =======================================
 
+    $scope.$on 'field-submit', (e, data) ->
+      console.log "field submit event #{data}"
+    
     $scope.$watch 'formItem.attributes[field.attribute]', (newValue, oldValue) ->
       if (newValue != oldValue)
         $scope.$emit 'input-value-changed', $scope.field
@@ -58,7 +55,7 @@ app.directive "csDate", ['uibDateParser', 'csSettings', 'CSInputBase', (uibDateP
 
   return {
     restrict: 'E'
-    templateUrl: 'cloudstorm/src/components/inputs/cs-date/cs-date-template.html'
+    templateUrl: 'components/cs-date/cs-date-template.html'
     priority: 1000
     scope:
       field: '=' # The resource item which the form is working with
@@ -69,10 +66,14 @@ app.directive "csDate", ['uibDateParser', 'csSettings', 'CSInputBase', (uibDateP
     controller: ['$scope',($scope) ->
       # NGModelOptions cannot be bound in link time, but can be made available on controller scope
       $scope.getModelOptions = () ->
-        offset = $scope.options['time-zone-offset'] || csSettings.settings['time-zone-offset'] || 'utc'
+        offset = $scope.options['time-zone-offset'] || csSettings.settings['time-zone-offset']
         options = { 'timezone': offset }
 
       $scope.$watch 'formItem.id', (newValue, oldValue) ->
+        if (newValue != oldValue)
+          format_date($scope)
+
+      $scope.$watch 'formItem.attributes[field.attribute]', (newValue, oldValue) ->
         if (newValue != oldValue)
           format_date($scope)
     ]

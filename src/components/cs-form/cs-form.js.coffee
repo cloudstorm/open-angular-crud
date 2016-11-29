@@ -1,14 +1,6 @@
 "use strict"
 
-# ===== SETUP =================================================================
-
-# Make sure that the components module is defined only once
-try
-  # Module already defined, use it
-  app = angular.module("cloudStorm")
-catch err
-  # Module not defined yet, define it
- app = angular.module('cloudStorm', [])
+app = angular.module('cloudStorm.form', [])
 
 # ===== DIRECTIVE =============================================================
 
@@ -67,7 +59,8 @@ app.directive "csForm", ['csSettings', (csSettings) ->
     # --- Trigger events ------------------------
     
     scrollTrigger = _.throttle () -> $scope.$broadcast 'form-scroll', 300
-    $(element).find('form').on 'scroll', scrollTrigger
+    elem = element[0].querySelector('form')
+    angular.element(elem).on 'scroll', scrollTrigger
     
     # --- Handle events -------------------------
     
@@ -154,7 +147,7 @@ app.directive "csForm", ['csSettings', (csSettings) ->
 
   return {
     restrict: 'A'
-    templateUrl: 'cloudstorm/src/components/cs-form/cs-form-template.html'
+    templateUrl: 'components/cs-form/cs-form-template.html'
     transclude:
       fields: '?formFields'
       actions: '?formActions'

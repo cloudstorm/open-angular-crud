@@ -1,22 +1,19 @@
 "use strict"
 
-####################################################################################################
-# Make sure that the components module is defined only once
-try
-  # Module already defined, use it
-  app = angular.module("cloudStorm")
-catch err
-  # Module not defined yet, define it
-  app = angular.module('cloudStorm', [])
+app = angular.module('cloudStorm.resource', [])
 
 ####################################################################################################
-app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', '$q', (csRestApi, csDataStore, ResourceService, $q) ->
+app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSettings', '$q', (csRestApi, csDataStore, ResourceService, csSettings, $q) ->
 ####################################################################################################
 
-  member_endpoint_url = (resource, id) ->
+  memberEndpointUrl = (resource, id) ->
+    return null unless resource.member_endpoint
     member_endpoint_template = urltemplate.parse(resource.member_endpoint)
     return member_endpoint_template.expand(id: id)
 
+  baseUrl = (resource) ->
+    resource.base_url || csSettingsProvider['base_url']
+    
 ####################################################################################################  
 
   class Resource
@@ -57,7 +54,9 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', '$q',
     @$index: (params, options = {}) ->
       index_params = angular.copy(params)
       actual_endpoint = options.endpoint || @.endpoint
-
+      base_url = baseUrl(@)
+      actual_endpoint = "#{base_url}/#{actual_endpoint}" if base_url
+        
       if options.scope
         scoped_endpoint = "#{actual_endpoint}/#{options.scope}"
         actual_endpoint = scoped_endpoint
@@ -102,7 +101,7 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', '$q',
     ################################################################################################
 
     @$get: (id, params) ->
-      csRestApi.get(member_endpoint_url(@, id), params).then(        
+      csRestApi.get(memberEndpointUrl(@, id), params).then(        
         (data) =>  # successCallback
           object = new @(data.data)
           included = _.map data.included, (i) => 
@@ -117,7 +116,7 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', '$q',
     ################################################################################################
 
     $reload: () -> 
-      endpoint = @links.self.href || member_endpoint_url(@.constructor, @id)
+      endpoint = @links.self.href || memberEndpointUrl(@.constructor, @id)
 
       csRestApi.get(endpoint, {}).then(        
         (data) =>  # successCallback
@@ -132,7 +131,8 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', '$q',
     $create: (params = {}, options = {}) -> 
       throw "The id of the object is provided, but PUT is not yet supported. (Did you mean to use $save?)" if @id
 
-      endpoint = options.endpoint || @.constructor.endpoint      
+      endpoint = options.endpoint || @.constructor.endpoint
+      endpoint = "#{baseUrl(@.constructor)}/#{endpoint}"
       endpoint = "#{endpoint}/#{options.scope}" if options.scope
 
       entity   = _.pick(@, "type", "attributes", "relationships")
@@ -155,12 +155,13 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', '$q',
     $save: (params = {}, options = {}) -> 
       throw "Object is not yet persisted into the DB, use $create. (Did you forget to provide its id?)" unless @id
       
-      endpoint = options.endpoint || @links.self.href || member_endpoint_url(@.constructor, @id)    
+      endpoint = options.endpoint || memberEndpointUrl(@.constructor, @id) || @links.self.href
+      endpoint = "#{baseUrl(@.constructor)}/#{endpoint}"
       endpoint = "#{endpoint}/#{options.scope}" if options.scope
 
       entity   = _.pick(@, "id", "type", "attributes", "relationships")
 
-      csRestApi.update(endpoint, entity, params).then(        
+      csRestApi.update(endpoint, entity, params).then(
         (data) =>  # successCallback
           object = @.$assign(data.data)  
           included = _.map data.included, (i) => 
@@ -174,8 +175,10 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', '$q',
 
     ################################################################################################
 
-    $destroy: () -> 
-      endpoint = @links.self.href || member_endpoint_url(@.constructor, @id)
+    $destroy: (options = {}) -> 
+      endpoint = options.endpoint || memberEndpointUrl(@.constructor, @id) || @links.self.href
+      base_url = baseUrl(@.constructor)
+      endpoint = "#{base_url}#{endpoint}" if base_url
 
       csRestApi.destroy(endpoint).then(        
         (data) =>  # successCallback

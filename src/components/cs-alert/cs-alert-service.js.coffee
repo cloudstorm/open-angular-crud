@@ -1,16 +1,10 @@
 "use strict"
 
-# Make sure that the components module is defined only once
-try
-  # Module already defined, use it
-  app = angular.module("cloudStorm")
-catch err
-  # Module not defined yet, define it
- app = angular.module('cloudStorm', [])
+app = angular.module('cloudStorm.alertService', [])
 
 # ===== SERVICE ===============================================================
 
-app.service 'CSAlertService', [() ->
+app.service 'csAlertService', [() ->
   @sequence = 0
   @alerts = []
   

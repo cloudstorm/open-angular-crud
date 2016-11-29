@@ -1,4 +1,4 @@
-angular.module('cloudStorm')
+angular.module('cloudStorm.localizationProvider', [])
 
 ####################################################################################################
 # A simple key-value lookup base translation service
@@ -18,6 +18,7 @@ angular.module('cloudStorm')
     'buttons.close': 'Close'
     'buttons.submit': 'Submit'
     'buttons.delete': 'Delete'
+    'index.empty': ' list empty'
     'buttons.new': 'New'
     'buttons.clear': 'Clear'
     'alert.nothing_changed': 'Nothing changed'
@@ -25,6 +26,7 @@ angular.module('cloudStorm')
     'alert.error_happened': 'An error happened'
     'alert.no_resource_created': 'Nothing created'
     'alert.new_resource_created': 'New resource successfully created'
+    'confirm.delete': "Are you sure you want to delete the item?"
     'filter_for_anything': 'Filter for anything'
   }
   

@@ -59,6 +59,19 @@
 
 } // .wizard END
 
+// TODO: refactor
+// https://github.com/cloud-storm/CloudStormJS/issues/38
+$uib-modal-margin: 30px;
+
+.modal-wizard {
+  .modal-dialog {
+    height: calc(100% - 2 * #{$uib-modal-margin});
+
+    .modal-content {
+      height: 100%;
+    }
+  }
+}
 
 ////// ANIMATION ////////////////////////////////
 

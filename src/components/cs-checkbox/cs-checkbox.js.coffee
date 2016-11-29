@@ -1,26 +1,18 @@
 "use strict"
 
-# ===== SETUP =================================================================
-
-# Make sure that the components module is defined only once
-try
-  # Module already defined, use it
-  app = angular.module("cloudStorm")
-catch err
-  # Module not defined yet, define it
- app = angular.module('cloudStorm', [])
-
+app = angular.module('cloudStorm.checkbox', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csTextfield", ['$rootScope', 'CSTemplateService', 'CSInputBase', ($rootScope, CSTemplateService, CSInputBase) ->
+app.directive "csCheckbox", ['$rootScope', 'csInputBase', ($rootScope, csInputBase) ->
+
 
   # ===== COMPILE =============================================================
 
   compile = ($templateElement, $templateAttributes) ->
 
     # Only modify the DOM in compile, use (pre/post) link for others
-    $templateElement.addClass "cs-textfield"
+    $templateElement.addClass "cs-checkbox"
 
     # Pre-link: gets called for parent first
     pre: (scope, element, attrs, controller) ->
@@ -29,24 +21,22 @@ app.directive "csTextfield", ['$rootScope', 'CSTemplateService', 'CSInputBase', 
     # Post-link: gets called for children recursively after post() traversed the DOM tree
     post: link
 
+
   # ===== LINK ================================================================
 
   link = ($scope, element, attrs, controller) ->    
-    CSInputBase $scope
-    $scope.CSTemplateService = CSTemplateService
-    $scope.defaultTemplate = 'cloudstorm/src/components/inputs/cs-textfield/cs-textfield-template.html'
-            
+    csInputBase $scope
+    
+    $scope.formItem.attributes[$scope.field.attribute] = !!$scope.formItem.attributes[$scope.field.attribute]
+    
     # ===== WATCHES =======================================
 
     $scope.$watch 'formItem.attributes[field.attribute]', (newValue, oldValue) ->
       if (newValue != oldValue)
         $scope.$emit 'input-value-changed', $scope.field
 
-    # ===== UI HANDLES ====================================
-
-    $scope.keyPressed = ($event) ->
-      if $event.keyCode == 13
-        $scope.$emit 'submit-form-on-enter', $scope.field
+    $scope.$on 'form-reset', () ->
+      $scope.formItem.attributes[$scope.field.attribute] = false
 
     return
 
@@ -54,7 +44,7 @@ app.directive "csTextfield", ['$rootScope', 'CSTemplateService', 'CSInputBase', 
   
   return {
     restrict: 'E'
-    template: '<ng-include src="CSTemplateService.getTemplateUrl(field,options,defaultTemplate)"/>',
+    templateUrl: 'components/cs-checkbox/cs-checkbox-template.html'
     scope:
       field: '=' # The resource item which the form is working with
       formItem: '='

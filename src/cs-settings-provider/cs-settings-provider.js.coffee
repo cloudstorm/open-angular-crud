@@ -1,12 +1,6 @@
 "use strict"
 
-# Make sure that the components module is defined only once
-try
-  # Module already defined, use it
-  app = angular.module("cloudStorm")
-catch err
-  # Module not defined yet, define it
-  app = angular.module('cloudStorm', [])
+app = angular.module("cloudStorm.settings", [])
 
 ###############################################################################
 
@@ -14,6 +8,9 @@ app.provider 'csSettings', ['csLocalizationProvider', (csLocalizationProvider) -
   
   defaultSettings = {
     'i18n-engine': csLocalizationProvider.$get()
+    'date-format': 'yyyy-MM-dd'
+    'datetime-format': 'yyyy-MM-ddThh:mm:ss.sss'
+    'time-zone-offset': 'utc'
   }
   
   @settings = defaultSettings

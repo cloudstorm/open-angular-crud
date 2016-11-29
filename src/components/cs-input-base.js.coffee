@@ -4,20 +4,11 @@
 
 "use strict"
 
-# ===== SETUP =================================================================
-
-# Make sure that the components module is defined only once
-try
-  # Module already defined, use it
-  app = angular.module("cloudStorm")
-catch err
-  # Module not defined yet, define it
- app = angular.module('cloudStorm', [])
-
+app = angular.module('cloudStorm.inputBase', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.factory "CSInputBase", [ ->
+app.factory "csInputBase", [ ->
 
   build = ($scope) ->
 

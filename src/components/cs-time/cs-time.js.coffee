@@ -1,60 +1,59 @@
 "use strict"
 
-# ===== SETUP =================================================================
-
-# Make sure that the components module is defined only once
-try
-  # Module already defined, use it
-  app = angular.module("cloudStorm")
-catch err
-  # Module not defined yet, define it
- app = angular.module('cloudStorm', [])
-
+app = angular.module('cloudStorm.time', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csEnum", ['$rootScope', 'CSInputBase', ($rootScope, CSInputBase) ->
-
+app.directive "csTime", ['uibDateParser', 'csSettings', 'csInputBase', (uibDateParser, csSettings, csInputBase) ->
 
   # ===== COMPILE =============================================================
 
   compile = ($templateElement, $templateAttributes) ->
 
     # Only modify the DOM in compile, use (pre/post) link for others
-    $templateElement.addClass "cs-enum"
+    $templateElement.addClass "cs-time"
 
     # Pre-link: gets called for parent first
     pre: (scope, element, attrs, controller) ->
       return
-    
+
     # Post-link: gets called for children recursively after post() traversed the DOM tree
     post: link
 
 
   # ===== LINK ================================================================
 
-  link = ($scope, element, attrs, controller) ->    
-    CSInputBase $scope
-        
+  link = ($scope, element, attrs, controller) ->
+    $scope.i18n = csSettings.settings['i18n-engine']
+
+    csInputBase $scope
+
     # ===== WATCHES =======================================
 
     $scope.$watch 'formItem.attributes[field.attribute]', (newValue, oldValue) ->
       if (newValue != oldValue)
         $scope.$emit 'input-value-changed', $scope.field
 
-    return
 
   # ===== CONFIGURE ===========================================================
-  
+
   return {
     restrict: 'E'
-    templateUrl: 'cloudstorm/src/components/inputs/cs-enum/cs-enum-template.html'
+    templateUrl: 'components/cs-time/cs-time-template.html'
+    priority: 1000
     scope:
       field: '=' # The resource item which the form is working with
       formItem: '='
       formMode: '='
-      options: '=' 
+      options: '='
     compile: compile
+    controller: ['$scope',($scope) ->
+      # NGModelOptions cannot be bound in link time, but can be made available on controller scope
+      $scope.getModelOptions = () ->
+        offset = $scope.options['time-zone-offset'] || csSettings.settings['time-zone-offset'] || 'utc'
+        options = { 'timezone': offset }
+    ]
+
   }
 
 ]

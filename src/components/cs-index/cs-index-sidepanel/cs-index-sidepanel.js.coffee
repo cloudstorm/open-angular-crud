@@ -1,18 +1,10 @@
 "use strict"
 
-# ===== SETUP =================================================================
-
-# Make sure that the components module is defined only once
-try
-  # Module already defined, use it
-  app = angular.module("cloudStorm")
-catch err
-  # Module not defined yet, define it
- app = angular.module('cloudStorm', [])
+app = angular.module('cloudStorm.index.sidePanel', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csIndexSidepanel", ['$rootScope', 'CSAlertService', 'csSettings', ($rootScope, CSAlertService, csSettings) ->
+app.directive "csIndexSidepanel", ['$rootScope', 'csAlertService', 'csSettings', ($rootScope, csAlertService, csSettings) ->
 
   # ===== COMPILE =============================================================
 
@@ -42,12 +34,12 @@ app.directive "csIndexSidepanel", ['$rootScope', 'CSAlertService', 'csSettings',
         "events":
           'wizard-canceled': (resource) ->
             $scope.unselectItem()
-            CSAlertService.addAlert($scope.i18n?.t('alert.nothing_changed') || 'translation missing', 'info')
+            csAlertService.addAlert($scope.i18n?.t('alert.nothing_changed') || 'translation missing', 'info')
           'wizard-submited': (resource) ->
-            $scope.closePanel()
-            CSAlertService.addAlert($scope.i18n?.t('alert.changes_saved') || 'translation missing', 'success')
+            $scope.unselectItem()
+            csAlertService.addAlert($scope.i18n?.t('alert.changes_saved') || 'translation missing', 'success')
           'wizard-error': (resource) ->
-            CSAlertService.addAlert($scope.i18n?.t('alert.error_happened')  || 'translation missing', 'danger')
+            csAlertService.addAlert($scope.i18n?.t('alert.error_happened')  || 'translation missing', 'danger')
 
       angular.merge $scope.editWizardOptions, _.omit($scope.csIndexSidepanelOptions, "selectedItem")
 
@@ -56,6 +48,9 @@ app.directive "csIndexSidepanel", ['$rootScope', 'CSAlertService', 'csSettings',
           if options = $scope.editWizardOptions
             options['form-item'] = newItem
 
+      $scope.closePanel = () ->
+        $scope.$broadcast 'wizard-cancel'
+
       return
 
   # ===== CONFIGURE ===========================================================
@@ -63,11 +58,10 @@ app.directive "csIndexSidepanel", ['$rootScope', 'CSAlertService', 'csSettings',
   return {
     restrict: 'E'
     compile: compile
-    templateUrl: 'cloudstorm/src/components/cs-index/cs-index-sidepanel/cs-index-sidepanel-template.html'
+    templateUrl: 'components/cs-index/cs-index-sidepanel/cs-index-sidepanel-template.html'
     scope:
       resourceType: '='
       item: '='
-      closePanel: '&closePanel'
       unselectItem: '&unselectItem'
       csIndexSidepanelOptions: '='
       panelNumberCallback: '='

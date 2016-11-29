@@ -1,0 +1,39 @@
+{
+  "name": "cloudstorm",
+  "version": "0.0.7",
+  "description": "Frontend framework for automatically creating forms and workflows for AngularJS",
+  "main": "src/cloudstorm.js.coffee",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cloudstorm/cloudstorm.git"
+  },
+  "keywords": [
+    "cloudstorm",
+    "forms"
+  ],
+  "author": "Virtual Solutions Ltd <info@cloudstorm.io>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cloudstorm/cloudstorm/issues"
+  },
+  "homepage": "https://github.com/cloudstorm/cloudstorm#readme",
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-coffee": "^1.0.0",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-sass": "^1.0.0",
+    "grunt-contrib-uglify": "^2.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-exec": "^1.0.1",
+    "grunt-haml2html": "^0.3.1",
+    "grunt-html2js": "^0.3.6"
+  }
+}

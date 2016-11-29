@@ -1,18 +1,10 @@
 "use strict"
 
-# ===== SETUP =================================================================
+app = angular.module("cloudStorm.templateService", [])
 
-# Make sure that the components module is defined only once
-try
-  # Module already defined, use it
-  app = angular.module("cloudStorm")
-catch err
-  # Module not defined yet, define it
-  app = angular.module('cloudStorm', [])
+app.factory 'csTemplateService', [() ->
 
-app.factory 'CSTemplateService', [() ->
-
-  class CSTemplateService
+  class csTemplateService
     
     getTemplateUrl: (field, options, defaultTemplate) ->
       template = defaultTemplate
@@ -30,5 +22,5 @@ app.factory 'CSTemplateService', [() ->
             
       template
 
-  return new CSTemplateService
+  return new csTemplateService
 ]

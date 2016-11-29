@@ -1,0 +1,6 @@
+%uib-alert{ "ng-repeat" => "alert in csAlertService.getAlerts()",
+            "type" => "{{alert.type}}",
+            "dismiss-on-timeout" => "{{csAlertService.timeoutForAlert(alert)}}", 
+            "ng-click" => "csAlertService.dismissAlert(alert.id)",
+            "close" => "csAlertService.dismissAlert(alert.id)" }
+  {{alert.message}}

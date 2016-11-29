@@ -1,19 +1,10 @@
 "use strict"
 
-# ===== SETUP =================================================================
-
-# Make sure that the components module is defined only once
-try
-  # Module already defined, use it
-  app = angular.module("cloudStorm")
-catch err
-  # Module not defined yet, define it
- app = angular.module('cloudStorm', [])
-
+app = angular.module('cloudStorm.number', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csNumber", ['$rootScope', 'CSInputBase', ($rootScope, CSInputBase) ->
+app.directive "csNumber", ['$rootScope', 'csInputBase', ($rootScope, csInputBase) ->
 
 
   # ===== COMPILE =============================================================
@@ -34,7 +25,7 @@ app.directive "csNumber", ['$rootScope', 'CSInputBase', ($rootScope, CSInputBase
   # ===== LINK ================================================================
 
   link = ($scope, element, attrs, controller) ->    
-    CSInputBase $scope
+    csInputBase $scope
             
     if $scope.formMode == 'create'
       if $scope.field.default?
@@ -52,7 +43,7 @@ app.directive "csNumber", ['$rootScope', 'CSInputBase', ($rootScope, CSInputBase
   
   return {
     restrict: 'E'
-    templateUrl: 'cloudstorm/src/components/inputs/cs-number/cs-number-template.html'
+    templateUrl: 'components/cs-number/cs-number-template.html'
     scope:
       field: '=' # The resource item which the form is working with
       formItem: '='

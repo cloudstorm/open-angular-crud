@@ -1,18 +1,10 @@
 "use strict"
 
-# ===== SETUP =================================================================
-
-# Make sure that the components module is defined only once
-try
-  # Module already defined, use it
-  app = angular.module("cloudStorm")
-catch err
-  # Module not defined yet, define it
- app = angular.module('cloudStorm', [])
+app = angular.module('cloudStorm.index', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSettings', '$uibModal', 'CSAlertService', '$filter', (ResourceService, csDataStore, csRestApi, csSettings, $uibModal, CSAlertService, $filter) ->
+app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSettings', '$uibModal', 'csAlertService', '$filter', (ResourceService, csDataStore, csRestApi, csSettings, $uibModal, csAlertService, $filter) ->
 
   # ===== COMPILE =============================================================
 
@@ -46,6 +38,7 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
             $scope.collection = items
           # errorCallback
           (reason) ->
+            $scope.collection = null
             console.log reason
           # notifyCallback
           () ->
@@ -90,6 +83,9 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
 
       # ===== GETTERS =========================================
 
+      $scope.listIsEmpty = () ->
+        $scope.collection == null
+        
       $scope.fieldValue = (item, field) ->
         if field.resource
           if field.cardinality == 'many'
@@ -155,7 +151,7 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
 
       $scope.destroyItem = ($event, item) ->
         $event.stopPropagation()
-        if confirm "Biztosan törölni akarja az elemet?"
+        if confirm $scope.i18n?.t('confirm.delete')
           item.$destroy().then(
             # successCallback
             (result) ->
@@ -164,11 +160,9 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
               $scope.collection.splice(index, 1)
             # errorCallback
             (reason) ->
-              CSAlertService.addAlert "#{reason.data.errors[0].detail}", 'danger'
+              alert = reason.data?.errors[0].detail
+              csAlertService.addAlert alert || $scope.i18n?.t('alert.error_happened'), 'danger'
           )
-
-      $scope.closePanel = () ->
-        $scope.$broadcast 'wizard-cancel'
 
       $scope.unselectItem = () ->
         $scope.csIndexOptions.selectedItem = null
@@ -198,12 +192,12 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
           "events": {
             'wizard-canceled': (resource) ->
               modalInstance.close()
-              CSAlertService.addAlert($scope.i18n?.t('alert.no_resource_created') || 'translation missing', 'info')
+              csAlertService.addAlert($scope.i18n?.t('alert.no_resource_created') || 'translation missing', 'info')
 
             'wizard-submited': (resource) ->
               pushNewItem($scope.collection, resource)
               modalInstance.close() unless $scope.wizardOptions['keep-first']
-              CSAlertService.addAlert($scope.i18n?.t('alert.new_resource_created') || 'translation missing', 'success')
+              csAlertService.addAlert($scope.i18n?.t('alert.new_resource_created') || 'translation missing', 'success')
 
           }
 
@@ -234,7 +228,7 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
   return {
     restrict: 'E'
     compile: compile
-    templateUrl: 'cloudstorm/src/components/cs-index/cs-index-template.html'
+    templateUrl: 'components/cs-index/cs-index-template.html'
     scope:
       csIndexOptions: '='
       resourceType: '='

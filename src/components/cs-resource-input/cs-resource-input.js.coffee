@@ -1,19 +1,10 @@
 "use strict"
 
-# ===== SETUP =================================================================
-
-# Make sure that the components module is defined only once
-try
-  # Module already defined, use it
-  app = angular.module("cloudStorm")
-catch err
-  # Module not defined yet, define it
- app = angular.module('cloudStorm', [])
-
+app = angular.module('cloudStorm.resourceInput', ['ui.select'])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csResourceInput", ['$rootScope', 'ResourceService', 'CSTemplateService', 'CSInputBase', 'csSettings', ($rootScope, ResourceService, CSTemplateService, CSInputBase, csSettings) ->
+app.directive "csResourceInput", ['$rootScope', 'ResourceService', 'csTemplateService', 'csInputBase', 'csSettings', ($rootScope, ResourceService, csTemplateService, csInputBase, csSettings) ->
 
   # ===== COMPILE =============================================================
 
@@ -35,9 +26,9 @@ app.directive "csResourceInput", ['$rootScope', 'ResourceService', 'CSTemplateSe
   link = ($scope, element, attrs, controller) ->        
     $scope.i18n = csSettings.settings['i18n-engine']
     
-    CSInputBase $scope
-    $scope.CSTemplateService = CSTemplateService
-    $scope.defaultTemplate = 'cloudstorm/src/components/inputs/cs-resource-input/cs-resource-input-template.html'
+    csInputBase $scope
+    $scope.csTemplateService = csTemplateService
+    $scope.defaultTemplate = 'components/cs-resource-input/cs-resource-input-template.html'
 
     setup_associations($scope)
 
@@ -142,7 +133,7 @@ app.directive "csResourceInput", ['$rootScope', 'ResourceService', 'CSTemplateSe
   
   return {
     restrict: 'E'
-    template: '<ng-include src="CSTemplateService.getTemplateUrl(field,options,defaultTemplate)"/>',
+    template: '<ng-include src="csTemplateService.getTemplateUrl(field,options,defaultTemplate)"/>',
     scope:
       field: '=' # The resource item which the form is working with
       formItem: '='

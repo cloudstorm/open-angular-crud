@@ -1,15 +1,6 @@
 "use strict"
 
-# ===== SETUP =================================================================
-
-# Make sure that the components module is defined only once
-try
-  # Module already defined, use it
-  app = angular.module("cloudStorm")
-catch err
-  # Module not defined yet, define it
-  app = angular.module('cloudStorm', [])
-
+app = angular.module('cloudStorm.field', [])
 
 # ===== DIRECTIVE =============================================================
 
@@ -62,8 +53,8 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
                                        form-mode='formMode'
                                        create-resources='createResources()'
                                        options='csFieldOptions'>
-                     </#{directiveName}>";
-    innerElement.html($compile(inputTemplate)($scope));
+                     </#{directiveName}>"
+    innerElement.append($compile(inputTemplate)($scope))
 
     # ===== DOM MANIPULATION ON SCOPE CHANGE ==============
 
@@ -128,7 +119,7 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
 
   return {
     restrict: 'E'
-    templateUrl: 'cloudstorm/src/components/cs-field/cs-field-template.html'
+    templateUrl: 'components/cs-field/cs-field-template.html'
     scope:
       field: '=?' # The resource item which the form is working with
       fieldName: '@' # The resource item which the form is working with

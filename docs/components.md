@@ -18,6 +18,18 @@ High-level components   | Form Input components                  | Misc componen
 ## CS Wizard
 <a href="../src/components/cs-wizard"><img src="images/go_to_source.png" align="right"></a>
 
+If you want to open a CS Wizard in a modal view, use the following snippet:
+
+```javascript
+$uibModal.open({
+  scope: $scope,
+  keyboard: false,
+  backdrop: 'static',
+  windowTopClass: 'modal-wizard',
+  template: "<div cs-wizard cs-wizard-options=wizardOptions></div>",
+});
+```
+
 ### Options
 **panel-number-callback**
 * expects a function with one paremeter: `length`: To keep track of the number of panels open, callback is called with length as parameter
@@ -155,12 +167,12 @@ $scope.csWizardOptions =
 [to top ↑](./components.md)
 
 ## CS Checkbox
-<a href="../src/components/inputs/cs-checkbox"><img src="images/go_to_source.png" align="right"></a>
+<a href="../src/components/cs-checkbox"><img src="images/go_to_source.png" align="right"></a>
 
 The `required` attribute has no effect on a CS Checkbox.
 
 ## CS Date
-<a href="../src/components/inputs/cs-date"><img src="images/go_to_source.png" align="right"></a>
+<a href="../src/components/cs-date"><img src="images/go_to_source.png" align="right"></a>
 
 **cs-field-options**
 
@@ -172,24 +184,24 @@ Option             | Type     | Description
 [to top ↑](./components.md)
 
 ## CS Time
-<a href="../src/components/inputs/cs-time"><img src="images/go_to_source.png" align="right"></a>
+<a href="../src/components/cs-time"><img src="images/go_to_source.png" align="right"></a>
 
 ## CS DateTime
-<a href="../src/components/inputs/cs-datetime"><img src="images/go_to_source.png" align="right"></a>
+<a href="../src/components/cs-datetime"><img src="images/go_to_source.png" align="right"></a>
 
 ## CS Enum
-<a href="../src/components/inputs/cs-enum"><img src="images/go_to_source.png" align="right"></a>
+<a href="../src/components/cs-enum"><img src="images/go_to_source.png" align="right"></a>
 
 ## CS Number
-<a href="../src/components/inputs/cs-number"><img src="images/go_to_source.png" align="right"></a>
+<a href="../src/components/cs-number"><img src="images/go_to_source.png" align="right"></a>
 
 ## CS Resource Input
-<a href="../src/components/inputs/cs-resource-input"><img src="images/go_to_source.png" align="right"></a>
+<a href="../src/components/cs-resource-input"><img src="images/go_to_source.png" align="right"></a>
 
 [to top ↑](./components.md)
 
 ## CS Textfield
-<a href="../src/components/inputs/cs-textfield"><img src="images/go_to_source.png" align="right"></a>
+<a href="../src/components/cs-textfield"><img src="images/go_to_source.png" align="right"></a>
 
 #### Lifecycle events
 
@@ -221,7 +233,7 @@ Example usage:
 
 ##### example.html
 ```html
-  <cs-index resource-type=resourceType cs-index-option=options />
+  <cs-index resource-type=resourceType cs-index-option=options></cs-index>
 ```
 ##### example.js
 ```javascript
@@ -237,12 +249,12 @@ Example usage:
 
 **Usage**
 
-1. Place a `<cs-alert/>` element in your layout.
-1. Include `CSAlertService` as dependency in controller/directive
-1. Add an alert by calling `CSAlertService.addAlert(message,type)`. Available types are same as Bootstrap: 'success', 'info', 'warning', 'danger'.
+1. Place a `<cs-alert></cs-alert>` element in your layout.
+1. Include `csAlertService` as dependency in controller/directive
+1. Add an alert by calling `csAlertService.addAlert(message,type)`. Available types are same as Bootstrap: 'success', 'info', 'warning', 'danger'.
 
-> When used from template make `CSAlertService`accessible on $scope
-(eg: in `ng-click => CSAlertService.addAlert('alert','success')`)
+> When used from template make `csAlertService`accessible on $scope
+(eg: in `ng-click => csAlertService.addAlert('alert','success')`)
 
 :warning:
 > Place only one cs-alert element per app, or make sure that there is only one such element in your view at the same time (eg: by placing it in a shared header template)!

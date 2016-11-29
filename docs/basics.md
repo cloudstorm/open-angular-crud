@@ -10,6 +10,10 @@ CloudStorm uses the [JSON API format](http://jsonapi.org/format/#document-struct
 
 > TODO :warning: Document merge override
 
+* Enpoint
+* Member_endpoint: optional
+* base_url: optional
+
 ```javascript
 @descriptor = {
   type: 'products'

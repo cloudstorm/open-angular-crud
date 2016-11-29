@@ -1,14 +1,6 @@
 "use strict"
 
-# ===== SETUP =================================================================
-
-# Make sure that the components module is defined only once
-try
-  # Module already defined, use it
-  app = angular.module("cloudStorm")
-catch err
-  # Module not defined yet, define it
-  app = angular.module('cloudStorm', [])
+app = angular.module('cloudStorm.wizard', [])
 
 # ===== DIRECTIVE =============================================================
 
@@ -222,7 +214,7 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', ($rootS
   
   return {
     restrict: 'A'
-    templateUrl: 'cloudstorm/src/components/cs-wizard/cs-wizard-template.html'
+    templateUrl: 'components/cs-wizard/cs-wizard-template.html'
     scope:
       csWizardOptions: '='
       panelNumberCallback: '='
@@ -258,7 +250,7 @@ app.directive "csWizardPanel", ['$rootScope', 'ResourceService', '$compile', ($r
 
   return {
     restrict: 'E'
-    templateUrl: 'cloudstorm/src/components/cs-wizard/cs-wizard-panel-template.html'
+    templateUrl: 'components/cs-wizard/cs-wizard-panel-template.html'
     link: link
   }
 ]

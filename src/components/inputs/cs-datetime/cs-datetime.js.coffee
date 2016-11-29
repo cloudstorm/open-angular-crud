@@ -1,15 +1,6 @@
 "use strict"
 
-# ===== SETUP =================================================================
-
-# Make sure that the components module is defined only once
-try
-  # Module already defined, use it
-  app = angular.module("cloudStorm")
-catch err
-  # Module not defined yet, define it
- app = angular.module('cloudStorm', ['ui.bootstrap'])
-
+app = angular.module('cloudStorm.datetime', ['ui.bootstrap'])
 
 # ===== DIRECTIVE =============================================================
 
@@ -94,7 +85,7 @@ app.directive "csDatetime", ['uibDateParser', 'csSettings', 'CSInputBase', (uibD
 
   return {
     restrict: 'E'
-    templateUrl: 'cloudstorm/src/components/inputs/cs-datetime/cs-datetime-template.html'
+    templateUrl: 'cloudstorm/src/components/cs-datetime/cs-datetime-template.html'
     priority: 1000
     scope:
       field: '=' # The resource item which the form is working with
