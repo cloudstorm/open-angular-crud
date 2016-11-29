@@ -22,7 +22,7 @@ app.directive "csDate", ['uibDateParser', 'csSettings', 'csInputBase', (uibDateP
 
 
   # ===== LINK ================================================================
-
+  
   format_date = ($scope) ->
     format = $scope.options['date-format'] || csSettings.settings['date-format']
 
@@ -35,11 +35,17 @@ app.directive "csDate", ['uibDateParser', 'csSettings', 'csInputBase', (uibDateP
   link = ($scope, element, attrs, controller) ->
     $scope.i18n = csSettings.settings['i18n-engine']
 
+    $scope.getType = () ->
+      typeof $scope.formItem.attributes[$scope.field.attribute]
+
     csInputBase $scope
     format_date($scope)
 
     # ===== WATCHES =======================================
 
+    $scope.$on 'field-submit', (e, data) ->
+      console.log "field submit event #{data}"
+    
     $scope.$watch 'formItem.attributes[field.attribute]', (newValue, oldValue) ->
       if (newValue != oldValue)
         $scope.$emit 'input-value-changed', $scope.field
@@ -60,10 +66,14 @@ app.directive "csDate", ['uibDateParser', 'csSettings', 'csInputBase', (uibDateP
     controller: ['$scope',($scope) ->
       # NGModelOptions cannot be bound in link time, but can be made available on controller scope
       $scope.getModelOptions = () ->
-        offset = $scope.options['time-zone-offset'] || csSettings.settings['time-zone-offset'] || 'utc'
+        offset = $scope.options['time-zone-offset'] || csSettings.settings['time-zone-offset']
         options = { 'timezone': offset }
 
       $scope.$watch 'formItem.id', (newValue, oldValue) ->
+        if (newValue != oldValue)
+          format_date($scope)
+
+      $scope.$watch 'formItem.attributes[field.attribute]', (newValue, oldValue) ->
         if (newValue != oldValue)
           format_date($scope)
     ]

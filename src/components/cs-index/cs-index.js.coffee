@@ -164,9 +164,6 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
               csAlertService.addAlert alert || $scope.i18n?.t('alert.error_happened'), 'danger'
           )
 
-      $scope.closePanel = () ->
-        $scope.$broadcast 'wizard-cancel'
-
       $scope.unselectItem = () ->
         $scope.csIndexOptions.selectedItem = null
 

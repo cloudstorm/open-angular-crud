@@ -36,7 +36,7 @@ app.directive "csIndexSidepanel", ['$rootScope', 'csAlertService', 'csSettings',
             $scope.unselectItem()
             csAlertService.addAlert($scope.i18n?.t('alert.nothing_changed') || 'translation missing', 'info')
           'wizard-submited': (resource) ->
-            $scope.closePanel()
+            $scope.unselectItem()
             csAlertService.addAlert($scope.i18n?.t('alert.changes_saved') || 'translation missing', 'success')
           'wizard-error': (resource) ->
             csAlertService.addAlert($scope.i18n?.t('alert.error_happened')  || 'translation missing', 'danger')
@@ -47,6 +47,9 @@ app.directive "csIndexSidepanel", ['$rootScope', 'csAlertService', 'csSettings',
         if newItem != oldItem
           if options = $scope.editWizardOptions
             options['form-item'] = newItem
+
+      $scope.closePanel = () ->
+        $scope.$broadcast 'wizard-cancel'
 
       return
 
@@ -59,7 +62,6 @@ app.directive "csIndexSidepanel", ['$rootScope', 'csAlertService', 'csSettings',
     scope:
       resourceType: '='
       item: '='
-      closePanel: '&closePanel'
       unselectItem: '&unselectItem'
       csIndexSidepanelOptions: '='
       panelNumberCallback: '='
