@@ -216,17 +216,17 @@ module.exports = function(grunt) {
           "package.json",
           "bower.json"
         ],
-        createTag: false,
+        createTag: true,
         tagName: 'v%VERSION%',
         tagMessage: 'Version %VERSION%',
-        push: false,
+        push: true,
         pushTo: 'origin'
       }
     },
 
     /**
      * Watches
-     * LiveReload is added through grunt-contrib-watch
+     * LiveReload is added through grunt-coníib-watch
      * User LiveReload with a browser extension or if you prefer to not,
      * then make sure the following is added to the end of the body tag in HTML:
      * <script src="http://localhost:35729/livereload.js"></script>
