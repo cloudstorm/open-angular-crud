@@ -160,7 +160,7 @@ module.exports = function(grunt) {
           ]
         },
         files: {
-          '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css': '<%= app_files.sass_main %>'
+          '<%= build_dir %>/assets/<%= pkg.name %>.css': '<%= app_files.sass_main %>'
         }
       }
     },
@@ -182,7 +182,7 @@ module.exports = function(grunt) {
           '<%= html2js.build.dest %>', 
           // 'module.suffix' 
         ],
-        dest: '<%= compile_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.js'
+        dest: '<%= compile_dir %>/assets/<%= pkg.name %>.js'
       }
     },
 

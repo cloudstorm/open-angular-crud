@@ -1,6 +1,6 @@
 {
   "name": "cloudstorm",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "homepage": "http://cloudstorm.io",
   "authors": [
     "Mihaly Rozner <mihaly.rozner@cloudstorm.io>",
@@ -9,8 +9,8 @@
   ],
   "description": "Frontend framework for automatically creating forms and workflows for AngularJS",
   "main": [
-    "src/cloudstorm.js.coffee",
-    "src/cloudstorm.css.scss"
+    "bin/assets/cloudstorm.js",
+    "bin/assets/cloudstorm.css"
   ],
   "dependencies": {
     "underscore": "1.8.3",
