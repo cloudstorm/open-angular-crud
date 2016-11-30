@@ -865,7 +865,7 @@ app.directive("csIndex", [
           return modalInstance.result.then((function(selectedItem) {
             return $scope.selected = selectedItem;
           }), function() {
-            return console.info('Modal dismissed at: ' + new Date);
+            return console.info('Modal dismissed at: ' + new Date());
           });
         };
         return pushNewItem = function(collection, item) {

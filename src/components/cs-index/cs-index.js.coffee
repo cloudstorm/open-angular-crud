@@ -85,7 +85,7 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
 
       $scope.listIsEmpty = () ->
         $scope.collection == null
-        
+
       $scope.fieldValue = (item, field) ->
         if field.resource
           if field.cardinality == 'many'
@@ -215,7 +215,7 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
         modalInstance.result.then ((selectedItem) ->
           $scope.selected = selectedItem
         ), ->
-          console.info 'Modal dismissed at: ' + new Date
+          console.info 'Modal dismissed at: ' + new Date()
 
       pushNewItem = (collection, item) ->
         newItem = item.constructor.$new()
