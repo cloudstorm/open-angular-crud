@@ -1,5 +1,5 @@
 /**
- * cloudstorm - v0.0.8 - 2016-11-30
+ * cloudstorm - v0.0.9 - 2016-11-30
  * https://github.com/cloudstorm/cloudstorm#readme
  *
  * Copyright (c) 2016 Virtual Solutions Ltd <info@cloudstorm.io>
@@ -1738,7 +1738,7 @@ app.factory('csResource', [
         index_params = angular.copy(params);
         actual_endpoint = options.endpoint || this.endpoint;
         base_url = baseUrl(this);
-        if (base_url) {
+        if (base_url != null) {
           actual_endpoint = base_url + "/" + actual_endpoint;
         }
         if (options.scope) {

@@ -56,7 +56,7 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
         index_params = angular.copy(params)
         actual_endpoint = options.endpoint || @.endpoint
         base_url = baseUrl(@)
-        actual_endpoint = "#{base_url}/#{actual_endpoint}" if base_url
+        actual_endpoint = "#{base_url}/#{actual_endpoint}" if base_url?
 
         if options.scope
           scoped_endpoint = "#{actual_endpoint}/#{options.scope}"
