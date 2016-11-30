@@ -13,6 +13,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-haml2html');
   grunt.loadNpmTasks('grunt-html2js');
   grunt.loadNpmTasks('grunt-exec');
+  grunt.loadNpmTasks('grunt-bump');
 
   /**
    * Load in our build configuration file.
@@ -198,6 +199,29 @@ module.exports = function(grunt) {
       stop_web: {
         command: "kill -9 `ps -ef |grep SimpleHTTPServer |awk '{print $2}'`"
       },
+    },
+
+    /**
+     * Increments the version number, commits, tags and pushes to origin
+     */
+    bump: {
+      options: {
+        files: [
+          "package.json",
+          "bower.json"
+        ],
+        commit: true,
+        commitMessage: 'Release: v%VERSION%',
+        commitFiles: [
+          "package.json",
+          "client/bower.json"
+        ],
+        createTag: false,
+        tagName: 'v%VERSION%',
+        tagMessage: 'Version %VERSION%',
+        push: false,
+        pushTo: 'origin'
+      }
     },
 
     /**
