@@ -51,8 +51,6 @@ module.exports = {
     js: [
     ],
     css: [
-      'vendor/bootstrap-sass/assets/stylesheets/_bootstrap.scss',
-      'vendor/angular-ui-select/dist/select.css'
     ],
     assets: [
     ]

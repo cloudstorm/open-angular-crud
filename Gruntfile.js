@@ -1,5 +1,5 @@
 module.exports = function(grunt) {
-  /** 
+  /**
    * Load required Grunt tasks. These are installed based on the versions listed
    * in `package.json` when you do `npm install` in this directory.
    */
@@ -20,7 +20,7 @@ module.exports = function(grunt) {
   var userConfig = require( './build.config.js' );
 
   /**
-   * This is the configuration object Grunt uses to give each plugin its 
+   * This is the configuration object Grunt uses to give each plugin its
    * instructions.
    */
   var taskConfig = {
@@ -29,9 +29,9 @@ module.exports = function(grunt) {
      * version. It's already there, so we don't repeat ourselves here.
      */
     pkg: grunt.file.readJSON("package.json"),
-    
+
     /**
-     * The banner is the comment that is placed at the top of our compiled 
+     * The banner is the comment that is placed at the top of our compiled
      * source files. It is first processed as a Grunt template, where the `<%=`
      * pairs are evaluated based on this very configuration object.
      */
@@ -55,7 +55,7 @@ module.exports = function(grunt) {
     //     dest: 'build/<%= pkg.name %>.min.js'
     //   }
     // },
-    
+
     coffee: {
       source: {
         options: {
@@ -68,7 +68,7 @@ module.exports = function(grunt) {
         ext: '.js'
       }
     },
-    
+
     /*
      * http://stackoverflow.com/questions/27494340/how-to-use-grunt-to-recursively-compile-a-directory-of-haml-or-jade
      */
@@ -79,12 +79,12 @@ module.exports = function(grunt) {
             cwd: '.',
             src: [ '<%= app_files.haml %>' ],
             dest: '<%= build_dir %>',
-            ext : '.html' 
+            ext : '.html'
           }
         ]
       },
     },
-    
+
     /**
      * HTML2JS is a Grunt plugin that takes all of your template files and
      * places them into JavaScript files as strings that are added to
@@ -110,13 +110,12 @@ module.exports = function(grunt) {
           }
         },
         src: [
-          '<%= vendor_files.css %>',
-          '<%= app_files.sass_main %>',
+          '<%= app_files.sass_main %>'
         ],
         dest: '<%= build_dir %>/concat.scss',
       }
     },
-    
+
     copy: {
       compiled_assets: {
         files: [
@@ -125,27 +124,21 @@ module.exports = function(grunt) {
             cwd: '<%= build_dir %>/assets',
             dest: '<%= compile_dir %>/assets',
             expand: true
-          },
-          {
-            cwd: '.',
-            src: [ '<%= vendor_files.css %>' ],
-            dest: '<%= compile_dir %>/',
-            expand: true
           }
         ]
       },
       sample_app: {
         files: [
-          { 
+          {
             src: [ '**'] ,
             cwd: '<%= sample_dir %>',
             dest: '<%= compile_dir %>/',
             expand:true
           }
-       ]   
+       ]
       }
     },
-    
+
     /**
      * `grunt-contrib-sass` handles SCSS compilation.
      * Only the main cloudstorm stylesheet file is included in compilation;
@@ -155,7 +148,6 @@ module.exports = function(grunt) {
       build: {
         options:{
           loadPath: [
-            "vendor/bootstrap-sass/assets/stylesheets",
             "src"
           ]
         },
@@ -175,12 +167,11 @@ module.exports = function(grunt) {
           banner: '<%= meta.banner %>',
           sourceMap: true
         },
-        src: [ 
-          // '<%= vendor_files.js %>', 
-          // 'module.prefix', 
+        src: [
+          // 'module.prefix',
           '<%= app_files.built_js %>',
-          '<%= html2js.build.dest %>', 
-          // 'module.suffix' 
+          '<%= html2js.build.dest %>',
+          // 'module.suffix'
         ],
         dest: '<%= compile_dir %>/assets/<%= pkg.name %>.js'
       }
@@ -190,7 +181,7 @@ module.exports = function(grunt) {
      * The directories to delete when `grunt clean` is executed.
      */
     clean: [
-      '<%= build_dir %>', 
+      '<%= build_dir %>',
       '<%= compile_dir %>'
     ],
 
@@ -209,10 +200,10 @@ module.exports = function(grunt) {
       },
     },
 
-    /** 
+    /**
      * Watches
      * LiveReload is added through grunt-contrib-watch
-     * User LiveReload with a browser extension or if you prefer to not, 
+     * User LiveReload with a browser extension or if you prefer to not,
      * then make sure the following is added to the end of the body tag in HTML:
      * <script src="http://localhost:35729/livereload.js"></script>
      */
@@ -232,27 +223,27 @@ module.exports = function(grunt) {
        * run our unit tests.
        */
       coffeesrc: {
-        files: [ 
+        files: [
           '<%= app_files.coffee %>'
         ],
         tasks: [ 'exec:say:coffee', 'coffee', 'concat:compile_js' ]
         // tasks: [ 'coffeelint:src', 'coffee:source', 'karma:unit:run', 'copy:build_appjs' ]
       },
       hamlsrc: {
-        files: [ 
+        files: [
           '<%= app_files.haml %>'
         ],
         tasks: [ 'exec:say:haml', 'haml', 'html2js', 'concat:compile_js' ]
         // tasks: [ 'coffeelint:src', 'coffee:source', 'karma:unit:run', 'copy:build_appjs' ]
       },
       sasssrc: {
-        files: [ 
+        files: [
           '<%= app_files.sass %>'
         ],
         tasks: [ 'exec:say:sass', 'sass', 'copy:compiled_assets' ]
       },
       sample_app: {
-        files: [ 
+        files: [
           '<%= sample_dir %>/**',
         ],
         tasks: [ 'exec:say:sample', 'copy:sample_app' ]
@@ -262,7 +253,7 @@ module.exports = function(grunt) {
   };
 
   grunt.initConfig( grunt.util._.extend( taskConfig, userConfig ) );
-  
+
   grunt.registerTask( 'start_web', ['exec:say:web','exec:start_web' ]);
 
   // *
@@ -271,18 +262,18 @@ module.exports = function(grunt) {
   //  * the `watch` task to `delta` (that's why the configuration var above is
   //  * `delta`) and then add a new task called `watch` that does a clean build
   //  * before watching for changes.
-   
+
   // grunt.renameTask( 'watch', 'delta' );
-  // grunt.registerTask( 'watch', [ 
-  //   'build', 'delta' 
-  //   // 'build', 'karma:unit', 'delta' 
+  // grunt.registerTask( 'watch', [
+  //   'build', 'delta'
+  //   // 'build', 'karma:unit', 'delta'
   // ]);
 
   /**
    * The default task is to build and compile.
    */
   grunt.registerTask( 'default', [ 'build', 'compile', 'start_web' ] );
-  
+
   /**
    * The `build` task gets your app ready to run for development and testing.
    */
@@ -292,7 +283,7 @@ module.exports = function(grunt) {
     // 'clean', 'html2js', 'jshint', 'coffeelint', 'coffee', 'less:build',
     // 'concat:build_css', 'copy:build_app_assets', 'copy:build_vendor_assets',
     // 'copy:build_appjs', 'copy:build_vendorjs', 'copy:build_vendorcss', 'index:build', 'karmaconfig',
-    // 'karma:continuous' 
+    // 'karma:continuous'
   ]);
 
   /**

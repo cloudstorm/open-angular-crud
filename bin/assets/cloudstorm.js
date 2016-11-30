@@ -1688,7 +1688,7 @@ app.factory('csResource', [
       });
     };
     baseUrl = function(resource) {
-      return resource.base_url || csSettingsProvider['base_url'];
+      return resource.base_url || csSettings['base_url'];
     };
     Resource = (function() {
       function Resource(value_object, opts) {
@@ -1773,13 +1773,9 @@ app.factory('csResource', [
             });
             return objects;
           };
-        })(this), (function(_this) {
-          return function(reason) {
-            return $q.reject(reason);
-          };
-        })(this), (function(_this) {
-          return function(value) {};
-        })(this));
+        })(this), function(reason) {
+          return $q.reject(reason);
+        }, function(value) {});
       };
 
       Resource.$search = function(query, options) {
@@ -1816,13 +1812,9 @@ app.factory('csResource', [
             });
             return object;
           };
-        })(this), (function(_this) {
-          return function(reason) {
-            return $q.reject(reason);
-          };
-        })(this), (function(_this) {
-          return function(value) {};
-        })(this));
+        })(this), function(reason) {
+          return $q.reject(reason);
+        }, function(value) {});
       };
 
       Resource.prototype.$reload = function() {
@@ -1832,13 +1824,9 @@ app.factory('csResource', [
           return function(data) {
             return _this.$assign(data.data);
           };
-        })(this), (function(_this) {
-          return function(reason) {
-            return $q.reject(reason);
-          };
-        })(this), (function(_this) {
-          return function(value) {};
-        })(this));
+        })(this), function(reason) {
+          return $q.reject(reason);
+        }, function(value) {});
       };
 
       Resource.prototype.$create = function(params, options) {
@@ -1850,7 +1838,7 @@ app.factory('csResource', [
           options = {};
         }
         if (this.id) {
-          throw "The id of the object is provided, but PUT is not yet supported. (Did you mean to use $save?)";
+          throw new Error("The id of the object is provided, but PUT is not yet supported." + " (Did you mean to use $save?)");
         }
         endpoint = options.endpoint || this.constructor.endpoint;
         endpoint = (baseUrl(this.constructor)) + "/" + endpoint;
@@ -1874,13 +1862,9 @@ app.factory('csResource', [
           return function(data) {
             return _this.$assign(data.data);
           };
-        })(this), (function(_this) {
-          return function(reason) {
-            return $q.reject(reason);
-          };
-        })(this), (function(_this) {
-          return function(value) {};
-        })(this));
+        })(this), function(reason) {
+          return $q.reject(reason);
+        }, function(value) {});
       };
 
       Resource.prototype.$save = function(params, options) {
@@ -1892,7 +1876,7 @@ app.factory('csResource', [
           options = {};
         }
         if (!this.id) {
-          throw "Object is not yet persisted into the DB, use $create. (Did you forget to provide its id?)";
+          throw new Error("Object is not yet persisted into the DB, use $create. " + "(Did you forget to provide its id?)");
         }
         endpoint = options.endpoint || memberEndpointUrl(this.constructor, this.id) || this.links.self.href;
         endpoint = (baseUrl(this.constructor)) + "/" + endpoint;
@@ -1913,13 +1897,9 @@ app.factory('csResource', [
             });
             return object;
           };
-        })(this), (function(_this) {
-          return function(reason) {
-            return $q.reject(reason);
-          };
-        })(this), (function(_this) {
-          return function(value) {};
-        })(this));
+        })(this), function(reason) {
+          return $q.reject(reason);
+        }, function(value) {});
       };
 
       Resource.prototype.$destroy = function(options) {
@@ -1936,13 +1916,9 @@ app.factory('csResource', [
           return function(data) {
             return _this.$assign(data.data);
           };
-        })(this), (function(_this) {
-          return function(reason) {
-            return $q.reject(reason);
-          };
-        })(this), (function(_this) {
-          return function(value) {};
-        })(this));
+        })(this), function(reason) {
+          return $q.reject(reason);
+        }, function(value) {});
       };
 
       Resource.prototype.$assign = function(value_object) {
@@ -2006,11 +1982,9 @@ app.factory('csResource', [
           return null;
         }
         actual_datastore = opts.datastore || this.$datastore;
-        return _.map(rel, (function(_this) {
-          return function(item) {
-            return actual_datastore.get(item.type, item.id);
-          };
-        })(this));
+        return _.map(rel, function(item) {
+          return actual_datastore.get(item.type, item.id);
+        });
       };
 
       Resource.prototype.$association = function(field, opts) {
