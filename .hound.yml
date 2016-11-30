@@ -1,0 +1,5 @@
+coffeescript:
+  config_file: coffeelint.json
+
+jshint:
+  enabled: false
