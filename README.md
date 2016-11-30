@@ -3,8 +3,6 @@ Welcome to CloudStorm - the open-source enterprise software framework for web de
 
 :octocat: We are currently looking for contributors and beta testers :octocat:
 
-[CloudStorm website](http://cloudstorm.io)  
-
 ## What is CloudStorm?
 CloudStorm creates all administration and data manipulation screens and forms for any resource in a database.
 The following are automatically generated for You:
