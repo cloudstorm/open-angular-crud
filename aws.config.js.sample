@@ -1,0 +1,15 @@
+/**
+ * This file/module contains aws configuration for the CDN deploy process.
+ * Usage:
+ *  1) Change accessKeyId AND secretKey to real values
+ *  2) Rename file to aws.config.js
+ *  3) !!!! UNDER NO CIRCUMSTANCE ADD THAT FILE TO GIT !!!!!
+ */
+module.exports = {
+  aws: {
+    accessKeyId: "YOUR ACCESS KEY ID",
+    secretKey: "YOUR SECRET ACCESS KEY",
+    bucketName: "cloudstorm-cdn",
+    bucketRegion: "us-east-1"
+  }
+};

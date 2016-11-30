@@ -25,6 +25,7 @@
   "homepage": "https://github.com/cloudstorm/cloudstorm#readme",
   "devDependencies": {
     "grunt": "^1.0.1",
+    "grunt-aws-s3": "^0.14.5",
     "grunt-bump": "^0.8.0",
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-coffee": "^1.0.0",

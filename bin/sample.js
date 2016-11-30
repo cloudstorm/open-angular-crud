@@ -28,7 +28,7 @@ angular.module('cloudStormSample.resources.item', ['cloudStorm.restApi']).factor
       }
 
       Item.endpoint = 'api/v1/items';
-      Item.base_url = 'http://demo.cloudstorm.io';
+      Item.base_url = 'https://demo.cloudstorm.io';
 
       Item.descriptor = {
         type: 'items',
@@ -112,7 +112,7 @@ angular.module('cloudStormSample.resources.categories', ['cloudStorm.restApi']).
       }
 
       Category.endpoint = 'api/v1/categories';
-      Category.base_url = 'http://demo.cloudstorm.io';
+      Category.base_url = 'https://demo.cloudstorm.io';
 
       Category.descriptor = {
         type: 'categories',
@@ -153,7 +153,7 @@ angular.module('cloudStormSample.resources.user', ['cloudStorm.restApi']).factor
       }
 
       User.endpoint = 'api/v1/users';
-      User.base_url = 'http://demo.cloudstorm.io';
+      User.base_url = 'https://demo.cloudstorm.io';
 
       User.descriptor = {
         type: 'users',

@@ -14,11 +14,17 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-html2js');
   grunt.loadNpmTasks('grunt-exec');
   grunt.loadNpmTasks('grunt-bump');
+  grunt.loadNpmTasks('grunt-aws-s3');
 
   /**
    * Load in our build configuration file.
    */
   var userConfig = require( './build.config.js' );
+
+  /**
+   * Load in our AWS credentials
+   */
+  var awsConfig = require( './aws.config.js' );
 
   /**
    * This is the configuration object Grunt uses to give each plugin its
@@ -46,16 +52,6 @@ module.exports = function(grunt) {
         ' * Licensed <%= pkg.license %> \n' +
         ' */\n'
     },
-
-    // uglify: {
-    //   options: {
-    //     banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
-    //   },
-    //   build: {
-    //     src: 'src/<%= pkg.name %>.js',
-    //     dest: 'build/<%= pkg.name %>.min.js'
-    //   }
-    // },
 
     coffee: {
       source: {
@@ -225,6 +221,30 @@ module.exports = function(grunt) {
     },
 
     /**
+     * Pushes compiled js and css files to CDN (AWS S3)
+     */
+    aws_s3: {
+      options: {
+        accessKeyId: '<%= aws.accessKeyId %>',
+        secretAccessKey: '<%= aws.secretKey %>'
+      },
+      dist: {
+        options: {
+          bucket: '<%= aws.bucketName %>',
+          region: '<%= aws.bucketRegion %>'
+        },
+        files: [
+          {
+            expand: true,
+            cwd: 'bin/assets',
+            src: [ '**' ],
+            dest: '/'
+          }
+        ]
+      }
+    },
+
+    /**
      * Watches
      * LiveReload is added through grunt-coníib-watch
      * User LiveReload with a browser extension or if you prefer to not,
@@ -276,38 +296,24 @@ module.exports = function(grunt) {
 
   };
 
-  grunt.initConfig( grunt.util._.extend( taskConfig, userConfig ) );
+  grunt.initConfig( grunt.util._.extend( taskConfig, userConfig, awsConfig ) );
 
   grunt.registerTask( 'start_web', ['exec:say:web','exec:start_web' ]);
-
-  // *
-  //  * In order to make it safe to just compile or copy *only* what was changed,
-  //  * we need to ensure we are starting from a clean, fresh build. So we rename
-  //  * the `watch` task to `delta` (that's why the configuration var above is
-  //  * `delta`) and then add a new task called `watch` that does a clean build
-  //  * before watching for changes.
-
-  // grunt.renameTask( 'watch', 'delta' );
-  // grunt.registerTask( 'watch', [
-  //   'build', 'delta'
-  //   // 'build', 'karma:unit', 'delta'
-  // ]);
 
   /**
    * The default task is to build and compile.
    */
   grunt.registerTask( 'default', [ 'build', 'compile', 'start_web' ] );
 
+  grunt.registerTask( 'cdn', 'aws_s3:dist' );
+
+  grunt.registerTask( 'deploy', ['bump', 'aws_s3:dist'] );
+
   /**
    * The `build` task gets your app ready to run for development and testing.
    */
   grunt.registerTask( 'build', [
     'clean', 'coffee', 'sass', 'haml', 'html2js', 'copy:sample_app'
-
-    // 'clean', 'html2js', 'jshint', 'coffeelint', 'coffee', 'less:build',
-    // 'concat:build_css', 'copy:build_app_assets', 'copy:build_vendor_assets',
-    // 'copy:build_appjs', 'copy:build_vendorjs', 'copy:build_vendorcss', 'index:build', 'karmaconfig',
-    // 'karma:continuous'
   ]);
 
   /**
@@ -316,7 +322,6 @@ module.exports = function(grunt) {
    */
   grunt.registerTask( 'compile', [
     'copy:compiled_assets', 'concat:compile_js'
-    // 'less:compile', 'copy:compiled_assets', 'ngAnnotate', 'concat:compile_js', 'uglify', 'index:compile'
   ]);
 
 };

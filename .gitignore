@@ -3,3 +3,4 @@ node_modules/
 vendor/
 .sass-cache
 sample/CloudStorm Sample_files
+aws.config.js

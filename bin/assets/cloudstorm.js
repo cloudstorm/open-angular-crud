@@ -1,5 +1,5 @@
 /**
- * cloudstorm - v0.0.9 - 2016-11-30
+ * cloudstorm - v0.0.10 - 2016-11-30
  * https://github.com/cloudstorm/cloudstorm#readme
  *
  * Copyright (c) 2016 Virtual Solutions Ltd <info@cloudstorm.io>
