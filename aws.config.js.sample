@@ -7,8 +7,8 @@
  */
 module.exports = {
   aws: {
-    accessKeyId: "YOUR ACCESS KEY ID",
-    secretKey: "YOUR SECRET ACCESS KEY",
+    accessKeyId: "YOUR_ACCESS_KEY_ID",
+    secretKey: "YOUR_SECRET_ACCESS_KEY",
     bucketName: "cloudstorm-cdn",
     bucketRegion: "us-east-1"
   }

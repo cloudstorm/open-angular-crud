@@ -134,7 +134,8 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
                          " (Did you mean to use $save?)") if @id
 
         endpoint = options.endpoint || @.constructor.endpoint
-        endpoint = "#{baseUrl(@.constructor)}/#{endpoint}"
+        base_url = baseUrl(@.constructor)
+        endpoint = "#{base_url}/#{endpoint}" if base_url?
         endpoint = "#{endpoint}/#{options.scope}" if options.scope
 
         entity   = _.pick(@, "type", "attributes", "relationships")
@@ -159,7 +160,8 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
                          "(Did you forget to provide its id?)") unless @id
 
         endpoint = options.endpoint || memberEndpointUrl(@.constructor, @id) || @links.self.href
-        endpoint = "#{baseUrl(@.constructor)}/#{endpoint}"
+        base_url = baseUrl(@.constructor)
+        endpoint = "#{base_url}/#{endpoint}" if base_url?
         endpoint = "#{endpoint}/#{options.scope}" if options.scope
 
         entity   = _.pick(@, "id", "type", "attributes", "relationships")
