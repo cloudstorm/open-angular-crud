@@ -1,5 +1,5 @@
 /**
- * cloudstorm - v0.0.10 - 2016-11-30
+ * cloudstorm - v0.0.11 - 2016-12-01
  * https://github.com/cloudstorm/cloudstorm#readme
  *
  * Copyright (c) 2016 Virtual Solutions Ltd <info@cloudstorm.io>
@@ -1830,7 +1830,7 @@ app.factory('csResource', [
       };
 
       Resource.prototype.$create = function(params, options) {
-        var data, endpoint, entity, ref, rel;
+        var base_url, data, endpoint, entity, ref, rel;
         if (params == null) {
           params = {};
         }
@@ -1841,7 +1841,10 @@ app.factory('csResource', [
           throw new Error("The id of the object is provided, but PUT is not yet supported." + " (Did you mean to use $save?)");
         }
         endpoint = options.endpoint || this.constructor.endpoint;
-        endpoint = (baseUrl(this.constructor)) + "/" + endpoint;
+        base_url = baseUrl(this.constructor);
+        if (base_url != null) {
+          endpoint = base_url + "/" + endpoint;
+        }
         if (options.scope) {
           endpoint = endpoint + "/" + options.scope;
         }
@@ -1868,7 +1871,7 @@ app.factory('csResource', [
       };
 
       Resource.prototype.$save = function(params, options) {
-        var endpoint, entity;
+        var base_url, endpoint, entity;
         if (params == null) {
           params = {};
         }
@@ -1879,7 +1882,10 @@ app.factory('csResource', [
           throw new Error("Object is not yet persisted into the DB, use $create. " + "(Did you forget to provide its id?)");
         }
         endpoint = options.endpoint || memberEndpointUrl(this.constructor, this.id) || this.links.self.href;
-        endpoint = (baseUrl(this.constructor)) + "/" + endpoint;
+        base_url = baseUrl(this.constructor);
+        if (base_url != null) {
+          endpoint = base_url + "/" + endpoint;
+        }
         if (options.scope) {
           endpoint = endpoint + "/" + options.scope;
         }

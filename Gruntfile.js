@@ -27,6 +27,13 @@ module.exports = function(grunt) {
   var awsConfig = require( './aws.config.js' );
 
   /**
+   * Use port parameter for the http server (defaults to 8000)
+   */
+  var optionsConfig = {
+    port: grunt.option('port') || '8000',
+  };
+
+  /**
    * This is the configuration object Grunt uses to give each plugin its
    * instructions.
    */
@@ -189,7 +196,7 @@ module.exports = function(grunt) {
         }
       },
       start_web: {
-        command: 'cd bin && python -m SimpleHTTPServer 8000'
+        command: 'cd bin && python -m SimpleHTTPServer <%= port %>'
         // command: 'cd bin && python -m SimpleHTTPServer 8000'
       },
       stop_web: {
@@ -296,7 +303,7 @@ module.exports = function(grunt) {
 
   };
 
-  grunt.initConfig( grunt.util._.extend( taskConfig, userConfig, awsConfig ) );
+  grunt.initConfig( grunt.util._.extend( taskConfig, userConfig, awsConfig, optionsConfig ) );
 
   grunt.registerTask( 'start_web', ['exec:say:web','exec:start_web' ]);
 
