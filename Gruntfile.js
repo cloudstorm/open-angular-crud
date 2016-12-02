@@ -52,7 +52,7 @@ module.exports = function(grunt) {
     meta: {
       banner:
         '/**\n' +
-        ' * <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
+        ' * <%= pkg.name %> - v<%= grunt.file.readJSON("package.json").version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
         ' * <%= pkg.homepage %>\n' +
         ' *\n' +
         ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
@@ -314,7 +314,9 @@ module.exports = function(grunt) {
 
   grunt.registerTask( 'cdn', 'aws_s3:dist' );
 
-  grunt.registerTask( 'deploy', ['bump', 'aws_s3:dist'] );
+  grunt.registerTask( 'deploy', ['release', 'aws_s3:dist'] );
+
+  grunt.registerTask( 'release', ['bump-only', 'build', 'compile', 'bump-commit'] )
 
   /**
    * The `build` task gets your app ready to run for development and testing.
