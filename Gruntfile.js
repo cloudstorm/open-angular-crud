@@ -316,7 +316,10 @@ module.exports = function(grunt) {
 
   grunt.registerTask( 'deploy', ['release', 'aws_s3:dist'] );
 
-  grunt.registerTask( 'release', ['bump-only', 'build', 'compile', 'bump-commit'] )
+  grunt.registerTask ('release', function(t) {
+    var target = t || 'patch';
+    grunt.task.run('bump-only:' + target, 'build', 'compile', 'bump-commit');
+  });
 
   /**
    * The `build` task gets your app ready to run for development and testing.
