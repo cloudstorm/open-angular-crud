@@ -15,6 +15,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-exec');
   grunt.loadNpmTasks('grunt-bump');
   grunt.loadNpmTasks('grunt-aws-s3');
+  grunt.loadNpmTasks('grunt-karma');
 
   /**
    * Load in our build configuration file.
@@ -248,6 +249,12 @@ module.exports = function(grunt) {
             dest: '/'
           }
         ]
+      }
+    },
+
+    karma: {
+      unit: {
+        configFile: 'karma.conf.js'
       }
     },
 
