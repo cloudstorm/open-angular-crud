@@ -328,6 +328,8 @@ module.exports = function(grunt) {
     grunt.task.run('bump-only:' + target, 'build', 'compile', 'bump-commit');
   });
 
+  grunt.registerTask( 'test', 'karma:unit' );
+
   /**
    * The `build` task gets your app ready to run for development and testing.
    */
