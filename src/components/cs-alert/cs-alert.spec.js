@@ -23,6 +23,9 @@ describe('csAlert', function() {
     csAlertService = _csAlertService_;
   }));
 
+
+  beforeEach(inject(function ($templateCache) { $templateCache.put('components/cs-alert/cs-alert-template.html', '<div>dwindiwidnwidnwdinwidiw</div>'); }));
+
   it('Replaces the element with the appropriate content', function() {
     csAlertService.addAlert('test alert 1');
     csAlertService.addAlert('test alert 2');
