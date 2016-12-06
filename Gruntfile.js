@@ -253,8 +253,13 @@ module.exports = function(grunt) {
     },
 
     karma: {
+      options: {
+        configFile: 'karma.conf.js',
+      },
       unit: {
-        configFile: 'karma.conf.js'
+        singleRun: true
+      },
+      continuous: {
       }
     },
 
@@ -328,7 +333,10 @@ module.exports = function(grunt) {
     grunt.task.run('bump-only:' + target, 'build', 'compile', 'bump-commit');
   });
 
-  grunt.registerTask( 'test', 'karma:unit' );
+  grunt.registerTask ('test', function(t) {
+    var target = t || 'continuous';
+    grunt.task.run('karma:' + target);
+  });
 
   /**
    * The `build` task gets your app ready to run for development and testing.
