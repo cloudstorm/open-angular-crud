@@ -32,11 +32,7 @@ describe('csAlert', function() {
     var compiled = $compile(element)($rootScope);
 
     // fire all the watches, so the scope expressions will be evaluated
-    do {
-     $rootScope.$digest();
-     console.log('wait');
-    }
-    while (compiled.html() == '');
+    $rootScope.$digest();
 
     // Check that the compiled element contains the desired content
     expect(compiled.html()).toContain("test alert 1");
