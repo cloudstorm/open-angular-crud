@@ -13,7 +13,7 @@ module.exports = function(config) {
       //Setup:
       './node_modules/angular/angular.js',                             // angular
       './node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js', // bootstrap
-       './node_modules/underscore/underscore-min.js',                  // underscore
+      './node_modules/underscore/underscore-min.js',                   // underscore
       './node_modules/angular-mocks/angular-mocks.js',                 // loads our modules for tests
       './bin/assets/cloudstorm.js',                                    // cloudstorm itself
       // if you wanna load template files in nested directories, you must use this:
@@ -37,11 +37,11 @@ module.exports = function(config) {
     ngHaml2JsPreprocessor: {
       stripPrefix: 'src/',
 
-      // cacheIdFromPath: function(filepath) {
-      //   // remove 'src/' from the start of the filename so the template cache works:
-      //   console.log(filepath);
-      //   return filepath.substring(4);
-      // },
+      cacheIdFromPath: function(filepath) {
+        // remove 'src/' from the start of the filename so the template cache works:
+        console.log(filepath);
+        return filepath.substring(4);
+      },
       moduleName: 'hamlTemplates'
     },
 
