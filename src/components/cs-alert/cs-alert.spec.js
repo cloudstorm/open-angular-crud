@@ -32,6 +32,10 @@ describe('csAlert', function() {
     console.log('-------------------- template:')
     console.log(template)
 
+    template = $templateCache.get('components/cs-alert/cs-alert-template.haml');
+    console.log('-------------------- template (haml):')
+    console.log(template)
+
     // Compile a piece of HTML containing the directive
     var html = '<cs-alert></cs-alert>';
     var element = angular.element(html);
