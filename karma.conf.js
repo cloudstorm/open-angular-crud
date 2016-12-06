@@ -11,11 +11,11 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       //Setup:
-      './node_modules/underscore/underscore-min.js',                    // underscore
       './node_modules/angular/angular.js',                             // angular
-      './node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
+      './node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js', // bootstrap
+       './node_modules/underscore/underscore-min.js',                  // underscore
       './node_modules/angular-mocks/angular-mocks.js',                 // loads our modules for tests
-      './bin/assets/cloudstorm.js',                                    //  cloudstorm itself
+      './bin/assets/cloudstorm.js',                                    // cloudstorm itself
       // if you wanna load template files in nested directories, you must use this:
       './src/**/*.haml',
 
