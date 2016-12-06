@@ -6,7 +6,7 @@ describe('csAlert', function() {
 
 
 
-  // beforeEach(angular.mock.module('hamlTemplates'));
+  beforeEach(angular.mock.module('hamlTemplates'));
   beforeEach(angular.mock.module('cloudStorm.alertService'));
   beforeEach(angular.mock.module('cloudStorm.alert'));
 
