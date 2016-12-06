@@ -333,6 +333,11 @@ module.exports = function(grunt) {
     grunt.task.run('bump-only:' + target, 'build', 'compile', 'bump-commit');
   });
 
+  grunt.registerTask ('testrelease', function(t) {
+    var target = t || 'patch';
+    grunt.task.run('bump-only:' + target, 'build', 'compile');
+  });
+
   grunt.registerTask ('test', function(t) {
     var target = t || 'continuous';
     grunt.task.run('karma:' + target);
