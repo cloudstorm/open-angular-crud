@@ -39,6 +39,7 @@ module.exports = function(config) {
       prependPrefix: 'served/',
       cacheIdFromPath: function(filepath) {
         // remove 'src/' from the start of the filename so the template cache works:
+        console.log(filepath);
         return filepath.substring(4);
       },
       moduleName: 'hamlTemplates'
