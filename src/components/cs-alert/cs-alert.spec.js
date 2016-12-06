@@ -2,56 +2,35 @@ describe('csAlert', function() {
   var $compile;
   var $rootScope;
   var csAlertService;
-  var $templateCache;
 
-
-
+  // load templates
   beforeEach(angular.mock.module('hamlTemplates'));
+
+  // load required modules
   beforeEach(angular.mock.module('cloudStorm.alertService'));
   beforeEach(angular.mock.module('cloudStorm.alert'));
 
   // Store references to $rootScope and $compile
   // so they are available to all tests in this describe block
-  beforeEach(inject(function(_$compile_, _$rootScope_, _$templateCache_){
+  beforeEach(inject(function(_$compile_, _$rootScope_, _csAlertService_){
     // The injector unwraps the underscores (_) from around the parameter names when matching
     $compile = _$compile_;
     $rootScope = _$rootScope_;
-    $templateCache = _$templateCache_
-  }));
-
-  beforeEach(inject(function (_csAlertService_) {
     csAlertService = _csAlertService_;
   }));
-
-  beforeEach(inject(function ($templateCache) { $templateCache.put('components/cs-alert/cs-alert-template.html', "<uib-alert close='csAlertService.dismissAlert(alert.id)' dismiss-on-timeout='{{csAlertService.timeoutForAlert(alert)}}' ng-click='csAlertService.dismissAlert(alert.id)' ng-repeat='alert in csAlertService.getAlerts()' type='{{alert.type}}'> {{alert.message}} </uib-alert>"); }));
 
   it('Replaces the element with the appropriate content', function() {
     csAlertService.addAlert('test alert 1');
     csAlertService.addAlert('test alert 2');
     csAlertService.addAlert('test alert 3');
 
-    template = $templateCache.get('components/cs-alert/cs-alert-template.html');
-    console.log('-------------------- template:')
-    console.log(template)
-
-    template = $templateCache.get('components/cs-alert/cs-alert-template.haml');
-    console.log('-------------------- template (haml):')
-    console.log(template)
-
     // Compile a piece of HTML containing the directive
     var html = '<cs-alert></cs-alert>';
     var element = angular.element(html);
-    console.log('-------------------- element:')
-    console.log(element)
     var compiled = $compile(element)($rootScope);
-    console.log('-------------------- compiled:')
-    console.log(compiled)
 
     // fire all the watches, so the scope expressions will be evaluated
     $rootScope.$digest();
-
-    console.log('-------------------- digested:')
-    console.log(compiled)
 
     // Check that the compiled element contains the desired content
     expect(compiled.html()).toContain("test alert 1");
