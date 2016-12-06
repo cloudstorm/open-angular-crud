@@ -23,8 +23,7 @@ describe('csAlert', function() {
     csAlertService = _csAlertService_;
   }));
 
-
-  beforeEach(inject(function ($templateCache) { $templateCache.put('components/cs-alert/cs-alert-template.html', '<div>dwindiwidnwidnwdinwidiw</div>'); }));
+  beforeEach(inject(function ($templateCache) { $templateCache.put('components/cs-alert/cs-alert-template.html', "<uib-alert close='csAlertService.dismissAlert(alert.id)' dismiss-on-timeout='{{csAlertService.timeoutForAlert(alert)}}' ng-click='csAlertService.dismissAlert(alert.id)' ng-repeat='alert in csAlertService.getAlerts()' type='{{alert.type}}'> {{alert.message}} </uib-alert>"); }));
 
   it('Replaces the element with the appropriate content', function() {
     csAlertService.addAlert('test alert 1');
