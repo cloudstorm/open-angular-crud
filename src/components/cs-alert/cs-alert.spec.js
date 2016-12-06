@@ -3,6 +3,8 @@ describe('csAlert', function() {
   var $rootScope;
   var csAlertService;
 
+
+
   beforeEach(angular.mock.module('hamlTemplates'));
   beforeEach(angular.mock.module('cloudStorm.alertService'));
   beforeEach(angular.mock.module('cloudStorm.alert'));
@@ -25,12 +27,16 @@ describe('csAlert', function() {
     csAlertService.addAlert('test alert 3');
 
     // Compile a piece of HTML containing the directive
-    var html = "<cs-alert></cs-alert>";
+    var html = '<cs-alert></cs-alert>';
     var element = angular.element(html);
     var compiled = $compile(element)($rootScope);
 
     // fire all the watches, so the scope expressions will be evaluated
-    $rootScope.$digest();
+    do {
+     $rootScope.$digest();
+     console.log('wait');
+    }
+    while (compiled.html() == '');
 
     // Check that the compiled element contains the desired content
     expect(compiled.html()).toContain("test alert 1");
