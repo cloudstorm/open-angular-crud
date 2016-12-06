@@ -17,18 +17,18 @@ app.directive "csCheckbox", ['$rootScope', 'csInputBase', ($rootScope, csInputBa
     # Pre-link: gets called for parent first
     pre: (scope, element, attrs, controller) ->
       return
-    
+
     # Post-link: gets called for children recursively after post() traversed the DOM tree
     post: link
 
 
   # ===== LINK ================================================================
 
-  link = ($scope, element, attrs, controller) ->    
+  link = ($scope, element, attrs, controller) ->
     csInputBase $scope
-    
+
     $scope.formItem.attributes[$scope.field.attribute] = !!$scope.formItem.attributes[$scope.field.attribute]
-    
+
     # ===== WATCHES =======================================
 
     $scope.$watch 'formItem.attributes[field.attribute]', (newValue, oldValue) ->
@@ -41,7 +41,7 @@ app.directive "csCheckbox", ['$rootScope', 'csInputBase', ($rootScope, csInputBa
     return
 
   # ===== CONFIGURE ===========================================================
-  
+
   return {
     restrict: 'E'
     templateUrl: 'components/cs-checkbox/cs-checkbox-template.html'

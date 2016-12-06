@@ -7,13 +7,13 @@ app = angular.module('cloudStorm.alertService', [])
 app.service 'csAlertService', [() ->
   @sequence = 0
   @alerts = []
-  
+
   @getAlerts = () ->
     if @alerts
       @alerts
     else
       []
-  
+
   @timeoutForAlert = (alert) ->
     switch alert.type
       when 'success' then 3500
@@ -26,10 +26,10 @@ app.service 'csAlertService', [() ->
       @alerts = []
     @alerts.push {id:@sequence, message: message, type: type}
     @sequence++
-  
+
   @dismissAlert = (idToDismiss) ->
     @alerts = _.without @alerts, _.findWhere(@alerts, {id: idToDismiss})
-    
+
   # For debug purposes
   window.csAlerts = this
 ]

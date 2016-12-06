@@ -15,6 +15,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-exec');
   grunt.loadNpmTasks('grunt-bump');
   grunt.loadNpmTasks('grunt-aws-s3');
+  grunt.loadNpmTasks('grunt-karma');
 
   /**
    * Load in our build configuration file.
@@ -251,6 +252,17 @@ module.exports = function(grunt) {
       }
     },
 
+    karma: {
+      options: {
+        configFile: 'karma.conf.js',
+      },
+      unit: {
+        singleRun: true
+      },
+      continuous: {
+      }
+    },
+
     /**
      * Watches
      * LiveReload is added through grunt-coníib-watch
@@ -319,6 +331,16 @@ module.exports = function(grunt) {
   grunt.registerTask ('release', function(t) {
     var target = t || 'patch';
     grunt.task.run('bump-only:' + target, 'build', 'compile', 'bump-commit');
+  });
+
+  grunt.registerTask ('testrelease', function(t) {
+    var target = t || 'patch';
+    grunt.task.run('bump-only:' + target, 'build', 'compile');
+  });
+
+  grunt.registerTask ('test', function(t) {
+    var target = t || 'continuous';
+    grunt.task.run('karma:' + target);
   });
 
   /**

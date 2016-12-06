@@ -1,3 +1,5 @@
+[ ![Codeship Status for cloudstorm/cloudstorm](https://app.codeship.com/projects/c3a54920-9dca-0134-ca86-1a706822621a/status?branch=master)](https://app.codeship.com/projects/188767)
+
 <a href="http://cloudstorm.io"><img src="./docs/images/logo.png" height="140" align="right"></a>
 Welcome to CloudStorm - the open-source enterprise software framework for web developers.
 

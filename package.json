@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Run tests with 'grunt test' (don't forget to install devDependencies though).\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,10 @@
   },
   "homepage": "https://github.com/cloudstorm/cloudstorm#readme",
   "devDependencies": {
+    "angular": "^1.5.9",
+    "angular-mocks": "^1.5.9",
+    "angular-ui-bootstrap": "^2.3.0",
+    "angular-ui-router": "^0.3.2",
     "grunt": "^1.0.1",
     "grunt-aws-s3": "^0.14.5",
     "grunt-bump": "^0.8.0",
@@ -36,6 +40,15 @@
     "grunt-contrib-watch": "^1.0.0",
     "grunt-exec": "^1.0.1",
     "grunt-haml2html": "^0.3.1",
-    "grunt-html2js": "^0.3.6"
+    "grunt-html2js": "^0.3.6",
+    "grunt-karma": "^2.0.0",
+    "jasmine-core": "^2.5.2",
+    "karma": "^1.3.0",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-jasmine": "^1.0.2",
+    "karma-ng-haml2js-preprocessor": "^0.1.1",
+    "karma-phantomjs-launcher": "^1.0.2",
+    "karma-spec-reporter": "0.0.26",
+    "underscore": "^1.8.3"
   }
 }
