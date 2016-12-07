@@ -1,5 +1,5 @@
 [ ![Codeship Status for cloudstorm/cloudstorm](https://app.codeship.com/projects/c3a54920-9dca-0134-ca86-1a706822621a/status?branch=master)](https://app.codeship.com/projects/188767)
-[![devDependency Status](https://david-dm.org/cloudstorm/cloudstorm/dev-status.svg?style=flat-square)](https://david-dm.org/cloudstorm/cloudstorm#info=devDependencies)
+[![devDependency Status](https://david-dm.org/cloudstorm/cloudstorm/dev-status.svg)](https://david-dm.org/cloudstorm/cloudstorm#info=devDependencies)
 [![Code Climate](https://codeclimate.com/github/cloudstorm/cloudstorm/badges/gpa.svg)](https://codeclimate.com/github/cloudstorm/cloudstorm)
 
 <a href="http://cloudstorm.io"><img src="./docs/images/logo.png" height="140" align="right"></a>
