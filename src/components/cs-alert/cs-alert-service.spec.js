@@ -22,22 +22,22 @@ describe('csAlertService', function() {
     csAlertService.addAlert('test alert 1');
     expect(csAlertService.getAlerts()).toEqual([{id: 0, message: 'test alert 1', type: 'warning'}]);
 
-    csAlertService.addAlert('test alert 2');
-    expect(csAlertService.getAlerts()).toEqual([{id: 0, message: 'test alert 1', type: 'warning'}, {id: 1, message: 'test alert 2', type: 'warning'}]);
+    csAlertService.addAlert('test alert 2', 'success');
+    expect(csAlertService.getAlerts()).toEqual([{id: 0, message: 'test alert 1', type: 'warning'}, {id: 1, message: 'test alert 2', type: 'success'}]);
   });
 
   it('should be able to dismiss alerts', function() {
     expect(csAlertService).toBeDefined();
     expect(csAlertService.getAlerts()).toEqual([]);
 
-    csAlertService.addAlert('test alert 1');
-    expect(csAlertService.getAlerts()).toEqual([{id: 0, message: 'test alert 1', type: 'warning'}]);
+    csAlertService.addAlert('test alert 1', 'info');
+    expect(csAlertService.getAlerts()).toEqual([{id: 0, message: 'test alert 1', type: 'info'}]);
 
-    csAlertService.addAlert('test alert 2');
-    expect(csAlertService.getAlerts()).toEqual([{id: 0, message: 'test alert 1', type: 'warning'}, {id: 1, message: 'test alert 2', type: 'warning'}]);
+    csAlertService.addAlert('test alert 2', 'danger');
+    expect(csAlertService.getAlerts()).toEqual([{id: 0, message: 'test alert 1', type: 'info'}, {id: 1, message: 'test alert 2', type: 'danger'}]);
 
     csAlertService.dismissAlert(0);
-    expect(csAlertService.getAlerts()).toEqual([{id: 1, message: 'test alert 2', type: 'warning'}]);
+    expect(csAlertService.getAlerts()).toEqual([{id: 1, message: 'test alert 2', type: 'danger'}]);
 
     csAlertService.dismissAlert(1);
     expect(csAlertService.getAlerts()).toEqual([]);

@@ -20,9 +20,9 @@ describe('csAlert', function() {
   }));
 
   it('Replaces the element with the appropriate content', function() {
-    csAlertService.addAlert('test alert 1');
-    csAlertService.addAlert('test alert 2');
-    csAlertService.addAlert('test alert 3');
+    csAlertService.addAlert('test alert 1', 'success');
+    csAlertService.addAlert('test alert 2', 'info');
+    csAlertService.addAlert('test alert 3', 'warning');
 
     // Compile a piece of HTML containing the directive
     var html = '<cs-alert></cs-alert>';
@@ -39,9 +39,9 @@ describe('csAlert', function() {
   });
 
   it('Does not show up if directive is missing' , function() {
-    csAlertService.addAlert('test alert 1');
-    csAlertService.addAlert('test alert 2');
-    csAlertService.addAlert('test alert 3');
+    csAlertService.addAlert('test alert 1', 'danger');
+    csAlertService.addAlert('test alert 2', 'success');
+    csAlertService.addAlert('test alert 3', 'info');
 
     // Compile a piece of HTML containing the directive
     var element = $compile("<body></body>")($rootScope);
@@ -83,7 +83,7 @@ describe('csAlert', function() {
   });
 
   it('Disappears when alert is clicked.', function() {
-    csAlertService.addAlert('test alert 1');
+    csAlertService.addAlert('test alert 1', 'danger');
     csAlertService.addAlert('test alert 2');
     csAlertService.addAlert('test alert 3');
 
