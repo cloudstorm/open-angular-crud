@@ -5,3 +5,4 @@ vendor/
 sample/CloudStorm Sample_files
 aws.config.js
 npm-debug.log
+coverage
