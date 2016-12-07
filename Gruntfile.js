@@ -197,7 +197,7 @@ module.exports = function(grunt) {
         }
       },
       start_web: {
-        command: 'cd bin && python -m SimpleHTTPServer <%= port %>'
+        command: 'cd bin && open "http://localhost:<%= port %>/sample.html" && python -m SimpleHTTPServer <%= port %>'
         // command: 'cd bin && python -m SimpleHTTPServer 8000'
       },
       stop_web: {
@@ -265,7 +265,7 @@ module.exports = function(grunt) {
 
     /**
      * Watches
-     * LiveReload is added through grunt-coníib-watch
+     * LiveReload is added through grunt-contrib-watch
      * User LiveReload with a browser extension or if you prefer to not,
      * then make sure the following is added to the end of the body tag in HTML:
      * <script src="http://localhost:35729/livereload.js"></script>
@@ -289,27 +289,27 @@ module.exports = function(grunt) {
         files: [
           '<%= app_files.coffee %>'
         ],
-        tasks: [ 'exec:say:coffee', 'coffee', 'concat:compile_js' ]
+        tasks: [ 'exec:say:coffee', 'coffee', 'concat:compile_js', 'karma:unit' ]
         // tasks: [ 'coffeelint:src', 'coffee:source', 'karma:unit:run', 'copy:build_appjs' ]
       },
       hamlsrc: {
         files: [
           '<%= app_files.haml %>'
         ],
-        tasks: [ 'exec:say:haml', 'haml', 'html2js', 'concat:compile_js' ]
+        tasks: [ 'exec:say:haml', 'haml', 'html2js', 'concat:compile_js', 'karma:unit' ]
         // tasks: [ 'coffeelint:src', 'coffee:source', 'karma:unit:run', 'copy:build_appjs' ]
       },
       sasssrc: {
         files: [
           '<%= app_files.sass %>'
         ],
-        tasks: [ 'exec:say:sass', 'sass', 'copy:compiled_assets' ]
+        tasks: [ 'exec:say:sass', 'sass', 'copy:compiled_assets', 'karma:unit' ]
       },
       sample_app: {
         files: [
           '<%= sample_dir %>/**',
         ],
-        tasks: [ 'exec:say:sample', 'copy:sample_app' ]
+        tasks: [ 'exec:say:sample', 'copy:sample_app', 'karma:unit' ]
       },
     },
 
