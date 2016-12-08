@@ -11,9 +11,9 @@ app.factory 'csDataStore', [ ->
     ################################################################################################
     # Opts are
     # (global)   If not parent is given the global datastore is used
-    # (child)    If a datastore if given then the repository of the given store will be the prototypical parnet of the repository
-    # (isolated) If an empty object is given, then it will be  the prototypical parnet of the repository
-    # (generic)  If {parent: object} is given, then `object` will be the prototypical parnet of the repository. Could be any type
+    # (child)    If a datastore is given then the repository of the given store will be the prototypical parent of the repository
+    # (isolated) If an empty object is given, then it will be  the prototypical parent of the repository
+    # (generic)  If {parent: object} is given, then `object` will be the prototypical parent of the repository. Could be any type
 
     constructor: (opts) ->
       if !opts
@@ -30,7 +30,7 @@ app.factory 'csDataStore', [ ->
 
     ################################################################################################
 
-    fork: () -> new csDataStore(@)
+    fork: () -> new DataStore(@)
 
     ################################################################################################
 

@@ -1,5 +1,3 @@
-
-// Be descriptive with titles here. The describe and it titles combined read like a sentence.
 describe('csAlertService', function() {
 
   var csAlertService;
