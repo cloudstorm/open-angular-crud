@@ -5,12 +5,12 @@ app = angular.module("cloudStorm.templateService", [])
 app.factory 'csTemplateService', [() ->
 
   class csTemplateService
-    
+
     getTemplateUrl: (field, options, defaultTemplate) ->
       template = defaultTemplate
-      
-      if (overrides = options['template-overrides']) 
-  
+
+      if (overrides = options['template-overrides'])
+
         _(overrides).forEach (override) ->
           if (override.type == field.type) && override.template
             template = override.template
@@ -19,7 +19,7 @@ app.factory 'csTemplateService', [() ->
         _(overrides).forEach (override) ->
           if (override.attribute == field.attribute) && override.template
             template = override.template
-            
+
       template
 
   return new csTemplateService

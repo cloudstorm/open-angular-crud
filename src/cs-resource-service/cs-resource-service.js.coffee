@@ -4,7 +4,7 @@ app = angular.module('cloudStorm.resourceService', [])
 
 ####################################################################################################
 
-app.factory 'ResourceService', ['$injector', ($injector) -> 
+app.factory 'ResourceService', ['$injector', ($injector) ->
 
 
   ##################################################################################################
@@ -25,8 +25,8 @@ app.factory 'ResourceService', ['$injector', ($injector) ->
   ##################################################################################################
 
   class ResourceService
-    
-    register: (name, resource) -> 
+
+    register: (name, resource) ->
       resources[name] = resource
 
     register_dynamic_name = (name, service_name) ->
@@ -37,8 +37,9 @@ app.factory 'ResourceService', ['$injector', ($injector) ->
 
       unless resource
         moduleName = lookup_table[name] || "#{camelCase(name)}Resource"
-        resource = $injector.get(moduleName)
-        
+        try resource = $injector.get(moduleName)
+        catch e;
+
         if resource
           @register(name, resource)
         else

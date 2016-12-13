@@ -40,4 +40,23 @@ describe('csAlertService', function() {
     csAlertService.dismissAlert(1);
     expect(csAlertService.getAlerts()).toEqual([]);
   });
+
+  it('should not error when dismissing non-existing alerts', function() {
+    expect(csAlertService).toBeDefined();
+    expect(csAlertService.getAlerts()).toEqual([]);
+
+    csAlertService.dismissAlert(0);
+    csAlertService.dismissAlert(1);
+    csAlertService.dismissAlert(2);
+    csAlertService.dismissAlert(0);
+  });
+
+
+  it('should not error when having a lot of alerts', function() {
+    expect(csAlertService).toBeDefined();
+    expect(csAlertService.getAlerts()).toEqual([]);
+    for (var i = 0; i < 1000000; i++) {
+       csAlertService.addAlert('test alert 1', 'info');
+    }
+  });
 });
