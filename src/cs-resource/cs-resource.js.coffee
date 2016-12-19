@@ -261,10 +261,11 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', '$q',
       @relationships ||= {}
       if value
         if angular.isArray(value)
+          filteredValue = _.reject value, ((v) -> !v || !v.id)
           @relationships[field.relationship] = { 
-            data: (_.map value, ((o) -> _.pick(o, "id", "type") ) )
+            data: (_.map filteredValue, ((o) -> _.pick(o, "id", "type") ) )
           }
-          _.each value, (o) => @.$datastore.put(o.type, o.id, o)
+          _.each filteredValue, (o) => @.$datastore.put(o.type, o.id, o)
         else
           @relationships[field.relationship] = { data: _.pick(value, "id", "type") }
           @.$datastore.put(value.type, value.id, value)
