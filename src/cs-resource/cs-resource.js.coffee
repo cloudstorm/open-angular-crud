@@ -199,7 +199,7 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', '$q',
     $assign: (value_object) -> 
       # this = value_object, while keeping the existing attributes if they exist
       delete @relationships
-      angular.merge(@, _.pick(value_object, "id", "type", "attributes", "relationships", "links"))
+      angular.merge(@, _.pick(value_object, "id", "type", "attributes", "relationships", "links", "meta"))
 
       if value_object.$datastore
         for name, rel of @relationships
@@ -223,7 +223,7 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', '$q',
       delete @attributes
       delete @relationships
       delete @links
-      angular.merge(@, _.pick(value_object, "id", "type", "attributes", "relationships", "links"))      
+      angular.merge(@, _.pick(value_object, "id", "type", "attributes", "relationships", "links", "meta"))      
       @.$datastore = new csDataStore(value_object.$datastore)
 
     ################################################################################################
