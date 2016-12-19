@@ -81,8 +81,13 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', '$q',
         (data) =>  # successCallback                    
           objects   = _.map data.data, ((i) => new @(i, datastore: datastore))
           included  = _.map data.included, (i) => 
-            resource = ResourceService.get(i.type)
-            return new resource(i, datastore: datastore)
+            assoc = datastore.get(i.type, i.id)
+            if assoc 
+              assoc.$assign(i) 
+              return assoc
+            else
+              resource = ResourceService.get(i.type)
+              return new resource(i, datastore: datastore)            
           return objects  
         (reason) => # errorCallback
           return $q.reject(reason);
@@ -199,6 +204,7 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', '$q',
     $assign: (value_object) -> 
       # this = value_object, while keeping the existing attributes if they exist
       delete @relationships
+      delete @meta
       angular.merge(@, _.pick(value_object, "id", "type", "attributes", "relationships", "links", "meta"))
 
       if value_object.$datastore
@@ -223,6 +229,7 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', '$q',
       delete @attributes
       delete @relationships
       delete @links
+      delete @meta
       angular.merge(@, _.pick(value_object, "id", "type", "attributes", "relationships", "links", "meta"))      
       @.$datastore = new csDataStore(value_object.$datastore)
 
