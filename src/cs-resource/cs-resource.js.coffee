@@ -116,12 +116,21 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', '$q',
 
     ################################################################################################
 
-    $reload: () -> 
+    $reload: (params) -> 
       endpoint = @links.self.href || member_endpoint_url(@.constructor, @id)
 
-      csRestApi.get(endpoint, {}).then(        
+      csRestApi.get(endpoint, params).then(        
         (data) =>  # successCallback
-          return @.$assign(data.data)          
+          object = @.$assign(data.data)          
+          included = _.map data.included, (i) => 
+            assoc = object.$datastore.get(i.type, i.id)
+            if assoc 
+              assoc.$assign(i) 
+              return assoc
+            else
+              resource = ResourceService.get(i.type)
+              return new resource(i, datastore: object.$datastore)            
+          return object
         (reason) => # errorCallback
           return $q.reject(reason);
         (value) =>  # notifyCallback
