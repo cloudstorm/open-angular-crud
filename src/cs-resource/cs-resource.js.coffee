@@ -44,7 +44,7 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', '$q',
 
     @$new: (opts = {}) -> 
       if opts.value 
-        value_object = opts.value
+        value_object = angular.copy(opts.value)
         value_object.relationships ||= {}
         value_object.attributes ||= {} 
         value_object.type ||= @descriptor.type
