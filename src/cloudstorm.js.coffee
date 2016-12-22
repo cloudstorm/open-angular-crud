@@ -23,5 +23,6 @@ app = angular.module 'cloudStorm', [
   'cloudStorm.settings'
   'cloudStorm.templateService'
   'cloudStorm.templates'
+  'cloudStorm.descriptorService'
   'ui.bootstrap'
 ]

@@ -1,0 +1,77 @@
+{
+  "name": "Item",
+  "type": "items",
+  "hint": "list",
+
+  "base_url": "https://demo.cloudstorm.io",
+  "endpoint": "api/v1/items",
+
+  "fields": [
+    {
+      "attribute": "title",
+      "cardinality": "one",
+      "label": "title",
+      "read_only": false,
+      "required": true,
+      "type": "string"
+    },
+    {
+      "attribute": "description",
+      "cardinality": "one",
+      "label": "description",
+      "read_only": false,
+      "required": false,
+      "type": "string"
+    },
+    {
+      "attribute": "due_date",
+      "cardinality": "one",
+      "label": "due_date",
+      "read_only": false,
+      "required": true,
+      "type": "date"
+    },
+    {
+      "attribute": "done",
+      "cardinality": "one",
+      "default": false,
+      "label": "done",
+      "read_only": false,
+      "required": false,
+      "type": "boolean"
+    },
+    {
+      "attribute": "categories",
+      "cardinality": "many",
+      "label": "categories",
+      "read_only": false,
+      "relationship": "categories",
+      "resource": "categories",
+      "type": "resource"
+    },
+    {
+      "attribute": "user_id",
+      "cardinality": "one",
+      "label": "User",
+      "read_only": true,
+      "relationship": "user",
+      "resource": "users",
+      "type": "resource"
+    }
+  ],
+
+  "attributes_to_hide": {
+    "create": [
+      "user_id"
+    ],
+    "edit": [
+      "user_id"
+    ]
+  },
+
+  "display": {
+    "name": "title",
+    "search": "title_x_cont"
+  }
+
+}

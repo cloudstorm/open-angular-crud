@@ -7,7 +7,7 @@ describe('csRestApi', function() {
 
   beforeEach(angular.mock.module('cloudStorm.restApi'));
 
-  beforeEach(inject(function (_csRestApi_, _$q_, _$rootScope_, _$httpBackend_, _$http_) {
+  beforeEach(inject(function (_csRestApi_, _$q_, _$rootScope_, _$httpBackend_) {
     csRestApi = _csRestApi_;
     $q = _$q_;
     $rootScope =  _$rootScope_;
