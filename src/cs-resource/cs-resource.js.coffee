@@ -178,8 +178,13 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', '$q',
         (data) =>  # successCallback
           object = @.$assign(data.data)  
           included = _.map data.included, (i) => 
-            resource = ResourceService.get(i.type)
-            return new resource(i, datastore: object.$datastore)    
+            assoc = object.$datastore.get(i.type, i.id)
+            if assoc 
+              assoc.$assign(i) 
+              return assoc
+            else
+              resource = ResourceService.get(i.type)
+              return new resource(i, datastore: object.$datastore)            
           return object              
         (reason) => # errorCallback
           return $q.reject(reason);
