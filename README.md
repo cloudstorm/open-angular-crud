@@ -15,8 +15,7 @@ The following are automatically generated for You:
 * Resource edit forms
 * CloudStorm Wizards -> forms within forms to create related resources in-place
 
-###[Live Demo](http://demo.cloudstorm.io)
-> Use credentials cloudstorm@example.com / cloudstorm or create new user.
+###[Live Demo](http://demo.cloudstorm.io)> Use credentials cloudstorm@example.com / cloudstorm or create new user.
 
 For documentation geared towards our automation and integration business, we recommend starting with the [CloudStorm website](http://cloudstorm.io).
 
@@ -41,8 +40,6 @@ This is the main source of documentation for **developers** working with (or con
 1. Enjoy! or read [the Basics](docs/basics.md)
 
 #### Dependencies
-* As of v0.0.1 CloudStorm depends on the Rails Asset Pipeline
-  _We're removing this dependency in v0.1, making CloudStorm backend-independent_
 * A JSON API serializer for the backend.
   _There are dozens of libraries to choose from, see the [Basic How-to](docs/basics.md) for more info._
 
