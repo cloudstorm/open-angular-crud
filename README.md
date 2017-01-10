@@ -15,7 +15,8 @@ The following are automatically generated for You:
 * Resource edit forms
 * CloudStorm Wizards -> forms within forms to create related resources in-place
 
-###[Live Demo](http://demo.cloudstorm.io)> Use credentials cloudstorm@example.com / cloudstorm or create new user.
+###[Live Demo](http://demo.cloudstorm.io)
+> Use credentials cloudstorm@example.com / cloudstorm or create new user.
 
 For documentation geared towards our automation and integration business, we recommend starting with the [CloudStorm website](http://cloudstorm.io).
 
