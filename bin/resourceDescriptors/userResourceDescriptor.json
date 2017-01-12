@@ -1,0 +1,25 @@
+{
+  "name": "User",
+  "type": "users",
+  "hint": "list",
+
+  "base_url": "https://demo.cloudstorm.io",
+  "endpoint": "api/v1/users",
+
+  "fields": [
+    {
+      "attribute": "email",
+      "cardinality": "one",
+      "label": "email",
+      "read_only": false,
+      "required": true,
+      "type": "string"
+    }
+  ],
+
+  "display": {
+    "name": "email",
+    "search": "name_x_cont"
+  }
+
+}

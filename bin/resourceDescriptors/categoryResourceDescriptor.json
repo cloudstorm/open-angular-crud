@@ -1,0 +1,25 @@
+{
+  "name": "Category",
+  "type": "categories",
+  "hint": "list",
+
+  "base_url": "https://demo.cloudstorm.io",
+  "endpoint": "api/v1/categories",
+
+  "fields": [
+    {
+      "attribute": "name",
+      "cardinality": "one",
+      "label": "name",
+      "read_only": false,
+      "required": true,
+      "type": "string"
+    }
+  ],
+
+  "display": {
+    "name": "name",
+    "search": "name_x_cont"
+  }
+
+}

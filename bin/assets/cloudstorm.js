@@ -1,8 +1,8 @@
 /**
- * cloudstorm - v0.0.12 - 2016-12-05
+ * cloudstorm - v0.0.12 - 2017-01-12
  * https://github.com/cloudstorm/cloudstorm#readme
  *
- * Copyright (c) 2016 Virtual Solutions Ltd <info@cloudstorm.io>
+ * Copyright (c) 2017 Virtual Solutions Ltd <info@cloudstorm.io>
  * Licensed MIT 
  */
 "use strict";
@@ -650,7 +650,7 @@ var app;
 app = angular.module('cloudStorm.index', []);
 
 app.directive("csIndex", [
-  'ResourceService', 'csDataStore', 'csRestApi', 'csSettings', '$uibModal', 'csAlertService', '$filter', function(ResourceService, csDataStore, csRestApi, csSettings, $uibModal, csAlertService, $filter) {
+  'ResourceService', 'csDataStore', 'csRestApi', 'csSettings', '$uibModal', 'csAlertService', '$filter', 'csDescriptorService', function(ResourceService, csDataStore, csRestApi, csSettings, $uibModal, csAlertService, $filter, csDescriptorService) {
     var compile;
     compile = function($templateElement, $templateAttributes) {
       var link;
@@ -660,220 +660,222 @@ app.directive("csIndex", [
         post: link
       });
       return link = function($scope, element, attrs, ctrl) {
-        var attributeToHide, defaultOptions, escapeRegExp, indexOptions, loadData, pushNewItem, resource, sortField;
-        $scope.i18n = csSettings.settings['i18n-engine'];
-        $scope.collection = [];
-        resource = ResourceService.get($scope.resourceType);
-        loadData = function() {
-          return resource.$index({
-            include: '*'
-          }).then(function(items) {
-            return $scope.collection = items;
-          }, function(reason) {
-            $scope.collection = null;
-            return console.log(reason);
-          }, function() {});
-        };
-        loadData();
-        defaultOptions = {
-          'selectedItem': null,
-          'sortAttribute': resource.descriptor.fields[0].attribute,
-          'filterValue': "",
-          'sortReverse': false,
-          'condensedView': false,
-          'hide-actions': false,
-          'hide-attributes': resource.descriptor.attributes_to_hide || {}
-        };
-        $scope.csIndexOptions || ($scope.csIndexOptions = {});
-        indexOptions = angular.copy($scope.csIndexOptions);
-        angular.copy({}, $scope.csIndexOptions);
-        angular.merge($scope.csIndexOptions, defaultOptions, indexOptions);
-        $scope.columns = resource.descriptor.fields;
-        $scope.header = resource.descriptor.name;
-        $scope.subHeader = resource.descriptor.hint;
-        sortField = _.find(resource.descriptor.fields, {
-          attribute: $scope.csIndexOptions.sortAttribute
-        });
-        $scope.comparisonValue = function(item) {
-          if (sortField) {
-            return $scope.fieldValue(item, sortField);
-          }
-        };
-        escapeRegExp = function(str) {
-          return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
-        };
-        $scope.filterComparison = function(value, index, array) {
-          var search;
-          search = new RegExp(escapeRegExp($scope.csIndexOptions.filterValue), "i");
-          return _.any(resource.descriptor.fields, function(field) {
-            var field_value;
-            if ((field_value = $scope.fieldValue(value, field))) {
-              return field_value.toString().match(search);
-            }
-          });
-        };
-        $scope.listIsEmpty = function() {
-          return $scope.collection === null;
-        };
-        $scope.fieldValue = function(item, field) {
-          var associations, display_date, display_time, enum_value, item_data, names, ref, relationship;
-          if (field.resource) {
-            if (field.cardinality === 'many') {
-              associations = item.$association(field);
-              names = _.map(associations, function(assoc) {
-                return assoc.$display_name();
-              });
-              return names.join(", ");
-            } else {
-              if (!item.relationships[field.relationship]) {
-                return '';
-              }
-              item_data = item.relationships[field.relationship].data;
-              relationship = item.$relationship(item_data);
-              if (!relationship) {
-                return '';
-              }
-              return relationship.$display_name();
-            }
-          } else if (field["enum"]) {
-            enum_value = _.find(field["enum"], {
-              value: item.attributes[field.attribute]
-            });
-            if (enum_value) {
-              return enum_value.name;
-            }
-            return item.attributes[field.attribute];
-          } else if (field.type === 'boolean') {
-            return ((ref = $scope.i18n) != null ? ref.t(item.attributes[field.attribute]) : void 0) || item.attributes[field.attribute];
-          } else if (field.type === 'time') {
-            display_time = new Date(item.attributes[field.attribute]);
-            return $filter('date')(display_time, 'HH:mm');
-          } else if (field.type === 'datetime') {
-            display_date = new Date(item.attributes[field.attribute]);
-            return $filter('date')(display_date, 'EEEE, MMMM d, y HH:mm');
-          } else {
-            return item.attributes[field.attribute];
-          }
-        };
-        $scope.columnVisible = function(column, index) {
-          var length;
-          length = $scope.columns.length;
-          if (attributeToHide(column.attribute)) {
-            return false;
-          }
-          if ($scope.viewIsCompressed() && !_.contains([0, 1, 2], index)) {
-            return false;
-          }
-          return true;
-        };
-        attributeToHide = function(attribute) {
-          var hiddenAttrs;
-          if (hiddenAttrs = $scope.csIndexOptions['hide-attributes'].index) {
-            return hiddenAttrs.indexOf(attribute) > -1;
-          }
-          return false;
-        };
-        $scope.createDisabled = function() {
-          return resource.descriptor.create_disabled;
-        };
-        $scope.sidePanelIsVisible = function() {
-          if ($scope.csIndexOptions.selectedItem) {
-            return true;
-          }
-          return false;
-        };
-        $scope.viewIsCompressed = function() {
-          return $scope.sidePanelIsVisible() && $scope.csIndexOptions.condensedView;
-        };
-        $scope.changeSorting = function(column) {
-          $scope.csIndexOptions.sortAttribute = column.attribute;
-          $scope.csIndexOptions.sortReverse = !$scope.csIndexOptions.sortReverse;
-          return sortField = _.find(resource.descriptor.fields, {
+        return csDescriptorService.getPromises().then(function() {
+          var attributeToHide, defaultOptions, escapeRegExp, indexOptions, loadData, pushNewItem, resource, sortField;
+          $scope.i18n = csSettings.settings['i18n-engine'];
+          $scope.collection = [];
+          resource = ResourceService.get($scope.resourceType);
+          loadData = function() {
+            return resource.$index({
+              include: '*'
+            }).then(function(items) {
+              return $scope.collection = items;
+            }, function(reason) {
+              $scope.collection = null;
+              return console.log(reason);
+            }, function() {});
+          };
+          loadData();
+          defaultOptions = {
+            'selectedItem': null,
+            'sortAttribute': resource.descriptor.fields[0].attribute,
+            'filterValue': "",
+            'sortReverse': false,
+            'condensedView': false,
+            'hide-actions': false,
+            'hide-attributes': resource.descriptor.attributes_to_hide || {}
+          };
+          $scope.csIndexOptions || ($scope.csIndexOptions = {});
+          indexOptions = angular.copy($scope.csIndexOptions);
+          angular.copy({}, $scope.csIndexOptions);
+          angular.merge($scope.csIndexOptions, defaultOptions, indexOptions);
+          $scope.columns = resource.descriptor.fields;
+          $scope.header = resource.descriptor.name;
+          $scope.subHeader = resource.descriptor.hint;
+          sortField = _.find(resource.descriptor.fields, {
             attribute: $scope.csIndexOptions.sortAttribute
           });
-        };
-        $scope.selectItem = function(item) {
-          return $scope.csIndexOptions.selectedItem = item;
-        };
-        $scope.destroyItem = function($event, item) {
-          var ref;
-          $event.stopPropagation();
-          if (confirm((ref = $scope.i18n) != null ? ref.t('confirm.delete') : void 0)) {
-            return item.$destroy().then(function(result) {
-              var index;
-              $scope.csIndexOptions.selectedItem = null;
-              index = $scope.collection.indexOf(item);
-              return $scope.collection.splice(index, 1);
-            }, function(reason) {
-              var alert, ref1, ref2;
-              alert = (ref1 = reason.data) != null ? ref1.errors[0].detail : void 0;
-              return csAlertService.addAlert(alert || ((ref2 = $scope.i18n) != null ? ref2.t('alert.error_happened') : void 0), 'danger');
-            });
-          }
-        };
-        $scope.unselectItem = function() {
-          return $scope.csIndexOptions.selectedItem = null;
-        };
-        $scope.getPanelNumber = function(length) {
-          if (length > 1) {
-            return $scope.csIndexOptions.condensedView = true;
-          } else {
-            return $scope.csIndexOptions.condensedView = false;
-          }
-        };
-        $scope.refreshIndex = function() {
-          $scope.unselectItem();
-          return loadData();
-        };
-        $scope.openNewResourcePanel = function() {
-          var modalInstance;
-          $scope.unselectItem();
-          $scope.wizardOptions = {
-            "resource-type": $scope.resourceType,
-            "form-item": {},
-            "form-mode": "create",
-            "reset-on-submit": true,
-            "events": {
-              'wizard-canceled': function(resource) {
-                var ref;
-                modalInstance.close();
-                return csAlertService.addAlert(((ref = $scope.i18n) != null ? ref.t('alert.no_resource_created') : void 0) || 'translation missing', 'info');
-              },
-              'wizard-submited': function(resource) {
-                var ref;
-                pushNewItem($scope.collection, resource);
-                if (!$scope.wizardOptions['keep-first']) {
-                  modalInstance.close();
-                }
-                return csAlertService.addAlert(((ref = $scope.i18n) != null ? ref.t('alert.new_resource_created') : void 0) || 'translation missing', 'success');
-              }
+          $scope.comparisonValue = function(item) {
+            if (sortField) {
+              return $scope.fieldValue(item, sortField);
             }
           };
-          angular.merge($scope.wizardOptions, $scope.csIndexOptions);
-          modalInstance = $uibModal.open({
-            scope: $scope,
-            keyboard: false,
-            backdrop: 'static',
-            windowTopClass: 'modal-wizard',
-            template: "<div cs-wizard cs-wizard-options=wizardOptions></div>",
-            resolve: {
-              dummy: function() {
-                return $scope.dummy;
+          escapeRegExp = function(str) {
+            return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+          };
+          $scope.filterComparison = function(value, index, array) {
+            var search;
+            search = new RegExp(escapeRegExp($scope.csIndexOptions.filterValue), "i");
+            return _.any(resource.descriptor.fields, function(field) {
+              var field_value;
+              if ((field_value = $scope.fieldValue(value, field))) {
+                return field_value.toString().match(search);
               }
+            });
+          };
+          $scope.listIsEmpty = function() {
+            return $scope.collection === null;
+          };
+          $scope.fieldValue = function(item, field) {
+            var associations, display_date, display_time, enum_value, item_data, names, ref, relationship;
+            if (field.resource) {
+              if (field.cardinality === 'many') {
+                associations = item.$association(field);
+                names = _.map(associations, function(assoc) {
+                  return assoc.$display_name();
+                });
+                return names.join(", ");
+              } else {
+                if (!item.relationships[field.relationship]) {
+                  return '';
+                }
+                item_data = item.relationships[field.relationship].data;
+                relationship = item.$relationship(item_data);
+                if (!relationship) {
+                  return '';
+                }
+                return relationship.$display_name();
+              }
+            } else if (field["enum"]) {
+              enum_value = _.find(field["enum"], {
+                value: item.attributes[field.attribute]
+              });
+              if (enum_value) {
+                return enum_value.name;
+              }
+              return item.attributes[field.attribute];
+            } else if (field.type === 'boolean') {
+              return ((ref = $scope.i18n) != null ? ref.t(item.attributes[field.attribute]) : void 0) || item.attributes[field.attribute];
+            } else if (field.type === 'time') {
+              display_time = new Date(item.attributes[field.attribute]);
+              return $filter('date')(display_time, 'HH:mm');
+            } else if (field.type === 'datetime') {
+              display_date = new Date(item.attributes[field.attribute]);
+              return $filter('date')(display_date, 'EEEE, MMMM d, y HH:mm');
+            } else {
+              return item.attributes[field.attribute];
             }
-          });
-          return modalInstance.result.then((function(selectedItem) {
-            return $scope.selected = selectedItem;
-          }), function() {
-            return console.info('Modal dismissed at: ' + new Date());
-          });
-        };
-        return pushNewItem = function(collection, item) {
-          var newItem;
-          newItem = item.constructor.$new();
-          newItem.$clone(item);
-          return collection.push(newItem);
-        };
+          };
+          $scope.columnVisible = function(column, index) {
+            var length;
+            length = $scope.columns.length;
+            if (attributeToHide(column.attribute)) {
+              return false;
+            }
+            if ($scope.viewIsCompressed() && !_.contains([0, 1, 2], index)) {
+              return false;
+            }
+            return true;
+          };
+          attributeToHide = function(attribute) {
+            var hiddenAttrs;
+            if (hiddenAttrs = $scope.csIndexOptions['hide-attributes'].index) {
+              return hiddenAttrs.indexOf(attribute) > -1;
+            }
+            return false;
+          };
+          $scope.createDisabled = function() {
+            return resource.descriptor.create_disabled;
+          };
+          $scope.sidePanelIsVisible = function() {
+            if ($scope.csIndexOptions.selectedItem) {
+              return true;
+            }
+            return false;
+          };
+          $scope.viewIsCompressed = function() {
+            return $scope.sidePanelIsVisible() && $scope.csIndexOptions.condensedView;
+          };
+          $scope.changeSorting = function(column) {
+            $scope.csIndexOptions.sortAttribute = column.attribute;
+            $scope.csIndexOptions.sortReverse = !$scope.csIndexOptions.sortReverse;
+            return sortField = _.find(resource.descriptor.fields, {
+              attribute: $scope.csIndexOptions.sortAttribute
+            });
+          };
+          $scope.selectItem = function(item) {
+            return $scope.csIndexOptions.selectedItem = item;
+          };
+          $scope.destroyItem = function($event, item) {
+            var ref;
+            $event.stopPropagation();
+            if (confirm((ref = $scope.i18n) != null ? ref.t('confirm.delete') : void 0)) {
+              return item.$destroy().then(function(result) {
+                var index;
+                $scope.csIndexOptions.selectedItem = null;
+                index = $scope.collection.indexOf(item);
+                return $scope.collection.splice(index, 1);
+              }, function(reason) {
+                var alert, ref1, ref2;
+                alert = (ref1 = reason.data) != null ? ref1.errors[0].detail : void 0;
+                return csAlertService.addAlert(alert || ((ref2 = $scope.i18n) != null ? ref2.t('alert.error_happened') : void 0), 'danger');
+              });
+            }
+          };
+          $scope.unselectItem = function() {
+            return $scope.csIndexOptions.selectedItem = null;
+          };
+          $scope.getPanelNumber = function(length) {
+            if (length > 1) {
+              return $scope.csIndexOptions.condensedView = true;
+            } else {
+              return $scope.csIndexOptions.condensedView = false;
+            }
+          };
+          $scope.refreshIndex = function() {
+            $scope.unselectItem();
+            return loadData();
+          };
+          $scope.openNewResourcePanel = function() {
+            var modalInstance;
+            $scope.unselectItem();
+            $scope.wizardOptions = {
+              "resource-type": $scope.resourceType,
+              "form-item": {},
+              "form-mode": "create",
+              "reset-on-submit": true,
+              "events": {
+                'wizard-canceled': function(resource) {
+                  var ref;
+                  modalInstance.close();
+                  return csAlertService.addAlert(((ref = $scope.i18n) != null ? ref.t('alert.no_resource_created') : void 0) || 'translation missing', 'info');
+                },
+                'wizard-submited': function(resource) {
+                  var ref;
+                  pushNewItem($scope.collection, resource);
+                  if (!$scope.wizardOptions['keep-first']) {
+                    modalInstance.close();
+                  }
+                  return csAlertService.addAlert(((ref = $scope.i18n) != null ? ref.t('alert.new_resource_created') : void 0) || 'translation missing', 'success');
+                }
+              }
+            };
+            angular.merge($scope.wizardOptions, $scope.csIndexOptions);
+            modalInstance = $uibModal.open({
+              scope: $scope,
+              keyboard: false,
+              backdrop: 'static',
+              windowTopClass: 'modal-wizard',
+              template: "<div cs-wizard cs-wizard-options=wizardOptions></div>",
+              resolve: {
+                dummy: function() {
+                  return $scope.dummy;
+                }
+              }
+            });
+            return modalInstance.result.then((function(selectedItem) {
+              return $scope.selected = selectedItem;
+            }), function() {
+              return console.info('Modal dismissed at: ' + new Date());
+            });
+          };
+          return pushNewItem = function(collection, item) {
+            var newItem;
+            newItem = item.constructor.$new();
+            newItem.$clone(item);
+            return collection.push(newItem);
+          };
+        });
       };
     };
     return {
@@ -1534,7 +1536,7 @@ app.factory('csDataStore', [
       }
 
       DataStore.prototype.fork = function() {
-        return new csDataStore(this);
+        return new DataStore(this);
       };
 
       DataStore.global = function() {
@@ -1565,6 +1567,79 @@ app.factory('csDataStore', [
       parent: {}
     });
     return DataStore;
+  }
+]);
+
+"use strict";
+var app,
+  extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  hasProp = {}.hasOwnProperty;
+
+app = angular.module('cloudStorm.descriptorService', []);
+
+app.service('csDescriptorService', [
+  '$q', '$http', 'ResourceService', 'csResource', function($q, $http, ResourceService, csResource) {
+    this.descriptors = [];
+    this.getDescriptors = function() {
+      if (this.descriptors) {
+        return this.descriptors;
+      } else {
+        return [];
+      }
+    };
+    this.hasPendingPromises = function() {
+      return this.descriptors.some(function(x) {
+        return x.$$state.status === 0;
+      });
+    };
+    this.getPromises = function() {
+      return Promise.all(this.getDescriptors());
+    };
+    this.registerDescriptorUrl = function(descriptorUrl) {
+      var descriptorPromise, request;
+      if (!this.descriptors) {
+        this.descriptors = [];
+      }
+      request = {
+        method: 'GET',
+        url: descriptorUrl,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      };
+      descriptorPromise = $http(request).success((function(_this) {
+        return function(data, status, headers, config) {
+          return _this.registerDescriptor(data);
+        };
+      })(this)).error((function(_this) {
+        return function(data, status, headers, config) {
+          return console.log("CS-002: Error while receiving descriptor from '" + descriptorUrl + "'");
+        };
+      })(this));
+      return this.descriptors.push(descriptorPromise);
+    };
+    this.registerDescriptor = function(data) {
+      var Resource;
+      Resource = (function(superClass) {
+        extend(Resource, superClass);
+
+        function Resource() {
+          return Resource.__super__.constructor.apply(this, arguments);
+        }
+
+        Resource.endpoint = data.endpoint;
+
+        Resource.base_url = data.base_url;
+
+        Resource.descriptor = _.omit(data, ['endpoint', 'base_url']);
+
+        return Resource;
+
+      })(csResource);
+      return ResourceService.register(Resource.descriptor.type, Resource);
+    };
+    return window.csDescriptors = this;
   }
 ]);
 
@@ -1648,11 +1723,15 @@ app.factory('ResourceService', [
       };
 
       ResourceService.prototype.get = function(name) {
-        var moduleName, resource;
+        var e, error, moduleName, resource;
         resource = resources[name];
         if (!resource) {
           moduleName = lookup_table[name] || ((camelCase(name)) + "Resource");
-          resource = $injector.get(moduleName);
+          try {
+            resource = $injector.get(moduleName);
+          } catch (error) {
+            e = error;
+          }
           if (resource) {
             this.register(name, resource);
           } else {
@@ -2335,7 +2414,7 @@ app.factory('csTemplateService', [
 
 var app;
 
-app = angular.module('cloudStorm', ['cloudStorm.alertService', 'cloudStorm.alert', 'cloudStorm.field', 'cloudStorm.form', 'cloudStorm.index', 'cloudStorm.index.sidePanel', 'cloudStorm.wizard', 'cloudStorm.checkbox', 'cloudStorm.date', 'cloudStorm.time', 'cloudStorm.datetime', 'cloudStorm.enum', 'cloudStorm.number', 'cloudStorm.resourceInput', 'cloudStorm.textfield', 'cloudStorm.inputBase', 'cloudStorm.dataStore', 'cloudStorm.localizationProvider', 'cloudStorm.resource', 'cloudStorm.resourceService', 'cloudStorm.restApi', 'cloudStorm.settings', 'cloudStorm.templateService', 'cloudStorm.templates', 'ui.bootstrap']);
+app = angular.module('cloudStorm', ['cloudStorm.alertService', 'cloudStorm.alert', 'cloudStorm.field', 'cloudStorm.form', 'cloudStorm.index', 'cloudStorm.index.sidePanel', 'cloudStorm.wizard', 'cloudStorm.checkbox', 'cloudStorm.date', 'cloudStorm.time', 'cloudStorm.datetime', 'cloudStorm.enum', 'cloudStorm.number', 'cloudStorm.resourceInput', 'cloudStorm.textfield', 'cloudStorm.inputBase', 'cloudStorm.dataStore', 'cloudStorm.localizationProvider', 'cloudStorm.resource', 'cloudStorm.resourceService', 'cloudStorm.restApi', 'cloudStorm.settings', 'cloudStorm.templateService', 'cloudStorm.templates', 'cloudStorm.descriptorService', 'ui.bootstrap']);
 
 angular.module('cloudStorm.templates', ['components/cs-alert/cs-alert-template.html', 'components/cs-checkbox/cs-checkbox-template.html', 'components/cs-date/cs-date-template.html', 'components/cs-datetime/cs-datetime-template.html', 'components/cs-enum/cs-enum-template.html', 'components/cs-field/cs-field-template.html', 'components/cs-form/cs-form-template.html', 'components/cs-index/cs-index-sidepanel/cs-index-sidepanel-template.html', 'components/cs-index/cs-index-template.html', 'components/cs-number/cs-number-template.html', 'components/cs-resource-input/cs-resource-input-template.html', 'components/cs-textfield/cs-textfield-template.html', 'components/cs-time/cs-time-template.html', 'components/cs-wizard/cs-wizard-panel-template.html', 'components/cs-wizard/cs-wizard-template.html']);
 
