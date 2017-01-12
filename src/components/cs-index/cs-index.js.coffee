@@ -26,8 +26,7 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
 
      # ===== INIT ============================================
 
-      promises = csDescriptorService.getDescriptors();
-      Promise.all(promises).then () ->
+      csDescriptorService.getPromises().then () ->
 
         $scope.i18n = csSettings.settings['i18n-engine']
 
