@@ -1,5 +1,5 @@
 /**
- * cloudstorm - v0.0.13 - 2017-01-12
+ * cloudstorm - v0.0.13 - 2017-01-16
  * https://github.com/cloudstorm/cloudstorm#readme
  *
  * Copyright (c) 2017 Virtual Solutions Ltd <info@cloudstorm.io>
@@ -726,13 +726,13 @@ app.directive("csIndex", [
                 });
                 return names.join(", ");
               } else {
-                if (!item.relationships[field.relationship]) {
-                  return '';
+                if (!(item.relationships && item.relationships[field.relationship])) {
+                  return item.attributes[field.attribute];
                 }
                 item_data = item.relationships[field.relationship].data;
                 relationship = item.$relationship(item_data);
                 if (!relationship) {
-                  return '';
+                  return item.attributes[field.attribute];
                 }
                 return relationship.$display_name();
               }
@@ -1025,9 +1025,9 @@ app.directive("csResourceInput", [
           datastore: $scope.formItem.$datastore
         }, $scope.field.resource_endpoint);
         return $scope.resource.$search(value, search_options).then(function(items) {
-          var relationships;
+          var ref, relationships;
           $scope.associates = items;
-          if (relationships = $scope.formItem.relationships[$scope.field.relationship]) {
+          if (relationships = (ref = $scope.formItem.relationships) != null ? ref[$scope.field.relationship] : void 0) {
             return $scope.model.object = $scope.formItem.$association($scope.field);
           }
         }, function(reason) {
@@ -1038,8 +1038,8 @@ app.directive("csResourceInput", [
         return $scope.$emit('create-resource', $scope.field.resource, $scope.field.attribute, $scope.formItem);
       };
       $scope.canCreateResources = function() {
-        var ref, ref1;
-        return $scope.createResources() && !((ref = $scope.formItem.relationships[$scope.field.relationship]) != null ? (ref1 = ref.data) != null ? ref1.id : void 0 : void 0);
+        var ref, ref1, ref2;
+        return $scope.createResources() && !((ref = $scope.formItem.relationships) != null ? (ref1 = ref[$scope.field.relationship]) != null ? (ref2 = ref1.data) != null ? ref2.id : void 0 : void 0 : void 0);
       };
       refreshAndSelect = function(itemID) {
         var search_options;
@@ -1795,7 +1795,7 @@ app.factory('csResource', [
           opts = {};
         }
         if (opts.value) {
-          value_object = opts.value;
+          value_object = angular.copy(opts.value);
           value_object.relationships || (value_object.relationships = {});
           value_object.attributes || (value_object.attributes = {});
           value_object.type || (value_object.type = this.descriptor.type);
@@ -1844,11 +1844,17 @@ app.factory('csResource', [
               });
             }));
             included = _.map(data.included, function(i) {
-              var resource;
-              resource = ResourceService.get(i.type);
-              return new resource(i, {
-                datastore: datastore
-              });
+              var assoc, resource;
+              assoc = datastore.get(i.type, i.id);
+              if (assoc) {
+                assoc.$assign(i);
+                return assoc;
+              } else {
+                resource = ResourceService.get(i.type);
+                return new resource(i, {
+                  datastore: datastore
+                });
+              }
             });
             return objects;
           };
@@ -1896,12 +1902,27 @@ app.factory('csResource', [
         }, function(value) {});
       };
 
-      Resource.prototype.$reload = function() {
+      Resource.prototype.$reload = function(params) {
         var endpoint;
         endpoint = this.links.self.href || memberEndpointUrl(this.constructor, this.id);
-        return csRestApi.get(endpoint, {}).then((function(_this) {
+        return csRestApi.get(endpoint, params).then((function(_this) {
           return function(data) {
-            return _this.$assign(data.data);
+            var included, object;
+            object = _this.$assign(data.data);
+            included = _.map(data.included, function(i) {
+              var assoc, resource;
+              assoc = object.$datastore.get(i.type, i.id);
+              if (assoc) {
+                assoc.$assign(i);
+                return assoc;
+              } else {
+                resource = ResourceService.get(i.type);
+                return new resource(i, {
+                  datastore: object.$datastore
+                });
+              }
+            });
+            return object;
           };
         })(this), function(reason) {
           return $q.reject(reason);
@@ -1974,11 +1995,17 @@ app.factory('csResource', [
             var included, object;
             object = _this.$assign(data.data);
             included = _.map(data.included, function(i) {
-              var resource;
-              resource = ResourceService.get(i.type);
-              return new resource(i, {
-                datastore: object.$datastore
-              });
+              var assoc, resource;
+              assoc = object.$datastore.get(i.type, i.id);
+              if (assoc) {
+                assoc.$assign(i);
+                return assoc;
+              } else {
+                resource = ResourceService.get(i.type);
+                return new resource(i, {
+                  datastore: object.$datastore
+                });
+              }
             });
             return object;
           };
@@ -2009,7 +2036,8 @@ app.factory('csResource', [
       Resource.prototype.$assign = function(value_object) {
         var assoc, item, j, len, name, ref, ref1, rel;
         delete this.relationships;
-        angular.merge(this, _.pick(value_object, "id", "type", "attributes", "relationships", "links"));
+        delete this.meta;
+        angular.merge(this, _.pick(value_object, "id", "type", "attributes", "relationships", "links", "meta"));
         if (value_object.$datastore) {
           ref = this.relationships;
           for (name in ref) {
@@ -2040,7 +2068,8 @@ app.factory('csResource', [
         delete this.attributes;
         delete this.relationships;
         delete this.links;
-        angular.merge(this, _.pick(value_object, "id", "type", "attributes", "relationships", "links"));
+        delete this.meta;
+        angular.merge(this, _.pick(value_object, "id", "type", "attributes", "relationships", "links", "meta"));
         return this.$datastore = new csDataStore(value_object.$datastore);
       };
 
@@ -2111,17 +2140,22 @@ app.factory('csResource', [
       };
 
       Resource.prototype.$assign_association = function(field, value, opts) {
+        var filteredValue;
         if (opts == null) {
           opts = {};
         }
+        this.relationships || (this.relationships = {});
         if (value) {
           if (angular.isArray(value)) {
+            filteredValue = _.reject(value, (function(v) {
+              return !v || !v.id;
+            }));
             this.relationships[field.relationship] = {
-              data: _.map(value, (function(o) {
+              data: _.map(filteredValue, (function(o) {
                 return _.pick(o, "id", "type");
               }))
             };
-            return _.each(value, (function(_this) {
+            return _.each(filteredValue, (function(_this) {
               return function(o) {
                 return _this.$datastore.put(o.type, o.id, o);
               };
@@ -2626,7 +2660,7 @@ angular.module("components/cs-number/cs-number-template.html", []).run(["$templa
 angular.module("components/cs-resource-input/cs-resource-input-template.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("components/cs-resource-input/cs-resource-input-template.html",
     "<div class='input-group cs-resource-input-group' ng-if=\"field.cardinality == 'one'\">\n" +
-    "  <ui-select close-on-select='true' ng-disabled='fieldDisabled()' ng-model='model.object' ng-required='fieldRequired()'>\n" +
+    "  <ui-select append-to-body ='true' close-on-select='true' ng-disabled='fieldDisabled()' ng-model='model.object' ng-required='fieldRequired()'>\n" +
     "    <ui-select-match allow-clear>\n" +
     "      <span>\n" +
     "        {{$select.selected.$display_name()}}\n" +

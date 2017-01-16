@@ -88,7 +88,7 @@ app.directive "csResourceInput", [
           # successCallback
           (items) ->
             $scope.associates = items
-            if relationships = $scope.formItem.relationships[$scope.field.relationship]
+            if relationships = $scope.formItem.relationships?[$scope.field.relationship]
               $scope.model.object = $scope.formItem.$association($scope.field)
           # errorCallback
           (reason) ->
@@ -97,15 +97,13 @@ app.directive "csResourceInput", [
           () ->
         )
 
-
       # ===== SETTERS =======================================
 
       $scope.pushPanel = ->
         $scope.$emit 'create-resource', $scope.field.resource, $scope.field.attribute, $scope.formItem
 
       $scope.canCreateResources = () ->
-        $scope.createResources() && !$scope.formItem.relationships[$scope.field.relationship]?.data?.id
-
+        $scope.createResources() && !$scope.formItem.relationships?[$scope.field.relationship]?.data?.id
 
       # ===== PRIVATE =======================================
 

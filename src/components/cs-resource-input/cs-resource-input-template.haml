@@ -2,12 +2,13 @@
   %ui-select{ "ng-disabled" => "fieldDisabled()",
               "ng-required" => "fieldRequired()",
               "ng-model" => "model.object",
-              "close-on-select" => "true"}
+              "close-on-select" => "true",
+              "append-to-body " => "true" }
     %ui-select-match{"allow-clear" => true}
       %span
         {{$select.selected.$display_name()}}
     %ui-select-choices{ "repeat" => "item in associates track by $index",
-                        "refresh" => "refresh($select.search)", 
+                        "refresh" => "refresh($select.search)",
                         "refresh-delay" => "200" }
       %span
         {{item.$display_name()}}
@@ -29,7 +30,7 @@
       %span
         {{$item.$display_name()}}
     %ui-select-choices{ "repeat" => "item in associates track by $index",
-                        "refresh" => "refresh($select.search)", 
+                        "refresh" => "refresh($select.search)",
                         "refresh-delay" => "200" }
       %span
         {{item.$display_name()}}
@@ -37,6 +38,6 @@
   %span.input-group-btn{"ng-if" => "createResources() && !createDisabled()"}
     %button.btn.btn-default{ "ng-disabled" => "fieldDisabled()",
                              "ng-click" => "pushPanel()",
-                             "type" => "button" } {{ i18n.t('buttons.new') }} 
+                             "type" => "button" } {{ i18n.t('buttons.new') }}
 
 .cover

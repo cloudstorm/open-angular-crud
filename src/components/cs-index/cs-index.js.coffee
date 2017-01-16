@@ -96,10 +96,10 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
                 assoc.$display_name()
               return names.join(", ")
             else
-              return '' unless item.relationships[field.relationship]
+              return item.attributes[field.attribute] unless item.relationships && item.relationships[field.relationship]
               item_data = item.relationships[field.relationship].data
               relationship = item.$relationship(item_data)
-              return '' unless relationship
+              return item.attributes[field.attribute] unless relationship
               relationship.$display_name()
           else if field.enum
             enum_value = _.find(field.enum, { value: item.attributes[field.attribute] })

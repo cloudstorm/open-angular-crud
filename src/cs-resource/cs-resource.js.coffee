@@ -42,7 +42,7 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
 
       @$new: (opts = {}) ->
         if opts.value
-          value_object = opts.value
+          value_object = angular.copy(opts.value)
           value_object.relationships ||= {}
           value_object.attributes ||= {}
           value_object.type ||= @descriptor.type
@@ -81,8 +81,13 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
           (data) =>  # successCallback
             objects   = _.map data.data, ((i) => new @(i, datastore: datastore))
             included  = _.map data.included, (i) ->
-              resource = ResourceService.get(i.type)
-              return new resource(i, datastore: datastore)
+              assoc = datastore.get(i.type, i.id)
+              if assoc
+                assoc.$assign(i)
+                return assoc
+              else
+                resource = ResourceService.get(i.type)
+                return new resource(i, datastore: datastore)
             return objects
           (reason) -> # errorCallback
             return $q.reject(reason)
@@ -116,12 +121,21 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
 
       ################################################################################################
 
-      $reload: () ->
-        endpoint = @links.self.href || memberEndpointUrl(@.constructor, @id)
+      $reload: (params) ->
 
-        csRestApi.get(endpoint, {}).then(
+        endpoint = @links.self.href || memberEndpointUrl(@.constructor, @id)
+        csRestApi.get(endpoint, params).then(
           (data) =>  # successCallback
-            return @.$assign(data.data)
+            object = @.$assign(data.data)
+            included = _.map data.included, (i) =>
+              assoc = object.$datastore.get(i.type, i.id)
+              if assoc
+                assoc.$assign(i)
+                return assoc
+              else
+                resource = ResourceService.get(i.type)
+                return new resource(i, datastore: object.$datastore)
+            return object
           (reason) -> # errorCallback
             return $q.reject(reason)
           (value) ->  # notifyCallback
@@ -170,8 +184,13 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
           (data) =>  # successCallback
             object = @.$assign(data.data)
             included = _.map data.included, (i) ->
-              resource = ResourceService.get(i.type)
-              return new resource(i, datastore: object.$datastore)
+              assoc = object.$datastore.get(i.type, i.id)
+              if assoc
+                assoc.$assign(i)
+                return assoc
+              else
+                resource = ResourceService.get(i.type)
+                return new resource(i, datastore: object.$datastore)
             return object
           (reason) -> # errorCallback
             return $q.reject(reason)
@@ -198,7 +217,9 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
       $assign: (value_object) ->
         # this = value_object, while keeping the existing attributes if they exist
         delete @relationships
-        angular.merge(@, _.pick(value_object, "id", "type", "attributes", "relationships", "links"))
+        delete @meta
+        angular.merge(@, _.pick(value_object, "id", "type", "attributes", "relationships", "links", "meta"))
+
 
         if value_object.$datastore
           for name, rel of @relationships
@@ -222,7 +243,9 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
         delete @attributes
         delete @relationships
         delete @links
-        angular.merge(@, _.pick(value_object, "id", "type", "attributes", "relationships", "links"))
+        delete @meta
+        angular.merge(@, _.pick(value_object, "id", "type", "attributes", "relationships", "links", "meta"))
+
         @.$datastore = new csDataStore(value_object.$datastore)
 
       ################################################################################################
@@ -257,12 +280,16 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
             return @.$relationship(rel.data, opts)
 
       $assign_association: (field, value, opts = {}) ->
+        @relationships ||= {}
         if value
           if angular.isArray(value)
+            filteredValue = _.reject value, ((v) -> !v || !v.id)
             @relationships[field.relationship] = {
-              data: (_.map value, ((o) -> _.pick(o, "id", "type") ) )
+              data: (_.map filteredValue, ((o) -> _.pick(o, "id", "type") ) )
+
             }
-            _.each value, (o) => @.$datastore.put(o.type, o.id, o)
+            _.each filteredValue, (o) => @.$datastore.put(o.type, o.id, o)
+
           else
             @relationships[field.relationship] = { data: _.pick(value, "id", "type") }
             @.$datastore.put(value.type, value.id, value)
