@@ -15,8 +15,11 @@ The following are automatically generated for You:
 * Resource edit forms
 * CloudStorm Wizards -> forms within forms to create related resources in-place
 
-###[Live Demo](http://demo.cloudstorm.io)
-> Use credentials cloudstorm@example.com / cloudstorm or create new user.
+###See it in action on [Pluncker](https://embed.plnkr.co/JDwFkOLq1ZaKrEpOHZn1/)
+
+###Check out another [Live Demo](http://demo.cloudstorm.io)
+> Use credentials cloudstorm@example.com / cloudstorm or create new user.  
+> (This is a rails app, see source [here](https://github.com/cloudstorm/cloudstorm-rails-examples/tree/master/todo-list).)
 
 For documentation geared towards our automation and integration business, we recommend starting with the [CloudStorm website](http://cloudstorm.io).
 
