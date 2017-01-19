@@ -1,5 +1,5 @@
 /**
- * cloudstorm - v0.0.13 - 2017-01-16
+ * cloudstorm - v0.0.13 - 2017-01-19
  * https://github.com/cloudstorm/cloudstorm#readme
  *
  * Copyright (c) 2017 Virtual Solutions Ltd <info@cloudstorm.io>
@@ -1608,12 +1608,12 @@ app.service('csDescriptorService', [
           'Accept': 'application/json'
         }
       };
-      descriptorPromise = $http(request).success((function(_this) {
-        return function(data, status, headers, config) {
-          return _this.registerDescriptor(data);
+      descriptorPromise = $http(request).then((function(_this) {
+        return function(response) {
+          return _this.registerDescriptor(response.data);
         };
-      })(this)).error((function(_this) {
-        return function(data, status, headers, config) {
+      })(this))["catch"]((function(_this) {
+        return function(response) {
           return console.log("CS-002: Error while receiving descriptor from '" + descriptorUrl + "'");
         };
       })(this));
@@ -1735,7 +1735,7 @@ app.factory('ResourceService', [
           if (resource) {
             this.register(name, resource);
           } else {
-            throw "CS-001: cannot auto-inject " + name;
+            throw new Error(("CS-001: cannot auto-inject resource: '" + name + "'\n") + "Most likely causes for this error include:\n" + "\tOne of your resources reference another resource that you forgot to register.\n" + "\tYou manually set 'resourceType' to something that is not registered as a resource.");
           }
         }
         return resource;
@@ -2263,13 +2263,13 @@ angular.module('cloudStorm.restApi', []).factory('csRestApi', [
         params: query,
         paramSerializer: '$httpParamSerializerJQLike'
       };
-      $http(request).success((function(_this) {
-        return function(data, status, headers, config) {
-          return deferred.resolve(data);
+      $http(request).then((function(_this) {
+        return function(response) {
+          return deferred.resolve(response.data);
         };
-      })(this)).error((function(_this) {
-        return function(data, status, headers, config) {
-          return deferred.reject(data);
+      })(this))["catch"]((function(_this) {
+        return function(response) {
+          return deferred.reject(response.data);
         };
       })(this));
       return deferred.promise;
@@ -2287,13 +2287,13 @@ angular.module('cloudStorm.restApi', []).factory('csRestApi', [
         params: query,
         paramSerializer: '$httpParamSerializerJQLike'
       };
-      $http(request).success((function(_this) {
-        return function(data, status, headers, config) {
-          return deferred.resolve(data);
+      $http(request).then((function(_this) {
+        return function(response) {
+          return deferred.resolve(response.data);
         };
-      })(this)).error((function(_this) {
-        return function(data, status, headers, config) {
-          return deferred.reject(data);
+      })(this))["catch"]((function(_this) {
+        return function(response) {
+          return deferred.reject(response.data);
         };
       })(this));
       return deferred.promise;
@@ -2311,15 +2311,15 @@ angular.module('cloudStorm.restApi', []).factory('csRestApi', [
         data: object,
         params: query
       };
-      $http(request).success((function(_this) {
-        return function(data, status, headers, config) {
-          return deferred.resolve(data);
+      $http(request).then((function(_this) {
+        return function(response) {
+          return deferred.resolve(response.data);
         };
-      })(this)).error((function(_this) {
-        return function(data, status, headers, config) {
+      })(this))["catch"]((function(_this) {
+        return function(response) {
           return deferred.reject({
-            data: data,
-            status: status
+            data: response.data,
+            status: response.status
           });
         };
       })(this));
@@ -2337,15 +2337,15 @@ angular.module('cloudStorm.restApi', []).factory('csRestApi', [
         },
         data: object
       };
-      $http(request).success((function(_this) {
-        return function(data, status, headers, config) {
-          return deferred.resolve(data);
+      $http(request).then((function(_this) {
+        return function(response) {
+          return deferred.resolve(response.data);
         };
-      })(this)).error((function(_this) {
-        return function(data, status, headers, config) {
+      })(this))["catch"]((function(_this) {
+        return function(response) {
           return deferred.reject({
-            data: data,
-            status: status
+            data: response.data,
+            status: response.status
           });
         };
       })(this));
@@ -2362,15 +2362,15 @@ angular.module('cloudStorm.restApi', []).factory('csRestApi', [
           'Accept': 'application/vnd.api+json'
         }
       };
-      $http(request).success((function(_this) {
-        return function(data, status, headers, config) {
-          return deferred.resolve(data);
+      $http(request).then((function(_this) {
+        return function(response) {
+          return deferred.resolve(response.data);
         };
-      })(this)).error((function(_this) {
-        return function(data, status, headers, config) {
+      })(this))["catch"]((function(_this) {
+        return function(response) {
           return deferred.reject({
-            data: data,
-            status: status
+            data: response.data,
+            status: response.status
           });
         };
       })(this));

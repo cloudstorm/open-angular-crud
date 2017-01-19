@@ -22,7 +22,6 @@ angular.module('cloudStorm.restApi', [])
 
   index = (endpoint, query) ->
     deferred = $q.defer()
-
     request =
       method: 'GET'
       url: endpoint
@@ -32,12 +31,11 @@ angular.module('cloudStorm.restApi', [])
       params: query
       paramSerializer: '$httpParamSerializerJQLike'
 
-    $http(request).success( (data, status, headers, config) =>
-      deferred.resolve(data)
-    ).error( (data, status, headers, config) =>
-      deferred.reject(data)
+    $http(request).then( (response) =>
+      deferred.resolve(response.data)
+    ).catch( (response) =>
+      deferred.reject(response.data)
     )
-
     return deferred.promise
 
   ##################################################################################################
@@ -54,10 +52,10 @@ angular.module('cloudStorm.restApi', [])
       params: query
       paramSerializer: '$httpParamSerializerJQLike'
 
-    $http(request).success( (data, status, headers, config) =>
-      deferred.resolve(data)
-    ).error( (data, status, headers, config) =>
-      deferred.reject(data)
+    $http(request).then( (response) =>
+      deferred.resolve(response.data)
+    ).catch( (response) =>
+      deferred.reject(response.data)
     )
 
     return deferred.promise
@@ -76,10 +74,10 @@ angular.module('cloudStorm.restApi', [])
       data: object
       params: query
 
-    $http(request).success( (data, status, headers, config) =>
-      deferred.resolve(data)
-    ).error( (data, status, headers, config) =>
-      deferred.reject({data: data, status: status})
+    $http(request).then( (response) =>
+      deferred.resolve(response.data)
+    ).catch( (response) =>
+      deferred.reject({data: response.data, status: response.status})
     )
 
     return deferred.promise
@@ -97,10 +95,10 @@ angular.module('cloudStorm.restApi', [])
         'Accept': 'application/vnd.api+json'
       data: object
 
-    $http(request).success( (data, status, headers, config) =>
-      deferred.resolve(data)
-    ).error( (data, status, headers, config) =>
-      deferred.reject({data: data, status: status})
+    $http(request).then( (response) =>
+      deferred.resolve(response.data)
+    ).catch( (response) =>
+      deferred.reject({data: response.data, status: response.status})
     )
 
     return deferred.promise
@@ -117,10 +115,10 @@ angular.module('cloudStorm.restApi', [])
         'Content-Type': 'application/vnd.api+json'
         'Accept': 'application/vnd.api+json'
 
-    $http(request).success( (data, status, headers, config) =>
-      deferred.resolve(data)
-    ).error( (data, status, headers, config) =>
-      deferred.reject({data: data, status: status})
+    $http(request).then( (response) =>
+      deferred.resolve(response.data)
+    ).catch( (response) =>
+      deferred.reject({data: response.data, status: response.status})
     )
 
     return deferred.promise

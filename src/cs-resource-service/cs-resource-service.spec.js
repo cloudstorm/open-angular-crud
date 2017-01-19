@@ -24,7 +24,7 @@ describe('ResourceService - TODO: rename to csResourceService?', function() {
 
   it('should throw error when it cannot auto-infer the resource service', function() {
     expect(csResourceService).toBeDefined();
-    expect(function() { csResourceService.get('name'); }).toThrow('CS-001: cannot auto-inject name');
+    expect(function() { csResourceService.get('name'); }).toThrowError(/CS-001:/);
   });
 
   it('should auto-infer the resource service from name', function() {

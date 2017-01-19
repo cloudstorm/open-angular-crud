@@ -29,9 +29,9 @@ app.service 'csDescriptorService', [ '$q', '$http', 'ResourceService', 'csResour
         'Content-Type': 'application/json'
         'Accept': 'application/json'
 
-    descriptorPromise = $http(request).success( (data, status, headers, config) =>
-      @registerDescriptor(data);
-    ).error( (data, status, headers, config) =>
+    descriptorPromise = $http(request).then( (response) =>
+      @registerDescriptor(response.data);
+    ).catch( (response) =>
       console.log("CS-002: Error while receiving descriptor from '#{descriptorUrl}'")
     );
 

@@ -43,7 +43,10 @@ app.factory 'ResourceService', ['$injector', ($injector) ->
         if resource
           @register(name, resource)
         else
-          throw "CS-001: cannot auto-inject #{name}"
+          throw new Error( "CS-001: cannot auto-inject resource: '#{name}'\n" +
+                "Most likely causes for this error include:\n" +
+                "\tOne of your resources reference another resource that you forgot to register.\n" +
+                "\tYou manually set 'resourceType' to something that is not registered as a resource.")
 
       return resource
 
