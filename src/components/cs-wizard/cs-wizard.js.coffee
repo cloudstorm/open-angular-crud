@@ -237,6 +237,9 @@ app.directive "csWizardPanel", ['$rootScope', 'ResourceService', '$compile', ($r
 
   link = ($scope, element, attrs, controller) ->
 
+    $scope.formClass = () ->
+      $scope.csWizardOptions['form-class']
+
     # ===== COMPILE DOM WITH APPROPRIATE DIRECTIVE ========
     
     if $scope.panel.directive
@@ -252,6 +255,7 @@ app.directive "csWizardPanel", ['$rootScope', 'ResourceService', '$compile', ($r
           form-resource="panel.resource"
           form-resource-descriptor="resource_descriptor(panel)"
           role="form"
+          ng-class='formClass()' 
         >
       """    
       innerElement.html($compile(inputTemplate)($scope));
