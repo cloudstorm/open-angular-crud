@@ -80,15 +80,17 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', '$q',
       csRestApi.index(actual_endpoint, index_params).then(        
         (data) =>  # successCallback                    
           objects   = _.map data.data, ((i) => new @(i, datastore: datastore))
-          included  = _.map data.included, (i) => 
+          included  = _.map data.included, (i) =>           
             assoc = datastore.get(i.type, i.id)
             if assoc 
               assoc.$assign(i) 
               return assoc
             else
               resource = ResourceService.get(i.type)
-              return new resource(i, datastore: datastore)            
-          return objects  
+              return new resource(i, datastore: datastore)
+          
+          objects.meta = data.meta
+          return objects
         (reason) => # errorCallback
           return $q.reject(reason);
         (value) =>  # notifyCallback
