@@ -1,5 +1,5 @@
 /**
- * cloudstorm - v0.0.14 - 2017-01-19
+ * cloudstorm - v0.0.15 - 2017-06-23
  * https://github.com/cloudstorm/cloudstorm#readme
  *
  * Copyright (c) 2017 Virtual Solutions Ltd <info@cloudstorm.io>
@@ -222,12 +222,13 @@ app.directive("csDatetime", [
       date_format = $scope.options['datetime-format'] || csSettings.settings['datetime-format'];
       if (date_format) {
         input_date = $scope.formItem.attributes[$scope.field.attribute];
-        if (!angular.isDate(input_date)) {
-          input_date = input_date.substring(0, input_date.length - 1);
+        if (input_date) {
+          if (!angular.isDate(input_date)) {
+            input_date = input_date.substring(0, input_date.length - 1);
+          }
+          date = uibDateParser.parse(new Date(input_date), date_format);
+          return $scope.formItem.attributes[$scope.field.attribute] = date;
         }
-        console.log(input_date);
-        date = uibDateParser.parse(new Date(input_date), date_format);
-        return $scope.formItem.attributes[$scope.field.attribute] = date;
       }
     };
     link = function($scope, element, attrs, controller) {
@@ -242,7 +243,7 @@ app.directive("csDatetime", [
     };
     return {
       restrict: 'E',
-      templateUrl: 'cloudstorm/src/components/cs-datetime/cs-datetime-template.html',
+      templateUrl: 'components/cs-datetime/cs-datetime-template.html',
       priority: 1000,
       scope: {
         field: '=',
@@ -1445,75 +1446,6 @@ app.directive("csWizardPanel", [
 "use strict";
 var app;
 
-app = angular.module('cloudStorm.datetime', ['ui.bootstrap']);
-
-app.directive("csDatetime", [
-  'uibDateParser', 'csSettings', 'CSInputBase', function(uibDateParser, csSettings, CSInputBase) {
-    var compile, format_date, link;
-    compile = function($templateElement, $templateAttributes) {
-      $templateElement.addClass("cs-datetime");
-      return {
-        pre: function(scope, element, attrs, controller) {},
-        post: link
-      };
-    };
-    format_date = function($scope) {
-      var date, date_format, input_date;
-      date_format = $scope.options['datetime-format'] || csSettings.settings['datetime-format'];
-      if (date_format) {
-        input_date = $scope.formItem.attributes[$scope.field.attribute];
-        if (!angular.isDate(input_date)) {
-          input_date = input_date.substring(0, input_date.length - 1);
-        }
-        console.log(input_date);
-        date = uibDateParser.parse(new Date(input_date), date_format);
-        return $scope.formItem.attributes[$scope.field.attribute] = date;
-      }
-    };
-    link = function($scope, element, attrs, controller) {
-      $scope.i18n = csSettings.settings['i18n-engine'];
-      CSInputBase($scope);
-      format_date($scope);
-      return $scope.$watch('formItem.attributes[field.attribute]', function(newValue, oldValue) {
-        if (newValue !== oldValue) {
-          return $scope.$emit('input-value-changed', $scope.field);
-        }
-      });
-    };
-    return {
-      restrict: 'E',
-      templateUrl: 'cloudstorm/src/components/cs-datetime/cs-datetime-template.html',
-      priority: 1000,
-      scope: {
-        field: '=',
-        formItem: '=',
-        formMode: '=',
-        options: '='
-      },
-      compile: compile,
-      controller: [
-        '$scope', function($scope) {
-          $scope.getModelOptions = function() {
-            var offset, options;
-            offset = $scope.options['time-zone-offset'] || csSettings.settings['time-zone-offset'] || 'utc';
-            return options = {
-              'timezone': offset
-            };
-          };
-          return $scope.$watch('formItem.id', function(newValue, oldValue) {
-            if (newValue !== oldValue) {
-              return format_date($scope);
-            }
-          });
-        }
-      ]
-    };
-  }
-]);
-
-"use strict";
-var app;
-
 app = angular.module('cloudStorm.dataStore', []);
 
 app.factory('csDataStore', [
@@ -2022,7 +1954,7 @@ app.factory('csResource', [
         endpoint = options.endpoint || memberEndpointUrl(this.constructor, this.id) || this.links.self.href;
         base_url = baseUrl(this.constructor);
         if (base_url) {
-          endpoint = "" + base_url + endpoint;
+          endpoint = base_url + "/" + endpoint;
         }
         return csRestApi.destroy(endpoint).then((function(_this) {
           return function(data) {
