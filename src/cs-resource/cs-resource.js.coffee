@@ -202,7 +202,7 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
       $destroy: (options = {}) ->
         endpoint = options.endpoint || memberEndpointUrl(@.constructor, @id) || @links.self.href
         base_url = baseUrl(@.constructor)
-        endpoint = "#{base_url}#{endpoint}" if base_url
+        endpoint = "#{base_url}/#{endpoint}" if base_url
 
         csRestApi.destroy(endpoint).then(
           (data) =>  # successCallback

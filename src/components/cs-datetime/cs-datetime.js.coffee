@@ -25,14 +25,14 @@ app.directive "csDatetime", ['uibDateParser', 'csSettings', 'csInputBase', (uibD
 
   format_date = ($scope) ->
     date_format = $scope.options['datetime-format'] || csSettings.settings['datetime-format']
-
     if date_format
       input_date = $scope.formItem.attributes[$scope.field.attribute]
-      if !angular.isDate(input_date)
-        input_date = input_date.substring(0, input_date.length - 1);
-      console.log(input_date)
-      date = uibDateParser.parse(new Date(input_date), date_format)
-      $scope.formItem.attributes[$scope.field.attribute] = date
+      if input_date
+        if !angular.isDate(input_date)
+          input_date = input_date.substring(0, input_date.length - 1);
+        # console.log(input_date)
+        date = uibDateParser.parse(new Date(input_date), date_format)
+        $scope.formItem.attributes[$scope.field.attribute] = date
 
   link = ($scope, element, attrs, controller) ->
     $scope.i18n = csSettings.settings['i18n-engine']
@@ -52,7 +52,7 @@ app.directive "csDatetime", ['uibDateParser', 'csSettings', 'csInputBase', (uibD
 
   return {
     restrict: 'E'
-    templateUrl: 'cloudstorm/src/components/cs-datetime/cs-datetime-template.html'
+    templateUrl: 'components/cs-datetime/cs-datetime-template.html'
     priority: 1000
     scope:
       field: '=' # The resource item which the form is working with
