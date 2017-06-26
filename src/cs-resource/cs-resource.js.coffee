@@ -88,6 +88,7 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
               else
                 resource = ResourceService.get(i.type)
                 return new resource(i, datastore: datastore)
+            objects.meta = data.meta
             return objects
           (reason) -> # errorCallback
             return $q.reject(reason)
