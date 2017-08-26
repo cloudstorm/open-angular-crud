@@ -1,0 +1,7 @@
+%div
+  ItemId : {{itemId}} <br>
+  ResourceType : {{resourceType}} <br>
+  Name : {{descriptor.name}}
+  %div{ "ng-repeat" => "field in descriptor.fields"}
+    %div
+      Field name : {{field.attribute}}  -- Value {{getValue(field.attribute)}}
