@@ -2,6 +2,21 @@ var app = angular.module('cloudStormSample', [
   'cloudStorm',
 ])
 
+app.component("initial", {
+    template : "<div class='welcomeMessage'> Welcome to the sample app!</div>",
+})
+
+app.component("show", {
+    bindings : {
+      id : '<',
+      resource : '<',
+    },
+    template : "" +
+        "<div> " +
+        "  <cs-profile item-id='$ctrl.id' resource-type='$ctrl.resource'></cs-profile>  "  +
+        "</div> ",
+})
+
 app.component("index", {
     bindings : {
       resType : '<',
@@ -11,11 +26,12 @@ app.component("index", {
     		"  <cs-index item-id='$ctrl.itemId' resource-type='$ctrl.resType' cs-index-options='options'></cs-index> " +
     		"</div> ",
     controller : function(){
-        this.itemId = 1
+        console.log("Here we are")
+        this.itemId = null
     }
 })
 
-app.component("showResource", {
+app.component("editResource", {
   
     bindings : {
       id : "<",
@@ -62,7 +78,6 @@ app.component("edit", {
     }
 })
 
-//app.config(function() {
 
 var type = {
   name: 'type',
@@ -81,7 +96,7 @@ var type = {
 var id = {
     name : "id",
     url : "/{resourceType}/{id}",
-    component : "showResource",
+    component : "editResource",
      resolve : {
        id : function($transition$){
          return $transition$.params().id
@@ -92,31 +107,29 @@ var id = {
     }
 }
 
-var showHide = {
-    name : "type.id.show",
-    url : "/{showHide}",
-    component : "showHide",
-    resolve : {
-       showHide : function($transition$){
-         console.log("ShowHide resolve")
-         console.log($transition$.params())
-         return "showHide"
-       }
-    }
+var showResource = {
+  name : "show",
+  url : "/{resource}/{id}/show",
+  component : "show",
+  resolve : {
+      id : function($transition$){
+        return $transition$.params().id
+      },
+      resource : function($transition$){
+        return $transition$.params().resource
+      }
+   }
 }
 
 app.controller('MainCtrl', function($scope, csAlertService, csDescriptorService, csRoute, $state) {
+  
   csDescriptorService.registerDescriptorUrl('resourceDescriptors/itemResourceDescriptor.json');
   csDescriptorService.registerDescriptorUrl('resourceDescriptors/categoryResourceDescriptor.json');
   csDescriptorService.registerDescriptorUrl('resourceDescriptors/userResourceDescriptor.json');
-
+  
   csRoute.setState($state)
   csRoute.addState(type)
   csRoute.addState(id)
-  csRoute.addState(showHide)
-    
-  csAlertService.addAlert('Welcome to CloudStorm', 'info');
-  $scope.resourceType = 'categories';
-  
+  csRoute.addState(showResource)
 
 });
