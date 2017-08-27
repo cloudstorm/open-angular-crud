@@ -167,6 +167,11 @@
     font-size: 18px;
   }
   
+  .appTitle:hover{
+    cursor: initial; 
+    color: #555555;
+  }
+
   .selected {
       background-color: #e7e7e7;
   }

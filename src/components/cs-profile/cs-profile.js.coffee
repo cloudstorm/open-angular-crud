@@ -12,7 +12,6 @@ app.directive "csProfile", ['ResourceService', 'csDescriptorService', 'csRoute',
     # Pre-link: gets called for parent first
     pre: ($scope, element, attrs, controller) ->
       return
-
     
     post: link
     # Post-link: gets ca
@@ -57,8 +56,7 @@ app.directive "csProfile", ['ResourceService', 'csDescriptorService', 'csRoute',
                 items : $scope.getRelatedItems(field.relationship, field.resource)
               })
           console.log $scope.relations    
-        
-        
+
         getItem = (items, id) ->
 
           item = null
@@ -78,7 +76,7 @@ app.directive "csProfile", ['ResourceService', 'csDescriptorService', 'csRoute',
         $scope.getValue = (attribute) ->
           if $scope && $scope.item
             return $scope.item.attributes[attribute]
-        
+
         $scope.getRelatedItems = (relationship, type) ->
 
           if $scope && $scope.item
@@ -94,11 +92,10 @@ app.directive "csProfile", ['ResourceService', 'csDescriptorService', 'csRoute',
         
           field = $scope.resources[type].descriptor.fields[0].attribute
           return item.attributes[field]
-          
+        
         $scope.go = (id, type) ->
           csRoute.go("show", {resource : type, id : id})
-      
-        
+
         getArray = (relationships) ->
           if relationships == undefined
             return []
@@ -108,7 +105,7 @@ app.directive "csProfile", ['ResourceService', 'csDescriptorService', 'csRoute',
             arr = []
             arr.push(relationships.data)
             return arr
-      
+
       return
 
   return {
