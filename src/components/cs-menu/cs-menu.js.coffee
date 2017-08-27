@@ -28,11 +28,11 @@ app.directive "csMenu", ['ResourceService', 'csDescriptorService', 'csRoute', (R
       csDescriptorService.getPromises().then () ->
         $scope.resources = ResourceService.getResources()
         console.log $scope.resources
+        $scope.select(Object.keys($scope.resources)[0])
   
       $scope.selected = null
       $scope.isSelected = (type) ->
         return (type == $scope.selected)
-      
       
       $scope.select = (type) ->
         $scope.selected = type
