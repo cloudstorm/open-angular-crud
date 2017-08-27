@@ -7,12 +7,16 @@
             String : {{field.attribute}}  : {{getValue(field.attribute)}}
           %div{ "ng-switch-when" => "date"}
             Date : {{field.attribute}} : {{getValue(field.attribute)}}
-          %div{ "ng-switch-when" => "resource"}
-            %div
-              Resource name : {{field.attribute}}
-            %div{ "ng-repeat" => "relationship in relatedCategories"}
-              %div{ "ng-click" => "go(relationship.id, field.resource)"}
-                {{relationship.label}}, {{field.resource}}
+          %div{ "ng-switch-when" => "boolean"}
+            Boolean : {{field.attribute}} : {{getValue(field.attribute)}}
+      %div{ "ng-repeat" => "relation in relations"}
+        %div
+          Name : {{relation.label}} 
+        %div{ "ng-repeat" => "item in relation.items"}
+          %div{ "ng-click" => "go(item.id, relation.resourceType)"}
+            Item : {{item.label}}
+ 
+          
               
               
               

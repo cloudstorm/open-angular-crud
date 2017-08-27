@@ -34,7 +34,8 @@ app.directive "csProfile", ['ResourceService', 'csDescriptorService', 'csRoute',
               $scope.collection = items
               resource.data = items
               $scope.item = getItem(items, $scope.itemId)
-              $scope.relatedCategories = $scope.getRelatedItems("categories")
+              #$scope.relatedCategories = $scope.getRelatedItems("categories")
+              init()
               if $scope.item == null
                 csAlertService.addAlert($scope.i18n?.t('alert.resource_not_found') + $scope.itemId, 'danger')
             # errorCallback
@@ -43,6 +44,20 @@ app.directive "csProfile", ['ResourceService', 'csDescriptorService', 'csRoute',
             # notifyCallback
             () ->
           )
+        
+        init = () ->
+         
+          resources = []
+          $scope.relations = []
+          for field in $scope.descriptor.fields
+            if field.type == 'resource'  
+              $scope.relations.push({
+                label : field.label
+                resourceType : field.resource
+                items : $scope.getRelatedItems(field.relationship, field.resource)
+              })
+          console.log $scope.relations    
+        
         
         getItem = (items, id) ->
 
@@ -64,13 +79,13 @@ app.directive "csProfile", ['ResourceService', 'csDescriptorService', 'csRoute',
           if $scope && $scope.item
             return $scope.item.attributes[attribute]
         
-        $scope.getRelatedItems = (type) ->
-             
+        $scope.getRelatedItems = (relationship, type) ->
+
           if $scope && $scope.item
             items = []
-            relationships = getArray($scope.item.relationships[type])
+            relationships = getArray($scope.item.relationships[relationship])
             for rel in relationships
-              resources = $scope.item.$datastore.repository[rel.type]   
+              resources = $scope.item.$datastore.repository[rel.type]
               item = resources[rel.id]   
               items.push({ id : item.id, label : getFirstField(item, type)})
             return items
