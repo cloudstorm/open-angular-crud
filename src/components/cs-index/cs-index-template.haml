@@ -20,7 +20,6 @@
                                                  "ng-click" => "openNewResourcePanel()",
                                                  "ng-disabled" => "createDisabled()" }
             {{ i18n.t('buttons.new') }}
-
     .row{ "ng-switch-when" => "true" }
       .well.well-lg
         {{header}} {{ i18n.t('index.empty') }}
@@ -51,6 +50,9 @@
                      "ng-if" => "columnVisible(column, $index)" }
                   {{ fieldValue(item, column) }}
                 %td.actions{ "ng-hide" => "csIndexOptions['hide-actions']" }
+                  / SHOW
+                  .action.show-action{"ng-click" => "showItem(item)"}
+                    Show
                   / DELETE
                   .action.delete-action{ "ng-click" => "destroyItem($event, item)" }<> {{ i18n.t('buttons.delete') }}
 

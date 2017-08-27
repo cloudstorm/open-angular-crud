@@ -194,6 +194,9 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
                 alert = reason.data?.errors[0].detail
                 csAlertService.addAlert alert || $scope.i18n?.t('alert.error_happened'), 'danger'
             )
+        $scope.showItem = (item) ->
+          console.log { resource : $scope.resourceType, id : item.attributes.id}
+          csRoute.go("show", { resource : $scope.resourceType, id : item.attributes.id})
 
         $scope.unselectItem = () ->
           $scope.csIndexOptions.selectedItem = null
@@ -264,7 +267,7 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
             $scope.collection = resource.data
           init()
           ###
-        true  
+        true
 
   # ===== CONFIGURE ===========================================================
 

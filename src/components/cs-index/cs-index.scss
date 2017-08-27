@@ -68,6 +68,7 @@
                 background-color: $action-bg-color;
 
                 &.delete-action { color: $brand-danger; }
+                &.show-action { color: $brand-info; }
               }
             }
           }
