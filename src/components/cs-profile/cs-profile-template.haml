@@ -3,5 +3,11 @@
   ResourceType : {{resourceType}} <br>
   Name : {{descriptor.name}}
   %div{ "ng-repeat" => "field in descriptor.fields"}
-    %div
-      Field name : {{field.attribute}}  -- Value {{getValue(field.attribute)}}
+    %div{ "ng-switch" => "field.type"}
+      %div{ "ng-switch-when" => "string"}
+        String : {{field.attribute}}  -- Value {{getValue(field.attribute)}}
+      %div{ "ng-switch-when" => "date"}
+        Date : {{field.attribute}}  -- Value {{getValue(field.attribute)}}
+      %div{ "ng-switch-when" => "resource"}
+        Resource : {{field.attribute}}  -- Relationship : {{field.relationship}}
+    

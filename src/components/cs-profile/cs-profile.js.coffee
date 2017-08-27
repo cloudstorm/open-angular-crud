@@ -51,11 +51,11 @@ app.directive "csProfile", ['ResourceService', 'csDescriptorService', (ResourceS
         loadData()
         
         $scope.getValue = (attribute) ->
-          if $scope
+          if $scope && $scope.item
             return $scope.item.attributes[attribute]
         
       return
-    
+
   return {
     restrict: 'E'
     compile: compile
