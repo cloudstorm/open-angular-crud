@@ -4,7 +4,7 @@ app = angular.module('cloudStorm.index.sidePanel', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csIndexSidepanel", ['$rootScope', 'csAlertService', 'csSettings', ($rootScope, csAlertService, csSettings) ->
+app.directive "csIndexSidepanel", ['$rootScope', 'csAlertService', 'csSettings', 'csRoute', ($rootScope, csAlertService, csSettings, csRoute) ->
 
   # ===== COMPILE =============================================================
 
@@ -47,10 +47,11 @@ app.directive "csIndexSidepanel", ['$rootScope', 'csAlertService', 'csSettings',
         if newItem != oldItem
           if options = $scope.editWizardOptions
             options['form-item'] = newItem
-
+      
       $scope.closePanel = () ->
+        csRoute.go("type", { resourceType : $scope.resourceType})
         $scope.$broadcast 'wizard-cancel'
-
+      
       return
 
   # ===== CONFIGURE ===========================================================
@@ -62,6 +63,7 @@ app.directive "csIndexSidepanel", ['$rootScope', 'csAlertService', 'csSettings',
     scope:
       resourceType: '='
       item: '='
+      itemId : '='   
       unselectItem: '&unselectItem'
       csIndexSidepanelOptions: '='
       panelNumberCallback: '='
