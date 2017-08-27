@@ -30,6 +30,7 @@
       &.btn { padding: 6px 24px; }
     }
 
+
   }
 
   // ========== CS INDEX TABLE ====================
@@ -78,4 +79,65 @@
 
   }
 
+   // ==== cs-profile.scss ==== 
+
+  .container {
+    width: 100%;  
+  }
+  
+  .middle {
+    display : table;
+    margin: 10px auto;  
+  }
+
+  .profile {
+    width: 500px;
+  }  
+
+  .item {
+      margin : 5px 0px 5px 50px;
+      padding : 2px 10px;
+      font-size : 15px;  
+      border-radius : 5px;
+      text-align : center;
+      width: 300px;
+  }
+  
+  .title {
+    font-size: 20px;
+    margin: 10px auto;
+    font-style: italic;
+    display: table;
+  }
+  
+  .data {
+      background-color : #ececec;
+  }
+
+  .resource {
+      background-color : #c7c3c3;
+   }
+
+  .resource:hover {
+      cursor : pointer;
+  }
+
+  .inline {
+      display : inline-block;   
+  }
+  
+  .fieldTitle {
+      margin-top : 7px;  
+      width: 50px;
+  }
+  
+  .flex {
+      display : flex; 
+   }
+ 
+  .relation {
+     text-decoration: underline;
+     width: 140px;
+     text-height: auto;
+  }
 }
