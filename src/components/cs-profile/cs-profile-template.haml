@@ -1,13 +1,19 @@
-%div
-  ItemId : {{itemId}} <br>
-  ResourceType : {{resourceType}} <br>
-  Name : {{descriptor.name}}
-  %div{ "ng-repeat" => "field in descriptor.fields"}
-    %div{ "ng-switch" => "field.type"}
-      %div{ "ng-switch-when" => "string"}
-        String : {{field.attribute}}  -- Value {{getValue(field.attribute)}}
-      %div{ "ng-switch-when" => "date"}
-        Date : {{field.attribute}}  -- Value {{getValue(field.attribute)}}
-      %div{ "ng-switch-when" => "resource"}
-        Resource : {{field.attribute}}  -- Relationship : {{field.relationship}}
-    
+.container
+  .middle
+    .profile
+      %div{ "ng-repeat" => "field in descriptor.fields"}
+        %div{ "ng-switch" => "field.type"}
+          %div{ "ng-switch-when" => "string"}
+            String : {{field.attribute}}  : {{getValue(field.attribute)}}
+          %div{ "ng-switch-when" => "date"}
+            Date : {{field.attribute}} : {{getValue(field.attribute)}}
+          %div{ "ng-switch-when" => "resource"}
+            %div
+              Resource name : {{field.attribute}}
+            %div{ "ng-repeat" => "relationship in relatedCategories"}
+              %div{ "ng-click" => "go(relationship.id, field.resource)"}
+                {{relationship.label}}, {{field.resource}}
+              
+              
+              
+              

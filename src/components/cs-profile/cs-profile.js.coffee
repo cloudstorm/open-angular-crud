@@ -2,7 +2,7 @@
 
 app = angular.module('cloudStorm.profile', [])
 
-app.directive "csProfile", ['ResourceService', 'csDescriptorService', (ResourceService, csDescriptorService) ->
+app.directive "csProfile", ['ResourceService', 'csDescriptorService', 'csRoute', 'csAlertService', (ResourceService, csDescriptorService, csRoute, csAlertService) ->
   
   compile = ($templateElement, $templateAttributes) ->
 
@@ -18,10 +18,13 @@ app.directive "csProfile", ['ResourceService', 'csDescriptorService', (ResourceS
     # Post-link: gets ca
     link = ($scope, element, attr) ->
       
+      $templateElement.addClass "cs-index"
+      
       console.log ($scope.itemId + ' ' + $scope.resourceType)
       csDescriptorService.getPromises().then () ->
         resource = ResourceService.get($scope.resourceType)
         $scope.descriptor = resource.descriptor
+        $scope.resources = ResourceService.getResources()
         
         loadData = () ->
           resource.$index({include: '*'}).then(
@@ -30,7 +33,10 @@ app.directive "csProfile", ['ResourceService', 'csDescriptorService', (ResourceS
               resource.loaded = true
               $scope.collection = items
               resource.data = items
-              setSelectedItem()
+              $scope.item = getItem(items, $scope.itemId)
+              $scope.relatedCategories = $scope.getRelatedItems("categories")
+              if $scope.item == null
+                csAlertService.addAlert($scope.i18n?.t('alert.resource_not_found') + $scope.itemId, 'danger')
             # errorCallback
             (reason) ->
               $scope.collection = null
@@ -38,15 +44,15 @@ app.directive "csProfile", ['ResourceService', 'csDescriptorService', (ResourceS
             () ->
           )
         
-        setSelectedItem = () ->
-        
+        getItem = (items, id) ->
+
+          item = null
           if $scope.itemId != null
-            for res in $scope.collection
-              if res.id == $scope.itemId.toString()
-                $scope.item = res 
+            for res in items
+              if res.id == id.toString()
+                item = res 
                 break
-            if $scope.item == null
-              csAlertService.addAlert($scope.i18n?.t('alert.resource_not_found') + $scope.itemId, 'danger')
+          item
         
         loadData()
         
@@ -54,6 +60,40 @@ app.directive "csProfile", ['ResourceService', 'csDescriptorService', (ResourceS
           if $scope && $scope.item
             return $scope.item.attributes[attribute]
         
+        $scope.getValue = (attribute) ->
+          if $scope && $scope.item
+            return $scope.item.attributes[attribute]
+        
+        $scope.getRelatedItems = (type) ->
+             
+          if $scope && $scope.item
+            items = []
+            relationships = getArray($scope.item.relationships[type])
+            for rel in relationships
+              resources = $scope.item.$datastore.repository[rel.type]   
+              item = resources[rel.id]   
+              items.push({ id : item.id, label : getFirstField(item, type)})
+            return items
+        
+        getFirstField = (item, type) ->
+        
+          field = $scope.resources[type].descriptor.fields[0].attribute
+          return item.attributes[field]
+          
+        $scope.go = (id, type) ->
+          csRoute.go("show", {resource : type, id : id})
+      
+        
+        getArray = (relationships) ->
+          if relationships == undefined
+            return []
+          else if relationships.data.constructor == Array 
+            return relationships.data
+          else
+            arr = []
+            arr.push(relationships.data)
+            return arr
+      
       return
 
   return {
