@@ -4,9 +4,23 @@ app.provider 'csRoute', [ '$stateProvider', ($stateProvider) ->
    
   @state 
    
-  @go = (type, params) ->
-    @state.go(type,params)
-  
+  @go = (type, params, options) ->
+    @state.go(type, params, options)
+ 
+  @transitionTo = (params) ->
+    url  = ""
+    for i in params
+       url += "/" + i
+    history.pushState(null, null, + window.location.pathname + '#' + url);
+    
+    ### Other solution
+    @state.transitionTo(type, params, {
+      location: true,
+      inherit: true,
+      relative: @state.$current,
+      notify: false})
+    ###
+   
   @setState = (state) ->
     @state = state
     
