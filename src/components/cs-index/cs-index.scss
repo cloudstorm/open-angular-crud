@@ -140,4 +140,35 @@
      width: 140px;
      text-height: auto;
   }
+
+  // ==== cs-menu.scss ==== 
+  
+  .nav {
+    background-color : #F8F7F8;  
+  }
+
+  .navElement {
+    color: #555555;
+    display: block;
+    padding : 20px;  
+  }
+  
+  .nav {
+    font-weight: bold;
+  }
+ 
+  .navElement:hover {
+    color: #333333; 
+    cursor: pointer;  
+  }
+
+  .appTitle {
+    font-weight: normal;
+    font-size: 18px;
+  }
+  
+  .selected {
+      background-color: #e7e7e7;
+  }
+  
 }

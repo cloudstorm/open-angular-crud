@@ -4,7 +4,7 @@ app = angular.module('cloudStorm.csMenu', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csMenu", ['ResourceService', 'csDataStore', 'csRestApi', 'csSettings', '$uibModal', 'csAlertService', '$filter', 'csDescriptorService', 'csRoute', (ResourceService, csDataStore, csRestApi, csSettings, $uibModal, csAlertService, $filter, csDescriptorService, csRoute) ->
+app.directive "csMenu", ['ResourceService', 'csDescriptorService', 'csRoute', (ResourceService, csDescriptorService, csRoute) ->
   
   # ===== COMPILE =============================================================
 
@@ -23,10 +23,21 @@ app.directive "csMenu", ['ResourceService', 'csDataStore', 'csRestApi', 'csSetti
 
     link = ( $scope, element, attrs, ctrl) ->
          
+      $templateElement.addClass "cs-index"
+
       csDescriptorService.getPromises().then () ->
         $scope.resources = ResourceService.getResources()
         console.log $scope.resources
-
+  
+      $scope.selected = null
+      $scope.isSelected = (type) ->
+        return (type == $scope.selected)
+      
+      
+      $scope.select = (type) ->
+        $scope.selected = type
+        csRoute.go("type", {resourceType : type})
+      
          
   return {
     restrict: 'E'
