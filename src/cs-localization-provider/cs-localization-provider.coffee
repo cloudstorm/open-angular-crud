@@ -26,6 +26,7 @@ angular.module('cloudStorm.localizationProvider', [])
     'alert.error_happened': 'An error happened'
     'alert.no_resource_created': 'Nothing created'
     'alert.new_resource_created': 'New resource successfully created'
+    'alert.resource_not_found' : 'There is no resource with the ID: '
     'confirm.delete': "Are you sure you want to delete the item?"
     'filter_for_anything': 'Filter for anything'
   }
