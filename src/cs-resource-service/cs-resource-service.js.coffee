@@ -26,6 +26,9 @@ app.factory 'ResourceService', ['$injector', ($injector) ->
 
   class ResourceService
 
+    getResources: () ->
+      resources
+
     register: (name, resource) ->
       resources[name] = resource
 

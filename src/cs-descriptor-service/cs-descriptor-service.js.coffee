@@ -42,6 +42,8 @@ app.service 'csDescriptorService', [ '$q', '$http', 'ResourceService', 'csResour
       @endpoint = data.endpoint
       @base_url = data.base_url
       @descriptor = _.omit data, ['endpoint', 'base_url']
+      @loaded = false
+      @data = null
     ResourceService.register Resource.descriptor.type, Resource
 
   # For debug purposes
