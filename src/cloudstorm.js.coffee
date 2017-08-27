@@ -6,7 +6,9 @@ app = angular.module 'cloudStorm', [
   'cloudStorm.index'
   'cloudStorm.index.sidePanel'
   'cloudStorm.wizard'
+  'cloudStorm.profile'
   'cloudStorm.checkbox'
+  'cloudStorm.csMenu'
   'cloudStorm.date'
   'cloudStorm.time'
   'cloudStorm.datetime'
@@ -24,5 +26,7 @@ app = angular.module 'cloudStorm', [
   'cloudStorm.templateService'
   'cloudStorm.templates'
   'cloudStorm.descriptorService'
+  'ui.router'
+  'cloudStorm.routeProvider'
   'ui.bootstrap'
 ]
