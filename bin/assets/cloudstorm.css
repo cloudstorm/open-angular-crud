@@ -221,6 +221,100 @@
         background-color: rgba(125, 125, 125, 0.3); }
         .cs-index table tbody tr td.actions .action:hover.delete-action {
           color: #d9534f; }
+        .cs-index table tbody tr td.actions .action:hover.show-action {
+          color: #5bc0de; }
+.cs-index .container {
+  width: 100%; }
+.cs-index .middle {
+  display: table;
+  margin: 10px auto; }
+.cs-index .profile {
+  width: 500px; }
+.cs-index .item {
+  margin: 5px 0px 5px 50px;
+  padding: 2px 10px;
+  font-size: 15px;
+  border-radius: 5px;
+  text-align: center;
+  width: 300px; }
+.cs-index .title {
+  font-size: 20px;
+  margin: 10px auto;
+  font-style: italic;
+  display: table; }
+.cs-index .data {
+  background-color: #ececec; }
+.cs-index .resource {
+  background-color: #c7c3c3; }
+.cs-index .resource:hover {
+  cursor: pointer; }
+.cs-index .inline {
+  display: inline-block; }
+.cs-index .fieldTitle {
+  margin-top: 7px;
+  width: 50px; }
+.cs-index .flex {
+  display: flex; }
+.cs-index .relation {
+  text-decoration: underline;
+  width: 140px;
+  text-height: auto; }
+.cs-index .nav {
+  background-color: #F8F7F8; }
+.cs-index .navElement {
+  color: #555555;
+  display: block;
+  padding: 20px; }
+.cs-index .nav {
+  font-weight: bold; }
+.cs-index .navElement:hover {
+  color: #333333;
+  cursor: pointer; }
+.cs-index .appTitle {
+  font-weight: normal;
+  font-size: 18px; }
+.cs-index .appTitle:hover {
+  cursor: initial;
+  color: #555555; }
+.cs-index .selected {
+  background-color: #e7e7e7; }
+
+.cs-profile .container {
+  width: 100%; }
+.cs-profile .middle {
+  display: table;
+  margin: 10px auto; }
+.cs-profile .profile {
+  width: 500px; }
+.cs-profile .item {
+  margin: 5px 0px 5px 50px;
+  padding: 2px 10px;
+  font-size: 15px;
+  border-radius: 5px;
+  text-align: center;
+  width: 300px; }
+.cs-profile .title {
+  font-size: 20px;
+  margin: 10px auto;
+  font-style: italic;
+  display: table; }
+.cs-profile .data {
+  background-color: #ececec; }
+.cs-profile .resource {
+  background-color: #c7c3c3; }
+.cs-profile .resource:hover {
+  cursor: pointer; }
+.cs-profile .inline {
+  display: inline-block; }
+.cs-profile .fieldTitle {
+  margin-top: 7px;
+  width: 50px; }
+.cs-profile .flex {
+  display: flex; }
+.cs-profile .relation {
+  text-decoration: underline;
+  width: 140px;
+  text-height: auto; }
 
 .cs-alert {
   position: fixed;
