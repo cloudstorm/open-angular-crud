@@ -29,4 +29,7 @@ app = angular.module 'cloudStorm', [
   'ui.router'
   'cloudStorm.routeProvider'
   'ui.bootstrap'
+  'cloudStorm.uiRouterIndex'
+  'cloudStorm.uiRouterShowNew'
+  'cloudStorm.uiRouterEdit'
 ]
