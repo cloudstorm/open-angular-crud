@@ -17,7 +17,8 @@ app.directive "csProfile", ['ResourceService', 'csDescriptorService', 'csRoute',
     # Post-link: gets ca
     link = ($scope, element, attr) ->
       
-      
+      $scope.loading = true
+
       console.log ($scope.itemId + ' ' + $scope.resourceType)
       csDescriptorService.getPromises().then () ->
         resource = ResourceService.get($scope.resourceType)
@@ -35,9 +36,9 @@ app.directive "csProfile", ['ResourceService', 'csDescriptorService', 'csRoute',
               $scope.item = getItem(items, $scope.itemId)
               #$scope.relatedCategories = $scope.getRelatedItems("categories")
               init()
+              $scope.loading = false
               if $scope.item == null
                 $scope.invalidID = true
-                csAlertService.addAlert($scope.i18n?.t('alert.resource_not_found') + $scope.itemId, 'danger')
             # errorCallback
             
             (reason) ->

@@ -1,6 +1,9 @@
 .container
   .middle
-    %div{ "ng-show" => "!invalidID"}
+    %div{ "ng-show" => "loading"}
+      %i{"style" => "font-size:54px", "class" => "fa"}
+        &#xf110
+    %div{ "ng-show" => "!invalidID && !loading"}
       .title
         Data
       %div{ "ng-repeat" => "field in descriptor.fields"}
