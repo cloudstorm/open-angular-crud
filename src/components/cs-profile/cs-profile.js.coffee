@@ -23,6 +23,7 @@ app.directive "csProfile", ['ResourceService', 'csDescriptorService', 'csRoute',
         resource = ResourceService.get($scope.resourceType)
         $scope.descriptor = resource.descriptor
         $scope.resources = ResourceService.getResources()
+        $scope.invalidID = false
         
         loadData = () ->
           resource.$index({include: '*'}).then(
@@ -35,8 +36,10 @@ app.directive "csProfile", ['ResourceService', 'csDescriptorService', 'csRoute',
               #$scope.relatedCategories = $scope.getRelatedItems("categories")
               init()
               if $scope.item == null
+                $scope.invalidID = true
                 csAlertService.addAlert($scope.i18n?.t('alert.resource_not_found') + $scope.itemId, 'danger')
             # errorCallback
+            
             (reason) ->
               $scope.collection = null
             # notifyCallback

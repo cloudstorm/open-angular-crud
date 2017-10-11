@@ -1,20 +1,22 @@
 .container
   .middle
-    .title
-      Data
-    %div{ "ng-repeat" => "field in descriptor.fields"}
-      %div{ "ng-switch" => "field.type"}
-        .flex{"ng-if" => "field.type != 'resource'"}
-          .fieldTitle
-            {{field.attribute}}
-          .item.data
-            {{getValue(field.attribute)}}
-    .title{"ng-if" => "relations.length > 0"}
-      Relations
-    .flex{ "ng-repeat" => "relation in relations", "ng-if" => "relation.items.length > 0"}
-      .fieldTitle
-        {{relation.label}}
-      %div
-        .item.resource{ "ng-repeat" => "item in relation.items", "ng-click" => "go(item.id, relation.resourceType)"}
-          {{item.label}}
-          
+    %div{ "ng-show" => "!invalidID"}
+      .title
+        Data
+      %div{ "ng-repeat" => "field in descriptor.fields"}
+        %div{ "ng-switch" => "field.type"}
+          .flex{"ng-if" => "field.type != 'resource'"}
+            .fieldTitle
+              {{field.attribute}}
+            .item.data
+              {{getValue(field.attribute)}}
+      .title{"ng-if" => "relations.length > 0"}
+        Relations
+      .flex{ "ng-repeat" => "relation in relations", "ng-if" => "relation.items.length > 0"}
+        .fieldTitle
+          {{relation.label}}
+        %div
+          .item.resource{ "ng-repeat" => "item in relation.items", "ng-click" => "go(item.id, relation.resourceType)"}
+            {{item.label}}
+    %div{ "ng-show" => "invalidID"}
+      Invalid id
