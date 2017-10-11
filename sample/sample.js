@@ -2,122 +2,46 @@ var app = angular.module('cloudStormSample', [
   'cloudStorm',
 ])
 
-app.component("initial", {
-    template : "<div class='welcomeMessage'> Welcome to the sample app!</div>",
-})
 
-app.component("show", {
-    bindings : {
-      id : '<',
-      resource : '<',
-    },
-    template : "" +
-        "<div> " +
-        "  <cs-profile item-id='$ctrl.id' resource-type='$ctrl.resource'></cs-profile>  "  +
-        "</div> ",
-})
-
-app.component("index", {
-    bindings : {
-      resType : '<',
-    },
-    template : "" +
-    		"<div> " +
-    		"  <cs-index item-id='$ctrl.itemId' resource-type='$ctrl.resType' cs-index-options='options'></cs-index> " +
-    		"</div> ",
-    controller : function(){
-        console.log("Here we are")
-        this.itemId = null
-    }
-})
-
-app.component("editResource", {
-  
-    bindings : {
-      id : "<",
-      resourceType : "<"
-    },
-    template : "" +
-        "<div> " +
-        "  <cs-index item-id='$ctrl.id' resource-type='$ctrl.resourceType' cs-index-options='options'></cs-index> " +
-        "</div> ",
-    controller : function(){
-        console.log("Loaded the show component")
-    }
-})
-
-app.component("showHide", {
-  
-    bindings : {
-      showHide : "<"
-    },
-    template : "" +
-        "<div> " +
-           "ShowHideTemplate" +
-        "</div> ",
-    controller : function(){
-        console.log("Loaded the show hide component")
-    }
-})
-
-app.component("edit", {
-    bindings : {
-      item : "<",
-      resourceType : "<",
-    },
-    template : "<div> " +
-    		"         <cs-index-sidepanel " +
-    		"           ng-if='true' " +
-    		"           resource-type='{{$ctrl.resourceType}}'" +
-    		"           item='{{$ctrl.item}}'" +
-    		"           ng-class='{'col-lg-4' : 'true'}'> " +
-    		"         </cs-index-sidepanel>" +
-    		"        </div> ",
-    controller : function(){
-      
-    }
-})
-
-
-var type = {
+var index = {
   name: 'type',
-  //url : '/about',
   url: '/{resourceType}',
-  component : "index", 
+  component : "csUIRouteIndex", 
   resolve : {
-    resType : function($transition$){
-      console.log("Type resolve")
-      console.log($transition$.params())
+    resourceType : function($transition$){
       return $transition$.params().resourceType
     }
   }
 }
 
-var id = {
+var edit = {
     name : "id",
-    url : "/{resourceType}/{id}",
-    component : "editResource",
+    url : "/{resourceType}/{id}/{cmd}",
+    component : "csUIRouteEdit",
      resolve : {
        id : function($transition$){
          return $transition$.params().id
        },
        resourceType : function($transition$){
          return $transition$.params().resourceType
+       },  
+       cmd : function($transition$){
+         return $transition$.params().cmd
        }
     }
 }
 
-var showResource = {
+var show_new = {
   name : "show",
-  url : "/{resource}/{id}/show",
-  component : "show",
+  url : "/{resourceType}/{id}",
+  component : "csUIRouteShowNew",
   resolve : {
       id : function($transition$){
         return $transition$.params().id
       },
-      resource : function($transition$){
-        return $transition$.params().resource
-      }
+      resourceType : function($transition$){
+        return $transition$.params().resourceType
+      },
    }
 }
 
@@ -128,8 +52,7 @@ app.controller('MainCtrl', function($scope, csAlertService, csDescriptorService,
   csDescriptorService.registerDescriptorUrl('resourceDescriptors/userResourceDescriptor.json');
   
   csRoute.setState($state)
-  csRoute.addState(type)
-  csRoute.addState(id)
-  csRoute.addState(showResource)
-
+  csRoute.addState(index)
+  csRoute.addState(edit)
+  csRoute.addState(show_new)
 });
