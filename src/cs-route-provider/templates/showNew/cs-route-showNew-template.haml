@@ -1,0 +1,5 @@
+%div{ "ng-switch" => "$ctrl.id" }
+  %div{ "ng-switch-when" => "new" }
+    New Item ...
+  %div{ "ng-switch-default" => "" }
+    %cs-profile{ "item-id" => "$ctrl.id", "resource-type" => "$ctrl.resourceType"}
