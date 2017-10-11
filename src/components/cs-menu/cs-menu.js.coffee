@@ -10,6 +10,8 @@ app.directive "csMenu", ['ResourceService', 'csDescriptorService', 'csRoute', (R
 
   compile = ($templateElement, $templateAttributes) ->
 
+    $templateElement.addClass "cs-menu"
+
     # Only modify the DOM in compile, use (pre/post) link for others
 
     # Pre-link: gets called for parent first
@@ -23,7 +25,6 @@ app.directive "csMenu", ['ResourceService', 'csDescriptorService', 'csRoute', (R
 
     link = ( $scope, element, attrs, ctrl) ->
          
-      $templateElement.addClass "cs-index"
 
       csDescriptorService.getPromises().then () ->
         $scope.resources = ResourceService.getResources()

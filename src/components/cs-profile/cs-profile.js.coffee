@@ -7,7 +7,7 @@ app.directive "csProfile", ['ResourceService', 'csDescriptorService', 'csRoute',
   compile = ($templateElement, $templateAttributes) ->
 
     # Only modify the DOM in compile, use (pre/post) link for others
-    #$templateElement.addClass "cs-index-sidepanel"
+    $templateElement.addClass "cs-profile"
 
     # Pre-link: gets called for parent first
     pre: ($scope, element, attrs, controller) ->
@@ -17,7 +17,6 @@ app.directive "csProfile", ['ResourceService', 'csDescriptorService', 'csRoute',
     # Post-link: gets ca
     link = ($scope, element, attr) ->
       
-      $templateElement.addClass "cs-index"
       
       console.log ($scope.itemId + ' ' + $scope.resourceType)
       csDescriptorService.getPromises().then () ->
