@@ -1,0 +1,19 @@
+.wizardContainer {
+  position : fixed;
+  height : calc(100% - 65px);
+}
+
+.middle {
+    display: table;
+    margin: 10px auto;
+}
+
+.aligner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.alignerItem {
+  min-width : 50%;
+}

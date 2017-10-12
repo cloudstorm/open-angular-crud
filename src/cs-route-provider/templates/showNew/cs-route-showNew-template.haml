@@ -1,5 +1,10 @@
-%div{ "ng-switch" => "$ctrl.id" }
-  %div{ "ng-switch-when" => "new" }
-    New Item ...
-  %div{ "ng-switch-default" => "" }
-    %cs-profile{ "item-id" => "$ctrl.id", "resource-type" => "$ctrl.resourceType"}
+%div{ "class" => "aligner"}
+  / %div{ "class" => "aligner-item"}
+  %div{ "ng-switch" => "$ctrl.id", "class" => "alignerItem"}
+    %div{ "ng-switch-when" => "new" }
+      %div{ "ng-if" => "!$ctrl.ready"}
+        Loading ... 
+      %div{ "ng-if" => "$ctrl.ready", "class" => "wizardContainer"}
+        %div{ "cs-wizard" => "", "cs-wizard-options" => "$ctrl.wizardOptions"}
+    %div{ "ng-switch-default" => "" }
+      %cs-profile{ "item-id" => "$ctrl.id", "resource-type" => "$ctrl.resourceType"}
