@@ -1,10 +1,13 @@
-%div{ "class" => "aligner"}
-  / %div{ "class" => "aligner-item"}
-  %div{ "ng-switch" => "$ctrl.id", "class" => "alignerItem"}
+.aligner{"ng-if" => "$ctrl.found"}
+  .alignerItem{ "ng-switch" => "$ctrl.id"}
     %div{ "ng-switch-when" => "new" }
       %div{ "ng-if" => "!$ctrl.ready"}
         Loading ... 
-      %div{ "ng-if" => "$ctrl.ready", "class" => "wizardContainer"}
+      .wizardContainer{ "ng-if" => "$ctrl.ready"}
         %div{ "cs-wizard" => "", "cs-wizard-options" => "$ctrl.wizardOptions"}
     %div{ "ng-switch-default" => "" }
       %cs-profile{ "item-id" => "$ctrl.id", "resource-type" => "$ctrl.resourceType"}
+.alert.alert-danger.errorMsg{"ng-if" => "!$ctrl.found"}
+  %strong
+    Error!   
+  Resource not found!
