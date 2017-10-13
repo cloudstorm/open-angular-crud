@@ -97,7 +97,7 @@ app.directive "csProfile", ['ResourceService', 'csDescriptorService', 'csRoute',
           return item.attributes[field]
         
         $scope.go = (id, type) ->
-          csRoute.go("show", {resource : type, id : id})
+          csRoute.go("show", {id : id, resourceType : type})
 
         getArray = (relationships) ->
           if relationships == undefined
