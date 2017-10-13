@@ -25,9 +25,8 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
     link = ( $scope, element, attrs, ctrl) ->
 
      # ===== INIT ============================================
-      console.log "InputData : "
-      console.log $scope.itemId
-      console.log $scope.resourceType
+        
+      $scope.loading = true        
       
       csDescriptorService.getPromises().then () ->
 
@@ -37,13 +36,15 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
         $scope.collection = []
         resource = ResourceService.get($scope.resourceType)
         loadData = () ->
+          
           resource.$index({include: '*'}).then(
             # successCallback
             (items) ->
               resource.loaded = true
               $scope.collection = items
+              $scope.loading = false
               resource.data = items
-              setSelectedItem()
+              # $scope.setSelectedItem()
             # errorCallback
             (reason) ->
               $scope.collection = null
@@ -54,7 +55,7 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
         #if !resource.loaded
         loadData()
 
-        setSelectedItem = () ->
+        $scope.setSelectedItem = () ->
         
           if $scope.itemId != null
             for res in $scope.collection
@@ -93,9 +94,7 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
           # setSelectedItem()
 
         init()
-        
-        console.log $scope.csIndexOptions
-        
+                
         $scope.comparisonValue = (item) ->
           $scope.fieldValue(item, sortField) if sortField
 
@@ -178,7 +177,7 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
         $scope.selectItem = (item) ->
           resource = ResourceService.get($scope.resourceType)
           $scope.csIndexOptions.selectedItem = (item)
-          #csRoute.transitionTo([$scope.resourceType, item.id])
+          csRoute.transitionTo('id', {resourceType : $scope.resourceType, id : item.id})
           
         $scope.destroyItem = ($event, item) ->
           $event.stopPropagation()
@@ -232,7 +231,6 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
                 pushNewItem($scope.collection, resource)
                 modalInstance.close() unless $scope.wizardOptions['keep-first']
                 csAlertService.addAlert($scope.i18n?.t('alert.new_resource_created') || 'translation missing', 'success')
-
             }
 
           angular.merge($scope.wizardOptions, $scope.csIndexOptions)
