@@ -7,5 +7,5 @@ app.component("csLoader", {
       color : '<',
       radius : '<',
     },
-    templateUrl : 'utils/loader/cs-loader-template.html',
+    templateUrl : 'cs-utils/loader/cs-loader-template.html',
 })
