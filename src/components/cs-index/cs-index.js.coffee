@@ -5,7 +5,7 @@ app = angular.module('cloudStorm.index', [])
 # ===== DIRECTIVE =============================================================
 
 app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSettings', '$uibModal', 'csAlertService', '$filter', 'csDescriptorService', 'csRoute', (ResourceService, csDataStore, csRestApi, csSettings, $uibModal, csAlertService, $filter, csDescriptorService, csRoute) ->
-  
+
   # ===== COMPILE =============================================================
 
   compile = ($templateElement, $templateAttributes) ->
@@ -16,7 +16,7 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
     # Pre-link: gets called for parent first
     pre: ($scope, element, attrs, controller) ->
       returns
-	
+
     # Post-link: gets called for children recursively after post() traversed the DOM tree
     post: link
 
@@ -25,9 +25,9 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
     link = ( $scope, element, attrs, ctrl) ->
 
      # ===== INIT ============================================
-        
-      $scope.loading = true        
-      
+
+      $scope.loading = true
+
       csDescriptorService.getPromises().then () ->
 
         $scope.i18n = csSettings.settings['i18n-engine']
@@ -36,7 +36,7 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
         $scope.collection = []
         resource = ResourceService.get($scope.resourceType)
         loadData = () ->
-          
+
           resource.$index({include: '*'}).then(
             # successCallback
             (items) ->
@@ -51,22 +51,22 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
             # notifyCallback
             () ->
           )
-        
+
         #if !resource.loaded
         loadData()
 
         $scope.setSelectedItem = () ->
-        
+
           if $scope.itemId != null
             for res in $scope.collection
               if res.id == $scope.itemId.toString()
-                $scope.csIndexOptions.selectedItem = res 
+                $scope.csIndexOptions.selectedItem = res
                 break
             if $scope.csIndexOptions.selectedItem == null
               csAlertService.addAlert($scope.i18n?.t('alert.resource_not_found') + $scope.itemId, 'danger')
-        
+
         sortField = undefined
-        init = () ->  
+        init = () ->
           defaultOptions =
             'selectedItem'    : null # [private API]
             'sortAttribute'   : resource.descriptor.fields[0].attribute # [private API]
@@ -75,26 +75,26 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
             'condensedView'   : false # [private API]
             'hide-actions'    : false
             'hide-attributes' : resource.descriptor.attributes_to_hide || {}
-  
+
           $scope.csIndexOptions ||= {}
           indexOptions = angular.copy $scope.csIndexOptions
           angular.copy {}, $scope.csIndexOptions
           angular.merge $scope.csIndexOptions, defaultOptions, indexOptions
-  
+
           $scope.columns = resource.descriptor.fields
           $scope.header  = resource.descriptor.name
           $scope.subHeader  = resource.descriptor.hint
-  
+
           # ===== SORT =========================================
-  
+
           sortField = _.find resource.descriptor.fields, { attribute: $scope.csIndexOptions.sortAttribute }
-          
+
           # if resource.loaded
           # $scope.collection = resource.data
           # setSelectedItem()
 
         init()
-                
+
         $scope.comparisonValue = (item) ->
           $scope.fieldValue(item, sortField) if sortField
 
@@ -143,7 +143,7 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
           else
             item.attributes[field.attribute]
 
-        $scope.columnVisible = (column, index) -> 
+        $scope.columnVisible = (column, index) ->
           length = $scope.columns.length
           if attributeToHide(column.attribute)
             return false
@@ -175,10 +175,8 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
           sortField = _.find resource.descriptor.fields, { attribute: $scope.csIndexOptions.sortAttribute }
 
         $scope.selectItem = (item) ->
-          resource = ResourceService.get($scope.resourceType)
           $scope.csIndexOptions.selectedItem = (item)
-          csRoute.transitionTo('id', {resourceType : $scope.resourceType, id : item.id})
-          
+
         $scope.destroyItem = ($event, item) ->
           $event.stopPropagation()
           if confirm $scope.i18n?.t('confirm.delete')
@@ -194,8 +192,8 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
                 csAlertService.addAlert alert || $scope.i18n?.t('alert.error_happened'), 'danger'
             )
         $scope.showItem = (item) ->
-          console.log { resource : $scope.resourceType, id : item.attributes.id}
-          csRoute.go("show", { resource : $scope.resourceType, id : item.attributes.id})
+          if $scope.csIndexOptions.selectedItem == null
+            csRoute.go("show", { resourceType : $scope.resourceType, id : item.attributes.id})
 
         $scope.unselectItem = () ->
           $scope.csIndexOptions.selectedItem = null
@@ -253,10 +251,10 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
           newItem = item.constructor.$new()
           newItem.$clone(item)
           collection.push newItem
-        
-        $scope.$watch "resourceType", () -> 
+
+        $scope.$watch "resourceType", () ->
           ###
-          resource = ResourceService.get($scope.resourceType)	
+          resource = ResourceService.get($scope.resourceType)
           console.log "Wath " + resource.loaded
           if !resource.loaded
             console.log "Check" + resource.loaded

@@ -46,15 +46,15 @@
             %tbody
               %tr{ "ng-repeat" => "item in collection | orderBy:comparisonValue:csIndexOptions.sortReverse | filter:filterComparison track by $index ",
                    "ng-class" => "{'info' : csIndexOptions.selectedItem.id == item.id}",
-                   "ng-click" => "selectItem(item)",
-                   "ng-dblclick" => "selectItem(item)" }
+                   "ng-click" => "showItem(item)",
+                   "ng-dblclick" => "showItem(item)" }
                 %td{ "ng-repeat" => "column in columns track by $index",
                      "ng-if" => "columnVisible(column, $index)" }
                   {{ fieldValue(item, column) }}
                 %td.actions{ "ng-hide" => "csIndexOptions['hide-actions']" }
                   / SHOW
-                  .action.show-action{"ng-click" => "showItem(item)"}
-                    Show
+                  .action.show-action{"ng-click" => "selectItem(item)"}
+                    Edit
                   / DELETE
                   .action.delete-action{ "ng-click" => "destroyItem($event, item)" }<> {{ i18n.t('buttons.delete') }}
 
