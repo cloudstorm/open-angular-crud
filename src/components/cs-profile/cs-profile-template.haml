@@ -1,8 +1,6 @@
 .container
   .middle
-    %div{ "ng-show" => "loading"}
-      %i{"style" => "font-size:54px", "class" => "fa"}
-        &#xf110
+    %cs-loader{ "ng-show" => "loading"}
     %div{ "ng-show" => "!invalidID && !loading"}
       .title
         Data
