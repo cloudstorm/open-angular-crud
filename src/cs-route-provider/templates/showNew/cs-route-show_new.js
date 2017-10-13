@@ -29,13 +29,12 @@ app.component("csUIRouteShowNew", {
               "form-mode": "create",
               "reset-on-submit": true,
               "events": {
-                'wizard-canceled': function(resource){
-                    csRoute.go()
-                  },
-                'wizard-submited': function(resource){
-                  pushNewItem($scope.collection, resource)
-                  csRoute.go()
-                }
+                'wizard-canceled': (function(resource){
+                    csRoute.go("type", {resourceType : this.resourceType})
+                  }).bind(this),
+                'wizard-submited': (function(resource){
+                    csRoute.go("type", {resourceType : this.resourceType})
+                }).bind(this),
               }
             }
           }
