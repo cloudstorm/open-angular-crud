@@ -4,7 +4,7 @@ angular.module('cloudStorm.localizationProvider', [])
 # A simple key-value lookup base translation service
 
 .provider 'csLocalization', [ () ->
-  
+
 ####################################################################################################
 
   defaultTranslations = {
@@ -18,6 +18,7 @@ angular.module('cloudStorm.localizationProvider', [])
     'buttons.close': 'Close'
     'buttons.submit': 'Submit'
     'buttons.delete': 'Delete'
+    'buttons.edit': 'Edit'
     'index.empty': ' list empty'
     'buttons.new': 'New'
     'buttons.clear': 'Clear'
@@ -30,7 +31,7 @@ angular.module('cloudStorm.localizationProvider', [])
     'confirm.delete': "Are you sure you want to delete the item?"
     'filter_for_anything': 'Filter for anything'
   }
-  
+
   translations = defaultTranslations
 
   ##################################################################################################
