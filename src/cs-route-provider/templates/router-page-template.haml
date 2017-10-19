@@ -1,10 +1,10 @@
 %cs-loader{ "ng-if" => "$ctrl.loading"}
 %div{ "ng-if" => "!$ctrl.loading"}
   %cs-error{"errors" => "$ctrl.errors"}
-  %div{"ng-switch" => "$ctrl.patternType"}
-    %cs-index{ "ng-switch-when" => "index"}
-    %cs-profile{ "ng-switch-when" => "profile"}
-    .aligner{"ng-if" => "!$ctrl.loading"}
+  %div{"ng-if" => "$ctrl.errors.length == 0", "ng-switch" => "$ctrl.patternType"}
+    %cs-index{ "ng-switch-when" => "index", "resource-type" => "$ctrl.resourceType", "item-id" => 'null', "cs-index-options" => "options"}
+    %cs-profile{ "ng-switch-when" => "profile", "item" => "$ctrl.item", "resource" =>"$ctrl.resource"}
+    .aligner{"ng-switch-when" => "edit"}
       .alignerItem
         .wizardContainer
           %div{ "cs-wizard" => "", "cs-wizard-options" => "$ctrl.wizardOptions"}

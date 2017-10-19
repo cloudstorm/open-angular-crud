@@ -17,6 +17,7 @@ app.component("csRoutePage", {
         this.errors = []
 
         //getDataLoaderObject(this, descriptor)["index"].call()
+
         var call = function(scope){
 
           csDescriptorService.getPromises().then(
@@ -28,11 +29,14 @@ app.component("csRoutePage", {
                 this.resource = resource
                 return resource.$get(this.id, {include: '*'})
               }).bind(scope), (function(){
-                this.errors.push(this.resourceType + " is not a resource")
+                this.errors.push("\"" + this.resourceType + "\" is not a resource")
               }).bind(scope)
             ).then((function(item){
                 this.item = item
                 this.finished()
+            }).bind(scope), (function(){
+              this.errors.push("There is no " + this.resource.descriptor.name + "with the id: " + this.id)
+              this.finished()
             }).bind(scope))
         }
 
@@ -56,8 +60,8 @@ app.component("csRoutePage", {
           this.loading = false
           $scope.$apply()
         }
-
         call(this)
+
       }
 })
 
