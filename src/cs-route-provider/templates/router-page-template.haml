@@ -1,0 +1,17 @@
+%cs-loader{ "ng-if" => "$ctrl.loading"}
+%div{ "ng-if" => "!$ctrl.loading"}
+  %cs-error{"errors" => "$ctrl.errors"}
+  %div{"ng-switch" => "$ctrl.patternType"}
+    %cs-index{ "ng-switch-when" => "index"}
+    %cs-profile{ "ng-switch-when" => "profile"}
+    .aligner{"ng-if" => "!$ctrl.loading"}
+      .alignerItem
+        .wizardContainer
+          %div{ "cs-wizard" => "", "cs-wizard-options" => "$ctrl.wizardOptions"}
+
+    /.aligner{"ng-switch-when" => "edit"}
+    / %cs-wizard{"cs-wizard-options" => "$ctrl.wizardOptions"}
+    /%div
+    /Edit
+    /.wizardContainer{ "ng-switch-when" => "new"}
+    /%cs-wizard{"cs-wizard-options" => "$ctrl.wizardOptions"}
