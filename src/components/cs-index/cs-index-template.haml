@@ -25,9 +25,7 @@
         {{header}} {{ i18n.t('index.empty') }}
 
     .row{ "ng-switch-when" => "false" }
-      %cs-loader{ "ng-if" => "loading"}
-      .index-table{ "ng-if" => "!loading",
-                    "ng-class" => "{ 'col-lg-8' : sidePanelIsVisible() && !viewIsCompressed(),
+      .index-table{"ng-class" => "{ 'col-lg-8' : sidePanelIsVisible() && !viewIsCompressed(),
                                      'col-lg-6' : viewIsCompressed() }" }
         .table-responsive
 
