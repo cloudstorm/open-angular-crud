@@ -25,12 +25,12 @@ app.directive "csMenu", ['ResourceService', 'csDescriptorService', 'csRoute', (R
 
     link = ( $scope, element, attrs, ctrl) ->
          
-
       csDescriptorService.getPromises().then () ->
         $scope.resources = ResourceService.getResources()
         console.log $scope.resources
-        $scope.select(Object.keys($scope.resources)[0])
-  
+        $scope.$apply()
+       
+      $scope.title = "Sample application"
       $scope.selected = null
       $scope.isSelected = (type) ->
         return (type == $scope.selected)
