@@ -1,8 +1,8 @@
 var app
 
-app = angular.module("cloudStrom.uiRouterPageController", [])
+app = angular.module("cloudStrom.uiPageRouter", [])
 
-app.component("csRoutePage", {
+app.component("csPageRouter", {
 
     bindings : {
         resourceType : "<",
