@@ -1,6 +1,6 @@
 var app
 
-app = angular.module("cloudStrom.uiPageRouter", [])
+app = angular.module("cloudStorm.uiPageRouter", [])
 
 app.component("csPageRouter", {
 

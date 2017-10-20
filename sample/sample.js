@@ -5,7 +5,7 @@ var app = angular.module('cloudStormSample', [
 var index = {
   name: 'type',
   url: '/{resourceType}',
-  component : "csRoutePage",
+  component : "csPageRouter",
   resolve : {
     resourceType : function($transition$){
       return $transition$.params().resourceType
@@ -19,7 +19,7 @@ var index = {
 var show_new = {
   name : "show",
   url : "/{resourceType}/{id}",
-  component : "csRoutePage",
+  component : "csPageRouter",
   resolve : {
       resourceType : function($transition$){
         return $transition$.params().resourceType
@@ -36,7 +36,7 @@ var show_new = {
 var edit = {
     name : "id",
     url : "/{resourceType}/{id}/{cmd}",
-    component : "csRoutePage",
+    component : "csPageRouter",
      resolve : {
        resourceType : function($transition$){
          return $transition$.params().resourceType
