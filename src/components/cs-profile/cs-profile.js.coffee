@@ -2,8 +2,8 @@
 
 app = angular.module('cloudStorm.profile', [])
 
-app.directive "csProfile", ['ResourceService', 'csDescriptorService', 'csRoute', 'csAlertService', (ResourceService, csDescriptorService, csRoute, csAlertService) ->
-  
+app.directive "csProfile", ['ResourceService', 'csDescriptorService', 'csRoute', 'csAlertService', 'csResource', (ResourceService, csDescriptorService, csRoute, csAlertService, csResource) ->
+
   compile = ($templateElement, $templateAttributes) ->
 
     # Only modify the DOM in compile, use (pre/post) link for others
@@ -12,104 +12,61 @@ app.directive "csProfile", ['ResourceService', 'csDescriptorService', 'csRoute',
     # Pre-link: gets called for parent first
     pre: ($scope, element, attrs, controller) ->
       return
-    
+
     post: link
     # Post-link: gets ca
     link = ($scope, element, attr) ->
-      
-      $scope.loading = true
 
-      console.log ($scope.itemId + ' ' + $scope.resourceType)
-      csDescriptorService.getPromises().then () ->
-        resource = ResourceService.get($scope.resourceType)
-        $scope.descriptor = resource.descriptor
-        $scope.resources = ResourceService.getResources()
-        $scope.invalidID = false
-        
-        loadData = () ->
-          resource.$index({include: '*'}).then(
-            # successCallback
-            (items) ->
-              resource.loaded = true
-              $scope.collection = items
-              resource.data = items
-              $scope.item = getItem(items, $scope.itemId)
-              #$scope.relatedCategories = $scope.getRelatedItems("categories")
-              init()
-              $scope.loading = false
-              if $scope.item == null
-                $scope.invalidID = true
-            # errorCallback
-            
-            (reason) ->
-              $scope.collection = null
-            # notifyCallback
-            () ->
-          )
-        
-        init = () ->
-         
-          resources = []
-          $scope.relations = []
-          for field in $scope.descriptor.fields
-            if field.type == 'resource'  
-              $scope.relations.push({
-                label : field.label
-                resourceType : field.resource
-                items : $scope.getRelatedItems(field.relationship, field.resource)
-              })
-          console.log $scope.relations    
+      $scope.loading = false
+      $scope.descriptor = $scope.resource.descriptor
+      $scope.resources = ResourceService.getResources()
 
-        getItem = (items, id) ->
+      init = () ->
 
-          item = null
-          if $scope.itemId != null
-            for res in items
-              if res.id == id.toString()
-                item = res 
-                break
-          item
-        
-        loadData()
-        
-        $scope.getValue = (attribute) ->
-          if $scope && $scope.item
-            return $scope.item.attributes[attribute]
-        
-        $scope.getValue = (attribute) ->
-          if $scope && $scope.item
-            return $scope.item.attributes[attribute]
+        resources = []
+        $scope.relations = []
+        for field in $scope.descriptor.fields
+          if field.type == 'resource'
+            $scope.relations.push({
+              label : field.label
+              resourceType : field.resource
+              items : $scope.getRelatedItems(field.relationship, field.resource)
+            })
 
-        $scope.getRelatedItems = (relationship, type) ->
+      $scope.getValue = (attribute) ->
+        if $scope && $scope.item
+          return $scope.item.attributes[attribute]
 
-          if $scope && $scope.item
-            items = []
-            relationships = getArray($scope.item.relationships[relationship])
-            for rel in relationships
-              resources = $scope.item.$datastore.repository[rel.type]
-              item = resources[rel.id]   
-              items.push({ id : item.id, label : getFirstField(item, type)})
-            return items
-        
-        getFirstField = (item, type) ->
-        
-          field = $scope.resources[type].descriptor.fields[0].attribute
-          return item.attributes[field]
-        
-        $scope.go = (id, type) ->
-          csRoute.go("show", {id : id, resourceType : type})
+      $scope.getRelatedItems = (relationship, type) ->
 
-        getArray = (relationships) ->
-          if relationships == undefined
-            return []
-          else if relationships.data.constructor == Array 
-            return relationships.data
-          else
-            arr = []
-            arr.push(relationships.data)
-            return arr
+        if $scope && $scope.item
+          items = []
+          relationships = getArray($scope.item.relationships[relationship])
+          for rel in relationships
+            resources = $scope.item.$datastore.repository[rel.type]
+            item = resources[rel.id]
+            items.push({ id : item.id, label : getFirstField(item, type)})
+          return items
 
-      return
+      getFirstField = (item, type) ->
+
+        field = $scope.resources[type].descriptor.fields[0].attribute
+        return item.attributes[field]
+
+      $scope.go = (id, type) ->
+        csRoute.go("show", {id : id, resourceType : type})
+
+      getArray = (relationships) ->
+        if relationships == undefined
+          return []
+        else if relationships.data.constructor == Array
+          return relationships.data
+        else
+          arr = []
+          arr.push(relationships.data)
+          return arr
+
+      init()
 
   return {
     restrict: 'E'
@@ -118,5 +75,7 @@ app.directive "csProfile", ['ResourceService', 'csDescriptorService', 'csRoute',
     scope:
       resourceType: '='
       itemId: '='
+      resource: "<"
+      item : "<"
   }
 ]
