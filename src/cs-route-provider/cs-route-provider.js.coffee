@@ -1,6 +1,8 @@
+"use strict"
+
 app = angular.module('cloudStorm.routeProvider', [])
 
-app.provider 'csRoute', ['$stateProvider', ($stateProvider) ->
+app.provider 'csRoute', ['$stateProvider', 'csSettingsProvider', ($stateProvider, csSettingsProvider) ->
 
   @state
 
@@ -25,18 +27,9 @@ app.provider 'csRoute', ['$stateProvider', ($stateProvider) ->
   @$get = ->
     @
 
+  for state in csSettingsProvider.states
+    @addState state
+
   return
-
-]
-
-app.service 'csRouteService', ['$state', ($state) ->
-
-  @go = (type, params) ->
-    $state.go(type,params)
-
-  @
-]
-
-app.controller 'csRouteController', ['$location', ($location) ->
 
 ]
