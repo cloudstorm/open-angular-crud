@@ -7,10 +7,14 @@ app = angular.module('cloudStorm.resource', [])
 app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSettings', '$q',
   (csRestApi, csDataStore, ResourceService, csSettings, $q) ->
 
+    # Returns relative URL
     memberEndpointUrl = (resource, id) ->
-      return null unless resource.member_endpoint
-      member_endpoint_template = urltemplate.parse(resource.member_endpoint)
-      return member_endpoint_template.expand(id: id)
+      # TODO solve with URL template
+      #effective_endpoint = resource.member_endpoint || "#{resource.endpoint}/{id}"
+      #member_endpoint_template = urltemplate.parse(effective_endpoint)
+      #member_endpoint_template.expand(id: id)
+      # HACK
+      return resource.endpoint + "/" + id
 
     baseUrl = (resource) ->
       resource.base_url || csSettings['base_url']
@@ -108,7 +112,13 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
       ################################################################################################
 
       @$get: (id, params) ->
-        csRestApi.get(memberEndpointUrl(@, id), params).then(
+
+        # TODO - make the URL for get
+        actual_endpoint = memberEndpointUrl(@, id)
+        base_url = baseUrl(@)
+        actual_endpoint = "#{base_url}/#{actual_endpoint}" if base_url?
+
+        csRestApi.get(actual_endpoint, params).then(
           (data) =>  # successCallback
             object = new @(data.data)
             included = _.map data.included, (i) ->
