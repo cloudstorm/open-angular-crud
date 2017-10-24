@@ -175,6 +175,7 @@ module.exports = function(grunt) {
         src: [
           // 'module.prefix',
           '<%= app_files.built_js %>',
+          '<%= app_files.js %>',
           '<%= html2js.build.dest %>',
           // 'module.suffix'
         ],
@@ -281,6 +282,13 @@ module.exports = function(grunt) {
         livereload: true
       },
 
+      jssrc : {
+        files: [
+          '<%= app_files.js %>'
+        ],
+        tasks: ['concat:compile_js']
+      },
+      
       /**
        * When our CoffeeScript source files change, we want to  lint them and
        * run our unit tests.
@@ -309,10 +317,10 @@ module.exports = function(grunt) {
         files: [
           '<%= sample_dir %>/**',
         ],
-        tasks: [ 'exec:say:sample', 'copy:sample_app', 'karma:unit' ]
+        //tasks: [ 'exec:say:sample', 'copy:sample_app', 'karma:unit' ]
+        tasks: ['copy:sample_app', 'karma:unit' ]
       },
     },
-
   };
 
   grunt.initConfig( grunt.util._.extend( taskConfig, userConfig, awsConfig, optionsConfig ) );
