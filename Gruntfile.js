@@ -79,9 +79,21 @@ module.exports = function(grunt) {
       default : {
         src: [ '<%= app_files.ts %>' ],
         options: {
-          rootDir: '<%= root_dir %>'
+          rootDir: '<%= root_dir %>',
+          //experimentalDecorators: true,
+          //skipDefaultLibCheck: true,
+          noStrictGenericChecks : true,
+          target: "es6",
+          module: "amd",
+          moduleResolution: "node",
+          sourceMap: true,
+          emitDecoratorMetadata: true,
+          experimentalDecorators: true,
+          lib: [ "es2016", "dom" ],
+          noImplicitAny: true,
+          suppressImplicitAnyIndexErrors: true
         },
-        outDir: '<%= build_dir %>/src'
+        outDir: '<%= build_dir %>/src',
       }
     },
 

@@ -23,6 +23,22 @@
     "url": "https://github.com/cloudstorm/cloudstorm/issues"
   },
   "homepage": "https://github.com/cloudstorm/cloudstorm#readme",
+  "dependencies": {
+    "@angular/common": "~4.4.6",
+    "@angular/compiler": "~4.4.6",
+    "@angular/core": "~4.4.6",
+    "@angular/forms": "~4.4.6",
+    "@angular/http": "~4.4.6",
+    "@angular/platform-browser": "~4.4.6",
+    "@angular/platform-browser-dynamic": "~4.4.6",
+    "@angular/router": "~4.4.6",
+    "angular-in-memory-web-api": "~0.3.0",
+    "systemjs": "0.19.40",
+    "core-js": "^2.4.1",
+    "rxjs": "5.5.1",
+    "zone.js": "^0.8.4",
+    "@angular/upgrade": "^4.4.6"
+  },
   "devDependencies": {
     "angular": "^1.5.9",
     "angular-mocks": "^1.5.9",
