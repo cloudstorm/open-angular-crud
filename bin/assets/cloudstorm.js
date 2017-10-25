@@ -2658,7 +2658,16 @@ app.factory('csTemplateService', [
   }
 ]);
 
-console.log('this is a comment from typescript');
+var app;
+app = angular.module('cloudStorm.csLoader', []);
+app.component("csLoader", {
+    bindings: {
+        color: '<',
+        radius: '<',
+    },
+    templateUrl: 'cs-utils/loader/cs-loader-template.html',
+});
+console.log('This is a comment from a typescript file.');
 var app;
 
 app = angular.module('cloudStorm', ['cloudStorm.alertService', 'cloudStorm.alert', 'cloudStorm.field', 'cloudStorm.form', 'cloudStorm.index', 'cloudStorm.index.sidePanel', 'cloudStorm.wizard', 'cloudStorm.profile', 'cloudStorm.checkbox', 'cloudStorm.csMenu', 'cloudStorm.date', 'cloudStorm.time', 'cloudStorm.datetime', 'cloudStorm.enum', 'cloudStorm.number', 'cloudStorm.resourceInput', 'cloudStorm.textfield', 'cloudStorm.inputBase', 'cloudStorm.dataStore', 'cloudStorm.localizationProvider', 'cloudStorm.resource', 'cloudStorm.resourceService', 'cloudStorm.restApi', 'cloudStorm.settings', 'cloudStorm.templateService', 'cloudStorm.templates', 'cloudStorm.descriptorService', 'ui.router', 'cloudStorm.routeProvider', 'ui.bootstrap', 'cloudStorm.csLoader', 'cloudStorm.csError', 'cloudStorm.uiPageRouter']);
@@ -2911,17 +2920,6 @@ app.component("csError", {
   templateUrl : "cs-utils/error/cs-error-template.html",
 })
 
-var app;
-
-app = angular.module('cloudStorm.csLoader', [])
-
-app.component("csLoader", {
-  bindings : {
-      color : '<',
-      radius : '<',
-    },
-    templateUrl : 'cs-utils/loader/cs-loader-template.html',
-})
 angular.module('cloudStorm.templates', ['components/cs-alert/cs-alert-template.html', 'components/cs-checkbox/cs-checkbox-template.html', 'components/cs-date/cs-date-template.html', 'components/cs-datetime/cs-datetime-template.html', 'components/cs-enum/cs-enum-template.html', 'components/cs-field/cs-field-template.html', 'components/cs-form/cs-form-template.html', 'components/cs-index/cs-index-sidepanel/cs-index-sidepanel-template.html', 'components/cs-index/cs-index-template.html', 'components/cs-menu/cs-menu-template.html', 'components/cs-number/cs-number-template.html', 'components/cs-profile/cs-profile-template.html', 'components/cs-resource-input/cs-resource-input-template.html', 'components/cs-textfield/cs-textfield-template.html', 'components/cs-time/cs-time-template.html', 'components/cs-wizard/cs-wizard-panel-template.html', 'components/cs-wizard/cs-wizard-template.html', 'cs-route-provider/router-component/cs-page-router-template.html', 'cs-utils/error/cs-error-template.html', 'cs-utils/loader/cs-loader-template.html']);
 
 angular.module("components/cs-alert/cs-alert-template.html", []).run(["$templateCache", function($templateCache) {
