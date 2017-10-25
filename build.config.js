@@ -10,6 +10,7 @@ module.exports = {
   build_dir: 'build',
   compile_dir: 'bin',
   sample_dir: 'sample',
+  root_dir: 'src',
 
   /**
    * This is a collection of file patterns that refer to our app code (the
@@ -27,7 +28,8 @@ module.exports = {
     sass: [ 'src/**/*.scss' ],
     haml: [ 'src/**/*.haml' ],
     built_js: [ '<%= build_dir %>/src/**/*.js', '!<%= build_dir %>/src/cloudstorm.js', '<%= build_dir %>/src/cloudstorm.js' ],
-    template: [ '<%= build_dir %>/**/*-template.html' ]
+    template: [ '<%= build_dir %>/**/*-template.html' ],
+    ts: [ 'src/**/*.ts'],
   },
 
   /**

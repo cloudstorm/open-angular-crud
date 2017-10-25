@@ -16,6 +16,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-bump');
   grunt.loadNpmTasks('grunt-aws-s3');
   grunt.loadNpmTasks('grunt-karma');
+  grunt.loadNpmTasks("grunt-ts");
 
   /**
    * Load in our build configuration file.
@@ -71,6 +72,16 @@ module.exports = function(grunt) {
         src: [ '<%= app_files.coffee %>' ],
         dest: '<%= build_dir %>',
         ext: '.js'
+      }
+    },
+
+    ts: {
+      default : {
+        src: [ '<%= app_files.ts %>' ],
+        options: {
+          rootDir: '<%= root_dir %>'
+        },
+        outDir: '<%= build_dir %>/src'
       }
     },
 
@@ -288,7 +299,14 @@ module.exports = function(grunt) {
         ],
         tasks: ['concat:compile_js']
       },
-      
+
+      tssrc: {
+        files: [
+          '<%= app_files.ts %>'
+        ],
+        tasks: [ 'exec:say:ts', 'ts', 'concat:compile_js', 'karma:unit' ]
+      },
+
       /**
        * When our CoffeeScript source files change, we want to  lint them and
        * run our unit tests.
@@ -355,7 +373,7 @@ module.exports = function(grunt) {
    * The `build` task gets your app ready to run for development and testing.
    */
   grunt.registerTask( 'build', [
-    'clean', 'coffee', 'sass', 'haml', 'html2js', 'copy:sample_app'
+    'clean', 'coffee', 'ts', 'sass', 'haml', 'html2js', 'copy:sample_app'
   ]);
 
   /**
