@@ -32,5 +32,4 @@ app = angular.module 'cloudStorm', [
   'cloudStorm.csLoader'
   'cloudStorm.csError'
   'cloudStorm.uiPageRouter'
-  'cloudStorm.csDataLoaderFactory'
 ]

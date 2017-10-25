@@ -11,7 +11,7 @@ app.component("csPageRouter", {
         pageType : "<",
     },
     templateUrl : "cs-route-provider/router-component/cs-page-router-template.html",
-    controller : function($scope, $timeout, csRoute, ResourceService, csDataLoader, csDescriptorService){
+    controller : function($scope, $timeout, csRoute, ResourceService, csDescriptorService){
 
         this.testValue = "InitialValue"
         this.loading = true

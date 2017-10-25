@@ -1,5 +1,7 @@
 var app;
 
+declare var angular: any;
+
 app = angular.module('cloudStorm.csLoader', [])
 
 app.component("csLoader", {
