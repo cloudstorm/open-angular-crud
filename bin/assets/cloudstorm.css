@@ -223,61 +223,6 @@
           color: #d9534f; }
         .cs-index table tbody tr td.actions .action:hover.show-action {
           color: #5bc0de; }
-.cs-index .container {
-  width: 100%; }
-.cs-index .middle {
-  display: table;
-  margin: 10px auto; }
-.cs-index .profile {
-  width: 500px; }
-.cs-index .item {
-  margin: 5px 0px 5px 50px;
-  padding: 2px 10px;
-  font-size: 15px;
-  border-radius: 5px;
-  text-align: center;
-  width: 300px; }
-.cs-index .title {
-  font-size: 20px;
-  margin: 10px auto;
-  font-style: italic;
-  display: table; }
-.cs-index .data {
-  background-color: #ececec; }
-.cs-index .resource {
-  background-color: #c7c3c3; }
-.cs-index .resource:hover {
-  cursor: pointer; }
-.cs-index .inline {
-  display: inline-block; }
-.cs-index .fieldTitle {
-  margin-top: 7px;
-  width: 50px; }
-.cs-index .flex {
-  display: flex; }
-.cs-index .relation {
-  text-decoration: underline;
-  width: 140px;
-  text-height: auto; }
-.cs-index .nav {
-  background-color: #F8F7F8; }
-.cs-index .navElement {
-  color: #555555;
-  display: block;
-  padding: 20px; }
-.cs-index .nav {
-  font-weight: bold; }
-.cs-index .navElement:hover {
-  color: #333333;
-  cursor: pointer; }
-.cs-index .appTitle {
-  font-weight: normal;
-  font-size: 18px; }
-.cs-index .appTitle:hover {
-  cursor: initial;
-  color: #555555; }
-.cs-index .selected {
-  background-color: #e7e7e7; }
 
 .cs-profile .container {
   width: 100%; }
@@ -348,6 +293,28 @@
   height: 16px;
   margin: 0; }
 
+.cs-menu .flex {
+  display: flex; }
+.cs-menu .nav {
+  background-color: #F8F7F8; }
+.cs-menu .navElement {
+  color: #555555;
+  display: block;
+  padding: 20px; }
+.cs-menu .nav {
+  font-weight: bold; }
+.cs-menu .navElement:hover {
+  color: #333333;
+  cursor: pointer; }
+.cs-menu .appTitle {
+  font-weight: normal;
+  font-size: 18px; }
+.cs-menu .appTitle:hover {
+  cursor: initial;
+  color: #555555; }
+.cs-menu .selected {
+  background-color: #e7e7e7; }
+
 .cs-textfield .ui-select-choices {
   display: none !important; }
 
@@ -359,5 +326,44 @@
 
 body > .ui-select-bootstrap.open {
   z-index: 1051; }
+
+.wizardContainer {
+  position: fixed;
+  height: calc(100% - 65px); }
+
+.middle {
+  display: table;
+  margin: 10px auto; }
+
+.aligner {
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+
+.alignerItem {
+  min-width: 50%; }
+
+.errorMsg {
+  margin-top: 30px; }
+
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite; }
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg); }
+  100% {
+    -webkit-transform: rotate(360deg); } }
+@keyframes spin {
+  0% {
+    transform: rotate(0deg); }
+  100% {
+    transform: rotate(360deg); } }
 
 /*# sourceMappingURL=cloudstorm.css.map */
