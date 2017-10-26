@@ -104,9 +104,16 @@ app.component("csPageRouter", {
 
         this.finished = function(){
           //Prepare data for
-          if(this.pageType == "edit" || this.pageType == "new"){
-            var item = (this.pageType == "edit") ? this.item : {}
-            var mode = (this.pageType == "edit") ? "edit" : "create"
+          if(this.pageType == "edit" || this.pageType == "new" || this.pageType == "profile"){
+            var item = (this.pageType == "edit" || this.pageType == "profile") ? this.item : {}
+            var mode = this.pageType
+            if(mode == "new"){
+              mode = "create"
+            }
+            if(mode == "profile"){
+              mode = "view"
+            }
+
             this.wizardOptions = {
               "resource-type" : this.resourceType,
               "form-item": item,
