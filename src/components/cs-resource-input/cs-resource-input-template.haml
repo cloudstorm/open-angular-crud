@@ -35,7 +35,7 @@
       %span
         {{item.$display_name()}}
 
-  %span.input-group-btn{"ng-if" => "createResources() && !createDisabled()"}
+  %span.input-group-btn{"ng-if" => "createResources() && !createDisabled() && formMode != 'view'"}
     %button.btn.btn-default{ "ng-disabled" => "fieldDisabled()",
                              "ng-click" => "pushPanel()",
                              "type" => "button" } {{ i18n.t('buttons.new') }}
