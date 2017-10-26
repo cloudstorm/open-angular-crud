@@ -46,7 +46,8 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
         when type == 'enum'     then 'cs-enum'
         when type == 'boolean'  then 'cs-checkbox'
 
-    innerElement = angular.element(element[0].querySelector('.cs-input-wrapper'))
+    wrapper_name = ".cs-input-wrapper_" + $scope.formMode
+
     inputTemplate = "<#{directiveName} form-item='formItem'
                                        field-name='fieldName'
                                        field='field'
@@ -54,6 +55,8 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
                                        create-resources='createResources()'
                                        options='csFieldOptions'>
                      </#{directiveName}>"
+
+    innerElement = angular.element(element[0].querySelector(wrapper_name))
     innerElement.append($compile(inputTemplate)($scope))
 
     # ===== DOM MANIPULATION ON SCOPE CHANGE ==============
@@ -94,6 +97,13 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
 
     $scope.getHint = (field) ->
       field.hint || null
+
+    $scope.viewMode = () ->
+      return $scope.formMode == "view"
+
+    $scope.editOrCreateMode = () ->
+      console.log $scope.formMode == "edit" || $scope.formMode == "create"
+      return $scope.formMode == "edit" || $scope.formMode == "create"
 
     return
 

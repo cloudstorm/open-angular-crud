@@ -1,18 +1,37 @@
 / CloudStorm Form Field component
 / Renders different kind of inputs for different types of items
+/
+/
 
-.cs-field-inner
-  
+/.div{"ng-switch" => "formMode"}
+.cs-field-inner{"ng-show" => "formMode == 'edit'"}
+
   %label.control-label {{field.label}}
   %span{ "ng-if" => "field.required" } *
-  
+
   / CS will populate the correct input taking into account its overrides
-  .cs-input-wrapper
+  .cs-input-wrapper_edit
 
   %span.help-block{ "ng-if" => "field.errors.length > 0" }
     {{getError(field)}}
-  
+
   %span.help-block{ "ng-if" => "(!(field.errors.length > 0) && (getHint(field)))" }
     {{getHint(field)}}
-  
+
   .cover
+
+.cs-field-inner{"ng-show" => "formMode == 'view'"}
+  .cs-field-row
+    .cs-field-element_1
+      %label.control-label {{field.label}}
+      / CS will populate the correct input taking into account its overrides
+    .cs-field-element_2
+      .cs-input-wrapper_view
+
+    %span.help-block{ "ng-if" => "field.errors.length > 0" }
+      {{getError(field)}}
+
+    %span.help-block{ "ng-if" => "(!(field.errors.length > 0) && (getHint(field)))" }
+      {{getHint(field)}}
+
+    .cover

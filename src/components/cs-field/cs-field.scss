@@ -3,4 +3,22 @@
     position: relative;
     padding-bottom: 15px;
   }
+
+  .cs-field-row {
+    display : flex;
+    align-items: center;
+  }
+
+  .cs-field-element_1 {
+    flex : 1;
+  }
+
+  .cs-field-element_2 {
+    flex : 2;
+  }
+
+
+  .cs-field-element_3 {
+    flex : 3;
+  }
 }
