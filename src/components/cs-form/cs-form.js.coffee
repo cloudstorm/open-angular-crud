@@ -25,16 +25,16 @@ app.directive "csForm", ['csSettings', (csSettings) ->
   link = ($scope, element, attrs, controller) ->
 
     $scope.i18n = csSettings.settings['i18n-engine']
-    
+
     $scope.fields = $scope.formResourceDescriptor.fields
 
     if $scope.formMode == 'create'
       if $scope.formItem
-        $scope.formItem = $scope.formResource.$new(value: $scope.formItem) 
+        $scope.formItem = $scope.formResource.$new(value: $scope.formItem)
       else
-        $scope.formItem = $scope.formResource.$new() 
+        $scope.formItem = $scope.formResource.$new()
 
-    if $scope.formMode == 'edit'
+    if $scope.formMode == 'edit' || $scope.formMode == 'view'
       $scope.editableItem = $scope.formResource.$new(value: $scope.formItem)
     else
       $scope.editableItem = $scope.formItem
@@ -57,16 +57,16 @@ app.directive "csForm", ['csSettings', (csSettings) ->
     # ===== LIFECYCLE EVENTS ==============================
 
     # --- Trigger events ------------------------
-    
+
     scrollTrigger = _.throttle () -> $scope.$broadcast 'form-scroll', 300
     elem = element[0].querySelector('form')
     angular.element(elem).on 'scroll', scrollTrigger
-    
+
     # --- Handle events -------------------------
-    
+
     $scope.$on 'input-value-changed', (event, field) ->
       $scope.$broadcast 'field-value-changed', field
-    
+
     $scope.$on 'submit-form-on-enter', (event, field) ->
       $scope.submit() unless $scope.csFormOptions['skip-on-enter'] && $scope.wizardPanelIndex == 0
 

@@ -12,7 +12,7 @@
 
 %form{ "name" => "csForm",
        "novalidate" => "",
-       "ng-transclude" => "fields" }  
+       "ng-transclude" => "fields" }
   %cs-field.form-group.field{ "ng-repeat" => "field in fields track by $index",
                               "form-item" => "editableItem",
                               "field" => "field",
@@ -21,7 +21,7 @@
                               "create-resources" => "createResources()",
                               "ng-show" => "isFieldVisible(field.attribute)" }
 
-.form-group.form-actions{ "ng-transclude" => "actions" }
+.form-group.form-actions{ "ng-transclude" => "actions" , "ng-if" => "formMode != 'view'"}
   .actions-inner
     .btn-tooltip-wrapper{ "uib-tooltip" => "{{i18n.t('validation_text')}}",
                           "tooltip-placement" => "right",
@@ -32,7 +32,7 @@
                                "ng-click" => "submit()",
                                "type" => "button" }
         {{ i18n.t('buttons.submit') }}
-    
+
     %button.btn.btn-link{ "ng-click" => "cancel()",
                           "type" => "button",
                           "ng-switch" => "csFormOptions['form-mode']" }
