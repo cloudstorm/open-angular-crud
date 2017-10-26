@@ -9,7 +9,9 @@
   %span{ "ng-switch-when" => "edit" }
     %h4.divided
       {{editableItem.$display_name()}}
-
+  %span{ "ng-switch-when" => "view" }
+    %h4.divided
+      {{editableItem.$display_name()}}
 %form{ "name" => "csForm",
        "novalidate" => "",
        "ng-transclude" => "fields" }
