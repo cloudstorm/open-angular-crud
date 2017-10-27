@@ -1,8 +1,9 @@
 / ng-if creates an isolate scope so all data is available through $parent
 / %ui-select-choices is only here to disable typeahed dropdown as there should be not typeahed in this controller
 
-%div{"ng-if" => "formMode == 'edit'"}
-  %input.form-control{ "ng-if" => "field.cardinality == 'one'",
+%div{"ng-if" => "mode('edit')"}
+  %input.form-control{  "ng-if" => "mode('view')",
+                       "ng-if" => "field.cardinality == 'one'",
                        "ng-disabled" => "fieldDisabled()",
                        "ng-required" => "fieldRequired()",
                        "ng-model" => "$parent.formItem.attributes[$parent.field.attribute]",
@@ -22,6 +23,6 @@
         {{$item}}
     %ui-select-choices{ :repeat => "item in []" }
 
-.showField{ "ng-if" => "formMode == 'view'",
+.showField{ "ng-if" => "mode('view')",
             "ng-model" => "$parent.formItem.attributes[$parent.field.attribute]"}
   {{formItem.attributes[field.attribute]}}
