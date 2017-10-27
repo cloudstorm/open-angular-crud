@@ -7,6 +7,7 @@
   padding: 4px;
   margin-left: 4px;
   width: 242px;
+  min-height: 34px;
 }
 
 .item-item {
@@ -18,6 +19,14 @@
   margin : 3px;
   text-align: center;
   white-space: nowrap;
+}
+
+.no-item{
+  color: #ff0000ab;
+  font-size: 12px;
+  font-style: italic;
+  line-height: 24px;
+  padding-left: 3px;
 }
 
 .item-item:hover {

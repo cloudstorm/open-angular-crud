@@ -1,3 +1,5 @@
 .itemContainer
-  .item-item{"ng-repeat" => "item in $ctrl.itemList", "ng-click" => "click(item.id)"}
+  .item-item{"ng-repeat" => "item in $ctrl.itemList", "ng-click" => "$ctrl.click(item)"}
     {{item.attributes[$ctrl.key]}}
+  .no-item{"ng-if" => "$ctrl.itemList.length == 0"}
+    There is no item to show
