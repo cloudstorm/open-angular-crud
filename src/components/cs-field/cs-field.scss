@@ -17,8 +17,17 @@
     flex : 2;
   }
 
-
   .cs-field-element_3 {
     flex : 3;
+  }
+
+  .showField {
+    width: auto;
+    border: 1px solid #ded9d9;
+    border-radius: 4px;
+    background-color: #f8f7f8;
+    margin: 3px;
+    padding: 8px;
+    font-size: 13px;
   }
 }
