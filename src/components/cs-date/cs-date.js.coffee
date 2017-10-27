@@ -22,10 +22,10 @@ app.directive "csDate", ['uibDateParser', 'csSettings', 'csInputBase', (uibDateP
 
 
   # ===== LINK ================================================================
-  
+
   format_date = ($scope) ->
     format = $scope.options['date-format'] || csSettings.settings['date-format']
-
+    $scope.input_date = $scope.formItem.attributes[$scope.field.attribute] 
     if format
       input_date = $scope.formItem.attributes[$scope.field.attribute]
       date = uibDateParser.parse(input_date, format)
@@ -45,7 +45,7 @@ app.directive "csDate", ['uibDateParser', 'csSettings', 'csInputBase', (uibDateP
 
     $scope.$on 'field-submit', (e, data) ->
       console.log "field submit event #{data}"
-    
+
     $scope.$watch 'formItem.attributes[field.attribute]', (newValue, oldValue) ->
       if (newValue != oldValue)
         $scope.$emit 'input-value-changed', $scope.field
