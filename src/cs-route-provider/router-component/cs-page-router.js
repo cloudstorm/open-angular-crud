@@ -48,7 +48,6 @@ app.component("csPageRouter", {
               return ResourceService.get(this.resourceType)
             }).bind(this)).then(
               (function(resource){
-                console.log(resource.descriptor)
                 this.resource = resource
                 this.finished()
               }).bind(this), (function(){
