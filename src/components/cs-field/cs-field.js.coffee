@@ -34,7 +34,6 @@ app.directive "csField", ['$compile', '$templateRequest', 'csDescriptorFactory',
 
     # ===== COMPILE DOM WITH APPROPRIATE DIRECTIVE ========
 
-    console.log $scope.csFieldOptions
 
     $scope.csFieldOptions.layout =
       alignement : 'horizontal'
@@ -58,7 +57,8 @@ app.directive "csField", ['$compile', '$templateRequest', 'csDescriptorFactory',
         when type == 'enum'     then 'cs-enum'
         when type == 'boolean'  then 'cs-checkbox'
 
-    wrapper_name = ".cs-input-wrapper_" + $scope.formMode
+    #wrapper_name = ".cs-input-wrapper_" + $scope.formMode
+    wrapper_name = ".cs-input-wrapper"
 
     inputTemplate = "<#{directiveName} form-item='formItem'
                                        field-name='fieldName'
@@ -115,11 +115,11 @@ app.directive "csField", ['$compile', '$templateRequest', 'csDescriptorFactory',
       return $scope.formMode == "view"
 
     $scope.editOrCreateMode = () ->
-      console.log $scope.formMode == "edit" || $scope.formMode == "create"
       return $scope.formMode == "edit" || $scope.formMode == "create"
 
-    $scope.getStyle = () ->
-      return "red"
+    $scope.style = (name) ->
+      return $scope.descriptor.style[name]
+
     return
 
   # ===== PRIVATE =============================================================

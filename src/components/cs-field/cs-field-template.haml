@@ -4,7 +4,7 @@
 /
 
 /.div{"ng-switch" => "formMode"}
-.cs-field-inner{"ng-show" => "formMode == 'edit'"}
+.cs-field-inner{"ng-show" => "formMode == 'edit' && false"}
 
   %label.control-label {{field.label}}
   %span{ "ng-if" => "field.required" } *
@@ -20,7 +20,7 @@
 
   .cover
 
-.cs-field-inner{"ng-show" => "formMode == 'view'"}
+.cs-field-inner{"ng-show" => "formMode == 'view' && false"}
   .cs-field-row
     .cs-field-element_1
       %label.control-label {{field.label}}
@@ -35,3 +35,10 @@
       {{getHint(field)}}
 
     .cover
+
+.cs-field-inner
+  %div{"ng-class" => "style('container')"}
+    %div{"ng-class" => "style('field1')"}
+      %label.control-label {{field.label}}
+    %div{"ng-class" => "style('field2')"}
+      .cs-input-wrapper
