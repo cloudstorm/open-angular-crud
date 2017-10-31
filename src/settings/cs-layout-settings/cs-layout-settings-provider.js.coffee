@@ -11,14 +11,14 @@ app.provider 'csLayoutSettings', [() ->
 
     'csField' : {
       horizontal : {
-        contaner : "cont_h",
+        container : "cont_h",
         field1 : "field1_h",
         field2 : "field2_h"
       },
       vertical : {
-        contaner : "cont_h",
-        field1 : "field1_h",
-        field2 : "field2_h"
+        container : "cont_v",
+        field1 : "field1_v",
+        field2 : "field2_v"
       }
     }
   }

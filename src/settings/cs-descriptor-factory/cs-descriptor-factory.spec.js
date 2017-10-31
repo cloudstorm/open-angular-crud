@@ -6,6 +6,7 @@ describe('csDescriptorFactory', function(){
   beforeEach(angular.mock.module('cloudStorm.layoutSettings'));
   beforeEach(angular.mock.module('cloudStorm.descriptorPropagationSettings'));
   beforeEach(angular.mock.module('cloudStorm.descriptorFactory'));
+  beforeEach(angular.mock.module('cloudStorm.csHashService'));
 
   beforeEach(inject(function (_csDescriptorFactory_) {
     csDescriptorFactory = _csDescriptorFactory_;
@@ -14,8 +15,6 @@ describe('csDescriptorFactory', function(){
   it('should exist', function() {
     expect(csDescriptorFactory).toBeDefined();
   });
-
-
 
   var scope = {}
   var keys = ["a", "b", "c"]
@@ -49,10 +48,8 @@ describe('csDescriptorFactory', function(){
       formMode : "create",
     }
     csDescriptorFactory.processData(formScope);
-    expect(formScope.descriptors.csField.layout).toEqual("horizontal");
+    expect(formScope.childDescriptors.csField.layout).toEqual("horizontal");
   })
-
-
 
   /* Output
   var formScope = {
@@ -60,7 +57,6 @@ describe('csDescriptorFactory', function(){
       name : "csForm"
     }
     formMode = "create"
-
   }
   */
 

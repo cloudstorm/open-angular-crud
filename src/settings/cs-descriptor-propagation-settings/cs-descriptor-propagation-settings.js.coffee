@@ -11,7 +11,7 @@ app.provider 'csDescriptorPropagationSettings', [() ->
     'csForm' : {
       type : "switch",
       base : ["formMode"],
-      target : ["descriptors", "csField", "layout"],
+      target : ["childDescriptors", "csField", "layout"],
       rule : {
         create : "horizontal",
         edit : "horizontal",

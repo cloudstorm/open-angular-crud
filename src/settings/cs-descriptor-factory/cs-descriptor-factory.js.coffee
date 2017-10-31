@@ -3,17 +3,23 @@
 app = angular.module('cloudStorm.descriptorFactory', [])
 
 ####################################################################################################
-app.factory 'csDescriptorFactory', [ 'csLayoutSettings', 'csDescriptorPropagationSettings', (csLayoutSettings, csDescriptorPropagationSettings) ->
+app.factory 'csDescriptorFactory', [ 'csLayoutSettings', 'csDescriptorPropagationSettings', 'csHashService', (csLayoutSettings, csDescriptorPropagationSettings, csHashService) ->
 ####################################################################################################
+
+  init = (scope, name) ->
+    if !scope.descriptor
+      scope.descriptor = {}
+    scope.descriptor.name = name
+    processData(scope)
 
   processData = (scope) ->
 
     ## At first check the csDescriptorPropagationSettings
-    if csDescriptorPropagationSettings.components[scope.descriptor.name]
+    if scope.descriptor.name of csDescriptorPropagationSettings.components
       propagate(scope)
 
-    #if csLayoutSettings.components[scope.descriptor.name]
-    #setStyle(scope)
+    if scope.descriptor.name of csLayoutSettings.style
+      setStyle(scope, csLayoutSettings.style[scope.descriptor.name])
 
     #It loads the style descriptors too.
 
@@ -53,8 +59,10 @@ app.factory 'csDescriptorFactory', [ 'csLayoutSettings', 'csDescriptorPropagatio
       object = val
     scope[firstKey] = object
 
-  setStyle = (scope) ->
-    null
+  setStyle = (scope, style) ->
+
+    csHashService.map(style, scope.descriptor.layout, "CS-DS001 : No template defined for this layout!")
+    scope.descriptor.style = style[scope.descriptor.layout]
 
   getObject = (key, value) ->
     object = {}
@@ -70,6 +78,7 @@ app.factory 'csDescriptorFactory', [ 'csLayoutSettings', 'csDescriptorPropagatio
 
   return {
     get: get
+    init: init
     processData: processData
     setStyle: setStyle
     setTarget: setTarget
