@@ -47,8 +47,9 @@ app.factory 'csDescriptorFactory', [ 'csLayoutSettings', 'csDescriptorPropagatio
 
     return object
 
-  setTarget = (scope, keys, val) ->
+  setTarget = (scope, _keys_, val) ->
 
+    keys = _keys_.slice()
     firstKey = keys.shift()
     if(keys.length > 0)
       lastKey = keys.pop()
