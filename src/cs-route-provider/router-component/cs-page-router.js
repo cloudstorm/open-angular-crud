@@ -26,9 +26,9 @@ app.component("csPageRouter", {
                 }
                 this.resource_id();
                 break;
-              case "profile":
+              case "show":
                 if(this.id == "new"){
-                  this.pageType = "new"
+                  this.pageType = "create"
                   this.resource();
                 } else {
                   this.resource_id();
@@ -102,37 +102,26 @@ app.component("csPageRouter", {
         }
 
         this.finished = function(){
-          //Prepare data for
-          if(this.pageType == "edit" || this.pageType == "new" || this.pageType == "profile"){
-            var item = (this.pageType == "edit" || this.pageType == "profile") ? this.item : {}
-            var mode = this.pageType
-            if(mode == "new"){
-              mode = "create"
-            }
-            if(mode == "profile"){
-              mode = "view"
-            }
 
-            this.wizardOptions = {
-              "resource-type" : this.resourceType,
-              "form-item": item,
-              "form-mode": mode,
-              "reset-on-submit": true,
-              "events": {
-                'wizard-canceled': (function(resource){
-                    csRoute.go("type", {resourceType : this.resourceType})
-                  }).bind(this),
-                'wizard-submited': (function(resource){
-                    csRoute.go("type", {resourceType : this.resourceType})
+          this.wizardOptions = {
+            "resource-type" : this.resourceType,
+            "form-item": this.item || {},
+            "form-mode": this.pageType,
+            "reset-on-submit": true,
+            "events": {
+              'wizard-canceled': (function(resource){
+                  csRoute.go("index", {resourceType : this.resourceType})
                 }).bind(this),
-              }
+              'wizard-submited': (function(resource){
+                  csRoute.go("index", {resourceType : this.resourceType})
+              }).bind(this),
             }
           }
           this.loading = false
           $scope.$apply()
-        }
-        this.init()
       }
+      this.init()
+    }
 })
 
 /*

@@ -2,7 +2,7 @@
 / %ui-select-choices is only here to disable typeahed dropdown as there should be not typeahed in this controller
 
 %div{"ng-if" => "mode('edit')"}
-  %input.form-control{  "ng-if" => "mode('view')",
+  %input.form-control{  "ng-if" => "mode('show')",
                        "ng-if" => "field.cardinality == 'one'",
                        "ng-disabled" => "fieldDisabled()",
                        "ng-required" => "fieldRequired()",
@@ -23,6 +23,6 @@
         {{$item}}
     %ui-select-choices{ :repeat => "item in []" }
 
-.showField{ "ng-if" => "mode('view')",
+.showField{ "ng-if" => "mode('show')",
             "ng-model" => "$parent.formItem.attributes[$parent.field.attribute]"}
   {{formItem.attributes[field.attribute]}}

@@ -6,13 +6,12 @@
                       "ng-disabled" => "fieldDisabled()",
                       "ng-required" => "fieldRequired()",
                       "ng-click" => "dt.open = true",
-                      "ng-model" => "'formItem.attributes[field.attribute]'",
+                      "ng-model" => "formItem.attributes[field.attribute]",
                       "current-text" => "{{ i18n.t('today') }}",
                       "clear-text" => "{{ i18n.t('buttons.clear') }}",
                       "close-text" => "{{ i18n.t('buttons.close') }}",
                       "ng-model-options" => "getModelOptions()",
                       type: "text",
                       "autocomplete" => "off" }
-.showField{ "ng-if" => "mode('view')",
-            "ng-model" => "formItem.attributes[field.attribute]"}
+.showField{ "ng-if" => "mode('show')"}
   {{input_date}}

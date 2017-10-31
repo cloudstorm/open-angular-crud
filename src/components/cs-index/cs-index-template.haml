@@ -50,7 +50,7 @@
                      "ng-if" => "columnVisible(column, $index)" }
                   {{ fieldValue(item, column) }}
                 %td.actions{ "ng-hide" => "csIndexOptions['hide-actions']" }
-                  / SHOW
+                  / EDIT
                   .action.show-action{"ng-click" => "selectItem(item)"}<> {{ i18n.t('buttons.edit') }}
                   / DELETE
                   .action.delete-action{ "ng-click" => "destroyItem($event, item)" }<> {{ i18n.t('buttons.delete') }}

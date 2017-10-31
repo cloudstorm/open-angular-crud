@@ -1,9 +1,9 @@
 / Only valid for cardinality:one
-%input.form-control{ "ng-if" => "!mode('view')",
+%input.form-control{ "ng-if" => "!mode('show')",
                      "ng-disabled" => "fieldDisabled()",
                      "ng-model" => "formItem.attributes[field.attribute]",
                      type: "checkbox" }
-.show-view{"ng-if" => "mode('view')"}
+.show-view{"ng-if" => "mode('show')"}
   %div{"ng-if" => "formItem.attributes[field.attribute]"}
     ✓
   %div{"ng-if" => "!formItem.attributes[field.attribute]"}

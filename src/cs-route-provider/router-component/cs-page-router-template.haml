@@ -4,7 +4,7 @@
   %div{"ng-if" => "$ctrl.errors.length == 0", "ng-switch" => "$ctrl.pageType"}
     %cs-index{ "ng-switch-when" => "index", "resource-type" => "$ctrl.resourceType", "items" => "$ctrl.items", "resource" => "$ctrl.resource", "item-id" => 'null', "cs-index-options" => "options"}
     %cs-profile{ "ng-switch-when" => "profile_", "item" => "$ctrl.item", "resource" =>"$ctrl.resource"}
-    .aligner{"ng-switch-when" => "profile"}
+    .aligner{"ng-switch-when" => "show"}
       .alignerItem
         .wizardContainer
           %div{ "cs-wizard" => "", "cs-wizard-options" => "$ctrl.wizardOptions"}
@@ -12,7 +12,7 @@
       .alignerItem
         .wizardContainer
           %div{ "cs-wizard" => "", "cs-wizard-options" => "$ctrl.wizardOptions"}
-    .aligner{"ng-switch-when" => "new"}
+    .aligner{"ng-switch-when" => "create"}
       .alignerItem
         .wizardContainer
           %div{ "cs-wizard" => "", "cs-wizard-options" => "$ctrl.wizardOptions"}

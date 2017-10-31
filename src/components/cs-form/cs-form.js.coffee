@@ -36,7 +36,7 @@ app.directive "csForm", ['csSettings', 'csDescriptorFactory', (csSettings, csDes
       else
         $scope.formItem = $scope.formResource.$new()
 
-    if $scope.formMode == 'edit' || $scope.formMode == 'view'
+    if $scope.formMode == 'edit' || $scope.formMode == 'show'
       $scope.editableItem = $scope.formResource.$new(value: $scope.formItem)
     else
       $scope.editableItem = $scope.formItem
