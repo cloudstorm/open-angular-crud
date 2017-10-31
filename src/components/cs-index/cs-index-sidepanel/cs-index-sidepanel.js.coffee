@@ -47,11 +47,10 @@ app.directive "csIndexSidepanel", ['$rootScope', 'csAlertService', 'csSettings',
         if newItem != oldItem
           if options = $scope.editWizardOptions
             options['form-item'] = newItem
-      
+
       $scope.closePanel = () ->
-        csRoute.go("type", { resourceType : $scope.resourceType})
         $scope.$broadcast 'wizard-cancel'
-      
+
       return
 
   # ===== CONFIGURE ===========================================================
@@ -63,7 +62,7 @@ app.directive "csIndexSidepanel", ['$rootScope', 'csAlertService', 'csSettings',
     scope:
       resourceType: '='
       item: '='
-      itemId : '='   
+      itemId : '='
       unselectItem: '&unselectItem'
       csIndexSidepanelOptions: '='
       panelNumberCallback: '='
