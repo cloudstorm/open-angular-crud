@@ -36,4 +36,5 @@ app = angular.module 'cloudStorm', [
   'cloudStorm.descriptorPropagationSettings'
   'cloudStorm.layoutSettings'
   'cloudStorm.descriptorFactory'
+  'cloudStorm.csHashService'
 ]
