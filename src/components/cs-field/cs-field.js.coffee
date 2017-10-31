@@ -4,17 +4,20 @@ app = angular.module('cloudStorm.field', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRequest) ->
+app.directive "csField", ['$compile', '$templateRequest', 'csDescriptorFactory', ($compile, $templateRequest, csDescriptorFactory) ->
 
   # ===== COMPILE =============================================================
 
-  compile = ($templateElement, $templateAttributes) ->
+
+  compile = ($templateElement, $templateAttributes, $scope) ->
 
     # Only modify the DOM in compile, use (pre/post) link for others
     $templateElement.addClass "cs-field"
 
     # Pre-link: gets called for parent first
     pre: ($scope, element, attrs, controller) ->
+
+      csDescriptorFactory.init($scope, "csField")
       return
 
     # Post-link: gets called for children recursively after post() traversed the DOM tree
@@ -25,15 +28,24 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
 
   link = ($scope, element, attrs, controller) ->
 
+
     if !$scope.field? && $scope.fieldName?
       $scope.field = _.find $scope.formItem.constructor.descriptor.fields, { attribute: $scope.fieldName }
 
     # ===== COMPILE DOM WITH APPROPRIATE DIRECTIVE ========
 
+    console.log $scope.csFieldOptions
+
+    $scope.csFieldOptions.layout =
+      alignement : 'horizontal'
+      fieldType : 'view'
+
     if override = getDirectiveOverride($scope)
       directiveName = override
     else
       type = $scope.field.type
+
+
 
       directiveName = switch
         when type == 'resource' then 'cs-resource-input'
@@ -72,6 +84,7 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
         element.addClass 'has-error' if $scope.getError($scope.field)
 
 
+
     # ===== COMPONENT LIFECYCLE ===========================
 
     $scope.$on 'field-error', (event, reason) ->
@@ -105,6 +118,8 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
       console.log $scope.formMode == "edit" || $scope.formMode == "create"
       return $scope.formMode == "edit" || $scope.formMode == "create"
 
+    $scope.getStyle = () ->
+      return "red"
     return
 
   # ===== PRIVATE =============================================================
@@ -125,6 +140,7 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
 
     overrideName
 
+
   # ===== CONFIGURE ===========================================================
 
   return {
@@ -137,6 +153,7 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
       formMode: '='
       csFieldOptions: '='
       createResources: '&'
+      descriptor : "="
     compile: compile
   }
 

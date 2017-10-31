@@ -4,7 +4,7 @@ app = angular.module('cloudStorm.form', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csForm", ['csSettings', (csSettings) ->
+app.directive "csForm", ['csSettings', 'csDescriptorFactory', (csSettings, csDescriptorFactory) ->
 
   # ===== COMPILE =============================================================
 
@@ -14,7 +14,9 @@ app.directive "csForm", ['csSettings', (csSettings) ->
     $templateElement.addClass "cs-form"
 
     # Pre-link: gets called for parent first
-    pre: (scope, element, attrs, controller) ->
+    pre: ($scope, element, attrs, controller) ->
+
+      csDescriptorFactory.init($scope, "csForm")
       return
 
     # Post-link: gets called for children recursively after post() traversed the DOM tree
