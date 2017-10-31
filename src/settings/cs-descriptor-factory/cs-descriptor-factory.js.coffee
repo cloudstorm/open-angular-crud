@@ -31,7 +31,8 @@ app.factory 'csDescriptorFactory', [ 'csLayoutSettings', 'csDescriptorPropagatio
     switch descriptor.type
       when "switch" then value = descriptor.rule[base]
       when "copy" then value = base
-      else break
+      else throw new Error("Type '" + descriptor.type + "' is not a valid propagation type.")
+
     setTarget(scope, descriptor.target, value)
 
   getBase = (scope, keys) ->

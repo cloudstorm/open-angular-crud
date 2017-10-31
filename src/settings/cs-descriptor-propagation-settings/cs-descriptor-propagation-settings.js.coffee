@@ -13,12 +13,15 @@ app.provider 'csDescriptorPropagationSettings', [() ->
       base : ["formMode"],
       target : ["childDescriptors", "csField", "layout"],
       rule : {
-        create : "horizontal",
-        edit : "horizontal",
-        view : "vertical",
+        create : "vertical",
+        edit : "vertical",
+        view : "horizontal",
       }
     }
   }
+
+  @addCase = (key, object) ->
+    @components[key] = object
 
   @$get = ->
     @
