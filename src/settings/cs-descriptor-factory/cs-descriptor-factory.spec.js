@@ -15,12 +15,7 @@ describe('csDescriptorFactory', function(){
     expect(csDescriptorFactory).toBeDefined();
   });
 
-  const formScope = {
-    descriptor : {
-      name : "csForm",
-    },
-    formMode : "create",
-  }
+
 
   var scope = {}
   var keys = ["a", "b", "c"]
@@ -46,11 +41,16 @@ describe('csDescriptorFactory', function(){
     expect(scope.a).toEqual("val");
   })
 
-    /*
-    console.log(formScope)
+  it('propagate', function(){
+    const formScope = {
+      descriptor : {
+        name : "csForm",
+      },
+      formMode : "create",
+    }
     csDescriptorFactory.processData(formScope);
     expect(formScope.descriptors.csField.layout).toEqual("horizontal");
-    */
+  })
 
 
 

@@ -12,8 +12,8 @@ app.factory 'csDescriptorFactory', [ 'csLayoutSettings', 'csDescriptorPropagatio
     if csDescriptorPropagationSettings.components[scope.descriptor.name]
       propagate(scope)
 
-    if csLayoutSettings.components[scope.descriptor.name]
-      setStyle(scope)
+    #if csLayoutSettings.components[scope.descriptor.name]
+    #setStyle(scope)
 
     #It loads the style descriptors too.
 
