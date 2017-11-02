@@ -41,6 +41,15 @@ describe('csDescriptorFactory', function(){
     expect(scope.a).toEqual("val");
   })
 
+  it('getObject_1', function(){
+    var object = { key : "value"};
+    expect(csDescriptorFactory.getObject("key", object)).toEqual("value");
+  })
+
+  it('getObject_2', function(){
+    expect(csDescriptorFactory.getObject("key", "value")).toEqual({"key" : "value"});
+  })
+
   it('propagate', function(){
     var formScope = {
       descriptor : {
@@ -48,6 +57,7 @@ describe('csDescriptorFactory', function(){
       },
       formMode : "create",
     }
+
     csDescriptorPropagationSettings.addCase('csForm_t', {
       type : "switch",
       base : ["formMode"],
@@ -56,9 +66,22 @@ describe('csDescriptorFactory', function(){
         create : "abcdef",
       }
     })
-
+    /*
+    csDescriptorPropagationSettings.addCase('csForm_t', {
+      type : "copy",
+      base : ["formMode"],
+      target : ["childDescriptors", "csField", "mode"],
+    })
+    */
     csDescriptorFactory.processData(formScope);
+    /*
+    csDescriptorFactory.propagate(formScope, {
+      type : "copy",
+      base : ["formMode"],
+      target : ["childDescriptors", "csField", "mode"],
+    }); */
     expect(formScope.childDescriptors.csField.layout).toEqual("abcdef");
+    //expect(formScope.childDescriptors.csField.mode).toEqual("create");
   })
 
   /* Output

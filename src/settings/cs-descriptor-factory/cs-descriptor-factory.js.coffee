@@ -15,17 +15,19 @@ app.factory 'csDescriptorFactory', [ 'csLayoutSettings', 'csDescriptorPropagatio
   processData = (scope) ->
 
     ## At first check the csDescriptorPropagationSettings
+    console.log "Karmatest"
     if scope.descriptor.name of csDescriptorPropagationSettings.components
-      propagate(scope)
+      defs = csDescriptorPropagationSettings.components[scope.descriptor.name]
+      for def in defs
+        propagate(scope, def)
 
-    if scope.descriptor.name of csLayoutSettings.style
-      setStyle(scope, csLayoutSettings.style[scope.descriptor.name])
+    #if scope.descriptor.name of csLayoutSettings.style
+    #setStyle(scope, csLayoutSettings.style[scope.descriptor.name])
 
     #It loads the style descriptors too.
 
-  propagate = (scope) ->
+  propagate = (scope, descriptor) ->
 
-    descriptor =  csDescriptorPropagationSettings.components[scope.descriptor.name]
     base = getBase(scope, descriptor.base)
     value = null
     switch descriptor.type
@@ -61,12 +63,27 @@ app.factory 'csDescriptorFactory', [ 'csLayoutSettings', 'csDescriptorPropagatio
       object = val
     scope[firstKey] = object
 
-  setStyle = (scope, style) ->
+  setStyle = (scope, styleDef) ->
 
-    csHashService.map(style, scope.descriptor.layout, "CS-DS001 : No template defined for this layout!")
-    scope.descriptor.style = style[scope.descriptor.layout]
+    #csHashService.map(style, scope.descriptor.layout, "CS-DS001 : No template defined for this layout!")
+    # Iterate on the keys
+    styleObject = {}
+    for varName, def in styleDef
+      for className, value in def[scope[varName]]
+        stylObject[className] = value
+
+    scope.descriptor.style = styleObject
 
   getObject = (key, value) ->
+    if (value instanceof Object)
+      if(key of value)
+        value[key]
+      else
+        newObject(key, value)
+    else
+      newObject(key, value)
+
+  newObject = (key, value) ->
     object = {}
     object[key] = value
     object
@@ -84,6 +101,7 @@ app.factory 'csDescriptorFactory', [ 'csLayoutSettings', 'csDescriptorPropagatio
     processData: processData
     setStyle: setStyle
     setTarget: setTarget
+    getObject: getObject
   }
 
   ##################################################################################################
