@@ -24,7 +24,7 @@ describe('csErrorMsgs', function(){
         result: csErrorMsgs.errorPrefix + "Input param 0 is not an array"
       },{
         def: "{{0}}",
-        params: ["X"],
+        params: "X",
         result: "X"
       },{
         def: "{{0|array}}",
@@ -36,5 +36,21 @@ describe('csErrorMsgs', function(){
       expect(csErrorMsgs.getParam(test.def, test.params)).toEqual(test.result)
     })
   });
+
+  it('get()', function() {
+
+    var tests = [
+      {
+        component : "csDescriptorFactory",
+        type: "overlap",
+        params : [["X", "Y", "Z"]],
+        result: 'Overlapping data propagation definition in target: X\tY\tZ\t'
+      }]
+
+    tests.forEach(function(test){
+      expect(csErrorMsgs.get(test.component, test.type, test.params)).toEqual(test.result)
+    })
+  });
+
 
 })
