@@ -3,7 +3,7 @@
 app = angular.module('cloudStorm.descriptorFactory', [])
 
 ####################################################################################################
-app.factory 'csDescriptorFactory', [ 'csLayoutSettings', 'csDescriptorPropagationSettings', 'csHashService', (csLayoutSettings, csDescriptorPropagationSettings, csHashService) ->
+app.factory 'csDescriptorFactory', [ 'csErrorFactory', 'csLayoutSettings', 'csDescriptorPropagationSettings', 'csHashService', (csErrorFactory, csLayoutSettings, csDescriptorPropagationSettings, csHashService) ->
 ####################################################################################################
 
   init = (scope, name) ->
@@ -15,7 +15,6 @@ app.factory 'csDescriptorFactory', [ 'csLayoutSettings', 'csDescriptorPropagatio
   processData = (scope) ->
 
     ## At first check the csDescriptorPropagationSettings
-    console.log "Karmatest"
     if scope.descriptor.name of csDescriptorPropagationSettings.components
       defs = csDescriptorPropagationSettings.components[scope.descriptor.name]
       for def in defs
@@ -41,13 +40,19 @@ app.factory 'csDescriptorFactory', [ 'csLayoutSettings', 'csDescriptorPropagatio
 
     object = scope
     for key in keys
-      if key of object
-        object = object[key]
+      if (typeof object) == 'object'
+        if key of object
+          object = object[key]
+        else
+          csErrorFactory.throw 'csDescriptorFactory', 'baseNotDefined', [keys]
       else
-        throw new Error("CS-101: Key: '" + key + "' is not defined\n" +
-              "Templatename : " + scope.descriptor.name);
+        csErrorFactory.throw 'csDescriptorFactory', 'intermediate', [keys, lastKey]
+      lastKey = key
 
     return object
+
+  prepareArray = (scope, target) ->
+    throw new Error("prepare")
 
   setTarget = (scope, _keys_, val) ->
 
@@ -98,10 +103,12 @@ app.factory 'csDescriptorFactory', [ 'csLayoutSettings', 'csDescriptorPropagatio
   return {
     get: get
     init: init
+    getBase: getBase
     processData: processData
     setStyle: setStyle
     setTarget: setTarget
     getObject: getObject
+    prepareArray: prepareArray
   }
 
   ##################################################################################################

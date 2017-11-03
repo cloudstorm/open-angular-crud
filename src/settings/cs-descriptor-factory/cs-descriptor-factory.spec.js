@@ -3,13 +3,16 @@ describe('csDescriptorFactory', function(){
   var csDescriptorPropagationSettings;
   var csDescriptorFactory;
 
+  beforeEach(angular.mock.module('cloudStorm.descriptorFactory'));
+  beforeEach(angular.mock.module('cloudStorm.errorFactory'));
   beforeEach(angular.mock.module('cloudStorm.layoutSettings'));
   beforeEach(angular.mock.module('cloudStorm.descriptorPropagationSettings'));
-  beforeEach(angular.mock.module('cloudStorm.descriptorFactory'));
   beforeEach(angular.mock.module('cloudStorm.csHashService'));
+  beforeEach(angular.mock.module('cloudStorm.errorMsgProvider'));
 
-  beforeEach(inject(function (_csDescriptorFactory_, _csDescriptorPropagationSettings_) {
+  beforeEach(inject(function (_csDescriptorFactory_, _csDescriptorPropagationSettings_, _csErrorFactory_) {
     csDescriptorFactory = _csDescriptorFactory_;
+    csErrorFactory = _csErrorFactory_;
     csDescriptorPropagationSettings = _csDescriptorPropagationSettings_;
   }));
 
@@ -21,33 +24,115 @@ describe('csDescriptorFactory', function(){
   var keys = ["a", "b", "c"]
   const value = "val"
 
-  it('setTarget_1', function(){
+  it('setTarget()', function(){
 
-    csDescriptorFactory.setTarget(scope, keys, value);
-    expect(scope.a.b.c).toEqual("val");
+    var tests = [
+      {
+        scope : scope,
+        keys: ["a"],
+        value: value,
+        result: value,
+        input : function(){
+          return scope.a
+        }
+      }, {
+        scope : scope,
+        keys: ["a", "b"],
+        value: value,
+        result: value,
+        input : function(){
+          return scope.a.b
+        }
+      },{
+        scope : scope,
+        keys: ["a", "b", "c"],
+        value: value,
+        result: value,
+        input : function(){
+          return scope.a.b.c
+        }
+      },
+    ]
+
+    tests.forEach(function(test){
+      csDescriptorFactory.setTarget(test.scope, test.keys, test.value);
+      expect(test.input()).toEqual(test.result);
+    })
   })
 
-  it('setTarget_2', function(){
+  it('getObject()', function(){
 
-    keys = ["a", "b"]
-    csDescriptorFactory.setTarget(scope, keys, value);
-    expect(scope.a.b).toEqual("val");
+    var tests = [
+      {
+        key: "key",
+        object : "value",
+        result: { key : "value"},
+      }, {
+        key: "key",
+        object : { key : "value"},
+        result: "value",
+      }, {
+        key: "key",
+        object : { key : { key : "value"}},
+        result:  { key : "value"},
+      }
+    ]
+
+    tests.forEach(function(test){
+      expect(csDescriptorFactory.getObject(test.key, test.object)).toEqual(test.result);
+    })
+
   })
 
-  it('setTarget_3', function(){
+  it('getBase', function(){
 
-    keys = ["a"]
-    csDescriptorFactory.setTarget(scope, keys, value);
-    expect(scope.a).toEqual("val");
+
+    var errorTests = [
+      {
+        scope : {},
+        keys : ["a"],
+        error : csErrorFactory.error('csDescriptorFactory', 'baseNotDefined', [["a"]])
+      }, {
+        scope : {},
+        keys : ["a", "b"],
+        error : csErrorFactory.error('csDescriptorFactory', 'baseNotDefined', [["a", "b"]])
+      }, {
+        scope : { a : "b" },
+        keys : ["a", "b"],
+        error : csErrorFactory.error('csDescriptorFactory', 'intermediate', [["a", "b"], "b"])
+      }
+    ]
+
+    errorTests.forEach(function(test){
+      expect(function() {
+        csDescriptorFactory.getBase(test.scope, test.keys)
+      }).toThrow(test.error);
+    })
+
+    var tests = [
+      {
+        scope : { a : "b"},
+        keys : ["a"],
+        result : "b"
+      }
+    ]
+
+    tests.forEach(function(test){
+      expect(csDescriptorFactory.getBase(test.scope, test.keys)).toEqual(test.result);
+    })
   })
 
-  it('getObject_1', function(){
-    var object = { key : "value"};
-    expect(csDescriptorFactory.getObject("key", object)).toEqual("value");
-  })
+  it("array_preprocess", function(){
 
-  it('getObject_2', function(){
-    expect(csDescriptorFactory.getObject("key", "value")).toEqual({"key" : "value"});
+    var test = {
+      scope : { a : { b : "1" } },
+      target : ["a", "b", "c"],
+      func : function(){
+        csDescriptorFactory.prepareArray(null, null)
+      }
+    }
+    var target1 = ["a", "b", "c"];
+    expect( function(){ csDescriptorFactory.prepareArray(null, null) } ).toThrow(new Error("prepare"));
   })
 
   it('propagate', function(){
@@ -63,25 +148,20 @@ describe('csDescriptorFactory', function(){
       base : ["formMode"],
       target : ["childDescriptors", "csField", "layout"],
       rule : {
-        create : "abcdef",
+        create : "create_result",
       }
     })
-    /*
+
     csDescriptorPropagationSettings.addCase('csForm_t', {
       type : "copy",
       base : ["formMode"],
-      target : ["childDescriptors", "csField", "mode"],
+      target : ["childDescriptors1", "csField1", "mode"],
     })
-    */
+
     csDescriptorFactory.processData(formScope);
-    /*
-    csDescriptorFactory.propagate(formScope, {
-      type : "copy",
-      base : ["formMode"],
-      target : ["childDescriptors", "csField", "mode"],
-    }); */
-    expect(formScope.childDescriptors.csField.layout).toEqual("abcdef");
-    //expect(formScope.childDescriptors.csField.mode).toEqual("create");
+
+    expect(formScope.childDescriptors.csField.layout).toEqual("create_result");
+    expect(formScope.childDescriptors1.csField1.mode).toEqual("create");
   })
 
   /* Output
