@@ -4,6 +4,14 @@ app = angular.module('cloudStorm.errorFactory', [])
 
 app.factory('csErrorFactory', ['csErrorMessages', function(csErrorMessages){
 
+
+  var thrw = function(componentName, type, params){
+      throw this.error(componentName, type, params)
+  }
+
+  var error = function(componentName, type, params){
+    return new Error(this.get('csDescriptorFactory', type, params))
+  }
   var get = function(componentName, type, params){
 
     if(componentName in csErrorMessages.cases){
@@ -42,8 +50,9 @@ app.factory('csErrorFactory', ['csErrorMessages', function(csErrorMessages){
         if(Array.isArray(value)){
           var msg = '';
           value.forEach(function(element){
-            msg += element + '\t'
+            msg += element + ', '
           })
+          msg = "[" + msg.substring(0, msg.length - 2) + "]"
           return msg
         } else {
           return csErrorMessages.errorPrefix + 'Input param ' + num + ' is not an array';
@@ -57,6 +66,8 @@ app.factory('csErrorFactory', ['csErrorMessages', function(csErrorMessages){
   }
 
   return {
+    throw: thrw,
+    error: error,
     get: get,
     getParam: getParam,
   }

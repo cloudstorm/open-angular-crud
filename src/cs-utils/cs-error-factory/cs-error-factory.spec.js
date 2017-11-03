@@ -33,7 +33,7 @@ describe('csErrorFactory', function(){
       },{
         def: "{{0|array}}",
         params: [["X", "Y", "Z"]],
-        result: "X\tY\tZ\t",
+        result: '[X, Y, Z]',
       }]
 
     tests.forEach(function(test){
@@ -48,7 +48,7 @@ describe('csErrorFactory', function(){
         component : "test",
         type: "1",
         params : [["X", "Y", "Z"]],
-        result: 'ABCDEF : X\tY\tZ\t'
+        result: 'ABCDEF : [X, Y, Z]'
       }]
 
     tests.forEach(function(test){
