@@ -3,7 +3,6 @@
   %cs-error{"errors" => "$ctrl.errors"}
   %div{"ng-if" => "$ctrl.errors.length == 0", "ng-switch" => "$ctrl.pageType"}
     %cs-index{ "ng-switch-when" => "index", "resource-type" => "$ctrl.resourceType", "items" => "$ctrl.items", "resource" => "$ctrl.resource", "item-id" => 'null', "cs-index-options" => "options"}
-    %cs-profile{ "ng-switch-when" => "profile_", "item" => "$ctrl.item", "resource" =>"$ctrl.resource"}
     .aligner{"ng-switch-when" => "show"}
       .alignerItem
         .wizardContainer
