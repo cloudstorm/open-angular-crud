@@ -11,7 +11,8 @@ var app;
 app = angular.module('cloudStorm.alertService', []);
 
 app.service('csAlertService', [
-  function() {
+  'csSettings', function(csSettings) {
+    this.i18n = csSettings.settings['i18n-engine'];
     this.sequence = 0;
     this.alerts = [];
     this.getAlerts = function() {
@@ -46,6 +47,12 @@ app.service('csAlertService', [
         type: type
       });
       return this.sequence++;
+    };
+    this.success = function(type) {
+      return this.addAlert(this.i18n.t('alert.' + type), 'success');
+    };
+    this.warning = function(warning) {
+      return this.addAlert(this.i18n.t('alert.' + type), 'warning');
     };
     this.dismissAlert = function(idToDismiss) {
       return this.alerts = _.without(this.alerts, _.findWhere(this.alerts, {
@@ -316,14 +323,12 @@ var app;
 app = angular.module('cloudStorm.field', []);
 
 app.directive("csField", [
-  '$compile', '$templateRequest', 'csDescriptorFactory', function($compile, $templateRequest, csDescriptorFactory) {
+  '$compile', '$templateRequest', function($compile, $templateRequest) {
     var compile, getDirectiveOverride, link;
     compile = function($templateElement, $templateAttributes, $scope) {
       $templateElement.addClass("cs-field");
       return {
-        pre: function($scope, element, attrs, controller) {
-          csDescriptorFactory.init($scope, "csField");
-        },
+        pre: function($scope, element, attrs, controller) {},
         post: link
       };
     };
@@ -365,7 +370,7 @@ app.directive("csField", [
           }
         })();
       }
-      wrapper_name = ".cs-input-wrapper";
+      wrapper_name = ".cs-input-wrapper_" + $scope.formMode;
       inputTemplate = "<" + directiveName + " form-item='formItem' field-name='fieldName' field='field' form-mode='formMode' create-resources='createResources()' options='csFieldOptions'> </" + directiveName + ">";
       innerElement = angular.element(element[0].querySelector(wrapper_name));
       innerElement.append($compile(inputTemplate)($scope));
@@ -461,14 +466,12 @@ var app;
 app = angular.module('cloudStorm.form', []);
 
 app.directive("csForm", [
-  'csSettings', 'csDescriptorFactory', function(csSettings, csDescriptorFactory) {
+  'csSettings', function(csSettings) {
     var compile, link;
     compile = function($templateElement, $templateAttributes) {
       $templateElement.addClass("cs-form");
       return {
-        pre: function($scope, element, attrs, controller) {
-          csDescriptorFactory.init($scope, "csForm");
-        },
+        pre: function($scope, element, attrs, controller) {},
         post: link
       };
     };
@@ -984,7 +987,6 @@ app.directive("csMenu", [
       return link = function($scope, element, attrs, ctrl) {
         csDescriptorService.getPromises().then(function() {
           $scope.resources = ResourceService.getResources();
-          console.log($scope.resources);
           return $scope.$apply();
         });
         $scope.title = "Sample application";
@@ -3033,7 +3035,7 @@ app.provider('csLayoutSettings', [
 
 var app;
 
-app = angular.module('cloudStorm', ['cloudStorm.alertService', 'cloudStorm.alert', 'cloudStorm.field', 'cloudStorm.form', 'cloudStorm.index', 'cloudStorm.index.sidePanel', 'cloudStorm.wizard', 'cloudStorm.profile', 'cloudStorm.checkbox', 'cloudStorm.csMenu', 'cloudStorm.date', 'cloudStorm.time', 'cloudStorm.datetime', 'cloudStorm.enum', 'cloudStorm.number', 'cloudStorm.resourceInput', 'cloudStorm.textfield', 'cloudStorm.inputBase', 'cloudStorm.dataStore', 'cloudStorm.localizationProvider', 'cloudStorm.resource', 'cloudStorm.resourceService', 'cloudStorm.restApi', 'cloudStorm.settings', 'cloudStorm.templateService', 'cloudStorm.templates', 'cloudStorm.descriptorService', 'ui.router', 'cloudStorm.routeProvider', 'ui.bootstrap', 'cloudStorm.csLoader', 'cloudStorm.csError', 'cloudStorm.uiPageRouter', 'cloudStorm.csItemList', 'cloudStorm.descriptorPropagationSettings', 'cloudStorm.layoutSettings', 'cloudStorm.descriptorFactory', 'cloudStorm.csHashService', 'cloudStorm.errorMsgProvider', 'cloudStorm.errorFactory']);
+app = angular.module('cloudStorm', ['cloudStorm.alertService', 'cloudStorm.alert', 'cloudStorm.field', 'cloudStorm.form', 'cloudStorm.wizard', 'cloudStorm.checkbox', 'cloudStorm.csMenu', 'cloudStorm.date', 'cloudStorm.time', 'cloudStorm.datetime', 'cloudStorm.enum', 'cloudStorm.index', 'cloudStorm.index.sidePanel', 'cloudStorm.csItemList', 'cloudStorm.main', 'cloudStorm.number', 'cloudStorm.profile', 'cloudStorm.resourceInput', 'cloudStorm.textfield', 'cloudStorm.inputBase', 'cloudStorm.dataStore', 'cloudStorm.localizationProvider', 'cloudStorm.resource', 'cloudStorm.resourceService', 'cloudStorm.restApi', 'cloudStorm.settings', 'cloudStorm.templateService', 'cloudStorm.templates', 'cloudStorm.descriptorService', 'ui.router', 'cloudStorm.routeProvider', 'ui.bootstrap', 'cloudStorm.csLoader', 'cloudStorm.csError', 'cloudStorm.uiPageRouter']);
 
 var app = angular.module("cloudStorm.csItemList", [])
 
@@ -3053,6 +3055,16 @@ app.component("csItemList", {
   }
 })
 
+"use strict"
+
+var app = angular.module('cloudStorm.main', [])
+
+app.component('csMain', {
+
+  templateUrl : 'components/cs-main/cs-main-template.html',
+
+})
+
 var app
 
 app = angular.module("cloudStorm.uiPageRouter", [])
@@ -3066,7 +3078,7 @@ app.component("csPageRouter", {
         pageType : "<",
     },
     templateUrl : "cs-route-provider/router-component/cs-page-router-template.html",
-    controller : function($scope, $timeout, csRoute, ResourceService, csDescriptorService){
+    controller : function($scope, csRoute, ResourceService, csDescriptorService, csAlertService){
 
         this.testValue = "InitialValue"
         this.loading = true
@@ -3076,7 +3088,7 @@ app.component("csPageRouter", {
             switch (this.pageType) {
               case "index": this.resource_index(); break;
               case "edit":
-                if(this.cmd != "edit"){
+                if(this.cmd != "edit" && this.cmd != "show"){
                   this.errors.push("\"" + this.cmd + "\" is not a valid command");
                 }
                 this.resource_id();
@@ -3119,7 +3131,6 @@ app.component("csPageRouter", {
               return ResourceService.get(this.resourceType)
             }).bind(this)).then(
               (function(resource){
-                console.log(resource.descriptor)
                 this.resource = resource
                 return resource.$get(this.id, {include: '*'})
               }).bind(this), (function(){
@@ -3142,12 +3153,12 @@ app.component("csPageRouter", {
             }).bind(this))
             .then(
               (function(resource){
-                console.log(resource.descriptor)
                 this.resource = resource
                 return resource.$index({include: '*'})
                 this.finished()
               }).bind(this), (function(){
-                this.errors.push("\"" + this.resourceType + "\" is not a resource")
+                this.errors.push("\"" + this.resourceType +
+                  "\" is not a resource")
               }).bind(this))
             .then((function(items){
                   this.items = items
@@ -3168,8 +3179,22 @@ app.component("csPageRouter", {
                   csRoute.go("index", {resourceType : this.resourceType})
                 }).bind(this),
               'wizard-submited': (function(resource){
-                  csRoute.go("index", {resourceType : this.resourceType})
-              }).bind(this),
+                  //$scope.wizardOptions['keep-first']
+                  switch(this.pageType){
+                    case "create":
+                      csAlertService.success('new_resource_created')
+                      break;
+                    case "edit":
+                      csAlertService.success("changes_saved")
+                      break;
+                  }
+
+                  if(this.wizardOptions['keep-first']){
+                    csRoute.go("show", {resourceType : this.resourceType, id : "new"})
+                  } else {
+                    csRoute.go("index", {resourceType : this.resourceType})
+                  }
+              }).bind(this)
             }
           }
           this.loading = false
@@ -3283,118 +3308,6 @@ this.call = function(params, func){
 
 //this.execute("profile").bind(this)
 
-'use strict'
-
-app = angular.module('cloudStorm.errorFactory', [])
-
-app.factory('csErrorFactory', ['csErrorMessages', function(csErrorMessages){
-
-  var thrw = function(componentName, type, params){
-    throw this.error(componentName, type, params)
-  }
-
-  var error = function(componentName, type, params){
-    return new Error(this.get('csDescriptorFactory', type, params))
-  }
-
-  var arrayNotEmpty = function(array, componentName, type){
-    if(array.length == 0){
-      throw new Error(this.error(componentName, type, null))
-    }
-  }
-
-  var get = function(componentName, type, params){
-
-    if(componentName in csErrorMessages.cases){
-      if(type in csErrorMessages.cases[componentName]){
-        var msg = csErrorMessages.cases[componentName][type].slice(0)
-        var reg = new RegExp("{{.*}}")
-        reg.exec(msg).forEach((function(inputDef){
-            msg = msg.replace(inputDef, this.getParam(inputDef, params))
-        }).bind(this))
-        return msg
-      } else {
-        return csErrorMessages.errorPrefix + type + ', there is no such case.';
-      }
-    } else {
-      return csErrorMessages.errorPrefix + componentName + ', there is no such component.';
-    }
-  }
-
-  var getParam = function(paramDef, params) {
-
-    if(params == null){
-      return csErrorMessages.errorPrefix + "'params' parameter is null!";
-    }
-    if((typeof params) != 'object'){
-      params = [params]
-    }
-    var def = paramDef.substring(2, paramDef.length - 2).split("|");
-    var num = parseInt(def[0]);
-    if(isNaN(num)) {
-      return csErrorMessages.errorPrefix + "'" + def[0] + "' is not an integer. Please revise the error msg definition";
-    }
-    var type = def[1];
-    var value = params[num];
-    switch(type){
-      case 'array' :
-        if(Array.isArray(value)){
-          var msg = '';
-          value.forEach(function(element){
-            msg += element + ', '
-          })
-          msg = "[" + msg.substring(0, msg.length - 2) + "]"
-          return msg
-        } else {
-          return csErrorMessages.errorPrefix + 'Input param ' + num + ' is not an array';
-        }
-      case 'object':
-        //Comes later
-        return null
-      case undefined :
-        return value
-    }
-  }
-
-  return {
-    throw: thrw,
-    error: error,
-    arrayNotEmpty: arrayNotEmpty,
-    get: get,
-    getParam: getParam,
-  }
-
-}])
-
-'use strict'
-
-app = angular.module('cloudStorm.errorMsgProvider', [])
-
-app.provider('csErrorMessages', [function() {
-
-  this.errorPrefix = "\ncsErrorMsgs ERROR: "
-
-  this.cases = {
-
-    'csDescriptorFactory': {
-      'baseNotDefined' : 'Base variable is not defined for definition : \n {{0|array}}',
-      'intermediate' : 'From the array : \n {{0|array}} \n the key {{1}} does not refer to an object',
-      'overlap': 'Overlapping data propagation definition in target: {{0|array}}',
-    },
-    'general' : {
-
-    },
-    'test' : {
-      "1" : "ABCDEF : {{0|array}}"
-    },
-  }
-
-  this.$get = function() {
-    return this;
-  };
-
-}]);
-
 var app
 
 app = angular.module("cloudStorm.csError", [])
@@ -3405,26 +3318,10 @@ app.component("csError", {
   bindings : {
     errors : "<",
   },
-  templateUrl : "cs-utils/error/cs-error-template.html",
+  templateUrl : "cs-utils/cs-error-template/cs-error-template.html",
 })
 
-
-var app = angular.module('cloudStorm.csHashService', [])
-
-
-app.service("csHashService", function(){
-
-  this.map = function(object, key, errorMsg){
-
-    if(!(key in object)){
-      throw new Error("Key : '" + key + "' not found'\n" + errorMsg);
-    } else {
-      return object[key]
-    }
-  }
-})
-
-angular.module('cloudStorm.templates', ['components/cs-alert/cs-alert-template.html', 'components/cs-checkbox/cs-checkbox-template.html', 'components/cs-date/cs-date-template.html', 'components/cs-datetime/cs-datetime-template.html', 'components/cs-enum/cs-enum-template.html', 'components/cs-field/cs-field-template.html', 'components/cs-form/cs-form-template.html', 'components/cs-index/cs-index-sidepanel/cs-index-sidepanel-template.html', 'components/cs-index/cs-index-template.html', 'components/cs-item-list/cs-item-list-template.html', 'components/cs-menu/cs-menu-template.html', 'components/cs-number/cs-number-template.html', 'components/cs-profile/cs-profile-template.html', 'components/cs-resource-input/cs-resource-input-template.html', 'components/cs-textfield/cs-textfield-template.html', 'components/cs-time/cs-time-template.html', 'components/cs-wizard/cs-wizard-panel-template.html', 'components/cs-wizard/cs-wizard-template.html', 'cs-route-provider/router-component/cs-page-router-template.html', 'cs-utils/cs-error-template/cs-error-template.html', 'cs-utils/loader/cs-loader-template.html']);
+angular.module('cloudStorm.templates', ['components/cs-alert/cs-alert-template.html', 'components/cs-checkbox/cs-checkbox-template.html', 'components/cs-date/cs-date-template.html', 'components/cs-datetime/cs-datetime-template.html', 'components/cs-enum/cs-enum-template.html', 'components/cs-field/cs-field-template.html', 'components/cs-form/cs-form-template.html', 'components/cs-index/cs-index-sidepanel/cs-index-sidepanel-template.html', 'components/cs-index/cs-index-template.html', 'components/cs-item-list/cs-item-list-template.html', 'components/cs-main/cs-main-template.html', 'components/cs-menu/cs-menu-template.html', 'components/cs-number/cs-number-template.html', 'components/cs-profile/cs-profile-template.html', 'components/cs-resource-input/cs-resource-input-template.html', 'components/cs-textfield/cs-textfield-template.html', 'components/cs-time/cs-time-template.html', 'components/cs-wizard/cs-wizard-panel-template.html', 'components/cs-wizard/cs-wizard-template.html', 'cs-route-provider/router-component/cs-page-router-template.html', 'cs-utils/cs-error-template/cs-error-template.html', 'cs-utils/cs-loader/cs-loader-template.html', 'cs-utils/loader/cs-loader-template.html']);
 
 angular.module("components/cs-alert/cs-alert-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-alert/cs-alert-template.html",
@@ -3437,7 +3334,7 @@ angular.module("components/cs-alert/cs-alert-template.html", []).run(["$template
 angular.module("components/cs-checkbox/cs-checkbox-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-checkbox/cs-checkbox-template.html",
     "<!-- Only valid for cardinality:one -->\n" +
-    "<input class='form-control' ng-disabled='fieldDisabled()' ng-if='!mode(&#39;show&#39;)' ng-model='formItem.attributes[field.attribute]' type='checkbox'>\n" +
+    "<input class='form-control' ng-disabled='fieldDisabled()' ng-if='mode(&#39;create&#39;) || mode(&#39;edit&#39;)' ng-model='formItem.attributes[field.attribute]' type='checkbox'>\n" +
     "<div class='show-view' ng-if='mode(&#39;show&#39;)'>\n" +
     "<div ng-if='formItem.attributes[field.attribute]'>\n" +
     "✓\n" +
@@ -3451,7 +3348,7 @@ angular.module("components/cs-checkbox/cs-checkbox-template.html", []).run(["$te
 
 angular.module("components/cs-date/cs-date-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-date/cs-date-template.html",
-    "<input autocomplete='off' class='form-control' clear-text='{{ i18n.t(&#39;buttons.clear&#39;) }}' close-text='{{ i18n.t(&#39;buttons.close&#39;) }}' current-text='{{ i18n.t(&#39;today&#39;) }}' datepicker-append-to-body='true' datepicker-options='{startingDay: 1, showWeeks: false}' is-open='dt.open' ng-click='dt.open = true' ng-disabled='fieldDisabled()' ng-if='mode(&#39;edit&#39;)' ng-model-options='getModelOptions()' ng-model='formItem.attributes[field.attribute]' ng-required='fieldRequired()' type='text' uib-datepicker-popup=''>\n" +
+    "<input autocomplete='off' class='form-control' clear-text='{{ i18n.t(&#39;buttons.clear&#39;) }}' close-text='{{ i18n.t(&#39;buttons.close&#39;) }}' current-text='{{ i18n.t(&#39;today&#39;) }}' datepicker-append-to-body='true' datepicker-options='{startingDay: 1, showWeeks: false}' is-open='dt.open' ng-click='dt.open = true' ng-disabled='fieldDisabled()' ng-if='mode(&#39;edit&#39;) || mode(&#39;create&#39;)' ng-model-options='getModelOptions()' ng-model='formItem.attributes[field.attribute]' ng-required='fieldRequired()' type='text' uib-datepicker-popup=''>\n" +
     "<div class='showField' ng-if='mode(&#39;show&#39;)'>\n" +
     "{{input_date}}\n" +
     "</div>\n" +
@@ -3503,11 +3400,12 @@ angular.module("components/cs-field/cs-field-template.html", []).run(["$template
     "<!--  -->\n" +
     "<!--  -->\n" +
     "<!-- .div{\"ng-switch\" => \"formMode\"} -->\n" +
-    "<div class='cs-field-inner' ng-show='formMode == &#39;edit&#39; &amp;&amp; false'>\n" +
+    "<div class='cs-field-inner' ng-show='formMode == &#39;edit&#39; || formMode == &#39;create&#39;'>\n" +
     "<label class='control-label'>{{field.label}}</label>\n" +
     "<span ng-if='field.required'>*</span>\n" +
     "<!-- CS will populate the correct input taking into account its overrides -->\n" +
     "<div class='cs-input-wrapper_edit'></div>\n" +
+    "<div class='cs-input-wrapper_create'></div>\n" +
     "<span class='help-block' ng-if='field.errors.length &gt; 0'>\n" +
     "{{getError(field)}}\n" +
     "</span>\n" +
@@ -3516,14 +3414,14 @@ angular.module("components/cs-field/cs-field-template.html", []).run(["$template
     "</span>\n" +
     "<div class='cover'></div>\n" +
     "</div>\n" +
-    "<div class='cs-field-inner' ng-show='formMode == &#39;view&#39; &amp;&amp; false'>\n" +
+    "<div class='cs-field-inner' ng-show='formMode == &#39;show&#39;'>\n" +
     "<div class='cs-field-row'>\n" +
     "<div class='cs-field-element_1'>\n" +
     "<label class='control-label'>{{field.label}}</label>\n" +
     "<!-- CS will populate the correct input taking into account its overrides -->\n" +
     "</div>\n" +
     "<div class='cs-field-element_2'>\n" +
-    "<div class='cs-input-wrapper_view'></div>\n" +
+    "<div class='cs-input-wrapper_show'></div>\n" +
     "</div>\n" +
     "<span class='help-block' ng-if='field.errors.length &gt; 0'>\n" +
     "{{getError(field)}}\n" +
@@ -3532,17 +3430,6 @@ angular.module("components/cs-field/cs-field-template.html", []).run(["$template
     "{{getHint(field)}}\n" +
     "</span>\n" +
     "<div class='cover'></div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class='cs-field-inner'>\n" +
-    "<div ng-class='style(&#39;container&#39;)'>\n" +
-    "<div ng-class='style(&#39;field1&#39;)'>\n" +
-    "<label class='control-label'>{{field.label}}</label>\n" +
-    "<span ng-class='style(&#39;req_star&#39;)' ng-if='field.required'>*</span>\n" +
-    "</div>\n" +
-    "<div ng-class='style(&#39;field2&#39;)'>\n" +
-    "<div class='cs-input-wrapper'></div>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "");
@@ -3562,7 +3449,7 @@ angular.module("components/cs-form/cs-form-template.html", []).run(["$templateCa
     "{{editableItem.$display_name()}}\n" +
     "</h4>\n" +
     "</span>\n" +
-    "<span ng-switch-when='view'>\n" +
+    "<span ng-switch-when='show'>\n" +
     "<h4 class='divided'>\n" +
     "{{editableItem.$display_name()}}\n" +
     "</h4>\n" +
@@ -3571,7 +3458,7 @@ angular.module("components/cs-form/cs-form-template.html", []).run(["$templateCa
     "<form name='csForm' ng-transclude='fields' novalidate=''>\n" +
     "<cs-field class='form-group field' create-resources='createResources()' cs-field-options='csFormOptions' descriptor='childDescriptors[&#39;csField&#39;]' field='field' form-item='editableItem' form-mode='formMode' ng-repeat='field in fields track by $index' ng-show='isFieldVisible(field.attribute)'></cs-field>\n" +
     "</form>\n" +
-    "<div class='form-group form-actions' ng-if='formMode != &#39;view&#39;' ng-transclude='actions'>\n" +
+    "<div class='form-group form-actions' ng-if='formMode != &#39;show&#39;' ng-transclude='actions'>\n" +
     "<div class='actions-inner'>\n" +
     "<div class='btn-tooltip-wrapper' tooltip-enable='csForm.$invalid' tooltip-placement='right' tooltip-trigger='mouseenter' uib-tooltip='{{i18n.t(&#39;validation_text&#39;)}}'>\n" +
     "<button class='btn btn-success' ng-class='{&#39;disabled&#39;: csForm.$invalid}' ng-click='submit()' type='button'>\n" +
@@ -3688,6 +3575,18 @@ angular.module("components/cs-item-list/cs-item-list-template.html", []).run(["$
     "");
 }]);
 
+angular.module("components/cs-main/cs-main-template.html", []).run(["$templateCache", function ($templateCache) {
+  $templateCache.put("components/cs-main/cs-main-template.html",
+    "<div ng-controller='MainCtrl'>\n" +
+    "<cs-menu></cs-menu>\n" +
+    "<cs-alert></cs-alert>\n" +
+    "<div class='container'>\n" +
+    "<ui-view></ui-view>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "");
+}]);
+
 angular.module("components/cs-menu/cs-menu-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-menu/cs-menu-template.html",
     "<div class='flex nav'>\n" +
@@ -3792,7 +3691,7 @@ angular.module("components/cs-textfield/cs-textfield-template.html", []).run(["$
   $templateCache.put("components/cs-textfield/cs-textfield-template.html",
     "<!-- ng-if creates an isolate scope so all data is available through $parent -->\n" +
     "<!-- %ui-select-choices is only here to disable typeahed dropdown as there should be not typeahed in this controller -->\n" +
-    "<div ng-if='mode(&#39;edit&#39;)'>\n" +
+    "<div ng-if='mode(&#39;create&#39;) || mode(&#39;edit&#39;)'>\n" +
     "<input class='form-control' ng-disabled='fieldDisabled()' ng-if='field.cardinality == &#39;one&#39;' ng-keyup='keyPressed($event)' ng-model='$parent.formItem.attributes[$parent.field.attribute]' ng-required='fieldRequired()' type='text'>\n" +
     "<ui-select multiple='' ng-disabled='fieldDisabled()' ng-if='field.cardinality == &#39;many&#39;' ng-model='$parent.formItem.attributes[$parent.field.attribute]' ng-required='fieldRequired()' tagging-label='newTag' tagging=''>\n" +
     "<ui-select-match>\n" +
@@ -3838,7 +3737,6 @@ angular.module("cs-route-provider/router-component/cs-page-router-template.html"
     "<cs-error errors='$ctrl.errors'></cs-error>\n" +
     "<div ng-if='$ctrl.errors.length == 0' ng-switch='$ctrl.pageType'>\n" +
     "<cs-index cs-index-options='options' item-id='null' items='$ctrl.items' ng-switch-when='index' resource-type='$ctrl.resourceType' resource='$ctrl.resource'></cs-index>\n" +
-    "<cs-profile item='$ctrl.item' ng-switch-when='profile_' resource='$ctrl.resource'></cs-profile>\n" +
     "<div class='aligner' ng-switch-when='show'>\n" +
     "<div class='alignerItem'>\n" +
     "<div class='wizardContainer'>\n" +
@@ -3878,6 +3776,14 @@ angular.module("cs-utils/cs-error-template/cs-error-template.html", []).run(["$t
     "Error!\n" +
     "</strong>\n" +
     "{{error}}\n" +
+    "</div>\n" +
+    "");
+}]);
+
+angular.module("cs-utils/cs-loader/cs-loader-template.html", []).run(["$templateCache", function ($templateCache) {
+  $templateCache.put("cs-utils/cs-loader/cs-loader-template.html",
+    "<div class='middle'>\n" +
+    "<div class='loader'></div>\n" +
     "</div>\n" +
     "");
 }]);
