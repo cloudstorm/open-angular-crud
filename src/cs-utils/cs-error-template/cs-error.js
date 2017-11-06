@@ -1,7 +1,6 @@
 var app
 
-app = angular.module("cloudStorm.csError", [])
-
+app = angular.module("cloudStorm.error", [])
 
 app.component("csError", {
 

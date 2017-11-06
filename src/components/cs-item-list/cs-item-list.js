@@ -1,4 +1,4 @@
-var app = angular.module("cloudStorm.csItemList", [])
+var app = angular.module("cloudStorm.itemList", [])
 
 app.component("csItemList", {
 

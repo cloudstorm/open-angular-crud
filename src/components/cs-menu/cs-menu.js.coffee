@@ -1,6 +1,6 @@
 "use strict"
 
-app = angular.module('cloudStorm.csMenu', [])
+app = angular.module('cloudStorm.menu', [])
 
 # ===== DIRECTIVE =============================================================
 
