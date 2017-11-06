@@ -1,5 +1,5 @@
 / Only valid for cardinality:one
-%input.form-control{ "ng-if" => "!mode('show')",
+%input.form-control{ "ng-if" => "mode('create') || mode('edit')",
                      "ng-disabled" => "fieldDisabled()",
                      "ng-model" => "formItem.attributes[field.attribute]",
                      type: "checkbox" }
