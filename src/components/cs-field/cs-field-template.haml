@@ -35,11 +35,3 @@
       {{getHint(field)}}
 
     .cover
-
-.cs-field-inner
-  %div{"ng-class" => "style('container')"}
-    %div{"ng-class" => "style('field1')"}
-      %label.control-label {{field.label}}
-      %span{ "ng-if" => "field.required", "ng-class" => "style('req_star')" } *
-    %div{"ng-class" => "style('field2')"}
-      .cs-input-wrapper
