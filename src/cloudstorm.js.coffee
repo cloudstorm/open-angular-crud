@@ -38,4 +38,5 @@ app = angular.module 'cloudStorm', [
   'cloudStorm.descriptorFactory'
   'cloudStorm.csHashService'
   'cloudStorm.errorMsgProvider'
+  'cloudStorm.errorFactory'
 ]
