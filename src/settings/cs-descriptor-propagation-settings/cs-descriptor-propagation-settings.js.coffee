@@ -8,20 +8,26 @@ app.provider 'csDescriptorPropagationSettings', [() ->
 
   @components = {
 
-    'csForm' : {
+    'csForm' : [{
       type : "switch",
       base : ["formMode"],
       target : ["childDescriptors", "csField", "layout"],
       rule : {
         create : "vertical",
-        edit : "vertical",
-        view : "horizontal",
+        edit : "horizontal",
+        show : "horizontal",
       }
-    }
+    },{
+      type : "copy",
+      base : ["formMode"],
+      target : ["childDescriptors", "csField", "fieldMode"],
+    }]
   }
 
   @addCase = (key, object) ->
-    @components[key] = object
+    if !(key of @components)
+      @components[key] = []
+    @components[key].push(object)
 
   @$get = ->
     @
