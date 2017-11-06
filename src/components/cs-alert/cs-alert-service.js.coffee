@@ -4,7 +4,9 @@ app = angular.module('cloudStorm.alertService', [])
 
 # ===== SERVICE ===============================================================
 
-app.service 'csAlertService', [() ->
+app.service 'csAlertService', ['csSettings', (csSettings) ->
+
+  @i18n = csSettings.settings['i18n-engine']
   @sequence = 0
   @alerts = []
 
@@ -26,6 +28,12 @@ app.service 'csAlertService', [() ->
       @alerts = []
     @alerts.push {id:@sequence, message: message, type: type}
     @sequence++
+
+  @success = (type) ->
+    @addAlert(@i18n.t('alert.' + type), 'success')
+
+  @warning = (warning) ->
+    @addAlert(@i18n.t('alert.' + type), 'warning')
 
   @dismissAlert = (idToDismiss) ->
     @alerts = _.without @alerts, _.findWhere(@alerts, {id: idToDismiss})

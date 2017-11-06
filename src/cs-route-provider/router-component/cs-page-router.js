@@ -11,7 +11,7 @@ app.component("csPageRouter", {
         pageType : "<",
     },
     templateUrl : "cs-route-provider/router-component/cs-page-router-template.html",
-    controller : function($scope, $timeout, csRoute, ResourceService, csDescriptorService){
+    controller : function($scope, $timeout, csRoute, ResourceService, csDescriptorService, csAlertService){
 
         this.testValue = "InitialValue"
         this.loading = true
@@ -92,7 +92,8 @@ app.component("csPageRouter", {
                 return resource.$index({include: '*'})
                 this.finished()
               }).bind(this), (function(){
-                this.errors.push("\"" + this.resourceType + "\" is not a resource")
+                this.errors.push("\"" + this.resourceType +
+                  "\" is not a resource")
               }).bind(this))
             .then((function(items){
                   this.items = items
@@ -113,8 +114,22 @@ app.component("csPageRouter", {
                   csRoute.go("index", {resourceType : this.resourceType})
                 }).bind(this),
               'wizard-submited': (function(resource){
-                  csRoute.go("index", {resourceType : this.resourceType})
-              }).bind(this),
+                  //$scope.wizardOptions['keep-first']
+                  switch(this.pageType){
+                    case "create":
+                      csAlertService.success('new_resource_created')
+                      break;
+                    case "edit":
+                      csAlertService.success("changes_saved")
+                      break;
+                  }
+
+                  if(this.wizardOptions['keep-first']){
+                    csRoute.go("show", {resourceType : this.resourceType, id : "new"})
+                  } else {
+                    csRoute.go("index", {resourceType : this.resourceType})
+                  }
+              }).bind(this)
             }
           }
           this.loading = false
