@@ -15,7 +15,7 @@ app.provider 'csSettings', ['csLocalizationProvider', (csLocalizationProvider) -
 
   @states = [
       {
-        name: 'type'
+        name: 'index'
         url: '/{resourceType}'
         component: 'csPageRouter'
         resolve:
@@ -33,20 +33,20 @@ app.provider 'csSettings', ['csLocalizationProvider', (csLocalizationProvider) -
           id: ($transition$) ->
             $transition$.params().id
           pageType: ($transition$) ->
-            'profile'
+            'show'
       },{
-      name: 'id'
-      url: '/{resourceType}/{id}/{cmd}'
-      component: 'csPageRouter'
-      resolve:
-        resourceType: ($transition$) ->
-          $transition$.params().resourceType
-        id: ($transition$) ->
-          $transition$.params().id
-        cmd: ($transition$) ->
-          $transition$.params().cmd
-        pageType: ($transition$) ->
-          'edit'
+        name: 'edit'
+        url: '/{resourceType}/{id}/{cmd}'
+        component: 'csPageRouter'
+        resolve:
+          resourceType: ($transition$) ->
+            $transition$.params().resourceType
+          id: ($transition$) ->
+            $transition$.params().id
+          cmd: ($transition$) ->
+            $transition$.params().cmd
+          pageType: ($transition$) ->
+            'edit'
       }]
 
   @settings = defaultSettings
