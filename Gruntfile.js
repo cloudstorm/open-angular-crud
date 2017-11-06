@@ -297,7 +297,14 @@ module.exports = function(grunt) {
         files: [
           '<%= app_files.js %>'
         ],
-        tasks: ['concat:compile_js']
+        tasks: ['concat:compile_js', 'karma:unit']
+      },
+
+      jsspecsrc : {
+        files : [
+          '<%= app_files.jsspec %>'
+        ],
+        tasks : ['concat:compile_js', 'karma:unit']
       },
 
       tssrc: {

@@ -23,6 +23,7 @@ module.exports = {
    */
   app_files: {
     js: [ 'src/**/*.js', '!src/**/*.spec.js'],
+    jsspec: ['src/**/*.spec.js'],
     coffee: [ 'src/**/*.js.coffee', 'src/**/*.coffee' ],
     sass_main: [ 'src/cloudstorm.scss' ],
     sass: [ 'src/**/*.scss' ],
