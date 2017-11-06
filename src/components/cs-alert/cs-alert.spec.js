@@ -9,6 +9,8 @@ describe('csAlert', function() {
   // beforeEach(angular.mock.module('components/cs-alert/cs-alert-template.html'));
 
   // load required modules
+  beforeEach(angular.mock.module('cloudStorm.localizationProvider'));
+  beforeEach(angular.mock.module('cloudStorm.settings'));
   beforeEach(angular.mock.module('cloudStorm.alertService'));
   beforeEach(angular.mock.module('cloudStorm.alert'));
 

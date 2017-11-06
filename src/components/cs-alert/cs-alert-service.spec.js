@@ -2,6 +2,8 @@ describe('csAlertService', function() {
 
   var csAlertService;
 
+  beforeEach(angular.mock.module('cloudStorm.localizationProvider'));
+  beforeEach(angular.mock.module('cloudStorm.settings'));
   beforeEach(angular.mock.module('cloudStorm.alertService'));
 
   beforeEach(inject(function (_csAlertService_) {
