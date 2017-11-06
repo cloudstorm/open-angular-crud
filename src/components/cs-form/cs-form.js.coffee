@@ -16,7 +16,6 @@ app.directive "csForm", ['csSettings', 'csDescriptorFactory', (csSettings, csDes
     # Pre-link: gets called for parent first
     pre: ($scope, element, attrs, controller) ->
 
-      csDescriptorFactory.init($scope, "csForm")
       return
 
     # Post-link: gets called for children recursively after post() traversed the DOM tree

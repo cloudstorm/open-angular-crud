@@ -17,7 +17,6 @@ app.directive "csField", ['$compile', '$templateRequest', 'csDescriptorFactory',
     # Pre-link: gets called for parent first
     pre: ($scope, element, attrs, controller) ->
 
-      csDescriptorFactory.init($scope, "csField")
       return
 
     # Post-link: gets called for children recursively after post() traversed the DOM tree
@@ -57,8 +56,8 @@ app.directive "csField", ['$compile', '$templateRequest', 'csDescriptorFactory',
         when type == 'enum'     then 'cs-enum'
         when type == 'boolean'  then 'cs-checkbox'
 
-    #wrapper_name = ".cs-input-wrapper_" + $scope.formMode
-    wrapper_name = ".cs-input-wrapper"
+    wrapper_name = ".cs-input-wrapper_" + $scope.formMode
+    #wrapper_name = ".cs-input-wrapper"
 
     inputTemplate = "<#{directiveName} form-item='formItem'
                                        field-name='fieldName'
