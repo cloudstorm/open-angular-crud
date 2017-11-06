@@ -27,7 +27,6 @@ app.directive "csMenu", ['ResourceService', 'csDescriptorService', 'csRoute', (R
 
       csDescriptorService.getPromises().then () ->
         $scope.resources = ResourceService.getResources()
-        console.log $scope.resources
         $scope.$apply()
 
       $scope.title = "Sample application"

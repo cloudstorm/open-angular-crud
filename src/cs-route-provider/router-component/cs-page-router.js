@@ -64,7 +64,6 @@ app.component("csPageRouter", {
               return ResourceService.get(this.resourceType)
             }).bind(this)).then(
               (function(resource){
-                console.log(resource.descriptor)
                 this.resource = resource
                 return resource.$get(this.id, {include: '*'})
               }).bind(this), (function(){
@@ -87,7 +86,6 @@ app.component("csPageRouter", {
             }).bind(this))
             .then(
               (function(resource){
-                console.log(resource.descriptor)
                 this.resource = resource
                 return resource.$index({include: '*'})
                 this.finished()
