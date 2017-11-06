@@ -34,10 +34,4 @@ app = angular.module 'cloudStorm', [
   'cloudStorm.csLoader'
   'cloudStorm.csError'
   'cloudStorm.uiPageRouter'
-  'cloudStorm.descriptorPropagationSettings'
-  'cloudStorm.layoutSettings'
-  'cloudStorm.descriptorFactory'
-  'cloudStorm.csHashService'
-  'cloudStorm.errorMsgProvider'
-  'cloudStorm.errorFactory'
 ]
