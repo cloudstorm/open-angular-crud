@@ -8,5 +8,5 @@ app.component("csError", {
   bindings : {
     errors : "<",
   },
-  templateUrl : "cs-utils/error/cs-error-template.html",
+  templateUrl : "cs-utils/cs-error-template/cs-error-template.html",
 })
