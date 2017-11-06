@@ -21,7 +21,7 @@ app.component("csPageRouter", {
             switch (this.pageType) {
               case "index": this.resource_index(); break;
               case "edit":
-                if(this.cmd != "edit"){
+                if(this.cmd != "edit" && this.cmd != "show"){
                   this.errors.push("\"" + this.cmd + "\" is not a valid command");
                 }
                 this.resource_id();
