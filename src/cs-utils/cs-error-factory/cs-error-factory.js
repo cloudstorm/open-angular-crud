@@ -4,14 +4,20 @@ app = angular.module('cloudStorm.errorFactory', [])
 
 app.factory('csErrorFactory', ['csErrorMessages', function(csErrorMessages){
 
-
   var thrw = function(componentName, type, params){
-      throw this.error(componentName, type, params)
+    throw this.error(componentName, type, params)
   }
 
   var error = function(componentName, type, params){
     return new Error(this.get('csDescriptorFactory', type, params))
   }
+
+  var arrayNotEmpty = function(array, componentName, type){
+    if(array.length == 0){
+      throw new Error(this.error(componentName, type, null))
+    }
+  }
+
   var get = function(componentName, type, params){
 
     if(componentName in csErrorMessages.cases){
@@ -68,6 +74,7 @@ app.factory('csErrorFactory', ['csErrorMessages', function(csErrorMessages){
   return {
     throw: thrw,
     error: error,
+    arrayNotEmpty: arrayNotEmpty,
     get: get,
     getParam: getParam,
   }
