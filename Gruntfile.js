@@ -311,7 +311,7 @@ module.exports = function(grunt) {
         files: [
           '<%= app_files.ts %>'
         ],
-        tasks: [ 'exec:say:ts', 'ts', 'concat:compile_js', 'karma:unit' ]
+        tasks: ['ts', 'concat:compile_js', 'karma:unit' ]
       },
 
       /**
@@ -322,21 +322,21 @@ module.exports = function(grunt) {
         files: [
           '<%= app_files.coffee %>'
         ],
-        tasks: [ 'exec:say:coffee', 'coffee', 'concat:compile_js', 'karma:unit' ]
+        tasks: ['coffee', 'concat:compile_js', 'karma:unit' ]
         // tasks: [ 'coffeelint:src', 'coffee:source', 'karma:unit:run', 'copy:build_appjs' ]
       },
       hamlsrc: {
         files: [
           '<%= app_files.haml %>'
         ],
-        tasks: [ 'exec:say:haml', 'haml', 'html2js', 'concat:compile_js', 'karma:unit' ]
+        tasks: ['haml', 'html2js', 'concat:compile_js', 'karma:unit' ]
         // tasks: [ 'coffeelint:src', 'coffee:source', 'karma:unit:run', 'copy:build_appjs' ]
       },
       sasssrc: {
         files: [
           '<%= app_files.sass %>'
         ],
-        tasks: [ 'exec:say:sass', 'sass', 'copy:compiled_assets', 'karma:unit' ]
+        tasks: [ 'sass', 'copy:compiled_assets', 'karma:unit' ]
       },
       sample_app: {
         files: [
@@ -350,7 +350,7 @@ module.exports = function(grunt) {
 
   grunt.initConfig( grunt.util._.extend( taskConfig, userConfig, awsConfig, optionsConfig ) );
 
-  grunt.registerTask( 'start_web', ['exec:say:web','exec:start_web' ]);
+  grunt.registerTask( 'start_web', ['exec:start_web' ]);
 
   /**
    * The default task is to build and compile.
