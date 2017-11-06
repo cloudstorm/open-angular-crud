@@ -20,72 +20,7 @@ describe('csDescriptorFactory', function(){
     expect(csDescriptorFactory).toBeDefined();
   });
 
-  var scope = {}
-  var keys = ["a", "b", "c"]
-  const value = "val"
-
-  it('setTarget()', function(){
-
-    var tests = [
-      {
-        scope : scope,
-        keys: ["a"],
-        value: value,
-        result: value,
-        input : function(){
-          return scope.a
-        }
-      }, {
-        scope : scope,
-        keys: ["a", "b"],
-        value: value,
-        result: value,
-        input : function(){
-          return scope.a.b
-        }
-      },{
-        scope : scope,
-        keys: ["a", "b", "c"],
-        value: value,
-        result: value,
-        input : function(){
-          return scope.a.b.c
-        }
-      },
-    ]
-
-    tests.forEach(function(test){
-      csDescriptorFactory.setTarget(test.scope, test.keys, test.value);
-      expect(test.input()).toEqual(test.result);
-    })
-  })
-
-  it('getObject()', function(){
-
-    var tests = [
-      {
-        key: "key",
-        object : "value",
-        result: { key : "value"},
-      }, {
-        key: "key",
-        object : { key : "value"},
-        result: "value",
-      }, {
-        key: "key",
-        object : { key : { key : "value"}},
-        result:  { key : "value"},
-      }
-    ]
-
-    tests.forEach(function(test){
-      expect(csDescriptorFactory.getObject(test.key, test.object)).toEqual(test.result);
-    })
-
-  })
-
-  it('getBase', function(){
-
+  it('getBase() - error', function(){
 
     var errorTests = [
       {
@@ -108,6 +43,9 @@ describe('csDescriptorFactory', function(){
         csDescriptorFactory.getBase(test.scope, test.keys)
       }).toThrow(test.error);
     })
+  })
+
+  it('getBase() - run', function(){
 
     var tests = [
       {
@@ -122,20 +60,132 @@ describe('csDescriptorFactory', function(){
     })
   })
 
-  it("array_preprocess", function(){
-
-    var test = {
-      scope : { a : { b : "1" } },
-      target : ["a", "b", "c"],
-      func : function(){
-        csDescriptorFactory.prepareArray(null, null)
+  it('prepareTarget() - error', function(){
+    var errorTests = [
+      {
+        scope : { a : "b"},
+        target : ["a"],
+        error : csErrorFactory.error('csDescriptorFactory', 'overlap', [["a"]])
+      }, {
+        scope : { a : { b : "c" }},
+        target : ["a", "b"],
+        error : csErrorFactory.error('csDescriptorFactory', 'overlap', [["a", "b"]])
       }
-    }
-    var target1 = ["a", "b", "c"];
-    expect( function(){ csDescriptorFactory.prepareArray(null, null) } ).toThrow(new Error("prepare"));
+    ]
+
+    errorTests.forEach(function(test){
+      expect(function() {
+        csDescriptorFactory.prepareTarget(test.scope, test.target)
+      }).toThrow(test.error);
+    })
   })
 
-  it('propagate', function(){
+  it('prepareTarget() - run', function(){
+    var tests = [
+      {
+        scope : { a : { b : "e"}},
+        keys : ["a", "c"],
+        result : [{b : "e"}, ["c"]],
+      }, {
+        scope : { a : { b : { c : "e"}}},
+        keys : ["a", "b", "d"],
+        result : [{c : "e"}, ["d"]],
+      }, {
+        scope : { a : { b : "e"}},
+        keys : ["c", "e", "d"],
+        result : [{ a : { b : "e"}}, ["c", "e", "d"]],
+      },{
+        scope : { a : { b : {}}},
+        keys : ["a", "b", "c"],
+        result : [{}, ["c"]],
+      }]
+  })
+
+  it('setTarget() - error', function(){
+
+  })
+
+   it('setTarget() - run', function(){
+
+    var scope = {}
+    const value = "val"
+    var tests = [
+      {
+        scope : scope,
+        keys: ["a"],
+        value: value,
+        input : function(){
+          return scope.a
+        }
+      }, {
+        scope : scope,
+        keys: ["a", "b"],
+        value: value,
+        input : function(){
+          return scope.a.b
+        }
+      }, {
+        scope : scope,
+        keys: ["a", "b", "c"],
+        value: value,
+        result: value,
+        input : function(){
+          return scope.a.b.c
+        }
+      }]
+
+      tests.forEach(function(test){
+        csDescriptorFactory.setTarget(test.scope, test.keys, test.value);
+        expect(test.input()).toEqual(test.value);
+      })
+
+      var scope = { a : {  b : value }}
+      var tests = [{
+        scope : scope,
+        keys : ["a", "c"],
+        value : value,
+        input : function(){
+          return scope.a.c
+        }
+      }, {
+        scope : scope,
+        keys : ["c"],
+        value : value,
+        input : function(){
+          return scope.c
+        }
+      }]
+
+    tests.forEach(function(test){
+      csDescriptorFactory.setTarget(test.scope, test.keys, test.value);
+      expect(test.input()).toEqual(test.value);
+    })
+  })
+
+  it('getObject() - run', function(){
+
+    var tests = [
+      {
+        key: "key",
+        object : "value",
+        result: { key : "value"},
+      }, {
+        key: "key",
+        object : { key : "value"},
+        result: "value",
+      }, {
+        key: "key",
+        object : { key : { key : "value"}},
+        result:  { key : "value"},
+      }
+    ]
+
+    tests.forEach(function(test){
+      expect(csDescriptorFactory.getObject(test.key, test.object)).toEqual(test.result);
+    })
+  })
+
+  it('propagate() - run', function(){
     var formScope = {
       descriptor : {
         name : "csForm_t",
@@ -143,6 +193,28 @@ describe('csDescriptorFactory', function(){
       formMode : "create",
     }
 
+    var tests = [{
+      scope : formScope,
+      descriptor : {
+        type : "switch",
+        base : ["formMode"],
+        target : ["childDescriptors", "csField", "layout"],
+        rule : {
+          create : "create_result",
+        }},
+      resultVar : function(){
+        return formScope.formMode
+      },
+      result : "create_result"
+    }]
+
+    tests.forEach(function(test){
+
+      csDescriptorFactory.propagate(test.scope, test.descriptor);
+      expect(test.resultVar()).toEqual(test.result);
+    })
+
+    /*
     csDescriptorPropagationSettings.addCase('csForm_t', {
       type : "switch",
       base : ["formMode"],
@@ -151,17 +223,18 @@ describe('csDescriptorFactory', function(){
         create : "create_result",
       }
     })
+    */
 
+    /*
     csDescriptorPropagationSettings.addCase('csForm_t', {
       type : "copy",
       base : ["formMode"],
-      target : ["childDescriptors1", "csField1", "mode"],
-    })
+      target : ["childDescriptors", "csField", "mode"],
+    }) */
 
-    csDescriptorFactory.processData(formScope);
-
-    expect(formScope.childDescriptors.csField.layout).toEqual("create_result");
-    expect(formScope.childDescriptors1.csField1.mode).toEqual("create");
+    //csDescriptorFactory.processData(formScope);
+    //expect(formScope.childDescriptors.csField.layout).toEqual("create_result");
+    //expect(formScope.childDescriptors.csField.mode).toEqual("create");
   })
 
   /* Output

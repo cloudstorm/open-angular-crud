@@ -34,7 +34,8 @@ app.factory 'csDescriptorFactory', [ 'csErrorFactory', 'csLayoutSettings', 'csDe
       when "copy" then value = base
       else throw new Error("Type '" + descriptor.type + "' is not a valid propagation type.")
 
-    setTarget(scope, descriptor.target, value)
+    def = prepareTarget(scope, descriptor.target)
+    setTarget(def[0], def[1], value)
 
   getBase = (scope, keys) ->
 
@@ -51,12 +52,25 @@ app.factory 'csDescriptorFactory', [ 'csErrorFactory', 'csLayoutSettings', 'csDe
 
     return object
 
-  prepareArray = (scope, target) ->
-    throw new Error("prepare")
+  prepareTarget = (scope, _keys_) ->
 
-  setTarget = (scope, _keys_, val) ->
+    object = scope
+    num = 0
+    keys = null
+    for key in _keys_
+      if key of object
+        if (typeof object[key]) == 'object'
+          object = object[key]
+        else
+          csErrorFactory.throw "csDescriptorFactory", "overlap", [_keys_]
+      else
+        keys = _keys_.slice(num)
+      num++
 
-    keys = _keys_.slice()
+    [object, keys]
+
+  setTarget = (scope, keys, val) ->
+
     firstKey = keys.shift()
     if(keys.length > 0)
       lastKey = keys.pop()
@@ -104,11 +118,12 @@ app.factory 'csDescriptorFactory', [ 'csErrorFactory', 'csLayoutSettings', 'csDe
     get: get
     init: init
     getBase: getBase
+    propagate: propagate
     processData: processData
     setStyle: setStyle
     setTarget: setTarget
     getObject: getObject
-    prepareArray: prepareArray
+    prepareTarget: prepareTarget
   }
 
   ##################################################################################################
