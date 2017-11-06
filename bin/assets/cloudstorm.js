@@ -970,7 +970,7 @@ app.factory("csInputBase", [
 "use strict";
 var app;
 
-app = angular.module('cloudStorm.csMenu', []);
+app = angular.module('cloudStorm.menu', []);
 
 app.directive("csMenu", [
   'ResourceService', 'csDescriptorService', 'csRoute', function(ResourceService, csDescriptorService, csRoute) {
@@ -2803,6 +2803,15 @@ app.factory('csTemplateService', [
 ]);
 
 var app;
+app = angular.module('cloudStorm.loader', []);
+app.component("csLoader", {
+    bindings: {
+        color: '<',
+        radius: '<',
+    },
+    templateUrl: 'cs-utils/loader/cs-loader-template.html',
+});
+var app;
 app = angular.module('cloudStorm.csLoader', []);
 app.component("csLoader", {
     bindings: {
@@ -3035,9 +3044,9 @@ app.provider('csLayoutSettings', [
 
 var app;
 
-app = angular.module('cloudStorm', ['cloudStorm.alertService', 'cloudStorm.alert', 'cloudStorm.field', 'cloudStorm.form', 'cloudStorm.wizard', 'cloudStorm.checkbox', 'cloudStorm.csMenu', 'cloudStorm.date', 'cloudStorm.time', 'cloudStorm.datetime', 'cloudStorm.enum', 'cloudStorm.index', 'cloudStorm.index.sidePanel', 'cloudStorm.csItemList', 'cloudStorm.main', 'cloudStorm.number', 'cloudStorm.profile', 'cloudStorm.resourceInput', 'cloudStorm.textfield', 'cloudStorm.inputBase', 'cloudStorm.dataStore', 'cloudStorm.localizationProvider', 'cloudStorm.resource', 'cloudStorm.resourceService', 'cloudStorm.restApi', 'cloudStorm.settings', 'cloudStorm.templateService', 'cloudStorm.templates', 'cloudStorm.descriptorService', 'ui.router', 'cloudStorm.routeProvider', 'ui.bootstrap', 'cloudStorm.csLoader', 'cloudStorm.csError', 'cloudStorm.uiPageRouter']);
+app = angular.module('cloudStorm', ['cloudStorm.alertService', 'cloudStorm.alert', 'cloudStorm.field', 'cloudStorm.form', 'cloudStorm.wizard', 'cloudStorm.checkbox', 'cloudStorm.menu', 'cloudStorm.date', 'cloudStorm.time', 'cloudStorm.datetime', 'cloudStorm.enum', 'cloudStorm.index', 'cloudStorm.index.sidePanel', 'cloudStorm.itemList', 'cloudStorm.main', 'cloudStorm.number', 'cloudStorm.profile', 'cloudStorm.resourceInput', 'cloudStorm.textfield', 'cloudStorm.inputBase', 'cloudStorm.dataStore', 'cloudStorm.localizationProvider', 'cloudStorm.resource', 'cloudStorm.resourceService', 'cloudStorm.restApi', 'cloudStorm.settings', 'cloudStorm.templateService', 'cloudStorm.templates', 'cloudStorm.descriptorService', 'ui.router', 'cloudStorm.routeProvider', 'ui.bootstrap', 'cloudStorm.loader', 'cloudStorm.error', 'cloudStorm.uiPageRouter']);
 
-var app = angular.module("cloudStorm.csItemList", [])
+var app = angular.module("cloudStorm.itemList", [])
 
 app.component("csItemList", {
 
@@ -3310,8 +3319,7 @@ this.call = function(params, func){
 
 var app
 
-app = angular.module("cloudStorm.csError", [])
-
+app = angular.module("cloudStorm.error", [])
 
 app.component("csError", {
 
