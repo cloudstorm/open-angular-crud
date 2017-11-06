@@ -4,7 +4,7 @@ app = angular.module('cloudStorm.field', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csField", ['$compile', '$templateRequest', 'csDescriptorFactory', ($compile, $templateRequest, csDescriptorFactory) ->
+app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRequest) ->
 
   # ===== COMPILE =============================================================
 

@@ -4,7 +4,7 @@ app = angular.module('cloudStorm.form', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csForm", ['csSettings', 'csDescriptorFactory', (csSettings, csDescriptorFactory) ->
+app.directive "csForm", ['csSettings', (csSettings) ->
 
   # ===== COMPILE =============================================================
 
