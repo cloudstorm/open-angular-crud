@@ -8,8 +8,8 @@ angular.module('cloudStorm.localizationProvider', [])
 ####################################################################################################
 
   defaultTranslations = {
-    'false': 'Yes'
-    'true': 'No'
+    'false': 'No'
+    'true': 'Yes'
     'new': 'New'
     'today': 'Today'
     'create_another': 'Create another'
@@ -30,6 +30,8 @@ angular.module('cloudStorm.localizationProvider', [])
     'alert.resource_not_found' : 'There is no resource with the ID: '
     'confirm.delete': "Are you sure you want to delete the item?"
     'filter_for_anything': 'Filter for anything'
+    'checkbox.checked': '✓'
+    'checkbox.unchecked': '✘'
   }
 
   translations = defaultTranslations

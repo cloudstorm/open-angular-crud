@@ -2,9 +2,9 @@
 %input.form-control{ "ng-if" => "mode('create') || mode('edit')",
                      "ng-disabled" => "fieldDisabled()",
                      "ng-model" => "formItem.attributes[field.attribute]",
-                     type: "checkbox" }
+                     "type" => "checkbox" }
 .show-view{"ng-if" => "mode('show')"}
   %div{"ng-if" => "formItem.attributes[field.attribute]"}
-    ✓
+    {{ i18n.t('checkbox.checked') }}
   %div{"ng-if" => "!formItem.attributes[field.attribute]"}
-    ✘
+    {{ i18n.t('checkbox.unchecked') }}
