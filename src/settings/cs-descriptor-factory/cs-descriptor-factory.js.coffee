@@ -6,6 +6,7 @@ app = angular.module('cloudStorm.descriptorFactory', [])
 app.factory 'csDescriptorFactory', [ 'csErrorFactory', 'csLayoutSettings', 'csDescriptorPropagationSettings', 'csHashService', (csErrorFactory, csLayoutSettings, csDescriptorPropagationSettings, csHashService) ->
 ####################################################################################################
 
+
   init = (scope, name) ->
     if !scope.descriptor
       scope.descriptor = {}
@@ -24,6 +25,25 @@ app.factory 'csDescriptorFactory', [ 'csErrorFactory', 'csLayoutSettings', 'csDe
     #setStyle(scope, csLayoutSettings.style[scope.descriptor.name])
 
     #It loads the style descriptors too.
+
+  process = (variable, def) ->
+
+    base = getBase(def, value)
+    value = getValue(base, def)
+    objectInstance = getObject(def, value)
+    variable = objectInstance.get(variable)
+
+  getObject = (def) ->
+
+    lastKey = def.target.pop()
+    keys = def.target.reverse()
+    object = new _Value_(lastKey, value)
+    for key in keys
+      object = new _Object_(key, object)
+    object
+
+  setValue = (variable, objectInstance) ->
+
 
   propagate = (scope, descriptor) ->
 

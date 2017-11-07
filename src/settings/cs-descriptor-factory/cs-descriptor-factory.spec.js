@@ -20,6 +20,30 @@ describe('csDescriptorFactory', function(){
     expect(csDescriptorFactory).toBeDefined();
   });
 
+  it('process', function(){
+
+    var scope = {
+      formMode : "create",
+    }
+
+    var tests = [{
+      type : "switch",
+      base : ["formMode"],
+      target : ["csField", "style", "alignment"],
+      rule : {
+        create : "vertical",
+        edit : "horizontal",
+        show : "horizontal",
+      }
+    }, {
+      type : "copy",
+      base : ["formMode"],
+      target : ["childDescriptors", "csField", "fieldMode"],
+    }]
+
+
+  })
+
   it('getBase() - error', function(){
 
     var errorTests = [
@@ -52,6 +76,10 @@ describe('csDescriptorFactory', function(){
         scope : { a : "b"},
         keys : ["a"],
         result : "b"
+      }, {
+        scope : { a : {b : { c : "X" }}},
+        keys : ["a", "b", "c"],
+        result : "b"
       }
     ]
 
@@ -66,15 +94,15 @@ describe('csDescriptorFactory', function(){
     var keys = ["a", "b"]
     var value = "d_value"
 
-  }
+  })
 
   it('prepareTarget() - error_1', function(){
 
     //This is an other type of overlap
-    var scope = { a : { b : "b_val"};
+    var scope = { a : { b : "b_val"}};
     var keys = ["a", "c"]
-      
-  }
+
+  })
 
 
   it('prepareTarget() - error', function(){
