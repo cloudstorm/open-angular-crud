@@ -1,4 +1,4 @@
-.input-group.cs-resource-input-group{ 'ng-if' => "field.cardinality == 'one' && !mode('sh')" }
+.input-group.cs-resource-input-group{ 'ng-if' => "field.cardinality == 'one' && !mode('show')" }
   %ui-select{ "ng-disabled" => "fieldDisabled()",
               "ng-required" => "fieldRequired()",
               "ng-model" => "model.object",
@@ -13,15 +13,17 @@
       %span
         {{item.$display_name()}}
 
-      %span.input-group-btn{"ng-if" => "canCreateResources() || createDisabled()"}
+      %span.input-group-btn{ "ng-if" => "canCreateResources() || createDisabled()" }
         %button.btn.btn-default{ "ng-disabled" => "fieldDisabled()",
                                  "ng-click" => "pushPanel()",
                                  "type" => "button" } {{ i18n.t('buttons.new') }}
-.showField{ "ng-if" => "mode('view') && field.cardinality == 'one'"}
-  {{model.object.attributes[resource.descriptor.fields[0].attribute]}}
+.form-control.no-cursor{ "ng-if" => "mode('show') && field.cardinality == 'one'",
+                         "disabled" => "true" }
+  {{ model.object.attributes[resource.descriptor.fields[0].attribute] }}
 
-%cs-item-list{"ng-if" => "mode('show') && field.cardinality == 'many'",
-      "item-list" => "model.object", "key" => "resource.descriptor.fields[0].attribute"}
+%cs-item-list{ "ng-if" => "mode('show') && field.cardinality == 'many'",
+               "item-list" => "model.object",
+               "key" => "resource.descriptor.fields[0].attribute" }
 
 .input-group.cs-resource-input-group{ "ng-if" => "!mode('show') && field.cardinality == 'many'" }
   %ui-select{ "ui-select-override" => "",
@@ -32,7 +34,7 @@
               "close-on-select" => "true",
               "multiple" => true,
               "enable" => "false" }
-    %ui-select-match{"ui-lock-choice" => "mode('show')"}
+    %ui-select-match{ "ui-lock-choice" => "mode('show')" }
       %span
         {{$item.$display_name()}}
     %ui-select-choices{ "repeat" => "item in associates track by $index",
@@ -41,7 +43,7 @@
       %span
         {{item.$display_name()}}
 
-  %span.input-group-btn{"ng-if" => "createResources() && !createDisabled() && !mode('show')"}
+  %span.input-group-btn{ "ng-if" => "createResources() && !createDisabled() && !mode('show')" }
     %button.btn.btn-default{ "ng-disabled" => "fieldDisabled()",
                              "ng-click" => "pushPanel()",
                              "type" => "button" } {{ i18n.t('buttons.new') }}

@@ -1,27 +1,22 @@
-.itemContainer {
+.item-container {
   display : flex;
   flex-flow: row wrap;
-  background-color: #f8f7f8;
-  border: 1px solid #ded9d9;
-  border-radius: 4px;
-  padding: 4px;
-  margin-left: 4px;
-  width: 242px;
-  min-height: 34px;
+  margin: 0 0 -8px -8px;
 }
 
 .item-item {
   flex : 1;
-  padding: 4px;
-  border: 1px solid #ded9d9;
-  border-radius: 3px;
-  background-color: white;
-  margin : 3px;
+  padding: 6px 12px;
+  color: $gray;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin: 0 0 8px 8px;
+  background-color: $gray-lighter;
   text-align: center;
   white-space: nowrap;
 }
 
-.no-item{
+.no-item {
   color: #ff0000ab;
   font-size: 12px;
   font-style: italic;
@@ -31,5 +26,5 @@
 
 .item-item:hover {
   cursor: pointer;
-  border: 1px solid #a5a2a2;
+  border: 1px solid $gray-dark;
 }

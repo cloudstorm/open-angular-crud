@@ -23,7 +23,8 @@
                               "create-resources" => "createResources()",
                               "ng-show" => "isFieldVisible(field.attribute)" }
 
-.form-group.form-actions{ "ng-transclude" => "actions" , "ng-if" => "formMode != 'show'"}
+.form-group.form-actions{ "ng-transclude" => "actions",
+                          "ng-if" => "formMode != 'show'" }
   .actions-inner
     .btn-tooltip-wrapper{ "uib-tooltip" => "{{i18n.t('validation_text')}}",
                           "tooltip-placement" => "right",
@@ -50,5 +51,5 @@
     .checkbox.create-another{ "ng-if" => "formMode == 'create' && wizardPanelIndex == 0" }
       %label
         %input{ "ng-model" => "csFormOptions['keep-first']",
-                type: "checkbox" }
+                "type" => "checkbox" }
           {{ i18n.t('create_another') }}

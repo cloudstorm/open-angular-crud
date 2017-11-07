@@ -11,7 +11,8 @@
                       "clear-text" => "{{ i18n.t('buttons.clear') }}",
                       "close-text" => "{{ i18n.t('buttons.close') }}",
                       "ng-model-options" => "getModelOptions()",
-                      type: "text",
+                      "type" => "text",
                       "autocomplete" => "off" }
-.showField{ "ng-if" => "mode('show')"}
-  {{input_date}}
+.form-control.no-cursor{ "ng-if" => "mode('show')",
+                         "disabled" => "true"  }
+  {{ input_date }}

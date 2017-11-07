@@ -35,7 +35,7 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
 
 
     $scope.csFieldOptions.layout =
-      alignement : 'horizontal'
+      alignment : 'horizontal'
       fieldType : 'view'
 
     if override = getDirectiveOverride($scope)
@@ -56,8 +56,7 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
         when type == 'enum'     then 'cs-enum'
         when type == 'boolean'  then 'cs-checkbox'
 
-    wrapper_name = ".cs-input-wrapper_" + $scope.formMode
-    #wrapper_name = ".cs-input-wrapper"
+    wrapperName = ".cs-input-wrapper-" + $scope.formMode
 
     inputTemplate = "<#{directiveName} form-item='formItem'
                                        field-name='fieldName'
@@ -67,7 +66,7 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
                                        options='csFieldOptions'>
                      </#{directiveName}>"
 
-    innerElement = angular.element(element[0].querySelector(wrapper_name))
+    innerElement = angular.element(element[0].querySelector(wrapperName))
     innerElement.append($compile(inputTemplate)($scope))
 
     # ===== DOM MANIPULATION ON SCOPE CHANGE ==============

@@ -4,35 +4,35 @@
 /
 
 /.div{"ng-switch" => "formMode"}
-.cs-field-inner{"ng-show" => "formMode == 'edit' || formMode == 'create'"}
+.cs-field-inner{ "ng-show" => "formMode == 'edit' || formMode == 'create'" }
 
-  %label.control-label {{field.label}}
+  %label.control-label {{ field.label }}
   %span{ "ng-if" => "field.required" } *
 
   / CS will populate the correct input taking into account its overrides
-  .cs-input-wrapper_edit
-  .cs-input-wrapper_create
+  .cs-input-wrapper-edit
+  .cs-input-wrapper-create
 
   %span.help-block{ "ng-if" => "field.errors.length > 0" }
-    {{getError(field)}}
+    {{ getError(field) }}
 
   %span.help-block{ "ng-if" => "(!(field.errors.length > 0) && (getHint(field)))" }
-    {{getHint(field)}}
+    {{ getHint(field) }}
 
   .cover
 
-.cs-field-inner{"ng-show" => "formMode == 'show'"}
+.cs-field-inner{ "ng-show" => "formMode == 'show'" }
   .cs-field-row
-    .cs-field-element_1
-      %label.control-label {{field.label}}
+    .cs-field-label
+      %label.control-label {{ field.label }}
       / CS will populate the correct input taking into account its overrides
-    .cs-field-element_2
-      .cs-input-wrapper_show
+    .cs-field-content
+      .cs-input-wrapper-show
 
     %span.help-block{ "ng-if" => "field.errors.length > 0" }
-      {{getError(field)}}
+      {{ getError(field) }}
 
     %span.help-block{ "ng-if" => "(!(field.errors.length > 0) && (getHint(field)))" }
-      {{getHint(field)}}
+      {{ getHint(field) }}
 
     .cover

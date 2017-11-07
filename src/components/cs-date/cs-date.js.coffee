@@ -25,7 +25,7 @@ app.directive "csDate", ['uibDateParser', 'csSettings', 'csInputBase', (uibDateP
 
   format_date = ($scope) ->
     format = $scope.options['date-format'] || csSettings.settings['date-format']
-    $scope.input_date = $scope.formItem.attributes[$scope.field.attribute] 
+    $scope.input_date = $scope.formItem.attributes[$scope.field.attribute]
     if format
       input_date = $scope.formItem.attributes[$scope.field.attribute]
       date = uibDateParser.parse(input_date, format)
