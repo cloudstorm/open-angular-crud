@@ -17,11 +17,8 @@
         %button.btn.btn-default{ "ng-disabled" => "fieldDisabled()",
                                  "ng-click" => "pushPanel()",
                                  "type" => "button" } {{ i18n.t('buttons.new') }}
-.form-control.no-cursor{ "ng-if" => "mode('show') && field.cardinality == 'one'",
-                         "disabled" => "true" }
-  {{ model.object.attributes[resource.descriptor.fields[0].attribute] }}
 
-%cs-item-list{ "ng-if" => "mode('show') && field.cardinality == 'many'",
+%cs-item-list{ "ng-if" => "mode('show')",
                "item-list" => "model.object",
                "key" => "resource.descriptor.fields[0].attribute" }
 

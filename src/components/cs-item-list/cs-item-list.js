@@ -10,6 +10,9 @@ app.component("csItemList", {
   templateUrl : "components/cs-item-list/cs-item-list-template.html",
   controller : function(csRoute, csSettings){
 
+    if(!Array.isArray(this.itemList)){
+      this.itemList = [this.itemList]
+    }
     this.i18n = csSettings.settings['i18n-engine']
 
     this.click = function(item){
