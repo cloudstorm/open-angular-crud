@@ -2801,6 +2801,15 @@ app.factory('csTemplateService', [
 ]);
 
 var app;
+app = angular.module('cloudStorm.loader', []);
+app.component("csLoader", {
+    bindings: {
+        color: '<',
+        radius: '<',
+    },
+    templateUrl: 'cs-utils/loader/cs-loader-template.html',
+});
+var app;
 app = angular.module('cloudStorm.csLoader', []);
 app.component("csLoader", {
     bindings: {
@@ -3424,7 +3433,7 @@ app.service("csHashService", function(){
   }
 })
 
-angular.module('cloudStorm.templates', ['components/cs-alert/cs-alert-template.html', 'components/cs-checkbox/cs-checkbox-template.html', 'components/cs-date/cs-date-template.html', 'components/cs-datetime/cs-datetime-template.html', 'components/cs-enum/cs-enum-template.html', 'components/cs-field/cs-field-template.html', 'components/cs-form/cs-form-template.html', 'components/cs-index/cs-index-sidepanel/cs-index-sidepanel-template.html', 'components/cs-index/cs-index-template.html', 'components/cs-item-list/cs-item-list-template.html', 'components/cs-menu/cs-menu-template.html', 'components/cs-number/cs-number-template.html', 'components/cs-profile/cs-profile-template.html', 'components/cs-resource-input/cs-resource-input-template.html', 'components/cs-textfield/cs-textfield-template.html', 'components/cs-time/cs-time-template.html', 'components/cs-wizard/cs-wizard-panel-template.html', 'components/cs-wizard/cs-wizard-template.html', 'cs-route-provider/router-component/cs-page-router-template.html', 'cs-utils/cs-error-template/cs-error-template.html', 'cs-utils/loader/cs-loader-template.html']);
+angular.module('cloudStorm.templates', ['components/cs-alert/cs-alert-template.html', 'components/cs-checkbox/cs-checkbox-template.html', 'components/cs-date/cs-date-template.html', 'components/cs-datetime/cs-datetime-template.html', 'components/cs-enum/cs-enum-template.html', 'components/cs-field/cs-field-template.html', 'components/cs-form/cs-form-template.html', 'components/cs-index/cs-index-sidepanel/cs-index-sidepanel-template.html', 'components/cs-index/cs-index-template.html', 'components/cs-item-list/cs-item-list-template.html', 'components/cs-main/cs-main-template.html', 'components/cs-menu/cs-menu-template.html', 'components/cs-number/cs-number-template.html', 'components/cs-profile/cs-profile-template.html', 'components/cs-resource-input/cs-resource-input-template.html', 'components/cs-textfield/cs-textfield-template.html', 'components/cs-time/cs-time-template.html', 'components/cs-wizard/cs-wizard-panel-template.html', 'components/cs-wizard/cs-wizard-template.html', 'cs-route-provider/router-component/cs-page-router-template.html', 'cs-utils/cs-error-template/cs-error-template.html', 'cs-utils/cs-loader/cs-loader-template.html', 'cs-utils/loader/cs-loader-template.html']);
 
 angular.module("components/cs-alert/cs-alert-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-alert/cs-alert-template.html",
@@ -3688,6 +3697,18 @@ angular.module("components/cs-item-list/cs-item-list-template.html", []).run(["$
     "");
 }]);
 
+angular.module("components/cs-main/cs-main-template.html", []).run(["$templateCache", function ($templateCache) {
+  $templateCache.put("components/cs-main/cs-main-template.html",
+    "<div ng-controller='MainCtrl'>\n" +
+    "<cs-menu></cs-menu>\n" +
+    "<cs-alert></cs-alert>\n" +
+    "<div class='container'>\n" +
+    "<ui-view></ui-view>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "");
+}]);
+
 angular.module("components/cs-menu/cs-menu-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-menu/cs-menu-template.html",
     "<div class='flex nav'>\n" +
@@ -3878,6 +3899,14 @@ angular.module("cs-utils/cs-error-template/cs-error-template.html", []).run(["$t
     "Error!\n" +
     "</strong>\n" +
     "{{error}}\n" +
+    "</div>\n" +
+    "");
+}]);
+
+angular.module("cs-utils/cs-loader/cs-loader-template.html", []).run(["$templateCache", function ($templateCache) {
+  $templateCache.put("cs-utils/cs-loader/cs-loader-template.html",
+    "<div class='middle'>\n" +
+    "<div class='loader'></div>\n" +
     "</div>\n" +
     "");
 }]);
