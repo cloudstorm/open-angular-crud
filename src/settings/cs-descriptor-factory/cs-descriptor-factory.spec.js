@@ -59,6 +59,23 @@ describe('csDescriptorFactory', function(){
       expect(csDescriptorFactory.getBase(test.scope, test.keys)).toEqual(test.result);
     })
   })
+  it('prepareTarget() - error_1', function(){
+
+    //This is an other type of overlap
+    var scope = { a : { b : { c : "c_value" }}};
+    var keys = ["a", "b"]
+    var value = "d_value"
+
+  }
+
+  it('prepareTarget() - error_1', function(){
+
+    //This is an other type of overlap
+    var scope = { a : { b : "b_val"};
+    var keys = ["a", "c"]
+      
+  }
+
 
   it('prepareTarget() - error', function(){
     var errorTests = [
