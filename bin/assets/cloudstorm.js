@@ -1,5 +1,5 @@
 /**
- * cloudstorm - v0.0.15 - 2017-11-06
+ * cloudstorm - v0.0.15 - 2017-11-07
  * https://github.com/cloudstorm/cloudstorm#readme
  *
  * Copyright (c) 2017 Virtual Solutions Ltd <info@cloudstorm.io>
@@ -2825,7 +2825,7 @@ app = angular.module('cloudStorm.descriptorFactory', []);
 
 app.factory('csDescriptorFactory', [
   'csErrorFactory', 'csLayoutSettings', 'csDescriptorPropagationSettings', 'csHashService', function(csErrorFactory, csLayoutSettings, csDescriptorPropagationSettings, csHashService) {
-    var get, getBase, getObject, init, newObject, prepareTarget, processData, propagate, setStyle, setTarget;
+    var get, getBase, getObject, init, newObject, prepareTarget, process, processData, propagate, setStyle, setTarget, setValue;
     init = function(scope, name) {
       if (!scope.descriptor) {
         scope.descriptor = {};
@@ -2845,6 +2845,25 @@ app.factory('csDescriptorFactory', [
         return results;
       }
     };
+    process = function(variable, def) {
+      var base, objectInstance, value;
+      base = getBase(def, value);
+      value = getValue(base, def);
+      objectInstance = getObject(def, value);
+      return variable = objectInstance.get(variable);
+    };
+    getObject = function(def) {
+      var i, key, keys, lastKey, len, object;
+      lastKey = def.target.pop();
+      keys = def.target.reverse();
+      object = new _Value_(lastKey, value);
+      for (i = 0, len = keys.length; i < len; i++) {
+        key = keys[i];
+        object = new _Object_(key, object);
+      }
+      return object;
+    };
+    setValue = function(variable, objectInstance) {};
     propagate = function(scope, descriptor) {
       var base, def, value;
       base = getBase(scope, descriptor.base);
@@ -2975,7 +2994,7 @@ app.provider('csDescriptorPropagationSettings', [
         {
           type: "switch",
           base: ["formMode"],
-          target: ["childDescriptors", "csField", "layout"],
+          target: ["csField", "style", "alignment"],
           rule: {
             create: "vertical",
             edit: "horizontal",
@@ -3433,6 +3452,80 @@ app.service("csHashService", function(){
   }
 })
 
+
+class _Object_ {
+
+  constructor(key, value){
+
+    this.key = key
+    this.value = value
+  }
+
+  get(object){
+
+    if((typeof object) != 'object'){
+      throw new Error("overlap")
+    } else {
+      object[this.key] = this.getValue(object)
+      return object
+    }
+  }
+
+  getValue(object){
+    var toPass = object[this.key]
+    return this.value.get(toPass || {})
+  }
+}
+
+class _Value_ extends _Object_ {
+
+  getValue(object){
+    return this.value
+  }
+
+}
+
+var scope = {
+  a : {
+     b : "Y",
+  },
+  b : {
+    c : "X",
+  }
+}
+
+
+var keys = [ "a", "c", "d", "e"]
+var val = "Z"
+
+var obj1 = new _Value_("c", val)
+var obj2 = new _Object_("a", obj1)
+
+//processData
+var process = function(_keys_, value){
+
+  var lastKey = _keys_.pop()
+  var keys = _keys_.reverse()
+  var object = new _Value_(lastKey, value)
+  keys.forEach(function(key){
+    object = new _Object_(key, object);
+
+  })
+  return object;
+}
+
+var object = process(keys, val);
+scope = object.get(scope)
+
+
+var keys = [ "a", "c", "d", "k"]
+var val = "YOOO"
+
+object = process(keys, val);
+scope = object.get(scope)
+console.log("Scope YOOOO")
+console.log(scope)
+
 angular.module('cloudStorm.templates', ['components/cs-alert/cs-alert-template.html', 'components/cs-checkbox/cs-checkbox-template.html', 'components/cs-date/cs-date-template.html', 'components/cs-datetime/cs-datetime-template.html', 'components/cs-enum/cs-enum-template.html', 'components/cs-field/cs-field-template.html', 'components/cs-form/cs-form-template.html', 'components/cs-index/cs-index-sidepanel/cs-index-sidepanel-template.html', 'components/cs-index/cs-index-template.html', 'components/cs-item-list/cs-item-list-template.html', 'components/cs-main/cs-main-template.html', 'components/cs-menu/cs-menu-template.html', 'components/cs-number/cs-number-template.html', 'components/cs-profile/cs-profile-template.html', 'components/cs-resource-input/cs-resource-input-template.html', 'components/cs-textfield/cs-textfield-template.html', 'components/cs-time/cs-time-template.html', 'components/cs-wizard/cs-wizard-panel-template.html', 'components/cs-wizard/cs-wizard-template.html', 'cs-route-provider/router-component/cs-page-router-template.html', 'cs-utils/cs-error-template/cs-error-template.html', 'cs-utils/cs-loader/cs-loader-template.html', 'cs-utils/loader/cs-loader-template.html']);
 
 angular.module("components/cs-alert/cs-alert-template.html", []).run(["$templateCache", function ($templateCache) {
@@ -3578,7 +3671,7 @@ angular.module("components/cs-form/cs-form-template.html", []).run(["$templateCa
     "</span>\n" +
     "</div>\n" +
     "<form name='csForm' ng-transclude='fields' novalidate=''>\n" +
-    "<cs-field class='form-group field' create-resources='createResources()' cs-field-options='csFormOptions' descriptor='childDescriptors[&#39;csField&#39;]' field='field' form-item='editableItem' form-mode='formMode' ng-repeat='field in fields track by $index' ng-show='isFieldVisible(field.attribute)'></cs-field>\n" +
+    "<cs-field class='form-group field' create-resources='createResources()' cs-field-options='csFormOptions' field='field' form-item='editableItem' form-mode='formMode' ng-repeat='field in fields track by $index' ng-show='isFieldVisible(field.attribute)'></cs-field>\n" +
     "</form>\n" +
     "<div class='form-group form-actions' ng-if='formMode != &#39;view&#39;' ng-transclude='actions'>\n" +
     "<div class='actions-inner'>\n" +
