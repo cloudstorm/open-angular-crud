@@ -1,5 +1,5 @@
 /**
- * cloudstorm - v0.0.15 - 2017-11-06
+ * cloudstorm - v0.0.15 - 2017-11-07
  * https://github.com/cloudstorm/cloudstorm#readme
  *
  * Copyright (c) 2017 Virtual Solutions Ltd <info@cloudstorm.io>
@@ -95,7 +95,7 @@ var app;
 app = angular.module('cloudStorm.checkbox', []);
 
 app.directive("csCheckbox", [
-  '$rootScope', 'csInputBase', function($rootScope, csInputBase) {
+  '$rootScope', 'csInputBase', 'csSettings', function($rootScope, csInputBase, csSettings) {
     var compile, link;
     compile = function($templateElement, $templateAttributes) {
       $templateElement.addClass("cs-checkbox");
@@ -106,6 +106,7 @@ app.directive("csCheckbox", [
     };
     link = function($scope, element, attrs, controller) {
       csInputBase($scope);
+      $scope.i18n = csSettings.settings['i18n-engine'];
       $scope.formItem.attributes[$scope.field.attribute] = !!$scope.formItem.attributes[$scope.field.attribute];
       $scope.$watch('formItem.attributes[field.attribute]', function(newValue, oldValue) {
         if (newValue !== oldValue) {
@@ -333,14 +334,14 @@ app.directive("csField", [
       };
     };
     link = function($scope, element, attrs, controller) {
-      var directiveName, innerElement, inputTemplate, override, type, wrapper_name;
+      var directiveName, innerElement, inputTemplate, override, type, wrapperName;
       if (($scope.field == null) && ($scope.fieldName != null)) {
         $scope.field = _.find($scope.formItem.constructor.descriptor.fields, {
           attribute: $scope.fieldName
         });
       }
       $scope.csFieldOptions.layout = {
-        alignement: 'horizontal',
+        alignment: 'horizontal',
         fieldType: 'view'
       };
       if (override = getDirectiveOverride($scope)) {
@@ -370,9 +371,9 @@ app.directive("csField", [
           }
         })();
       }
-      wrapper_name = ".cs-input-wrapper_" + $scope.formMode;
+      wrapperName = ".cs-input-wrapper-" + $scope.formMode;
       inputTemplate = "<" + directiveName + " form-item='formItem' field-name='fieldName' field='field' form-mode='formMode' create-resources='createResources()' options='csFieldOptions'> </" + directiveName + ">";
-      innerElement = angular.element(element[0].querySelector(wrapper_name));
+      innerElement = angular.element(element[0].querySelector(wrapperName));
       innerElement.append($compile(inputTemplate)($scope));
       $scope.$watch('field.inactive', function(newValue, oldValue) {
         if (newValue !== oldValue) {
@@ -1911,8 +1912,8 @@ angular.module('cloudStorm.localizationProvider', []).provider('csLocalization',
   function() {
     var Localization, defaultTranslations, translations;
     defaultTranslations = {
-      'false': 'Yes',
-      'true': 'No',
+      'false': 'No',
+      'true': 'Yes',
       'new': 'New',
       'today': 'Today',
       'create_another': 'Create another',
@@ -1931,8 +1932,11 @@ angular.module('cloudStorm.localizationProvider', []).provider('csLocalization',
       'alert.no_resource_created': 'Nothing created',
       'alert.new_resource_created': 'New resource successfully created',
       'alert.resource_not_found': 'There is no resource with the ID: ',
+      'alert.no_linked_resource': 'There is no linked resource',
       'confirm.delete': "Are you sure you want to delete the item?",
-      'filter_for_anything': 'Filter for anything'
+      'filter_for_anything': 'Filter for anything',
+      'checkbox.checked': '✓',
+      'checkbox.unchecked': '✘'
     };
     translations = defaultTranslations;
     Localization = {
@@ -2827,7 +2831,7 @@ app = angular.module('cloudStorm.descriptorFactory', []);
 
 app.factory('csDescriptorFactory', [
   'csErrorFactory', 'csLayoutSettings', 'csDescriptorPropagationSettings', 'csHashService', function(csErrorFactory, csLayoutSettings, csDescriptorPropagationSettings, csHashService) {
-    var get, getBase, getObject, init, newObject, prepareTarget, processData, propagate, setStyle, setTarget;
+    var get, getBase, getObject, init, newObject, prepareTarget, process, processData, propagate, setStyle, setTarget, setValue;
     init = function(scope, name) {
       if (!scope.descriptor) {
         scope.descriptor = {};
@@ -2847,6 +2851,25 @@ app.factory('csDescriptorFactory', [
         return results;
       }
     };
+    process = function(variable, def) {
+      var base, objectInstance, value;
+      base = getBase(def, value);
+      value = getValue(base, def);
+      objectInstance = getObject(def, value);
+      return variable = objectInstance.get(variable);
+    };
+    getObject = function(def) {
+      var i, key, keys, lastKey, len, object;
+      lastKey = def.target.pop();
+      keys = def.target.reverse();
+      object = new _Value_(lastKey, value);
+      for (i = 0, len = keys.length; i < len; i++) {
+        key = keys[i];
+        object = new _Object_(key, object);
+      }
+      return object;
+    };
+    setValue = function(variable, objectInstance) {};
     propagate = function(scope, descriptor) {
       var base, def, value;
       base = getBase(scope, descriptor.base);
@@ -2977,7 +3000,7 @@ app.provider('csDescriptorPropagationSettings', [
         {
           type: "switch",
           base: ["formMode"],
-          target: ["childDescriptors", "csField", "layout"],
+          target: ["csField", "style", "alignment"],
           rule: {
             create: "vertical",
             edit: "horizontal",
@@ -3044,7 +3067,7 @@ app.provider('csLayoutSettings', [
 
 var app;
 
-app = angular.module('cloudStorm', ['cloudStorm.alertService', 'cloudStorm.alert', 'cloudStorm.field', 'cloudStorm.form', 'cloudStorm.wizard', 'cloudStorm.checkbox', 'cloudStorm.menu', 'cloudStorm.date', 'cloudStorm.time', 'cloudStorm.datetime', 'cloudStorm.enum', 'cloudStorm.index', 'cloudStorm.index.sidePanel', 'cloudStorm.itemList', 'cloudStorm.main', 'cloudStorm.number', 'cloudStorm.profile', 'cloudStorm.resourceInput', 'cloudStorm.textfield', 'cloudStorm.inputBase', 'cloudStorm.dataStore', 'cloudStorm.localizationProvider', 'cloudStorm.resource', 'cloudStorm.resourceService', 'cloudStorm.restApi', 'cloudStorm.settings', 'cloudStorm.templateService', 'cloudStorm.templates', 'cloudStorm.descriptorService', 'ui.router', 'cloudStorm.routeProvider', 'ui.bootstrap', 'cloudStorm.loader', 'cloudStorm.error', 'cloudStorm.uiPageRouter']);
+app = angular.module('cloudStorm', ['cloudStorm.alertService', 'cloudStorm.alert', 'cloudStorm.field', 'cloudStorm.form', 'cloudStorm.wizard', 'cloudStorm.checkbox', 'cloudStorm.menu', 'cloudStorm.date', 'cloudStorm.time', 'cloudStorm.datetime', 'cloudStorm.enum', 'cloudStorm.index', 'cloudStorm.index.sidePanel', 'cloudStorm.itemList', 'cloudStorm.main', 'cloudStorm.number', 'cloudStorm.resourceInput', 'cloudStorm.textfield', 'cloudStorm.inputBase', 'cloudStorm.dataStore', 'cloudStorm.localizationProvider', 'cloudStorm.resource', 'cloudStorm.resourceService', 'cloudStorm.restApi', 'cloudStorm.settings', 'cloudStorm.templateService', 'cloudStorm.templates', 'cloudStorm.descriptorService', 'ui.router', 'cloudStorm.routeProvider', 'ui.bootstrap', 'cloudStorm.loader', 'cloudStorm.error', 'cloudStorm.uiPageRouter']);
 
 var app = angular.module("cloudStorm.itemList", [])
 
@@ -3056,7 +3079,12 @@ app.component("csItemList", {
     uiConfig : "<",
   },
   templateUrl : "components/cs-item-list/cs-item-list-template.html",
-  controller : function(csRoute){
+  controller : function(csRoute, csSettings){
+
+    if(!Array.isArray(this.itemList)){
+      this.itemList = [this.itemList]
+    }
+    this.i18n = csSettings.settings['i18n-engine']
 
     this.click = function(item){
       csRoute.go("show", {resourceType : item.type, id : item.attributes.id})
@@ -3329,6 +3357,16 @@ app.component("csError", {
   templateUrl : "cs-utils/cs-error-template/cs-error-template.html",
 })
 
+'use strict'
+
+var app = angular.module('cloudStorm.objectFactory', [])
+
+app.factory('csObjectFactory', function(){
+
+
+
+})
+
 angular.module('cloudStorm.templates', ['components/cs-alert/cs-alert-template.html', 'components/cs-checkbox/cs-checkbox-template.html', 'components/cs-date/cs-date-template.html', 'components/cs-datetime/cs-datetime-template.html', 'components/cs-enum/cs-enum-template.html', 'components/cs-field/cs-field-template.html', 'components/cs-form/cs-form-template.html', 'components/cs-index/cs-index-sidepanel/cs-index-sidepanel-template.html', 'components/cs-index/cs-index-template.html', 'components/cs-item-list/cs-item-list-template.html', 'components/cs-main/cs-main-template.html', 'components/cs-menu/cs-menu-template.html', 'components/cs-number/cs-number-template.html', 'components/cs-profile/cs-profile-template.html', 'components/cs-resource-input/cs-resource-input-template.html', 'components/cs-textfield/cs-textfield-template.html', 'components/cs-time/cs-time-template.html', 'components/cs-wizard/cs-wizard-panel-template.html', 'components/cs-wizard/cs-wizard-template.html', 'cs-route-provider/router-component/cs-page-router-template.html', 'cs-utils/cs-error-template/cs-error-template.html', 'cs-utils/cs-loader/cs-loader-template.html', 'cs-utils/loader/cs-loader-template.html']);
 
 angular.module("components/cs-alert/cs-alert-template.html", []).run(["$templateCache", function ($templateCache) {
@@ -3345,10 +3383,10 @@ angular.module("components/cs-checkbox/cs-checkbox-template.html", []).run(["$te
     "<input class='form-control' ng-disabled='fieldDisabled()' ng-if='mode(&#39;create&#39;) || mode(&#39;edit&#39;)' ng-model='formItem.attributes[field.attribute]' type='checkbox'>\n" +
     "<div class='show-view' ng-if='mode(&#39;show&#39;)'>\n" +
     "<div ng-if='formItem.attributes[field.attribute]'>\n" +
-    "✓\n" +
+    "{{ i18n.t('checkbox.checked') }}\n" +
     "</div>\n" +
     "<div ng-if='!formItem.attributes[field.attribute]'>\n" +
-    "✘\n" +
+    "{{ i18n.t('checkbox.unchecked') }}\n" +
     "</div>\n" +
     "</div>\n" +
     "");
@@ -3357,8 +3395,8 @@ angular.module("components/cs-checkbox/cs-checkbox-template.html", []).run(["$te
 angular.module("components/cs-date/cs-date-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-date/cs-date-template.html",
     "<input autocomplete='off' class='form-control' clear-text='{{ i18n.t(&#39;buttons.clear&#39;) }}' close-text='{{ i18n.t(&#39;buttons.close&#39;) }}' current-text='{{ i18n.t(&#39;today&#39;) }}' datepicker-append-to-body='true' datepicker-options='{startingDay: 1, showWeeks: false}' is-open='dt.open' ng-click='dt.open = true' ng-disabled='fieldDisabled()' ng-if='mode(&#39;edit&#39;) || mode(&#39;create&#39;)' ng-model-options='getModelOptions()' ng-model='formItem.attributes[field.attribute]' ng-required='fieldRequired()' type='text' uib-datepicker-popup=''>\n" +
-    "<div class='showField' ng-if='mode(&#39;show&#39;)'>\n" +
-    "{{input_date}}\n" +
+    "<div class='form-control no-cursor' disabled='true' ng-if='mode(&#39;show&#39;)'>\n" +
+    "{{ input_date }}\n" +
     "</div>\n" +
     "");
 }]);
@@ -3409,33 +3447,33 @@ angular.module("components/cs-field/cs-field-template.html", []).run(["$template
     "<!--  -->\n" +
     "<!-- .div{\"ng-switch\" => \"formMode\"} -->\n" +
     "<div class='cs-field-inner' ng-show='formMode == &#39;edit&#39; || formMode == &#39;create&#39;'>\n" +
-    "<label class='control-label'>{{field.label}}</label>\n" +
+    "<label class='control-label'>{{ field.label }}</label>\n" +
     "<span ng-if='field.required'>*</span>\n" +
     "<!-- CS will populate the correct input taking into account its overrides -->\n" +
-    "<div class='cs-input-wrapper_edit'></div>\n" +
-    "<div class='cs-input-wrapper_create'></div>\n" +
+    "<div class='cs-input-wrapper-edit'></div>\n" +
+    "<div class='cs-input-wrapper-create'></div>\n" +
     "<span class='help-block' ng-if='field.errors.length &gt; 0'>\n" +
-    "{{getError(field)}}\n" +
+    "{{ getError(field) }}\n" +
     "</span>\n" +
     "<span class='help-block' ng-if='(!(field.errors.length &gt; 0) &amp;&amp; (getHint(field)))'>\n" +
-    "{{getHint(field)}}\n" +
+    "{{ getHint(field) }}\n" +
     "</span>\n" +
     "<div class='cover'></div>\n" +
     "</div>\n" +
     "<div class='cs-field-inner' ng-show='formMode == &#39;show&#39;'>\n" +
     "<div class='cs-field-row'>\n" +
-    "<div class='cs-field-element_1'>\n" +
-    "<label class='control-label'>{{field.label}}</label>\n" +
+    "<div class='cs-field-label'>\n" +
+    "<label class='control-label'>{{ field.label }}</label>\n" +
     "<!-- CS will populate the correct input taking into account its overrides -->\n" +
     "</div>\n" +
-    "<div class='cs-field-element_2'>\n" +
-    "<div class='cs-input-wrapper_show'></div>\n" +
+    "<div class='cs-field-content'>\n" +
+    "<div class='cs-input-wrapper-show'></div>\n" +
     "</div>\n" +
     "<span class='help-block' ng-if='field.errors.length &gt; 0'>\n" +
-    "{{getError(field)}}\n" +
+    "{{ getError(field) }}\n" +
     "</span>\n" +
     "<span class='help-block' ng-if='(!(field.errors.length &gt; 0) &amp;&amp; (getHint(field)))'>\n" +
-    "{{getHint(field)}}\n" +
+    "{{ getHint(field) }}\n" +
     "</span>\n" +
     "<div class='cover'></div>\n" +
     "</div>\n" +
@@ -3572,12 +3610,12 @@ angular.module("components/cs-index/cs-index-template.html", []).run(["$template
 
 angular.module("components/cs-item-list/cs-item-list-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-item-list/cs-item-list-template.html",
-    "<div class='itemContainer'>\n" +
+    "<div class='item-container'>\n" +
     "<div class='item-item' ng-click='$ctrl.click(item)' ng-repeat='item in $ctrl.itemList'>\n" +
-    "{{item.attributes[$ctrl.key]}}\n" +
+    "{{ item.attributes[$ctrl.key] }}\n" +
     "</div>\n" +
     "<div class='no-item' ng-if='$ctrl.itemList.length == 0'>\n" +
-    "There is no item to show\n" +
+    "{{ $ctrl.i18n.t('alert.no_linked_resource') }}\n" +
     "</div>\n" +
     "</div>\n" +
     "");
@@ -3653,7 +3691,7 @@ angular.module("components/cs-profile/cs-profile-template.html", []).run(["$temp
 
 angular.module("components/cs-resource-input/cs-resource-input-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-resource-input/cs-resource-input-template.html",
-    "<div class='input-group cs-resource-input-group' ng-if='field.cardinality == &#39;one&#39; &amp;&amp; !mode(&#39;sh&#39;)'>\n" +
+    "<div class='input-group cs-resource-input-group' ng-if='field.cardinality == &#39;one&#39; &amp;&amp; !mode(&#39;show&#39;)'>\n" +
     "<ui-select append-to-body='true' close-on-select='true' ng-disabled='fieldDisabled()' ng-model='model.object' ng-required='fieldRequired()'>\n" +
     "<ui-select-match allow-clear>\n" +
     "<span>\n" +
@@ -3670,10 +3708,7 @@ angular.module("components/cs-resource-input/cs-resource-input-template.html", [
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "</div>\n" +
-    "<div class='showField' ng-if='mode(&#39;view&#39;) &amp;&amp; field.cardinality == &#39;one&#39;'>\n" +
-    "{{model.object.attributes[resource.descriptor.fields[0].attribute]}}\n" +
-    "</div>\n" +
-    "<cs-item-list item-list='model.object' key='resource.descriptor.fields[0].attribute' ng-if='mode(&#39;show&#39;) &amp;&amp; field.cardinality == &#39;many&#39;'></cs-item-list>\n" +
+    "<cs-item-list item-list='model.object' key='resource.descriptor.fields[0].attribute' ng-if='mode(&#39;show&#39;)'></cs-item-list>\n" +
     "<div class='input-group cs-resource-input-group' ng-if='!mode(&#39;show&#39;) &amp;&amp; field.cardinality == &#39;many&#39;'>\n" +
     "<ui-select append-to-body='true' close-on-select='true' enable='false' multiple ng-disabled='fieldDisabled()' ng-model='model.object' ng-required='fieldRequired()' ui-select-override=''>\n" +
     "<ui-select-match ui-lock-choice='mode(&#39;show&#39;)'>\n" +
@@ -3710,8 +3745,8 @@ angular.module("components/cs-textfield/cs-textfield-template.html", []).run(["$
     "<ui-select-choices repeat='item in []'></ui-select-choices>\n" +
     "</ui-select>\n" +
     "</div>\n" +
-    "<div class='showField' ng-if='mode(&#39;show&#39;)' ng-model='$parent.formItem.attributes[$parent.field.attribute]'>\n" +
-    "{{formItem.attributes[field.attribute]}}\n" +
+    "<div class='form-control no-cursor' disabled ng-if='mode(&#39;show&#39;)' ng-model='$parent.formItem.attributes[$parent.field.attribute]'>\n" +
+    "{{ formItem.attributes[field.attribute] }}\n" +
     "</div>\n" +
     "");
 }]);
