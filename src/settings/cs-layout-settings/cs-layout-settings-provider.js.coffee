@@ -6,8 +6,7 @@ app = angular.module("cloudStorm.layoutSettings", [])
 
 app.provider 'csLayoutSettings', [() ->
 
-  @style = {
-
+  @style =
     'csField' : {
       alignment : {
         horizontal : {
@@ -33,7 +32,7 @@ app.provider 'csLayoutSettings', [() ->
         }
       }
     }
-  }
+
 
   @$get = ->
     @
