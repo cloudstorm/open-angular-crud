@@ -30,6 +30,7 @@ module.exports = function(config) {
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
       './src/**/*.haml': ['ng-haml2js'],
+      './src/**/*.js': ['babel'],
       './bin/assets/cloudstorm.js': ['coverage']
     },
 
