@@ -202,6 +202,9 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
         $scope.unselectItem()
         loadData()
 
+      $scope.testEvent = (test) ->
+        alert test
+
       $scope.openNewResourcePanel = () ->
         $scope.unselectItem()
 
