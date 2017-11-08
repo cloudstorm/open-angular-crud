@@ -4,12 +4,12 @@ angular.module('cloudStorm.localizationProvider', [])
 # A simple key-value lookup base translation service
 
 .provider 'csLocalization', [ () ->
-  
+
 ####################################################################################################
 
   defaultTranslations = {
-    'false': 'Yes'
-    'true': 'No'
+    'false': 'No'
+    'true': 'Yes'
     'new': 'New'
     'today': 'Today'
     'create_another': 'Create another'
@@ -18,6 +18,7 @@ angular.module('cloudStorm.localizationProvider', [])
     'buttons.close': 'Close'
     'buttons.submit': 'Submit'
     'buttons.delete': 'Delete'
+    'buttons.edit': 'Edit'
     'index.empty': ' list empty'
     'buttons.new': 'New'
     'buttons.clear': 'Clear'
@@ -26,10 +27,14 @@ angular.module('cloudStorm.localizationProvider', [])
     'alert.error_happened': 'An error happened'
     'alert.no_resource_created': 'Nothing created'
     'alert.new_resource_created': 'New resource successfully created'
+    'alert.resource_not_found': 'There is no resource with the ID: '
+    'alert.no_linked_resource': 'There is no linked resource'
     'confirm.delete': "Are you sure you want to delete the item?"
     'filter_for_anything': 'Filter for anything'
+    'checkbox.checked': '✓'
+    'checkbox.unchecked': '✘'
   }
-  
+
   translations = defaultTranslations
 
   ##################################################################################################

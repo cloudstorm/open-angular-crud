@@ -1,6 +1,30 @@
 .cs-field {
+
   .cs-field-inner {
     position: relative;
     padding-bottom: 15px;
   }
+
+  .show {
+    //
+  }
+
+  .hide {
+    display : none;
+  }
+
+  .cs-field-row {
+    display : flex;
+    //Horizontal align - necessary
+    align-items: center;
+  }
+
+  .cs-field-label {
+    flex : 1;
+  }
+
+  .cs-field-content {
+    flex : 2;
+  }
+
 }

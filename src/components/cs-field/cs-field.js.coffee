@@ -8,13 +8,15 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
 
   # ===== COMPILE =============================================================
 
-  compile = ($templateElement, $templateAttributes) ->
+
+  compile = ($templateElement, $templateAttributes, $scope) ->
 
     # Only modify the DOM in compile, use (pre/post) link for others
     $templateElement.addClass "cs-field"
 
     # Pre-link: gets called for parent first
     pre: ($scope, element, attrs, controller) ->
+
       return
 
     # Post-link: gets called for children recursively after post() traversed the DOM tree
@@ -25,15 +27,23 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
 
   link = ($scope, element, attrs, controller) ->
 
+
     if !$scope.field? && $scope.fieldName?
       $scope.field = _.find $scope.formItem.constructor.descriptor.fields, { attribute: $scope.fieldName }
 
     # ===== COMPILE DOM WITH APPROPRIATE DIRECTIVE ========
 
+
+    $scope.csFieldOptions.layout =
+      alignment : 'horizontal'
+      fieldType : 'view'
+
     if override = getDirectiveOverride($scope)
       directiveName = override
     else
       type = $scope.field.type
+
+
 
       directiveName = switch
         when type == 'resource' then 'cs-resource-input'
@@ -46,7 +56,8 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
         when type == 'enum'     then 'cs-enum'
         when type == 'boolean'  then 'cs-checkbox'
 
-    innerElement = angular.element(element[0].querySelector('.cs-input-wrapper'))
+    wrapperName = ".cs-input-wrapper-" + $scope.formMode
+
     inputTemplate = "<#{directiveName} form-item='formItem'
                                        field-name='fieldName'
                                        field='field'
@@ -54,6 +65,8 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
                                        create-resources='createResources()'
                                        options='csFieldOptions'>
                      </#{directiveName}>"
+
+    innerElement = angular.element(element[0].querySelector(wrapperName))
     innerElement.append($compile(inputTemplate)($scope))
 
     # ===== DOM MANIPULATION ON SCOPE CHANGE ==============
@@ -67,6 +80,7 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
       if newValue != oldValue
         element.removeClass 'has-error'
         element.addClass 'has-error' if $scope.getError($scope.field)
+
 
 
     # ===== COMPONENT LIFECYCLE ===========================
@@ -95,6 +109,15 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
     $scope.getHint = (field) ->
       field.hint || null
 
+    $scope.viewMode = () ->
+      return $scope.formMode == "view"
+
+    $scope.editOrCreateMode = () ->
+      return $scope.formMode == "edit" || $scope.formMode == "create"
+
+    $scope.style = (name) ->
+      return $scope.descriptor.style[name]
+
     return
 
   # ===== PRIVATE =============================================================
@@ -115,6 +138,7 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
 
     overrideName
 
+
   # ===== CONFIGURE ===========================================================
 
   return {
@@ -127,6 +151,7 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
       formMode: '='
       csFieldOptions: '='
       createResources: '&'
+      descriptor : "="
     compile: compile
   }
 

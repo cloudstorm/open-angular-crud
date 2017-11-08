@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-select/0.20.0/select.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.0-beta.3/angular-ui-router.js"></script>
+
     <!-- CloudStorm files -->
     <link rel="stylesheet" href="assets/cloudstorm.css" />
     <!-- <link rel="stylesheet" href="https://s3.amazonaws.com/cloudstorm-cdn/cloudstorm.css" /> -->
@@ -27,11 +29,8 @@
     <script src="sample.js"></script>
   </head>
 
-  <body ng-controller="MainCtrl">
-    <cs-alert></cs-alert>
-    <div class="container">
-      <cs-index resource-type=resourceType cs-index-options="options"></cs-index>
-    </div>
+  <body>
+    <cs-main></cs-main>
     <script src="http://localhost:35729/livereload.js"></script>
   </body>
 

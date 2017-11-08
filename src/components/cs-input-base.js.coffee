@@ -21,6 +21,8 @@ app.factory "csInputBase", [ ->
     $scope.createDisabled = () ->
       $scope.field.create_disabled
 
+    $scope.mode = (mode) ->
+      return $scope.formMode == mode
   return build
 
 ]

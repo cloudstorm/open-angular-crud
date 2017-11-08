@@ -1,0 +1,31 @@
+.item-container {
+  display : flex;
+  flex-flow: row wrap;
+  margin: 0 0 -8px -8px;
+}
+
+.item-item {
+  flex : 1;
+  padding: 6px 12px;
+  color: $gray;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin: 0 0 8px 8px;
+  background-color: $gray-lighter;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.no-item {
+  color: #b11c1c;
+  font-size: 13px;
+  font-style: italic;
+  padding-left: 3px;
+  margin-bottom: 14px;
+  margin-left: 6px;
+}
+
+.item-item:hover {
+  cursor: pointer;
+  border: 1px solid $gray-dark;
+}

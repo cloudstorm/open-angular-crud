@@ -1,9 +1,9 @@
-.input-group.cs-resource-input-group{ 'ng-if' => "field.cardinality == 'one'" }
+.input-group.cs-resource-input-group{ 'ng-if' => "field.cardinality == 'one' && !mode('show')" }
   %ui-select{ "ng-disabled" => "fieldDisabled()",
               "ng-required" => "fieldRequired()",
               "ng-model" => "model.object",
               "close-on-select" => "true",
-              "append-to-body " => "true" }
+              "append-to-body" => "true" }
     %ui-select-match{"allow-clear" => true}
       %span
         {{$select.selected.$display_name()}}
@@ -13,20 +13,25 @@
       %span
         {{item.$display_name()}}
 
-  %span.input-group-btn{"ng-if" => "canCreateResources() || createDisabled()"}
-    %button.btn.btn-default{ "ng-disabled" => "fieldDisabled()",
-                             "ng-click" => "pushPanel()",
-                             "type" => "button" } {{ i18n.t('buttons.new') }}
+      %span.input-group-btn{ "ng-if" => "canCreateResources() || createDisabled()" }
+        %button.btn.btn-default{ "ng-disabled" => "fieldDisabled()",
+                                 "ng-click" => "pushPanel()",
+                                 "type" => "button" } {{ i18n.t('buttons.new') }}
 
-.input-group.cs-resource-input-group{ 'ng-if' => "field.cardinality == 'many'" }
+%cs-item-list{ "ng-if" => "mode('show')",
+               "item-list" => "model.object",
+               "key" => "resource.descriptor.fields[0].attribute" }
+
+.input-group.cs-resource-input-group{ "ng-if" => "!mode('show') && field.cardinality == 'many'" }
   %ui-select{ "ui-select-override" => "",
               "ng-disabled" => "fieldDisabled()",
               "ng-required" => "fieldRequired()",
               "ng-model" => "model.object",
               "append-to-body" => "true",
               "close-on-select" => "true",
-              "multiple" => true }
-    %ui-select-match{"allow-clear" => true}
+              "multiple" => true,
+              "enable" => "false" }
+    %ui-select-match{ "ui-lock-choice" => "mode('show')" }
       %span
         {{$item.$display_name()}}
     %ui-select-choices{ "repeat" => "item in associates track by $index",
@@ -35,7 +40,7 @@
       %span
         {{item.$display_name()}}
 
-  %span.input-group-btn{"ng-if" => "createResources() && !createDisabled()"}
+  %span.input-group-btn{ "ng-if" => "createResources() && !createDisabled() && !mode('show')" }
     %button.btn.btn-default{ "ng-disabled" => "fieldDisabled()",
                              "ng-click" => "pushPanel()",
                              "type" => "button" } {{ i18n.t('buttons.new') }}

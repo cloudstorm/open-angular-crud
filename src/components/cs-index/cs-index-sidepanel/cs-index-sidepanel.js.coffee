@@ -4,7 +4,7 @@ app = angular.module('cloudStorm.index.sidePanel', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csIndexSidepanel", ['$rootScope', 'csAlertService', 'csSettings', ($rootScope, csAlertService, csSettings) ->
+app.directive "csIndexSidepanel", ['$rootScope', 'csAlertService', 'csSettings', 'csRoute', ($rootScope, csAlertService, csSettings, csRoute) ->
 
   # ===== COMPILE =============================================================
 
@@ -62,6 +62,7 @@ app.directive "csIndexSidepanel", ['$rootScope', 'csAlertService', 'csSettings',
     scope:
       resourceType: '='
       item: '='
+      itemId : '='
       unselectItem: '&unselectItem'
       csIndexSidepanelOptions: '='
       panelNumberCallback: '='

@@ -30,6 +30,7 @@
       &.btn { padding: 6px 24px; }
     }
 
+
   }
 
   // ========== CS INDEX TABLE ====================
@@ -68,13 +69,12 @@
                 background-color: $action-bg-color;
 
                 &.delete-action { color: $brand-danger; }
+                &.show-action { color: $brand-info; }
               }
             }
           }
         }
       }
     }
-
   }
-
 }

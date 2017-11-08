@@ -16,6 +16,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-bump');
   grunt.loadNpmTasks('grunt-aws-s3');
   grunt.loadNpmTasks('grunt-karma');
+  grunt.loadNpmTasks("grunt-ts");
 
   /**
    * Load in our build configuration file.
@@ -71,6 +72,16 @@ module.exports = function(grunt) {
         src: [ '<%= app_files.coffee %>' ],
         dest: '<%= build_dir %>',
         ext: '.js'
+      }
+    },
+
+    ts: {
+      default : {
+        src: [ '<%= app_files.ts %>' ],
+        options: {
+          rootDir: '<%= root_dir %>'
+        },
+        outDir: '<%= build_dir %>/src'
       }
     },
 
@@ -175,6 +186,7 @@ module.exports = function(grunt) {
         src: [
           // 'module.prefix',
           '<%= app_files.built_js %>',
+          '<%= app_files.js %>',
           '<%= html2js.build.dest %>',
           // 'module.suffix'
         ],
@@ -281,6 +293,27 @@ module.exports = function(grunt) {
         livereload: true
       },
 
+      jssrc : {
+        files: [
+          '<%= app_files.js %>'
+        ],
+        tasks: ['concat:compile_js', 'karma:unit']
+      },
+
+      jsspecsrc : {
+        files : [
+          '<%= app_files.jsspec %>'
+        ],
+        tasks : ['concat:compile_js', 'karma:unit']
+      },
+
+      tssrc: {
+        files: [
+          '<%= app_files.ts %>'
+        ],
+        tasks: ['ts', 'concat:compile_js', 'karma:unit' ]
+      },
+
       /**
        * When our CoffeeScript source files change, we want to  lint them and
        * run our unit tests.
@@ -289,35 +322,35 @@ module.exports = function(grunt) {
         files: [
           '<%= app_files.coffee %>'
         ],
-        tasks: [ 'exec:say:coffee', 'coffee', 'concat:compile_js', 'karma:unit' ]
+        tasks: ['coffee', 'concat:compile_js', 'karma:unit' ]
         // tasks: [ 'coffeelint:src', 'coffee:source', 'karma:unit:run', 'copy:build_appjs' ]
       },
       hamlsrc: {
         files: [
           '<%= app_files.haml %>'
         ],
-        tasks: [ 'exec:say:haml', 'haml', 'html2js', 'concat:compile_js', 'karma:unit' ]
+        tasks: ['haml', 'html2js', 'concat:compile_js', 'karma:unit' ]
         // tasks: [ 'coffeelint:src', 'coffee:source', 'karma:unit:run', 'copy:build_appjs' ]
       },
       sasssrc: {
         files: [
           '<%= app_files.sass %>'
         ],
-        tasks: [ 'exec:say:sass', 'sass', 'copy:compiled_assets', 'karma:unit' ]
+        tasks: [ 'sass', 'copy:compiled_assets', 'karma:unit' ]
       },
       sample_app: {
         files: [
           '<%= sample_dir %>/**',
         ],
-        tasks: [ 'exec:say:sample', 'copy:sample_app', 'karma:unit' ]
+        //tasks: [ 'exec:say:sample', 'copy:sample_app', 'karma:unit' ]
+        tasks: ['copy:sample_app', 'karma:unit' ]
       },
     },
-
   };
 
   grunt.initConfig( grunt.util._.extend( taskConfig, userConfig, awsConfig, optionsConfig ) );
 
-  grunt.registerTask( 'start_web', ['exec:say:web','exec:start_web' ]);
+  grunt.registerTask( 'start_web', ['exec:start_web' ]);
 
   /**
    * The default task is to build and compile.
@@ -347,7 +380,7 @@ module.exports = function(grunt) {
    * The `build` task gets your app ready to run for development and testing.
    */
   grunt.registerTask( 'build', [
-    'clean', 'coffee', 'sass', 'haml', 'html2js', 'copy:sample_app'
+    'clean', 'coffee', 'ts', 'sass', 'haml', 'html2js', 'copy:sample_app'
   ]);
 
   /**

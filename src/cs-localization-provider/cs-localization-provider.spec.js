@@ -14,7 +14,7 @@ describe('csLocalization', function() {
 
   it('should return the defaults', function() {
     expect(csLocalization).toBeDefined();
-    expect(csLocalization.t('false')).toEqual('Yes');
+    expect(csLocalization.t('false')).toEqual('No');
     expect(csLocalization.t('buttons.close')).toEqual('Close');
   });
 

@@ -1,0 +1,5 @@
+.item-container
+  .item-item{ "ng-repeat" => "item in $ctrl.itemList", "ng-click" => "$ctrl.click(item)" }
+    {{ item.attributes[$ctrl.key] }}
+  .no-item{ "ng-if" => "$ctrl.itemList.length == 0" }
+    {{ $ctrl.i18n.t('alert.no_linked_resource') }}

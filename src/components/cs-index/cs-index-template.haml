@@ -1,5 +1,5 @@
 .row
-  .col-lg-12{ "ng-switch" => "listIsEmpty()" }
+  .col-lg-12{ "ng-switch" => "listIsEmpty()"}
     .row.page-header
       %h1
         {{ header }}
@@ -20,13 +20,12 @@
                                                  "ng-click" => "openNewResourcePanel()",
                                                  "ng-disabled" => "createDisabled()" }
             {{ i18n.t('buttons.new') }}
-
     .row{ "ng-switch-when" => "true" }
       .well.well-lg
         {{header}} {{ i18n.t('index.empty') }}
 
     .row{ "ng-switch-when" => "false" }
-      .index-table{ "ng-class" => "{ 'col-lg-8' : sidePanelIsVisible() && !viewIsCompressed(),
+      .index-table{"ng-class" => "{ 'col-lg-8' : sidePanelIsVisible() && !viewIsCompressed(),
                                      'col-lg-6' : viewIsCompressed() }" }
         .table-responsive
 
@@ -45,12 +44,14 @@
             %tbody
               %tr{ "ng-repeat" => "item in collection | orderBy:comparisonValue:csIndexOptions.sortReverse | filter:filterComparison track by $index ",
                    "ng-class" => "{'info' : csIndexOptions.selectedItem.id == item.id}",
-                   "ng-click" => "selectItem(item)",
-                   "ng-dblclick" => "selectItem(item)" }
+                   "ng-click" => "showItem(item)",
+                   "ng-dblclick" => "showItem(item)" }
                 %td{ "ng-repeat" => "column in columns track by $index",
                      "ng-if" => "columnVisible(column, $index)" }
                   {{ fieldValue(item, column) }}
                 %td.actions{ "ng-hide" => "csIndexOptions['hide-actions']" }
+                  / EDIT
+                  .action.show-action{"ng-click" => "selectItem(item)"}<> {{ i18n.t('buttons.edit') }}
                   / DELETE
                   .action.delete-action{ "ng-click" => "destroyItem($event, item)" }<> {{ i18n.t('buttons.delete') }}
 
