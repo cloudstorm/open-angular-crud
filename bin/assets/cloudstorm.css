@@ -19,7 +19,7 @@
 .cs-checkbox input {
   width: 16px;
   height: 16px;
-  margin: 0; }
+  margin: 2px; }
 .cs-checkbox .show-view {
   margin-left: 5px; }
 
@@ -38,18 +38,43 @@
 .cs-datetime table {
   outline: none; }
 
-.cs-field .cs-field-inner {
-  position: relative;
-  padding-bottom: 15px; }
-.cs-field .hide {
-  display: none; }
-.cs-field .cs-field-row {
-  display: flex;
-  align-items: center; }
-.cs-field .cs-field-label {
-  flex: 1; }
-.cs-field .cs-field-content {
-  flex: 2; }
+.cs-field {
+  /*
+  * Vertical align
+  */
+  /*
+  * Horizontal align
+  */ }
+  .cs-field .cs-field-inner {
+    position: relative;
+    padding-bottom: 15px; }
+  .cs-field .hidden {
+    display: none; }
+  .cs-field .cont_v {
+    display: flex;
+    flex-direction: column; }
+  .cs-field .field1_v {
+    flex: 1; }
+  .cs-field .field2_v {
+    flex: 2; }
+  .cs-field .cont_h {
+    display: flex;
+    align-items: center;
+    flex-direction: row; }
+  .cs-field .field1_h {
+    flex: 1; }
+  .cs-field .field2_h {
+    flex: 2; }
+  .cs-field .cs-field-label {
+    flex: 1; }
+  .cs-field .cs-field-content {
+    flex: 2; }
+  .cs-field .inline {
+    display: flex; }
+  .cs-field .req-star {
+    margin-left: 3px; }
+  .cs-field .labelContainer {
+    padding-left: 1px; }
 
 .cs-form {
   width: 60%;

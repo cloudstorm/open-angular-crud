@@ -324,7 +324,7 @@ var app;
 app = angular.module('cloudStorm.field', []);
 
 app.directive("csField", [
-  '$compile', '$templateRequest', function($compile, $templateRequest) {
+  '$compile', '$templateRequest', 'csInputBase', function($compile, $templateRequest, csInputBase) {
     var compile, getDirectiveOverride, link;
     compile = function($templateElement, $templateAttributes, $scope) {
       $templateElement.addClass("cs-field");
@@ -334,7 +334,8 @@ app.directive("csField", [
       };
     };
     link = function($scope, element, attrs, controller) {
-      var directiveName, innerElement, inputTemplate, override, type, wrapperName;
+      var directiveName, innerElement, inputTemplate, override, styleMap, type, wrapperName;
+      csInputBase($scope);
       if (($scope.field == null) && ($scope.fieldName != null)) {
         $scope.field = _.find($scope.formItem.constructor.descriptor.fields, {
           attribute: $scope.fieldName
@@ -371,7 +372,7 @@ app.directive("csField", [
           }
         })();
       }
-      wrapperName = ".cs-input-wrapper-" + $scope.formMode;
+      wrapperName = ".cs-input-wrapper";
       inputTemplate = "<" + directiveName + " form-item='formItem' field-name='fieldName' field='field' form-mode='formMode' create-resources='createResources()' options='csFieldOptions'> </" + directiveName + ">";
       innerElement = angular.element(element[0].querySelector(wrapperName));
       innerElement.append($compile(inputTemplate)($scope));
@@ -391,6 +392,34 @@ app.directive("csField", [
           }
         }
       });
+      switch ($scope.formMode) {
+        case "edit":
+          styleMap = {
+            star: "show",
+            container: "cont_v",
+            field1: "field1_v",
+            field2: "field2_v"
+          };
+          break;
+        case "create":
+          styleMap = {
+            star: "show",
+            container: "container_v",
+            field1: "field1_v",
+            field2: "field2_v"
+          };
+          break;
+        case "show":
+          styleMap = {
+            star: "hidden",
+            container: "cont_h",
+            field1: "field1_h",
+            field2: "field2_h"
+          };
+      }
+      $scope.descriptor = {
+        style: styleMap
+      };
       $scope.$on('field-error', function(event, reason) {
         var errors;
         errors = reason.data.errors;
@@ -416,15 +445,6 @@ app.directive("csField", [
       };
       $scope.getHint = function(field) {
         return field.hint || null;
-      };
-      $scope.viewMode = function() {
-        return $scope.formMode === "view";
-      };
-      $scope.editOrCreateMode = function() {
-        return $scope.formMode === "edit" || $scope.formMode === "create";
-      };
-      $scope.style = function(name) {
-        return $scope.descriptor.style[name];
       };
     };
     getDirectiveOverride = function($scope) {
@@ -960,8 +980,11 @@ app.factory("csInputBase", [
       $scope.createDisabled = function() {
         return $scope.field.create_disabled;
       };
-      return $scope.mode = function(mode) {
+      $scope.mode = function(mode) {
         return $scope.formMode === mode;
+      };
+      return $scope.style = function(name) {
+        return $scope.descriptor.style[name];
       };
     };
     return build;
@@ -1054,108 +1077,6 @@ app.directive("csNumber", [
         options: '='
       },
       compile: compile
-    };
-  }
-]);
-
-"use strict";
-var app;
-
-app = angular.module('cloudStorm.profile', []);
-
-app.directive("csProfile", [
-  'ResourceService', 'csDescriptorService', 'csRoute', 'csAlertService', 'csResource', function(ResourceService, csDescriptorService, csRoute, csAlertService, csResource) {
-    var compile;
-    compile = function($templateElement, $templateAttributes) {
-      var link;
-      $templateElement.addClass("cs-profile");
-      ({
-        pre: function($scope, element, attrs, controller) {},
-        post: link
-      });
-      return link = function($scope, element, attr) {
-        var getArray, getFirstField, init;
-        $scope.loading = false;
-        $scope.descriptor = $scope.resource.descriptor;
-        $scope.resources = ResourceService.getResources();
-        init = function() {
-          var field, i, len, ref, resources, results;
-          resources = [];
-          $scope.relations = [];
-          ref = $scope.descriptor.fields;
-          results = [];
-          for (i = 0, len = ref.length; i < len; i++) {
-            field = ref[i];
-            if (field.type === 'resource') {
-              results.push($scope.relations.push({
-                label: field.label,
-                resourceType: field.resource,
-                items: $scope.getRelatedItems(field.relationship, field.resource)
-              }));
-            } else {
-              results.push(void 0);
-            }
-          }
-          return results;
-        };
-        $scope.getValue = function(attribute) {
-          if ($scope && $scope.item) {
-            return $scope.item.attributes[attribute];
-          }
-        };
-        $scope.getRelatedItems = function(relationship, type) {
-          var i, item, items, len, rel, relationships, resources;
-          if ($scope && $scope.item) {
-            items = [];
-            relationships = getArray($scope.item.relationships[relationship]);
-            for (i = 0, len = relationships.length; i < len; i++) {
-              rel = relationships[i];
-              resources = $scope.item.$datastore.repository[rel.type];
-              item = resources[rel.id];
-              items.push({
-                id: item.id,
-                label: getFirstField(item, type)
-              });
-            }
-            return items;
-          }
-        };
-        getFirstField = function(item, type) {
-          var field;
-          field = $scope.resources[type].descriptor.fields[0].attribute;
-          return item.attributes[field];
-        };
-        $scope.go = function(id, type) {
-          return csRoute.go("show", {
-            id: id,
-            resourceType: type
-          });
-        };
-        getArray = function(relationships) {
-          var arr;
-          if (relationships === void 0) {
-            return [];
-          } else if (relationships.data.constructor === Array) {
-            return relationships.data;
-          } else {
-            arr = [];
-            arr.push(relationships.data);
-            return arr;
-          }
-        };
-        return init();
-      };
-    };
-    return {
-      restrict: 'E',
-      compile: compile,
-      templateUrl: 'components/cs-profile/cs-profile-template.html',
-      scope: {
-        resourceType: '=',
-        itemId: '=',
-        resource: "<",
-        item: "<"
-      }
     };
   }
 ]);
@@ -2741,7 +2662,7 @@ app.provider('csSettings', [
           }
         }
       }, {
-        name: 'edit',
+        name: 'cmd',
         url: '/{resourceType}/{id}/{cmd}',
         component: 'csPageRouter',
         resolve: {
@@ -2755,7 +2676,7 @@ app.provider('csSettings', [
             return $transition$.params().cmd;
           },
           pageType: function($transition$) {
-            return 'edit';
+            return 'cmd';
           }
         }
       }
@@ -2813,258 +2734,11 @@ app.component("csLoader", {
         color: '<',
         radius: '<',
     },
-    templateUrl: 'cs-utils/loader/cs-loader-template.html',
+    templateUrl: 'cs-utils/cs-loader/cs-loader-template.html',
+    controller: function (csInputBase) {
+        csInputBase(this);
+    }
 });
-var app;
-app = angular.module('cloudStorm.csLoader', []);
-app.component("csLoader", {
-    bindings: {
-        color: '<',
-        radius: '<',
-    },
-    templateUrl: 'cs-utils/loader/cs-loader-template.html',
-});
-"use strict";
-var app;
-
-app = angular.module('cloudStorm.descriptorFactory', []);
-
-app.factory('csDescriptorFactory', [
-  'csErrorFactory', 'csLayoutSettings', 'csDescriptorPropagationSettings', 'csHashService', function(csErrorFactory, csLayoutSettings, csDescriptorPropagationSettings, csHashService) {
-    var get, getBase, getObject, init, newObject, prepareTarget, process, processData, propagate, setStyle, setTarget, setValue;
-    init = function(scope, name) {
-      if (!scope.descriptor) {
-        scope.descriptor = {};
-      }
-      scope.descriptor.name = name;
-      return processData(scope);
-    };
-    processData = function(scope) {
-      var def, defs, i, len, results;
-      if (scope.descriptor.name in csDescriptorPropagationSettings.components) {
-        defs = csDescriptorPropagationSettings.components[scope.descriptor.name];
-        results = [];
-        for (i = 0, len = defs.length; i < len; i++) {
-          def = defs[i];
-          results.push(propagate(scope, def));
-        }
-        return results;
-      }
-    };
-    process = function(variable, def) {
-      var base, objectInstance, value;
-      base = getBase(def, value);
-      value = getValue(base, def);
-      objectInstance = getObject(def, value);
-      return variable = objectInstance.get(variable);
-    };
-    getObject = function(def) {
-      var i, key, keys, lastKey, len, object;
-      lastKey = def.target.pop();
-      keys = def.target.reverse();
-      object = new _Value_(lastKey, value);
-      for (i = 0, len = keys.length; i < len; i++) {
-        key = keys[i];
-        object = new _Object_(key, object);
-      }
-      return object;
-    };
-    setValue = function(variable, objectInstance) {};
-    propagate = function(scope, descriptor) {
-      var base, def, value;
-      base = getBase(scope, descriptor.base);
-      value = null;
-      switch (descriptor.type) {
-        case "switch":
-          value = descriptor.rule[base];
-          break;
-        case "copy":
-          value = base;
-          break;
-        default:
-          throw new Error("Type '" + descriptor.type + "' is not a valid propagation type.");
-      }
-      def = prepareTarget(scope, descriptor.target);
-      return setTarget(def[0], def[1], value);
-    };
-    getBase = function(scope, keys) {
-      var i, key, lastKey, len, object;
-      object = scope;
-      for (i = 0, len = keys.length; i < len; i++) {
-        key = keys[i];
-        if ((typeof object) === 'object') {
-          if (key in object) {
-            object = object[key];
-          } else {
-            csErrorFactory["throw"]('csDescriptorFactory', 'baseNotDefined', [keys]);
-          }
-        } else {
-          csErrorFactory["throw"]('csDescriptorFactory', 'intermediate', [keys, lastKey]);
-        }
-        lastKey = key;
-      }
-      return object;
-    };
-    prepareTarget = function(scope, _keys_) {
-      var i, key, keys, len, num, object;
-      object = scope;
-      num = 0;
-      keys = null;
-      for (i = 0, len = _keys_.length; i < len; i++) {
-        key = _keys_[i];
-        if (key in object) {
-          if ((typeof object[key]) === 'object') {
-            object = object[key];
-          } else {
-            csErrorFactory["throw"]("csDescriptorFactory", "overlap", [_keys_]);
-          }
-        } else {
-          keys = _keys_.slice(num);
-        }
-        num++;
-      }
-      return [object, keys];
-    };
-    setTarget = function(scope, keys, val) {
-      var firstKey, i, key, lastKey, lastKeys, len, object;
-      firstKey = keys.shift();
-      if (keys.length > 0) {
-        lastKey = keys.pop();
-        object = getObject(lastKey, val);
-        lastKeys = keys.reverse();
-        for (i = 0, len = lastKeys.length; i < len; i++) {
-          key = lastKeys[i];
-          object = getObject(key, object);
-        }
-      } else {
-        object = val;
-      }
-      return scope[firstKey] = object;
-    };
-    setStyle = function(scope, styleDef) {
-      var className, def, i, j, len, len1, ref, styleObject, value, varName;
-      styleObject = {};
-      for (def = i = 0, len = styleDef.length; i < len; def = ++i) {
-        varName = styleDef[def];
-        ref = def[scope[varName]];
-        for (value = j = 0, len1 = ref.length; j < len1; value = ++j) {
-          className = ref[value];
-          stylObject[className] = value;
-        }
-      }
-      return scope.descriptor.style = styleObject;
-    };
-    getObject = function(key, value) {
-      if (value instanceof Object) {
-        if (key in value) {
-          return value[key];
-        } else {
-          return newObject(key, value);
-        }
-      } else {
-        return newObject(key, value);
-      }
-    };
-    newObject = function(key, value) {
-      var object;
-      object = {};
-      object[key] = value;
-      return object;
-    };
-    get = function() {
-      return this;
-    };
-    return {
-      get: get,
-      init: init,
-      getBase: getBase,
-      propagate: propagate,
-      processData: processData,
-      setStyle: setStyle,
-      setTarget: setTarget,
-      getObject: getObject,
-      prepareTarget: prepareTarget
-    };
-  }
-]);
-
-"use strict";
-var app;
-
-app = angular.module("cloudStorm.descriptorPropagationSettings", []);
-
-app.provider('csDescriptorPropagationSettings', [
-  function() {
-    this.components = {
-      'csForm': [
-        {
-          type: "switch",
-          base: ["formMode"],
-          target: ["csField", "style", "alignment"],
-          rule: {
-            create: "vertical",
-            edit: "horizontal",
-            show: "horizontal"
-          }
-        }, {
-          type: "copy",
-          base: ["formMode"],
-          target: ["childDescriptors", "csField", "fieldMode"]
-        }
-      ]
-    };
-    this.addCase = function(key, object) {
-      if (!(key in this.components)) {
-        this.components[key] = [];
-      }
-      return this.components[key].push(object);
-    };
-    this.$get = function() {
-      return this;
-    };
-  }
-]);
-
-"use strict";
-var app;
-
-app = angular.module("cloudStorm.layoutSettings", []);
-
-app.provider('csLayoutSettings', [
-  function() {
-    this.style = {
-      'csField': {
-        alignment: {
-          horizontal: {
-            container: "cont_h",
-            field1: "field1_h",
-            field2: "field2_h"
-          },
-          vertical: {
-            container: "cont_v",
-            field1: "field1_v",
-            field2: "field2_v"
-          }
-        },
-        mode: {
-          create: {
-            req_star: "show"
-          },
-          edit: {
-            req_star: "show"
-          },
-          show: {
-            req_star: "hide"
-          }
-        }
-      }
-    };
-    this.$get = function() {
-      return this;
-    };
-  }
-]);
-
 var app;
 
 app = angular.module('cloudStorm', ['cloudStorm.alertService', 'cloudStorm.alert', 'cloudStorm.field', 'cloudStorm.form', 'cloudStorm.wizard', 'cloudStorm.checkbox', 'cloudStorm.menu', 'cloudStorm.date', 'cloudStorm.time', 'cloudStorm.datetime', 'cloudStorm.enum', 'cloudStorm.index', 'cloudStorm.index.sidePanel', 'cloudStorm.itemList', 'cloudStorm.main', 'cloudStorm.number', 'cloudStorm.resourceInput', 'cloudStorm.textfield', 'cloudStorm.inputBase', 'cloudStorm.dataStore', 'cloudStorm.localizationProvider', 'cloudStorm.resource', 'cloudStorm.resourceService', 'cloudStorm.restApi', 'cloudStorm.settings', 'cloudStorm.templateService', 'cloudStorm.templates', 'cloudStorm.descriptorService', 'ui.router', 'cloudStorm.routeProvider', 'ui.bootstrap', 'cloudStorm.loader', 'cloudStorm.error', 'cloudStorm.uiPageRouter']);
@@ -3120,16 +2794,20 @@ app.component("csPageRouter", {
         this.testValue = "InitialValue"
         this.loading = true
         this.errors = []
+
+        this.validCommands = ["edit","show"]
         //getDataLoaderObject(this, descriptor)["index"].call()
         this.init = function (){
             switch (this.pageType) {
               case "index": this.resource_index(); break;
-              case "edit":
-                if(this.cmd != "edit" && this.cmd != "show"){
+              case "cmd":
+                if(this.validCommands.indexOf(this.cmd) == -1){
                   this.errors.push("\"" + this.cmd + "\" is not a valid command");
                 }
+                this.pageType = this.cmd
                 this.resource_id();
                 break;
+
               case "show":
                 if(this.id == "new"){
                   this.pageType = "create"
@@ -3357,17 +3035,7 @@ app.component("csError", {
   templateUrl : "cs-utils/cs-error-template/cs-error-template.html",
 })
 
-'use strict'
-
-var app = angular.module('cloudStorm.objectFactory', [])
-
-app.factory('csObjectFactory', function(){
-
-
-
-})
-
-angular.module('cloudStorm.templates', ['components/cs-alert/cs-alert-template.html', 'components/cs-checkbox/cs-checkbox-template.html', 'components/cs-date/cs-date-template.html', 'components/cs-datetime/cs-datetime-template.html', 'components/cs-enum/cs-enum-template.html', 'components/cs-field/cs-field-template.html', 'components/cs-form/cs-form-template.html', 'components/cs-index/cs-index-sidepanel/cs-index-sidepanel-template.html', 'components/cs-index/cs-index-template.html', 'components/cs-item-list/cs-item-list-template.html', 'components/cs-main/cs-main-template.html', 'components/cs-menu/cs-menu-template.html', 'components/cs-number/cs-number-template.html', 'components/cs-profile/cs-profile-template.html', 'components/cs-resource-input/cs-resource-input-template.html', 'components/cs-textfield/cs-textfield-template.html', 'components/cs-time/cs-time-template.html', 'components/cs-wizard/cs-wizard-panel-template.html', 'components/cs-wizard/cs-wizard-template.html', 'cs-route-provider/router-component/cs-page-router-template.html', 'cs-utils/cs-error-template/cs-error-template.html', 'cs-utils/cs-loader/cs-loader-template.html', 'cs-utils/loader/cs-loader-template.html']);
+angular.module('cloudStorm.templates', ['components/cs-alert/cs-alert-template.html', 'components/cs-checkbox/cs-checkbox-template.html', 'components/cs-date/cs-date-template.html', 'components/cs-datetime/cs-datetime-template.html', 'components/cs-enum/cs-enum-template.html', 'components/cs-field/cs-field-template.html', 'components/cs-form/cs-form-template.html', 'components/cs-index/cs-index-sidepanel/cs-index-sidepanel-template.html', 'components/cs-index/cs-index-template.html', 'components/cs-item-list/cs-item-list-template.html', 'components/cs-main/cs-main-template.html', 'components/cs-menu/cs-menu-template.html', 'components/cs-number/cs-number-template.html', 'components/cs-resource-input/cs-resource-input-template.html', 'components/cs-textfield/cs-textfield-template.html', 'components/cs-time/cs-time-template.html', 'components/cs-wizard/cs-wizard-panel-template.html', 'components/cs-wizard/cs-wizard-template.html', 'cs-route-provider/router-component/cs-page-router-template.html', 'cs-utils/cs-error-template/cs-error-template.html', 'cs-utils/cs-loader/cs-loader-template.html']);
 
 angular.module("components/cs-alert/cs-alert-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-alert/cs-alert-template.html",
@@ -3443,31 +3111,14 @@ angular.module("components/cs-field/cs-field-template.html", []).run(["$template
   $templateCache.put("components/cs-field/cs-field-template.html",
     "<!-- CloudStorm Form Field component -->\n" +
     "<!-- Renders different kind of inputs for different types of items -->\n" +
-    "<!--  -->\n" +
-    "<!--  -->\n" +
-    "<!-- .div{\"ng-switch\" => \"formMode\"} -->\n" +
-    "<div class='cs-field-inner' ng-show='formMode == &#39;edit&#39; || formMode == &#39;create&#39;'>\n" +
-    "<label class='control-label'>{{ field.label }}</label>\n" +
-    "<span ng-if='field.required'>*</span>\n" +
-    "<!-- CS will populate the correct input taking into account its overrides -->\n" +
-    "<div class='cs-input-wrapper-edit'></div>\n" +
-    "<div class='cs-input-wrapper-create'></div>\n" +
-    "<span class='help-block' ng-if='field.errors.length &gt; 0'>\n" +
-    "{{ getError(field) }}\n" +
-    "</span>\n" +
-    "<span class='help-block' ng-if='(!(field.errors.length &gt; 0) &amp;&amp; (getHint(field)))'>\n" +
-    "{{ getHint(field) }}\n" +
-    "</span>\n" +
-    "<div class='cover'></div>\n" +
+    "<div class='cs-field-inner'>\n" +
+    "<div ng-class='style(&#39;container&#39;)'>\n" +
+    "<div class='inline labelContainer' ng-class='style(&#39;field1&#39;)'>\n" +
+    "<label class='control-label'>{{field.label}}</label>\n" +
+    "<span class='req-star' ng-class='style(&#39;star&#39;)' ng-if='field.required'>*</span>\n" +
     "</div>\n" +
-    "<div class='cs-field-inner' ng-show='formMode == &#39;show&#39;'>\n" +
-    "<div class='cs-field-row'>\n" +
-    "<div class='cs-field-label'>\n" +
-    "<label class='control-label'>{{ field.label }}</label>\n" +
-    "<!-- CS will populate the correct input taking into account its overrides -->\n" +
-    "</div>\n" +
-    "<div class='cs-field-content'>\n" +
-    "<div class='cs-input-wrapper-show'></div>\n" +
+    "<div ng-class='style(&#39;field2&#39;)'>\n" +
+    "<div class='cs-input-wrapper'></div>\n" +
     "</div>\n" +
     "<span class='help-block' ng-if='field.errors.length &gt; 0'>\n" +
     "{{ getError(field) }}\n" +
@@ -3652,43 +3303,6 @@ angular.module("components/cs-number/cs-number-template.html", []).run(["$templa
     "");
 }]);
 
-angular.module("components/cs-profile/cs-profile-template.html", []).run(["$templateCache", function ($templateCache) {
-  $templateCache.put("components/cs-profile/cs-profile-template.html",
-    "<div class='container'>\n" +
-    "<div class='middle'>\n" +
-    "<div class='title'>\n" +
-    "Data\n" +
-    "</div>\n" +
-    "<div ng-repeat='field in descriptor.fields'>\n" +
-    "<div ng-switch='field.type'>\n" +
-    "<div class='flex' ng-if='field.type != &#39;resource&#39;'>\n" +
-    "<div class='fieldTitle'>\n" +
-    "{{field.attribute}}\n" +
-    "</div>\n" +
-    "<div class='item data'>\n" +
-    "{{getValue(field.attribute)}}\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class='title' ng-if='relations.length &gt; 0'>\n" +
-    "Relations\n" +
-    "</div>\n" +
-    "<div class='flex' ng-if='relation.items.length &gt; 0' ng-repeat='relation in relations'>\n" +
-    "<div class='fieldTitle'>\n" +
-    "{{relation.label}}\n" +
-    "</div>\n" +
-    "<div>\n" +
-    "<div class='item resource' ng-click='go(item.id, relation.resourceType)' ng-repeat='item in relation.items'>\n" +
-    "{{item.label}}\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "");
-}]);
-
 angular.module("components/cs-resource-input/cs-resource-input-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-resource-input/cs-resource-input-template.html",
     "<div class='input-group cs-resource-input-group' ng-if='field.cardinality == &#39;one&#39; &amp;&amp; !mode(&#39;show&#39;)'>\n" +
@@ -3801,12 +3415,6 @@ angular.module("cs-route-provider/router-component/cs-page-router-template.html"
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<!-- .aligner{\"ng-switch-when\" => \"edit\"} -->\n" +
-    "<!-- %cs-wizard{\"cs-wizard-options\" => \"$ctrl.wizardOptions\"} -->\n" +
-    "<!-- %div -->\n" +
-    "<!-- Edit -->\n" +
-    "<!-- .wizardContainer{ \"ng-switch-when\" => \"new\"} -->\n" +
-    "<!-- %cs-wizard{\"cs-wizard-options\" => \"$ctrl.wizardOptions\"} -->\n" +
     "</div>\n" +
     "</div>\n" +
     "");
@@ -3825,14 +3433,6 @@ angular.module("cs-utils/cs-error-template/cs-error-template.html", []).run(["$t
 
 angular.module("cs-utils/cs-loader/cs-loader-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("cs-utils/cs-loader/cs-loader-template.html",
-    "<div class='middle'>\n" +
-    "<div class='loader'></div>\n" +
-    "</div>\n" +
-    "");
-}]);
-
-angular.module("cs-utils/loader/cs-loader-template.html", []).run(["$templateCache", function ($templateCache) {
-  $templateCache.put("cs-utils/loader/cs-loader-template.html",
     "<div class='middle'>\n" +
     "<div class='loader'></div>\n" +
     "</div>\n" +
