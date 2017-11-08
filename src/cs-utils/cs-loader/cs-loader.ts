@@ -10,4 +10,8 @@ app.component("csLoader", {
       radius : '<',
     },
     templateUrl : 'cs-utils/cs-loader/cs-loader-template.html',
+    controller : function(csInputBase){
+
+      csInputBase(this)
+    }
 })
