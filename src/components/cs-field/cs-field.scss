@@ -13,18 +13,69 @@
     display : none;
   }
 
+  /*
+  * Vertical align
+  */
+  .cont_v {
+    display : flex;
+    flex-direction: column;
+  }
+
+  .field1_v {
+    flex : 1;
+  }
+
+  .field2_h {
+    flex : 2;
+  }
+
+  .cont_h {
+    display : flex;
+    align-items: center;
+    flex-direction: row;
+  }
+
+  .field1_h {
+    flex : 1;
+  }
+
+  .field2_h {
+    flex : 2;
+  }
+
   .cs-field-row {
     display : flex;
     //Horizontal align - necessary
     align-items: center;
   }
 
-  .cs-field-label {
+  .cs-field-element_1 {
     flex : 1;
   }
 
-  .cs-field-content {
+  .cs-field-element_2 {
     flex : 2;
   }
 
+  .cs-field-element_3 {
+    flex : 3;
+  }
+
+  .showField {
+    width: auto;
+    border: 1px solid #ded9d9;
+    border-radius: 4px;
+    background-color: #f8f7f8;
+    margin: 3px;
+    padding: 8px;
+    font-size: 13px;
+  }
+
+  .red {
+    background-color: red;
+  }
+
+  .blue {
+    background-color:  blue;
+  }
 }
