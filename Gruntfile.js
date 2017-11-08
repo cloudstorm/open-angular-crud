@@ -336,7 +336,7 @@ module.exports = function(grunt) {
         files: [
           '<%= app_files.sass %>'
         ],
-        tasks: [ 'sass', 'copy:compiled_assets', 'karma:unit' ]
+        tasks: [ 'sass', 'copy:compiled_assets' ]
       },
       sample_app: {
         files: [
@@ -391,4 +391,27 @@ module.exports = function(grunt) {
     'copy:compiled_assets', 'concat:compile_js'
   ]);
 
+  grunt.registerTask('haml_pre', [
+    'haml', 'html2js'
+  ]);
+
+  grunt.registerTask('haml_compile', [
+    'haml_pre', 'concat:compile_js'
+  ]);
+
+  grunt.registerTask('haml_sass', [
+      'haml_pre', 'sass', 'compile'
+  ]);
+
+  grunt.registerTask('sass_compile', [
+    'sass', 'copy:compiled_assets'
+  ]);
+
+  grunt.registerTask('js_compile', [
+    'concat:compile_js', 'karma:unit'
+  ]);
+
+  grunt.registerTask('coffee_compile', [
+    'coffee', 'concat:compile_js', 'karma:unit'
+  ]);
 };
