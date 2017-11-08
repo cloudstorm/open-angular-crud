@@ -9,7 +9,7 @@
     //
   }
 
-  .hide {
+  .hidden {
     display : none;
   }
 
@@ -25,9 +25,13 @@
     flex : 1;
   }
 
-  .field2_h {
+  .field2_v {
     flex : 2;
   }
+
+  /*
+  * Horizontal align
+  */
 
   .cont_h {
     display : flex;
@@ -43,39 +47,23 @@
     flex : 2;
   }
 
-  .cs-field-row {
-    display : flex;
-    //Horizontal align - necessary
-    align-items: center;
-  }
-
-  .cs-field-element_1 {
+  .cs-field-label {
     flex : 1;
   }
 
-  .cs-field-element_2 {
+  .cs-field-content {
     flex : 2;
   }
 
-  .cs-field-element_3 {
-    flex : 3;
+  .inline {
+    display : flex;
   }
 
-  .showField {
-    width: auto;
-    border: 1px solid #ded9d9;
-    border-radius: 4px;
-    background-color: #f8f7f8;
-    margin: 3px;
-    padding: 8px;
-    font-size: 13px;
+  .req-star{
+    margin-left: 3px;
   }
 
-  .red {
-    background-color: red;
-  }
-
-  .blue {
-    background-color:  blue;
+  .labelContainer {
+    padding-left: 1px;
   }
 }
