@@ -8,6 +8,10 @@
 
   // ==== OVERRIDE 100% WIDTH ON NARROW DEVICES ===
 
+  div.tTable>div.tBody>.cs-row.info {
+    background-color: #d9edf7;
+  }
+
   .tTable {
     display : table;
   }

@@ -27,6 +27,8 @@
     .row{ "ng-switch-when" => "false" }
       .index-table{"ng-class" => "{ 'col-lg-8' : sidePanelIsVisible() && !viewIsCompressed(),
                                      'col-lg-6' : viewIsCompressed() }" }
+
+
         .table-responsive
 
           .tTable.table.table-striped.table-hover
@@ -42,7 +44,8 @@
                 .tHCell.actions{ "ng-hide" => "csIndexOptions['hide-actions']" }
 
             .tBody.table.table-striped.table-hover
-              %cs-row{"ng-repeat" => "item in collection",
+              %cs-row{"ng-repeat" => "item in collection | orderBy:comparisonValue:csIndexOptions.sortReverse | filter:filterComparison track by $index",
+                      "ng-class" => "{'info' : csIndexOptions.selectedItem.id == item.id}",
                       "item" => "item",
                       "columns" => "columns",
                       "cs-index-Options" => "csIndexOptions",
