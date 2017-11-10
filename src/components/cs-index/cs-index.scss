@@ -8,6 +8,44 @@
 
   // ==== OVERRIDE 100% WIDTH ON NARROW DEVICES ===
 
+  .tTable {
+    display : table;
+  }
+
+  .tHead {
+    display : table-header-group;
+  }
+
+  .tBody {
+    display : table-row-group;
+  }
+
+  .tRow {
+    display : table-row;
+  }
+
+  .tHCell {
+    display : table-cell;
+    //bootstrap -- .table>thead:first-child>tr:first-child>th
+    border-top: 0;
+    //bootstrap -- .table>thead>tr>th
+    vertical-align: bottom;
+    border-bottom: 2px solid #ddd;
+    padding: 8px;
+    line-height: 1.42857143;
+    //tables.less --
+    text-align: left;
+    //user agent stylesheet
+    font-weight: bold;
+    //cs-index
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .tCell {
+    display : table-cell;
+  }
+
   .header-actions {
     .input-group-wrap {
       display: inline-block;
