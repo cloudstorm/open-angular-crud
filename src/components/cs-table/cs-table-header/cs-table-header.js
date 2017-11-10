@@ -1,10 +1,10 @@
 "use strict"
 
-var app = angular.module('cloudStorm.header', [])
+var app = angular.module('cloudStorm.tableHeader', [])
 
-app.component('csHeader', {
+app.component('csTableHeader', {
 
-  templateUrl : 'components/cs-table/cs-header/cs-header-template.html',
+  templateUrl : 'components/cs-table/cs-table-header/cs-table-header-template.html',
 
   controller : function(csSettings, $filter, $element){
 

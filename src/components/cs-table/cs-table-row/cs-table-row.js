@@ -1,10 +1,10 @@
 "use strict"
 
-var app = angular.module('cloudStorm.row', [])
+var app = angular.module('cloudStorm.tableRow', [])
 
-app.component('csRow', {
+app.component('csTableRow', {
 
-  templateUrl : 'components/cs-table/cs-row/cs-row-template.html',
+  templateUrl : 'components/cs-table/cs-table-row/cs-table-row-template.html',
 
   controller : function(csSettings, $filter, $element){
 
