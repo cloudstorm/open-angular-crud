@@ -1,0 +1,52 @@
+@import '../cs-index/cs-index-sidepanel/cs-index-sidepanel';
+
+
+div.table-striped > div.tBody>.cs-row:nth-of-type(odd){
+  background-color: #f9f9f9;
+}
+
+.cs-row {
+
+  $action-bg-color: rgba(125, 125, 125, 0.3);
+
+  display : table-row;
+
+  .tCell {
+    display : table-cell;
+    //bootstrap -- .table>tbody>tr>td
+    padding: 8px;
+    line-height: 1.42857143;
+    vertical-align: top;
+    border-top: 1px solid #ddd;
+    //cs-index
+    cursor: pointer;
+  }
+
+  div {
+    // Action buttons at the end of each table row
+    &.actions {
+      text-align: right;
+      line-height: $line-height-computed + 2 * $table-cell-padding;
+      padding-top: 0;
+      padding-bottom: 0;
+      white-space: nowrap;
+      vertical-align: middle;
+
+      .action {
+        cursor: pointer;
+        display: inline-block;
+        padding: 0 8px;
+
+        &.delete-action { color: $gray-light; }
+
+        &:hover {
+          text-decoration: underline;
+          background-color: $action-bg-color;
+
+          &.delete-action { color: $brand-danger; }
+          &.show-action { color: $brand-info; }
+        }
+      }
+    }
+  }
+}
