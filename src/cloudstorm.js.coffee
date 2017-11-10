@@ -17,6 +17,7 @@ app = angular.module 'cloudStorm', [
   'cloudStorm.number'
   'cloudStorm.resourceInput'
   'cloudStorm.textfield'
+  'cloudStorm.row'
   'cloudStorm.inputBase'
   'cloudStorm.dataStore'
   'cloudStorm.localizationProvider'
