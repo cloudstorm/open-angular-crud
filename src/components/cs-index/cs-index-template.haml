@@ -28,22 +28,15 @@
       .index-table{"ng-class" => "{ 'col-lg-8' : sidePanelIsVisible() && !viewIsCompressed(),
                                      'col-lg-6' : viewIsCompressed() }" }
 
-
         .table-responsive
 
           .tTable.table.table-striped.table-hover
             .tBody
-              .tRow
-                / TODO: static header
-                .tHCell{ "ng-repeat" => "column in columns track by $index",
-                     "ng-if" => "columnVisible(column, $index)",
-                     "ng-click" => "changeSorting(column)" }
-                  {{column.label}}
-                  %span.glyphicon.glyphicon-triangle-top{ "ng-if" => "csIndexOptions.sortAttribute==column.attribute && !csIndexOptions.sortReverse" }
-                  %span.glyphicon.glyphicon-triangle-bottom{ "ng-if" => "csIndexOptions.sortAttribute==column.attribute && csIndexOptions.sortReverse" }
-                .tHCell.actions{ "ng-hide" => "csIndexOptions['hide-actions']" }
-
-            .tBody.table.table-striped.table-hover
+              %cs-header{ "columns" => "columns",
+                          "cs-index-Options" => "csIndexOptions",
+                          "column-visible" => "columnVisible(column, index)",
+                          "change-sorting" => "changeSorting(column)"}
+            .tBody
               %cs-row{"ng-repeat" => "item in collection | orderBy:comparisonValue:csIndexOptions.sortReverse | filter:filterComparison track by $index",
                       "ng-class" => "{'info' : csIndexOptions.selectedItem.id == item.id}",
                       "item" => "item",
@@ -52,8 +45,6 @@
                       "show-item" => "showItem(item)",
                       "select-item" => "selectItem(item)",
                       "destroy-item" => "destroyItem(event, item)"}
-            / %cs-row{"ng-repeat" => "item in collection | orderBy:comparisonValue:csIndexOptions.sortReverse | filter:filterComparison track by $index ",
-
 
       %cs-index-sidepanel{ "ng-if" => "sidePanelIsVisible()",
                            "cs-index-sidepanel-options" => "csIndexOptions",

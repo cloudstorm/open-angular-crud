@@ -1,0 +1,8 @@
+/ .tRow is the style of the component template
+.tHCell{ "ng-repeat" => "column in $ctrl.columns track by $index",
+      "ng-if" => "$ctrl.columnVisible_(column, $index)",
+      "ng-click" => "$ctrl.changeSort_(column)" }
+  {{column.label}}
+  %span.glyphicon.glyphicon-triangle-top{ "ng-if" => "$ctrl.csIndexOptions.sortAttribute==column.attribute && !$ctrl.csIndexOptions.sortReverse" }
+  %span.glyphicon.glyphicon-triangle-bottom{ "ng-if" => "$ctrl.csIndexOptions.sortAttribute==column.attribute && $ctrl.csIndexOptions.sortReverse" }
+.tHCell.actions{ "ng-hide" => "csIndexOptions['hide-actions']" }
