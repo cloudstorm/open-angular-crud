@@ -25,26 +25,17 @@
         {{header}} {{ i18n.t('index.empty') }}
 
     .row{ "ng-switch-when" => "false" }
-      .index-table{"ng-class" => "{ 'col-lg-8' : sidePanelIsVisible() && !viewIsCompressed(),
-                                     'col-lg-6' : viewIsCompressed() }" }
 
-        .table-responsive
-
-          .tTable.table.table-striped.table-hover
-            .tBody
-              %cs-header{ "columns" => "columns",
-                          "cs-index-Options" => "csIndexOptions",
+      %cs-table-container{"ng-class" => "{ 'col-lg-8' : sidePanelIsVisible() && !viewIsCompressed(),
+                                     'col-lg-6' : viewIsCompressed() }",
+                          "resource" => "resource",
+                          "collection" => "collection",
+                          "columns" => "columns",
+                          "cs-index-options" => "csIndexOptions",
                           "column-visible" => "columnVisible(column, index)",
-                          "change-sorting" => "changeSorting(column)"}
-            .tBody
-              %cs-row{"ng-repeat" => "item in collection | orderBy:comparisonValue:csIndexOptions.sortReverse | filter:filterComparison track by $index",
-                      "ng-class" => "{'info' : csIndexOptions.selectedItem.id == item.id}",
-                      "item" => "item",
-                      "columns" => "columns",
-                      "cs-index-Options" => "csIndexOptions",
-                      "show-item" => "showItem(item)",
-                      "select-item" => "selectItem(item)",
-                      "destroy-item" => "destroyItem(event, item)"}
+                          "show-item" => "showItem(item)",
+                          "select-item" => "selectItem(item)",
+                          "destroy-item" => "destroyItem(event, item)"}
 
       %cs-index-sidepanel{ "ng-if" => "sidePanelIsVisible()",
                            "cs-index-sidepanel-options" => "csIndexOptions",

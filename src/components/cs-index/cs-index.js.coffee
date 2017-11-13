@@ -81,12 +81,6 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
 
       # ===== SORT =========================================
 
-      sortField = _.find resource.descriptor.fields, { attribute: $scope.csIndexOptions.sortAttribute }
-
-      $scope.comparisonValue = (item) ->
-        $scope.fieldValue(item, sortField) if sortField
-
-      # ===== COMPARISON ======================================
 
       escapeRegExp = (str) ->
         return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
@@ -101,35 +95,6 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
 
       $scope.listIsEmpty = () ->
         $scope.collection == null
-
-      $scope.fieldValue = (item, field) ->
-        if field.resource
-          if field.cardinality == 'many'
-            associations = item.$association(field)
-            names = _.map associations, (assoc) ->
-              assoc.$display_name()
-            return names.join(", ")
-          else
-            return item.attributes[field.attribute] unless item.relationships && item.relationships[field.relationship]
-            item_data = item.relationships[field.relationship].data
-            relationship = item.$relationship(item_data)
-            return item.attributes[field.attribute] unless relationship
-            relationship.$display_name()
-        else if field.enum
-          enum_value = _.find(field.enum, { value: item.attributes[field.attribute] })
-          return enum_value.name if enum_value
-          return item.attributes[field.attribute]
-        else if field.type == 'boolean'
-            return $scope.i18n?.t(item.attributes[field.attribute]) || item.attributes[field.attribute]
-        else if field.type == 'time'
-          display_time = new Date(item.attributes[field.attribute])
-          return $filter('date')(display_time, 'HH:mm')
-        else if field.type == 'datetime'
-          # TODO: move formatting to fields, use moment.js
-          display_date = new Date(item.attributes[field.attribute])
-          return $filter('date')(display_date, 'EEEE, MMMM d, y HH:mm')
-        else
-          item.attributes[field.attribute]
 
       $scope.columnVisible = (column, index) ->
         length = $scope.columns.length
