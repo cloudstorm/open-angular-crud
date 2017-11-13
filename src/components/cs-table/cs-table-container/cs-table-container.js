@@ -31,29 +31,14 @@ app.component('csTableContainer', {
       return this.columnVisible({column : column, index : index})
     }
 
-    this.changeSorting = function(column){
+    this.changeSorting = function(column, reverse){
       this.csIndexOptions.sortAttribute = column.attribute
       this.csIndexOptions.sortReverse = !this.csIndexOptions.sortReverse
       sortFieldComp = _.find(this.resource.descriptor.fields, {
         attribute: this.csIndexOptions.sortAttribute
       });
-      this.filterCollection(sortFieldComp)
+      this.collection = csResourceFilter.sort(this.collection, sortFieldComp, reverse)
     }
-
-    this.filterCollection = function(sortFieldComp){
-      this.collection = csResourceFilter.filter(this.collection)
-    }
-
-    this.fieldValue = function(item, sortField){
-      return "X";
-    }
-
-    $scope.comparisonValueComponent = function(item) {
-
-      if (sortFieldComp) {
-        return this.fieldValue(item, this.sortField);
-      }
-    };
 
     this.showItem_ = function(item){
       return this.showItem({ item : item })
@@ -69,7 +54,6 @@ app.component('csTableContainer', {
     columns : "<",
     columnVisible : "&",
     //tableRow
-    filterComparison : "<",
     columns : "<",
     columnVisible : "&",
     showItem : "&",

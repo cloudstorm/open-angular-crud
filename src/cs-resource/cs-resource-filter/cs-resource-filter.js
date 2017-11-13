@@ -4,17 +4,23 @@ var app;
 
 app = angular.module('cloudStorm.resourceFilter', [])
 
-app.factory('csResourceFilter', function(){
+app.factory('csResourceFilter', function(csSettings){
 
-  this.filter = function(array, column){
+  this.i18n = csSettings.settings['i18n-engine']
+
+  this.sort = function(array, column, desc){
     var fieldValue;
-    return _.sortBy(array, (function(item){
+    var array = _.sortBy(array, (function(item){
       fieldValue = this.fieldValue(item, column)
       if(fieldValue)
         fieldValue = fieldValue.toLowerCase()
-      console.log(fieldValue)
       return fieldValue
     }).bind(this))
+
+    if(desc){
+      array = array.reverse()
+    }
+    return array
   }
 
   this.fieldValue = function(item, field) {
@@ -47,7 +53,7 @@ app.factory('csResourceFilter', function(){
       }
       return item.attributes[field.attribute];
     } else if (field.type === 'boolean') {
-      return ((ref = $scope.i18n) != null ? ref.t(item.attributes[field.attribute]) : void 0) || item.attributes[field.attribute];
+      return ((ref = this.i18n) != null ? ref.t(item.attributes[field.attribute]) : void 0) || item.attributes[field.attribute];
     } else if (field.type === 'time') {
       display_time = new Date(item.attributes[field.attribute]);
       return $filter('date')(display_time, 'HH:mm');

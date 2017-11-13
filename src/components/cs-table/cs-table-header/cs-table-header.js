@@ -10,10 +10,12 @@ app.component('csTableHeader', {
 
     this.$onInit = function() {
       $element.addClass('cs-table-header')
+      this.sortReverse = true
     };
 
     this.changeSorting_ = function(column){
-      return this.changeSorting({column : column})
+      this.sortReverse = ! this.sortReverse
+      return this.changeSorting({column : column, reverse : this.sortReverse })
     }
 
     this.columnVisible_ = function(column, index){

@@ -4,9 +4,9 @@
       %cs-table-header{ "columns" => "$ctrl.columns",
                   "cs-index-options" => "$ctrl.csIndexOptions",
                   "column-visible" => "$ctrl.columnVisible_(column, index)",
-                  "change-sorting" => "$ctrl.changeSorting(column)"}
+                  "change-sorting" => "$ctrl.changeSorting(column, reverse)"}
     .tBody
-      %cs-table-row{"ng-repeat" => "item in $ctrl.collection | filter:$ctrl.filterComparison track by $index",
+      %cs-table-row{"ng-repeat" => "item in $ctrl.collection track by $index",
               "ng-class" => "{'info' : $ctrl.csIndexOptions.selectedItem.id == $ctrl.item.id}",
               "item" => "item",
               "columns" => "$ctrl.columns",

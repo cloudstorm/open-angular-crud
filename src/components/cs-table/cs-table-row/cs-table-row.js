@@ -26,14 +26,6 @@ app.component('csTableRow', {
       this.destroyItem({event : event, item : this.item})
     }
 
-    this.comparisonValue = function(item) {
-      console.log('comparisonValue _ row')
-      console.log(sortField)
-      if (sortField) {
-        return this.fieldValue(item, this.sortField);
-      }
-    };
-
     this.fieldValue = function(field) {
       var item = this.item
       var associations, display_date, display_time, enum_value, item_data, names, ref, relationship;
