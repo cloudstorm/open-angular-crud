@@ -11,20 +11,28 @@ app.component('csTableRow', {
     this.i18n = csSettings.settings['i18n-engine']
 
     this.$onInit = function() {
-      $element.addClass('cs-row')
+      $element.addClass('cs-table-row')
     };
 
     this.show = function(){
-      this.showItem({item : this.item})
+      this.showItem_({item : this.item})
     }
 
-    this.select = function(){
+    this.selectItem_ = function(){
       this.selectItem({item : this.item})
     }
 
-    this.destroy = function(event){
+    this.destroyItem_ = function(event){
       this.destroyItem({event : event, item : this.item})
     }
+
+    this.comparisonValue = function(item) {
+      console.log('comparisonValue _ row')
+      console.log(sortField)
+      if (sortField) {
+        return this.fieldValue(item, this.sortField);
+      }
+    };
 
     this.fieldValue = function(field) {
       var item = this.item
@@ -70,7 +78,6 @@ app.component('csTableRow', {
   },
   bindings : {
     item : "<",
-    filterComparison : "=",
     csIndexOptions : "=",
     columns : "<",
     columnVisible : "&",

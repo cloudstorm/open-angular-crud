@@ -9,11 +9,11 @@ app.component('csTableHeader', {
   controller : function(csSettings, $filter, $element){
 
     this.$onInit = function() {
-      $element.addClass('cs-header')
+      $element.addClass('cs-table-header')
     };
 
-    this.changeSort_ = function(column){
-      this.changeSorting({column : column})
+    this.changeSorting_ = function(column){
+      return this.changeSorting({column : column})
     }
 
     this.columnVisible_ = function(column, index){
