@@ -1,0 +1,13 @@
+@import '../../cs-index/cs-index-sidepanel/cs-index-sidepanel';
+
+
+.cs-table-container {
+
+  .tTable {
+    display : table;
+  }
+
+  .tBody {
+    display : table-row-group;
+  }
+}

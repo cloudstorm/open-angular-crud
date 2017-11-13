@@ -1,0 +1,16 @@
+.table-responsive
+  .tTable.table.table-striped.table-hover
+    .tBody
+      %cs-table-header{ "columns" => "$ctrl.columns",
+                  "cs-index-options" => "$ctrl.csIndexOptions",
+                  "column-visible" => "$ctrl.columnVisible_(column, index)",
+                  "change-sorting" => "$ctrl.changeSorting(column)"}
+    .tBody
+      %cs-table-row{"ng-repeat" => "item in $ctrl.collection | filter:$ctrl.filterComparison track by $index",
+              "ng-class" => "{'info' : $ctrl.csIndexOptions.selectedItem.id == $ctrl.item.id}",
+              "item" => "item",
+              "columns" => "$ctrl.columns",
+              "cs-index-options" => "$ctrl.csIndexOptions",
+              "show-item" => "$ctrl.showItem_(item)",
+              "select-item" => "$ctrl.selectItem_(item)",
+              "destroy-item" => "$ctrl.destroyItem_(event, item)"}
