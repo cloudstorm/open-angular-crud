@@ -1,0 +1,21 @@
+.row.page-header
+  %h1
+    {{ $ctrl.header }}
+    %small{ "ng-bind" => "$ctrl.subHeader" }
+    .header-actions.pull-right
+      .input-group-wrap
+        .input-group
+          .input-group-addon
+            %span.glyphicon.glyphicon-search
+          %input.form-control.cs-index-filter{ "ng-model" => "$ctrl.filterValue",
+                                               "ng-change" => "$ctrl.changeInFilter()",
+                                               :placeholder => "{{$ctrl.i18n.t('filter_for_anything') }}",
+                                               :type => "text" }
+
+      %button.btn.btn-default{ :type => "button", "ng-click" => "$ctrl.refreshIndex_()" }
+        %span.glyphicon.glyphicon-refresh
+
+      %button.btn.btn-primary.create-button{ :type => "button",
+                                             "ng-click" => "$ctrl.openNewResourcePanel_()",
+                                             "ng-disabled" => "$ctrl.createDisabled" }
+        {{ $ctrl.i18n.t('buttons.new') }}
