@@ -730,8 +730,9 @@ app.directive("csIndex", [
         angular.copy({}, $scope.csIndexOptions);
         angular.merge($scope.csIndexOptions, defaultOptions, indexOptions);
         $scope.columns = resource.descriptor.fields;
-        $scope.header = resource.descriptor.name;
-        $scope.subHeader = resource.descriptor.hint;
+        $scope.filter = function(filterValue) {
+          return $scope.filterValue = filterValue;
+        };
         escapeRegExp = function(str) {
           return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
         };
@@ -765,9 +766,6 @@ app.directive("csIndex", [
             return hiddenAttrs.indexOf(attribute) > -1;
           }
           return false;
-        };
-        $scope.createDisabled = function() {
-          return resource.descriptor.create_disabled;
         };
         $scope.sidePanelIsVisible = function() {
           if ($scope.csIndexOptions.selectedItem) {
@@ -1786,6 +1784,7 @@ angular.module('cloudStorm.localizationProvider', []).provider('csLocalization',
       'alert.new_resource_created': 'New resource successfully created',
       'alert.resource_not_found': 'There is no resource with the ID: ',
       'alert.no_linked_resource': 'There is no linked resource',
+      'info.no_item': 'There is no item to show',
       'confirm.delete': "Are you sure you want to delete the item?",
       'filter_for_anything': 'Filter for anything',
       'checkbox.checked': '✓',
@@ -2670,7 +2669,298 @@ app.component("csLoader", {
 });
 var app;
 
-app = angular.module('cloudStorm', ['cloudStorm.alertService', 'cloudStorm.alert', 'cloudStorm.field', 'cloudStorm.form', 'cloudStorm.wizard', 'cloudStorm.checkbox', 'cloudStorm.menu', 'cloudStorm.date', 'cloudStorm.time', 'cloudStorm.datetime', 'cloudStorm.enum', 'cloudStorm.index', 'cloudStorm.index.sidePanel', 'cloudStorm.itemList', 'cloudStorm.main', 'cloudStorm.number', 'cloudStorm.resourceInput', 'cloudStorm.textfield', 'cloudStorm.tableHeader', 'cloudStorm.tableRow', 'cloudStorm.tableContainer', 'cloudStorm.inputBase', 'cloudStorm.dataStore', 'cloudStorm.localizationProvider', 'cloudStorm.resource', 'cloudStorm.resourceService', 'cloudStorm.restApi', 'cloudStorm.resourceFilter', 'cloudStorm.settings', 'cloudStorm.templateService', 'cloudStorm.templates', 'cloudStorm.descriptorService', 'ui.router', 'cloudStorm.routeProvider', 'ui.bootstrap', 'cloudStorm.loader', 'cloudStorm.error', 'cloudStorm.uiPageRouter']);
+app = angular.module('cloudStorm', ['cloudStorm.alertService', 'cloudStorm.alert', 'cloudStorm.field', 'cloudStorm.form', 'cloudStorm.wizard', 'cloudStorm.checkbox', 'cloudStorm.menu', 'cloudStorm.date', 'cloudStorm.time', 'cloudStorm.datetime', 'cloudStorm.enum', 'cloudStorm.field', 'cloudStorm.filterRow', 'cloudStorm.form', 'cloudStorm.index', 'cloudStorm.index.sidePanel', 'cloudStorm.itemList', 'cloudStorm.main', 'cloudStorm.menu', 'cloudStorm.number', 'cloudStorm.resourceInput', 'cloudStorm.textfield', 'cloudStorm.tableHeader', 'cloudStorm.tableRow', 'cloudStorm.tableContainer', 'cloudStorm.inputBase', 'cloudStorm.dataStore', 'cloudStorm.localizationProvider', 'cloudStorm.resource', 'cloudStorm.resourceService', 'cloudStorm.restApi', 'cloudStorm.resourceFilter', 'cloudStorm.settings', 'cloudStorm.templateService', 'cloudStorm.templates', 'cloudStorm.descriptorService', 'ui.router', 'cloudStorm.routeProvider', 'ui.bootstrap', 'cloudStorm.loader', 'cloudStorm.error', 'cloudStorm.uiPageRouter']);
+
+'use string'
+
+var app = angular.module('cloudStorm.filterRow', [])
+
+app.component('csFilterRow', {
+
+    bindings : {
+      resource : "<",
+      filterValue : "<",
+      filter : "&",
+      openNewResourcePanel : "&",
+      refreshIndex : "&",
+    },
+
+    templateUrl : "components/cs-filter-row/cs-filter-row-template.html",
+
+    controller : function($element, csSettings){
+
+      this.$onInit = function(){
+        $element.addClass('cs-filter-row')
+        this.filterVal = ""
+        this.header  = this.resource.descriptor.name
+        this.subHeader  = this.resource.descriptor.hint
+        this.createDisabled = this.resource.descriptor.create_disabled
+      }
+
+      this.i18n = csSettings.settings['i18n-engine']
+
+      this.changeInFilter = function(){
+        this.filter({ filterValue : this.filterValue })
+      }
+
+      this.openNewResourcePanel_ = function(){
+        this.openNewResourcePanel();
+      }
+
+      this.refreshIndex_ = function(){
+        this.refreshIndex();
+      }
+
+    }
+})
+
+'use strict'
+
+var app = angular.module('cloudStorm.index', [])
+
+app.component('csIndex', {
+
+  bindings : {
+    csIndexOptions: '=',
+    resourceType: '=',
+    itemId : '=',
+    items : "<",
+    resource : "<",
+  },
+
+  templateUrl : 'components/cs-index/cs-index-template.html',
+  controller : function($scope, ResourceService, csSettings, $uibModal, csAlertService, csDescriptorService, csRoute){
+
+    var loadData, resource;
+    this.$onInit = function(){
+      this.filterValue = ""
+    }
+
+    this.i18n = csSettings.settings['i18n-engine'];
+
+    this.collection = this.items;
+    this.header  = this.resource.descriptor.name
+
+    resource = this.resource;
+
+    loadData = function() {
+      return csDescriptorService.getPromises().then(function() {
+        return this.resource.$index({
+          include: '*'
+        }).then(function(items) {}, this.collection = items, function(reason) {
+          this.collection = null;
+          return function() {};
+        });
+      });
+    };
+
+    var defaultOptions, indexOptions, sortField;
+
+    sortField = void 0;
+
+    defaultOptions = {
+      'selectedItem': null,
+      'sortAttribute': resource.descriptor.fields[0].attribute,
+      'filterValue': "",
+      'sortReverse': false,
+      'condensedView': false,
+      'hide-actions': false,
+      'hide-attributes': resource.descriptor.attributes_to_hide || {}
+    };
+
+    this.csIndexOptions || (this.csIndexOptions = {});
+
+    indexOptions = angular.copy(this.csIndexOptions);
+
+    angular.copy({}, this.csIndexOptions);
+
+    angular.merge(this.csIndexOptions, defaultOptions, indexOptions);
+
+    this.columns = resource.descriptor.fields;
+
+    // ===== SORT =========================================
+
+    var escapeRegExp;
+
+    this.filter = function(filterValue) {
+      $scope.$broadcast('filterValue', {filterValue : filterValue})
+    };
+
+    escapeRegExp = function(str) {
+      return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+    };
+
+    this.filterComparison = function(value, index, array) {
+      var search;
+      search = new RegExp(escapeRegExp(this.csIndexOptions.filterValue), "i");
+      return _.any(resource.descriptor.fields, function(field) {
+        var field_value;
+        if ((field_value = this.fieldValue(value, field))) {
+          return field_value.toString().match(search);
+        }
+      });
+    };
+
+    // ===== GETTERS =========================================
+
+
+    this.listIsEmpty = function() {
+      return this.collection === null;
+    };
+
+    this.columnVisible = function(column, index) {
+      var length;
+      length = this.columns.length;
+      if (this.attributeToHide(column.attribute)) {
+        return false;
+      }
+      if (this.viewIsCompressed() && !_.contains([0, 1, 2], index)) {
+        return false;
+      }
+      return true;
+    };
+
+    this.attributeToHide = function(attribute) {
+      var hiddenAttrs;
+      if (hiddenAttrs = this.csIndexOptions['hide-attributes'].index) {
+        return hiddenAttrs.indexOf(attribute) > -1;
+      }
+      return false;
+    };
+
+    this.sidePanelIsVisible = function() {
+      if (this.csIndexOptions.selectedItem) {
+        return true;
+      }
+      return false;
+    };
+
+    this.viewIsCompressed = function() {
+      return this.sidePanelIsVisible() && this.csIndexOptions.condensedView;
+    };
+
+    // ===== SETTERS =========================================
+
+    this.changeSorting = function(column) {
+      var sortField;
+      this.csIndexOptions.sortAttribute = column.attribute;
+      this.csIndexOptions.sortReverse = !this.csIndexOptions.sortReverse;
+      return sortField = _.find(resource.descriptor.fields, {
+        attribute: this.csIndexOptions.sortAttribute
+      });
+    };
+
+    this.selectItem = function(item) {
+      return this.csIndexOptions.selectedItem = item;
+    };
+
+    this.destroyItem = function($event, item) {
+      var ref;
+      $event.stopPropagation();
+      if (confirm((ref = this.i18n) != null ? ref.t('confirm.delete') : void 0)) {
+        return item.$destroy().then((function(result) {
+          var index;
+          this.csIndexOptions.selectedItem = null;
+          index = this.collection.indexOf(item);
+          return this.collection.splice(index, 1);
+        }).bind(this), (function(reason) {
+          var alert, ref1, ref2;
+          alert = (ref1 = reason.data) != null ? ref1.errors[0].detail : void 0;
+          return csAlertService.addAlert(alert || ((ref2 = this.i18n) != null ? ref2.t('alert.error_happened') : void 0), 'danger');
+        }).bind(this));
+      }
+    };
+
+    this.showItem = function(item) {
+      if (this.csIndexOptions.selectedItem === null) {
+        return csRoute.go("show", {
+          resourceType: this.resourceType,
+          id: item.attributes.id
+        });
+      } else {
+        return this.selectItem(item);
+      }
+    };
+
+    this.unselectItem = function() {
+      return this.csIndexOptions.selectedItem = null;
+    };
+
+    // ===== WIZARD CALLBACKS ============================
+
+    this.getPanelNumber = function(length) {
+      if (length > 1) {
+        return this.csIndexOptions.condensedView = true;
+      } else {
+        return this.csIndexOptions.condensedView = false;
+      }
+    };
+
+    // ===== UX HANDLES ======================================
+
+    var pushNewItem;
+
+    this.refreshIndex = function() {
+      this.unselectItem();
+      return loadData();
+    };
+
+    this.testEvent = function(test) {
+      return alert(test);
+    };
+
+    this.openNewResourcePanel = function() {
+      var modalInstance;
+      this.unselectItem();
+      this.wizardOptions = {
+        "resource-type": this.resourceType,
+        "form-item": {},
+        "form-mode": "create",
+        "reset-on-submit": true,
+        "events": {
+          'wizard-canceled': function(resource) {
+            var ref;
+            modalInstance.close();
+            return csAlertService.addAlert(((ref = this.i18n) != null ? ref.t('alert.no_resource_created') : void 0) || 'translation missing', 'info');
+          },
+          'wizard-submited': function(resource) {
+            var ref;
+            pushNewItem(this.collection, resource);
+            if (!this.wizardOptions['keep-first']) {
+              modalInstance.close();
+            }
+            return csAlertService.addAlert(((ref = this.i18n) != null ? ref.t('alert.new_resource_created') : void 0) || 'translation missing', 'success');
+          }
+        }
+      };
+      angular.merge(this.wizardOptions, this.csIndexOptions);
+      modalInstance = $uibModal.open({
+        scope: this,
+        keyboard: false,
+        backdrop: 'static',
+        windowTopClass: 'modal-wizard',
+        template: "<div cs-wizard cs-wizard-options=wizardOptions></div>",
+        resolve: {
+          dummy: function() {
+            return this.dummy;
+          }
+        }
+      });
+      return modalInstance.result.then((function(selectedItem) {
+        return this.selected = selectedItem;
+      }), function() {
+        return console.info('Modal dismissed at: ' + new Date());
+      });
+    };
+
+    pushNewItem = function(collection, item) {
+      var newItem;
+      newItem = item.constructor.$new();
+      newItem.$clone(item);
+      return collection.push(newItem);
+    };
+  }
+})
 
 var app = angular.module("cloudStorm.itemList", [])
 
@@ -2715,37 +3005,43 @@ app.component('csTableContainer', {
 
   controller : function($scope, csSettings, $filter, $element, csResourceFilter){
 
-    this.$onChanges = function(changesObj){
-      if(changesObj.csIndexOptions){
-        console.log(changesObj.csIndexOptions.currentValue['filterValue'])
-      }
-      console.log(changesObj)
-    }
-    
-    var sortFieldComp = void 0;
-    this.i18n = csSettings.settings['i18n-engine']
-
     this.$onInit = function() {
+      this.initialCollection = this.collection
       $element.addClass('cs-table-container')
     };
 
-    this.showItem_ = function(item){
-      this.showItem({item : item})
+    this.i18n = csSettings.settings['i18n-engine'];
+
+    this.$onChanges = function(changesObj){
+      //It is not called unfortunately
+    }
+
+    $scope.$on('filterValue', (function(event, args){
+      this.filter(args.filterValue)
+    }).bind(this))
+
+    var sortFieldComp;
+
+
+
+    this.showItem = function(item){
+      this.showItem_({item : item})
     }
 
     this.selectItem = function(item){
-      this.selectItem({item : item})
+      this.selectItem_({item : item})
     }
 
-    this.destroyItem_ = function(event, item){
-      this.destroyItem({event : event, item : item})
+    this.destroyItem = function(event, item){
+      this.destroyItem_({event : event, item : item})
     }
 
-    this.columnVisible_ = function(column, index){
-      return this.columnVisible({column : column, index : index})
+    this.columnVisible = function(column, index){
+      return this.columnVisible_({column : column, index : index})
     }
 
     this.changeSorting = function(column, reverse){
+      this.name = column.attribute
       this.csIndexOptions.sortAttribute = column.attribute
       this.csIndexOptions.sortReverse = !this.csIndexOptions.sortReverse
       sortFieldComp = _.find(this.resource.descriptor.fields, {
@@ -2754,8 +3050,12 @@ app.component('csTableContainer', {
       this.collection = csResourceFilter.sort(this.collection, sortFieldComp, reverse)
     }
 
-    this.showItem_ = function(item){
-      return this.showItem({ item : item })
+    this.filter = function(filterValue) {
+      if(filterValue == ""){
+        this.collection = this.initialCollection
+      } else {
+        this.collection = csResourceFilter.filter(this.collection, this.columns, filterValue)
+      }
     }
 
   },
@@ -2766,13 +3066,12 @@ app.component('csTableContainer', {
     //tableHeader
     csIndexOptions : "<",
     columns : "<",
-    columnVisible : "&",
     //tableRow
     columns : "<",
-    columnVisible : "&",
-    showItem : "&",
-    selectItem : "&",
-    destroyItem : "&",
+    columnVisible_ : "&",
+    showItem_ : "&",
+    selectItem_ : "&",
+    destroyItem_ : "&",
   },
 })
 
@@ -2791,21 +3090,21 @@ app.component('csTableHeader', {
       this.sortReverse = true
     };
 
-    this.changeSorting_ = function(column){
+    this.changeSorting = function(column){
       this.sortReverse = ! this.sortReverse
-      return this.changeSorting({column : column, reverse : this.sortReverse })
+      return this.changeSorting_({column : column, reverse : this.sortReverse })
     }
 
-    this.columnVisible_ = function(column, index){
-      return this.columnVisible({column : column, index : index})
+    this.columnVisible = function(column, index){
+      return this.columnVisible_({column : column, index : index})
     }
   },
 
   bindings : {
     csIndexOptions : "=",
     columns : "<",
-    columnVisible : "&",
-    changeSorting : "&",
+    columnVisible_ : "&",
+    changeSorting_ : "&",
   },
 })
 
@@ -2825,16 +3124,16 @@ app.component('csTableRow', {
       $element.addClass('cs-table-row')
     };
 
-    this.show = function(){
+    this.showItem = function(){
       this.showItem_({item : this.item})
     }
 
-    this.selectItem_ = function(){
-      this.selectItem({item : this.item})
+    this.selectItem = function(){
+      this.selectItem_({item : this.item})
     }
 
-    this.destroyItem_ = function(event){
-      this.destroyItem({event : event, item : this.item})
+    this.destroyItem = function(event){
+      this.destroyItem_({event : event, item : this.item})
     }
 
     this.fieldValue = function(field) {
@@ -2883,10 +3182,10 @@ app.component('csTableRow', {
     item : "<",
     csIndexOptions : "=",
     columns : "<",
-    columnVisible : "&",
-    showItem : "&",
-    selectItem : "&",
-    destroyItem : "&",
+    columnVisible_ : "&",
+    showItem_ : "&",
+    selectItem_ : "&",
+    destroyItem_ : "&",
   },
 })
 
@@ -2918,7 +3217,7 @@ app.factory('csResourceFilter', function(csSettings){
   this.filter = function(array, columns, filterValue){
 
     return _.filter(array, (function(item){
-      search = new RegExp(this.escapeRegExp(filterValue), "i");
+      var search = new RegExp(this.escapeRegExp(filterValue), "i");
       return _.any(columns, (function(field) {
         var field_value;
         if ((field_value = this.fieldValue(item, field))) {
@@ -2974,7 +3273,7 @@ app.factory('csResourceFilter', function(csSettings){
     }
   };
 
-  return this
+  return this;
 })
 
 var app
@@ -3232,7 +3531,7 @@ app.component("csError", {
   templateUrl : "cs-utils/cs-error-template/cs-error-template.html",
 })
 
-angular.module('cloudStorm.templates', ['components/cs-alert/cs-alert-template.html', 'components/cs-checkbox/cs-checkbox-template.html', 'components/cs-date/cs-date-template.html', 'components/cs-datetime/cs-datetime-template.html', 'components/cs-enum/cs-enum-template.html', 'components/cs-field/cs-field-template.html', 'components/cs-form/cs-form-template.html', 'components/cs-index/cs-index-sidepanel/cs-index-sidepanel-template.html', 'components/cs-index/cs-index-template.html', 'components/cs-item-list/cs-item-list-template.html', 'components/cs-main/cs-main-template.html', 'components/cs-menu/cs-menu-template.html', 'components/cs-number/cs-number-template.html', 'components/cs-resource-input/cs-resource-input-template.html', 'components/cs-table/cs-table-container/cs-table-container-template.html', 'components/cs-table/cs-table-header/cs-table-header-template.html', 'components/cs-table/cs-table-row/cs-table-row-template.html', 'components/cs-textfield/cs-textfield-template.html', 'components/cs-time/cs-time-template.html', 'components/cs-wizard/cs-wizard-panel-template.html', 'components/cs-wizard/cs-wizard-template.html', 'cs-route-provider/router-component/cs-page-router-template.html', 'cs-utils/cs-error-template/cs-error-template.html', 'cs-utils/cs-loader/cs-loader-template.html']);
+angular.module('cloudStorm.templates', ['components/cs-alert/cs-alert-template.html', 'components/cs-checkbox/cs-checkbox-template.html', 'components/cs-date/cs-date-template.html', 'components/cs-datetime/cs-datetime-template.html', 'components/cs-enum/cs-enum-template.html', 'components/cs-field/cs-field-template.html', 'components/cs-filter-row/cs-filter-row-template.html', 'components/cs-form/cs-form-template.html', 'components/cs-index/cs-index-sidepanel/cs-index-sidepanel-template.html', 'components/cs-index/cs-index-template.html', 'components/cs-item-list/cs-item-list-template.html', 'components/cs-main/cs-main-template.html', 'components/cs-menu/cs-menu-template.html', 'components/cs-number/cs-number-template.html', 'components/cs-resource-input/cs-resource-input-template.html', 'components/cs-table/cs-table-container/cs-table-container-template.html', 'components/cs-table/cs-table-header/cs-table-header-template.html', 'components/cs-table/cs-table-row/cs-table-row-template.html', 'components/cs-textfield/cs-textfield-template.html', 'components/cs-time/cs-time-template.html', 'components/cs-wizard/cs-wizard-panel-template.html', 'components/cs-wizard/cs-wizard-template.html', 'cs-route-provider/router-component/cs-page-router-template.html', 'cs-utils/cs-error-template/cs-error-template.html', 'cs-utils/cs-loader/cs-loader-template.html']);
 
 angular.module("components/cs-alert/cs-alert-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-alert/cs-alert-template.html",
@@ -3346,6 +3645,33 @@ angular.module("components/cs-field/cs-field-template.html", []).run(["$template
     "");
 }]);
 
+angular.module("components/cs-filter-row/cs-filter-row-template.html", []).run(["$templateCache", function ($templateCache) {
+  $templateCache.put("components/cs-filter-row/cs-filter-row-template.html",
+    "<div class='row page-header'>\n" +
+    "<h1>\n" +
+    "{{ $ctrl.header }}\n" +
+    "<small ng-bind='$ctrl.subHeader'></small>\n" +
+    "<div class='header-actions pull-right'>\n" +
+    "<div class='input-group-wrap'>\n" +
+    "<div class='input-group'>\n" +
+    "<div class='input-group-addon'>\n" +
+    "<span class='glyphicon glyphicon-search'></span>\n" +
+    "</div>\n" +
+    "<input class='form-control cs-index-filter' ng-change='$ctrl.changeInFilter()' ng-model='$ctrl.filterValue' placeholder='{{$ctrl.i18n.t(&#39;filter_for_anything&#39;) }}' type='text'>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<button class='btn btn-default' ng-click='$ctrl.refreshIndex_()' type='button'>\n" +
+    "<span class='glyphicon glyphicon-refresh'></span>\n" +
+    "</button>\n" +
+    "<button class='btn btn-primary create-button' ng-click='$ctrl.openNewResourcePanel_()' ng-disabled='$ctrl.createDisabled' type='button'>\n" +
+    "{{ $ctrl.i18n.t('buttons.new') }}\n" +
+    "</button>\n" +
+    "</div>\n" +
+    "</h1>\n" +
+    "</div>\n" +
+    "");
+}]);
+
 angular.module("components/cs-form/cs-form-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-form/cs-form-template.html",
     "<!-- CloudStorm Form component -->\n" +
@@ -3409,39 +3735,18 @@ angular.module("components/cs-index/cs-index-sidepanel/cs-index-sidepanel-templa
 angular.module("components/cs-index/cs-index-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-index/cs-index-template.html",
     "<div class='row'>\n" +
-    "<div class='col-lg-12' ng-switch='listIsEmpty()'>\n" +
-    "<div class='row page-header'>\n" +
-    "<h1>\n" +
-    "{{ header }}\n" +
-    "<small ng-bind='subHeader'></small>\n" +
-    "<div class='header-actions pull-right'>\n" +
-    "<div class='input-group-wrap'>\n" +
-    "<div class='input-group'>\n" +
-    "<div class='input-group-addon'>\n" +
-    "<span class='glyphicon glyphicon-search'></span>\n" +
-    "</div>\n" +
-    "<input class='form-control cs-index-filter' ng-model='csIndexOptions.filterValue' placeholder='{{ i18n.t(&#39;filter_for_anything&#39;) }}' type='text'>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<button class='btn btn-default' ng-click='refreshIndex()' type='button'>\n" +
-    "<span class='glyphicon glyphicon-refresh'></span>\n" +
-    "</button>\n" +
-    "<button class='btn btn-primary create-button' ng-click='openNewResourcePanel()' ng-disabled='createDisabled()' type='button'>\n" +
-    "{{ i18n.t('buttons.new') }}\n" +
-    "</button>\n" +
-    "</div>\n" +
-    "</h1>\n" +
-    "</div>\n" +
+    "<div class='col-lg-12' ng-switch='$ctrl.listIsEmpty()'>\n" +
+    "<cs-filter-row filter='$ctrl.filter(filterValue)' filterValue='$ctrl.filterValue' openNewResourcePanel='$ctrl.openNewResourcePanel()' refreshIndex='$ctrl.refreshIndex()' resource='$ctrl.resource'></cs-filter-row>\n" +
     "<div class='row' ng-switch-when='true'>\n" +
     "<div class='well well-lg'>\n" +
-    "{{header}} {{ i18n.t('index.empty') }}\n" +
+    "{{$ctrl.header}} {{ $ctrl.i18n.t('index.empty') }}\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class='row' ng-switch-when='false'>\n" +
-    "<cs-table-container collection='collection' column-visible='columnVisible(column, index)' columns='columns' cs-index-options='csIndexOptions' destroy-item='destroyItem(event, item)' ng-class='{ &#39;col-lg-8&#39; : sidePanelIsVisible() &amp;&amp; !viewIsCompressed(),\n" +
-    "&#39;col-lg-6&#39; : viewIsCompressed() }' resource='resource' select-item='selectItem(item)' show-item='showItem(item)'></cs-table-container>\n" +
-    "<cs-index-sidepanel cs-index-sidepanel-options='csIndexOptions' item='csIndexOptions.selectedItem' ng-class='{ &#39;col-lg-4&#39; : !viewIsCompressed() &amp;&amp; sidePanelIsVisible(),\n" +
-    "&#39;col-lg-6&#39; : viewIsCompressed() }' ng-if='sidePanelIsVisible()' panel-number-callback='getPanelNumber' resource-type='resourceType' unselect-item='unselectItem()'></cs-index-sidepanel>\n" +
+    "<cs-table-container collection='$ctrl.collection' column-visible_='$ctrl.columnVisible(column, index)' columns='$ctrl.columns' cs-index-options='$ctrl.csIndexOptions' destroy-item_='$ctrl.destroyItem(event, item)' ng-class='{ &#39;col-lg-8&#39; : $ctrl.sidePanelIsVisible() &amp;&amp; !$ctrl.viewIsCompressed(),\n" +
+    "&#39;col-lg-6&#39; : $ctrl.viewIsCompressed() }' resource='$ctrl.resource' select-item_='$ctrl.selectItem(item)' show-item_='$ctrl.showItem(item)'></cs-table-container>\n" +
+    "<cs-index-sidepanel cs-index-sidepanel-options='$ctrl.csIndexOptions' item='$ctrl.csIndexOptions.selectedItem' ng-class='{ &#39;col-lg-4&#39; : !$ctrl.viewIsCompressed() &amp;&amp; $ctrl.sidePanelIsVisible(),\n" +
+    "&#39;col-lg-6&#39; : $ctrl.viewIsCompressed() }' ng-if='$ctrl.sidePanelIsVisible()' panel-number-callback_='$ctrl.getPanelNumber(length)' resource-type='$ctrl.resourceType' unselect-item='$ctrl.unselectItem()'></cs-index-sidepanel>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -3538,11 +3843,16 @@ angular.module("components/cs-table/cs-table-container/cs-table-container-templa
     "<div class='table-responsive'>\n" +
     "<div class='tTable table table-striped table-hover'>\n" +
     "<div class='tBody'>\n" +
-    "<cs-table-header change-sorting='$ctrl.changeSorting(column, reverse)' column-visible='$ctrl.columnVisible_(column, index)' columns='$ctrl.columns' cs-index-options='$ctrl.csIndexOptions'></cs-table-header>\n" +
+    "<cs-table-header change-sorting_='$ctrl.changeSorting(column, reverse)' column-visible_='$ctrl.columnVisible(column, index)' columns='$ctrl.columns' cs-index-options='$ctrl.csIndexOptions'></cs-table-header>\n" +
     "</div>\n" +
     "<div class='tBody'>\n" +
-    "<cs-table-row columns='$ctrl.columns' cs-index-options='$ctrl.csIndexOptions' destroy-item='$ctrl.destroyItem_(event, item)' item='item' ng-class='{&#39;info&#39; : $ctrl.csIndexOptions.selectedItem.id == $ctrl.item.id}' ng-repeat='item in $ctrl.collection track by $index' select-item='$ctrl.selectItem_(item)' show-item='$ctrl.showItem_(item)'></cs-table-row>\n" +
+    "<cs-table-row columns='$ctrl.columns' cs-index-options='$ctrl.csIndexOptions' destroy-item_='$ctrl.destroyItem(event, item)' item='item' ng-class='{&#39;info&#39; : $ctrl.csIndexOptions.selectedItem.id == $ctrl.item.id}' ng-repeat='item in $ctrl.collection track by $index' select-item_='$ctrl.selectItem(item)' show-item_='$ctrl.showItem(item)'></cs-table-row>\n" +
     "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class='row no-result' ng-if='$ctrl.collection.length == 0'>\n" +
+    "<div class='col-lg-12'>\n" +
+    "{{ $ctrl.i18n.t('info.no_item') }}\n" +
     "</div>\n" +
     "</div>\n" +
     "");
@@ -3551,7 +3861,7 @@ angular.module("components/cs-table/cs-table-container/cs-table-container-templa
 angular.module("components/cs-table/cs-table-header/cs-table-header-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-table/cs-table-header/cs-table-header-template.html",
     "<!-- .tRow is the style of the component template -->\n" +
-    "<div class='tHCell' ng-click='$ctrl.changeSorting_(column)' ng-if='$ctrl.columnVisible_(column, $index)' ng-repeat='column in $ctrl.columns track by $index'>\n" +
+    "<div class='tHCell' ng-click='$ctrl.changeSorting(column)' ng-if='$ctrl.columnVisible(column, $index)' ng-repeat='column in $ctrl.columns track by $index'>\n" +
     "{{column.label}}\n" +
     "<span class='glyphicon glyphicon-triangle-top' ng-if='$ctrl.csIndexOptions.sortAttribute==column.attribute &amp;&amp; !$ctrl.csIndexOptions.sortReverse'></span>\n" +
     "<span class='glyphicon glyphicon-triangle-bottom' ng-if='$ctrl.csIndexOptions.sortAttribute==column.attribute &amp;&amp; $ctrl.csIndexOptions.sortReverse'></span>\n" +
@@ -3562,12 +3872,12 @@ angular.module("components/cs-table/cs-table-header/cs-table-header-template.htm
 
 angular.module("components/cs-table/cs-table-row/cs-table-row-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-table/cs-table-row/cs-table-row-template.html",
-    "<div class='tCell' ng-click='$ctrl.showItem_()' ng-repeat='column in $ctrl.columns track by $index'>\n" +
+    "<div class='tCell' ng-click='$ctrl.showItem()' ng-repeat='column in $ctrl.columns track by $index'>\n" +
     "{{ $ctrl.fieldValue(column) }}\n" +
     "<!-- \"ng-if\" => \"$ctrl.columnVisible(column, $index) || true\" -->\n" +
     "</div>\n" +
     "<div class='tCell actions'>\n" +
-    "<!-- EDIT --><div class='action show-action' ng-click='$ctrl.selectItem_()'>{{ $ctrl.i18n.t('buttons.edit') }}</div><!-- DELETE --><div class='action delete-action' ng-click='$ctrl.destroyItem_($event)'>{{ $ctrl.i18n.t('buttons.delete') }}</div></div>\n" +
+    "<!-- EDIT --><div class='action show-action' ng-click='$ctrl.selectItem()'>{{ $ctrl.i18n.t('buttons.edit') }}</div><!-- DELETE --><div class='action delete-action' ng-click='$ctrl.destroyItem($event)'>{{ $ctrl.i18n.t('buttons.delete') }}</div></div>\n" +
     "");
 }]);
 
