@@ -8,6 +8,13 @@ app.component('csTableContainer', {
 
   controller : function($scope, csSettings, $filter, $element, csResourceFilter){
 
+    this.$onInit = function() {
+      this.initialCollection = this.collection
+      $element.addClass('cs-table-container')
+    };
+
+    this.i18n = csSettings.settings['i18n-engine'];
+
     this.$onChanges = function(changesObj){
       //It is not called unfortunately
     }
@@ -18,10 +25,7 @@ app.component('csTableContainer', {
 
     var sortFieldComp;
 
-    this.$onInit = function() {
-      this.initialCollection = this.collection
-      $element.addClass('cs-table-container')
-    };
+
 
     this.showItem = function(item){
       this.showItem_({item : item})

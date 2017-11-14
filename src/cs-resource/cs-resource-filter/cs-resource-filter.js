@@ -82,5 +82,5 @@ app.factory('csResourceFilter', function(csSettings){
     }
   };
 
-  return this
+  return this;
 })

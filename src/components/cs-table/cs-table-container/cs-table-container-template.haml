@@ -14,3 +14,7 @@
               "show-item_" => "$ctrl.showItem(item)",
               "select-item_" => "$ctrl.selectItem(item)",
               "destroy-item_" => "$ctrl.destroyItem(event, item)"}
+
+.row.no-result{ "ng-if" => "$ctrl.collection.length == 0"}
+  .col-lg-12
+    {{ $ctrl.i18n.t('info.no_item') }}

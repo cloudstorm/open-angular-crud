@@ -10,4 +10,13 @@
   .tBody {
     display : table-row-group;
   }
+
+  .no-result {
+    width : 100%;
+    text-align: center;
+    padding : 3px;
+    font-style: italic;
+    font-size: larger;
+    margin-top: 30px;
+  }
 }
