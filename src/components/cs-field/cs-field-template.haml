@@ -1,9 +1,8 @@
 / CloudStorm Form Field component
 / Renders different kind of inputs for different types of items
-
 .cs-field-inner
   %div{"ng-class" => "style('container')"}
-    .inline.labelContainer{"ng-class" => "style('field1')"}
+    .inline.label-container{"ng-class" => "style('field1')"}
       %label.control-label {{field.label}}
       %span.req-star{ "ng-if" => "field.required", "ng-class" => "style('star')" } *
     %div{"ng-class" => "style('field2')"}

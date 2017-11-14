@@ -13,45 +13,38 @@
     display : none;
   }
 
-  /*
-  * Vertical align
-  */
-  .cont_v {
+  //----------------
+  // Vertical align
+  //----------------
+
+  .container-vertical {
     display : flex;
     flex-direction: column;
   }
 
-  .field1_v {
+  .field-1-vertical {
     flex : 1;
   }
 
-  .field2_v {
+  .field-2-vertical {
     flex : 2;
   }
 
-  /*
-  * Horizontal align
-  */
+  //-----------------
+  // Horizontal align
+  //-----------------
 
-  .cont_h {
+  .container-horizontal {
     display : flex;
     align-items: center;
     flex-direction: row;
   }
 
-  .field1_h {
+  .field-1-horizontal {
     flex : 1;
   }
 
-  .field2_h {
-    flex : 2;
-  }
-
-  .cs-field-label {
-    flex : 1;
-  }
-
-  .cs-field-content {
+  .field-2-horizontal {
     flex : 2;
   }
 
@@ -59,11 +52,11 @@
     display : flex;
   }
 
-  .req-star{
+  .req-star {
     margin-left: 3px;
   }
 
-  .labelContainer {
+  .label-container {
     padding-left: 1px;
   }
 }
