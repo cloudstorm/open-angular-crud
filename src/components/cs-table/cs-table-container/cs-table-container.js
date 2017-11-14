@@ -8,37 +8,39 @@ app.component('csTableContainer', {
 
   controller : function($scope, csSettings, $filter, $element, csResourceFilter){
 
+    this.name = "TestName"
+
     this.$onChanges = function(changesObj){
       if(changesObj.csIndexOptions){
         console.log(changesObj.csIndexOptions.currentValue['filterValue'])
       }
       console.log(changesObj)
     }
-    
-    var sortFieldComp = void 0;
-    this.i18n = csSettings.settings['i18n-engine']
+
+    var sortFieldComp;
 
     this.$onInit = function() {
       $element.addClass('cs-table-container')
     };
 
-    this.showItem_ = function(item){
-      this.showItem({item : item})
+    this.showItem = function(item){
+      this.showItem_({item : item})
     }
 
     this.selectItem = function(item){
-      this.selectItem({item : item})
+      this.selectItem_({item : item})
     }
 
-    this.destroyItem_ = function(event, item){
-      this.destroyItem({event : event, item : item})
+    this.destroyItem = function(event, item){
+      this.destroyItem_({event : event, item : item})
     }
 
-    this.columnVisible_ = function(column, index){
-      return this.columnVisible({column : column, index : index})
+    this.columnVisible = function(column, index){
+      return this.columnVisible_({column : column, index : index})
     }
 
     this.changeSorting = function(column, reverse){
+      this.name = column.attribute
       this.csIndexOptions.sortAttribute = column.attribute
       this.csIndexOptions.sortReverse = !this.csIndexOptions.sortReverse
       sortFieldComp = _.find(this.resource.descriptor.fields, {
@@ -47,24 +49,20 @@ app.component('csTableContainer', {
       this.collection = csResourceFilter.sort(this.collection, sortFieldComp, reverse)
     }
 
-    this.showItem_ = function(item){
-      return this.showItem({ item : item })
-    }
-
   },
   bindings : {
     //input
     resource : "<",
     collection : "<",
+    filterValue : "<",
     //tableHeader
     csIndexOptions : "<",
     columns : "<",
-    columnVisible : "&",
     //tableRow
     columns : "<",
-    columnVisible : "&",
-    showItem : "&",
-    selectItem : "&",
-    destroyItem : "&",
+    columnVisible_ : "&",
+    showItem_ : "&",
+    selectItem_ : "&",
+    destroyItem_ : "&",
   },
 })

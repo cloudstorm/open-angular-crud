@@ -13,20 +13,20 @@ app.component('csTableHeader', {
       this.sortReverse = true
     };
 
-    this.changeSorting_ = function(column){
+    this.changeSorting = function(column){
       this.sortReverse = ! this.sortReverse
-      return this.changeSorting({column : column, reverse : this.sortReverse })
+      return this.changeSorting_({column : column, reverse : this.sortReverse })
     }
 
-    this.columnVisible_ = function(column, index){
-      return this.columnVisible({column : column, index : index})
+    this.columnVisible = function(column, index){
+      return this.columnVisible_({column : column, index : index})
     }
   },
 
   bindings : {
     csIndexOptions : "=",
     columns : "<",
-    columnVisible : "&",
-    changeSorting : "&",
+    columnVisible_ : "&",
+    changeSorting_ : "&",
   },
 })

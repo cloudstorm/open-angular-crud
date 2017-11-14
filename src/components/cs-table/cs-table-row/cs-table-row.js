@@ -14,16 +14,16 @@ app.component('csTableRow', {
       $element.addClass('cs-table-row')
     };
 
-    this.show = function(){
+    this.showItem = function(){
       this.showItem_({item : this.item})
     }
 
-    this.selectItem_ = function(){
-      this.selectItem({item : this.item})
+    this.selectItem = function(){
+      this.selectItem_({item : this.item})
     }
 
-    this.destroyItem_ = function(event){
-      this.destroyItem({event : event, item : this.item})
+    this.destroyItem = function(event){
+      this.destroyItem_({event : event, item : this.item})
     }
 
     this.fieldValue = function(field) {
@@ -72,9 +72,9 @@ app.component('csTableRow', {
     item : "<",
     csIndexOptions : "=",
     columns : "<",
-    columnVisible : "&",
-    showItem : "&",
-    selectItem : "&",
-    destroyItem : "&",
+    columnVisible_ : "&",
+    showItem_ : "&",
+    selectItem_ : "&",
+    destroyItem_ : "&",
   },
 })

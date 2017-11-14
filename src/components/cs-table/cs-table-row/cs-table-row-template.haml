@@ -1,8 +1,8 @@
-.tCell{ "ng-repeat" => "column in $ctrl.columns track by $index", "ng-click" => "$ctrl.showItem_()"}
+.tCell{ "ng-repeat" => "column in $ctrl.columns track by $index", "ng-click" => "$ctrl.showItem()"}
   {{ $ctrl.fieldValue(column) }}
   / "ng-if" => "$ctrl.columnVisible(column, $index) || true"
 .tCell.actions
   / EDIT
-  .action.show-action{"ng-click" => "$ctrl.selectItem_()"}<> {{ $ctrl.i18n.t('buttons.edit') }}
+  .action.show-action{"ng-click" => "$ctrl.selectItem()"}<> {{ $ctrl.i18n.t('buttons.edit') }}
   / DELETE
-  .action.delete-action{ "ng-click" => "$ctrl.destroyItem_($event)" }<> {{ $ctrl.i18n.t('buttons.delete') }}
+  .action.delete-action{ "ng-click" => "$ctrl.destroyItem($event)" }<> {{ $ctrl.i18n.t('buttons.delete') }}
