@@ -1,5 +1,5 @@
 /**
- * cloudstorm - v0.0.15 - 2017-11-08
+ * cloudstorm - v0.0.15 - 2017-11-14
  * https://github.com/cloudstorm/cloudstorm#readme
  *
  * Copyright (c) 2017 Virtual Solutions Ltd <info@cloudstorm.io>
@@ -396,30 +396,28 @@ app.directive("csField", [
         case "edit":
           styleMap = {
             star: "show",
-            container: "cont_v",
-            field1: "field1_v",
-            field2: "field2_v"
+            container: "container-vertical",
+            field1: "field-1-vertical",
+            field2: "field-2-vertical"
           };
           break;
         case "create":
           styleMap = {
             star: "show",
-            container: "container_v",
-            field1: "field1_v",
-            field2: "field2_v"
+            container: "container-vertical",
+            field1: "field-1-vertical",
+            field2: "field-2-vertical"
           };
           break;
         case "show":
           styleMap = {
             star: "hidden",
-            container: "cont_h",
-            field1: "field1_h",
-            field2: "field2_h"
+            container: "container-horizontal",
+            field1: "field-1-horizontal",
+            field2: "field-2-horizontal"
           };
       }
-      $scope.descriptor = {
-        style: styleMap
-      };
+      $scope.styleMap = styleMap;
       $scope.$on('field-error', function(event, reason) {
         var errors;
         errors = reason.data.errors;
@@ -984,7 +982,7 @@ app.factory("csInputBase", [
         return $scope.formMode === mode;
       };
       return $scope.style = function(name) {
-        return $scope.descriptor.style[name];
+        return $scope.styleMap[name];
       };
     };
     return build;
@@ -2735,9 +2733,6 @@ app.component("csLoader", {
         radius: '<',
     },
     templateUrl: 'cs-utils/cs-loader/cs-loader-template.html',
-    controller: function (csInputBase) {
-        csInputBase(this);
-    }
 });
 var app;
 
@@ -3035,7 +3030,7 @@ app.component("csError", {
   templateUrl : "cs-utils/cs-error-template/cs-error-template.html",
 })
 
-angular.module('cloudStorm.templates', ['components/cs-alert/cs-alert-template.html', 'components/cs-checkbox/cs-checkbox-template.html', 'components/cs-date/cs-date-template.html', 'components/cs-datetime/cs-datetime-template.html', 'components/cs-enum/cs-enum-template.html', 'components/cs-field/cs-field-template.html', 'components/cs-form/cs-form-template.html', 'components/cs-index/cs-index-sidepanel/cs-index-sidepanel-template.html', 'components/cs-index/cs-index-template.html', 'components/cs-item-list/cs-item-list-template.html', 'components/cs-main/cs-main-template.html', 'components/cs-menu/cs-menu-template.html', 'components/cs-number/cs-number-template.html', 'components/cs-resource-input/cs-resource-input-template.html', 'components/cs-textfield/cs-textfield-template.html', 'components/cs-time/cs-time-template.html', 'components/cs-wizard/cs-wizard-panel-template.html', 'components/cs-wizard/cs-wizard-template.html', 'cs-route-provider/router-component/cs-page-router-template.html', 'cs-utils/cs-error-template/cs-error-template.html', 'cs-utils/cs-loader/cs-loader-template.html']);
+angular.module('cloudStorm.templates', ['components/cs-alert/cs-alert-template.html', 'components/cs-checkbox/cs-checkbox-template.html', 'components/cs-date/cs-date-template.html', 'components/cs-datetime/cs-datetime-template.html', 'components/cs-enum/cs-enum-template.html', 'components/cs-field/cs-field-template.html', 'components/cs-form/cs-form-template.html', 'components/cs-index/cs-index-sidepanel/cs-index-sidepanel-template.html', 'components/cs-index/cs-index-template.html', 'components/cs-item-list/cs-item-list-template.html', 'components/cs-main/cs-main-template.html', 'components/cs-menu/cs-menu-template.html', 'components/cs-number/cs-number-template.html', 'components/cs-resource-input/cs-resource-input-template.html', 'components/cs-table/cs-table-container/cs-table-container-template.html', 'components/cs-table/cs-table-header/cs-table-header-template.html', 'components/cs-table/cs-table-row/cs-table-row-template.html', 'components/cs-textfield/cs-textfield-template.html', 'components/cs-time/cs-time-template.html', 'components/cs-wizard/cs-wizard-panel-template.html', 'components/cs-wizard/cs-wizard-template.html', 'cs-route-provider/router-component/cs-page-router-template.html', 'cs-utils/cs-error-template/cs-error-template.html', 'cs-utils/cs-loader/cs-loader-template.html']);
 
 angular.module("components/cs-alert/cs-alert-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-alert/cs-alert-template.html",
@@ -3113,7 +3108,7 @@ angular.module("components/cs-field/cs-field-template.html", []).run(["$template
     "<!-- Renders different kind of inputs for different types of items -->\n" +
     "<div class='cs-field-inner'>\n" +
     "<div ng-class='style(&#39;container&#39;)'>\n" +
-    "<div class='inline labelContainer' ng-class='style(&#39;field1&#39;)'>\n" +
+    "<div class='inline label-container' ng-class='style(&#39;field1&#39;)'>\n" +
     "<label class='control-label'>{{field.label}}</label>\n" +
     "<span class='req-star' ng-class='style(&#39;star&#39;)' ng-if='field.required'>*</span>\n" +
     "</div>\n" +
@@ -3341,6 +3336,44 @@ angular.module("components/cs-resource-input/cs-resource-input-template.html", [
     "</span>\n" +
     "</div>\n" +
     "<div class='cover'></div>\n" +
+    "");
+}]);
+
+angular.module("components/cs-table/cs-table-container/cs-table-container-template.html", []).run(["$templateCache", function ($templateCache) {
+  $templateCache.put("components/cs-table/cs-table-container/cs-table-container-template.html",
+    "<div class='table-responsive'>\n" +
+    "<div class='tTable table table-striped table-hover'>\n" +
+    "<div class='tBody'>\n" +
+    "<cs-table-header change-sorting='$ctrl.changeSorting(column, reverse)' column-visible='$ctrl.columnVisible_(column, index)' columns='$ctrl.columns' cs-index-options='$ctrl.csIndexOptions'></cs-table-header>\n" +
+    "</div>\n" +
+    "<div class='tBody'>\n" +
+    "<cs-table-row columns='$ctrl.columns' cs-index-options='$ctrl.csIndexOptions' destroy-item='$ctrl.destroyItem_(event, item)' item='item' ng-class='{&#39;info&#39; : $ctrl.csIndexOptions.selectedItem.id == $ctrl.item.id}' ng-repeat='item in $ctrl.collection track by $index' select-item='$ctrl.selectItem_(item)' show-item='$ctrl.showItem_(item)'></cs-table-row>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "");
+}]);
+
+angular.module("components/cs-table/cs-table-header/cs-table-header-template.html", []).run(["$templateCache", function ($templateCache) {
+  $templateCache.put("components/cs-table/cs-table-header/cs-table-header-template.html",
+    "<!-- .tRow is the style of the component template -->\n" +
+    "<div class='tHCell' ng-click='$ctrl.changeSorting_(column)' ng-if='$ctrl.columnVisible_(column, $index)' ng-repeat='column in $ctrl.columns track by $index'>\n" +
+    "{{column.label}}\n" +
+    "<span class='glyphicon glyphicon-triangle-top' ng-if='$ctrl.csIndexOptions.sortAttribute==column.attribute &amp;&amp; !$ctrl.csIndexOptions.sortReverse'></span>\n" +
+    "<span class='glyphicon glyphicon-triangle-bottom' ng-if='$ctrl.csIndexOptions.sortAttribute==column.attribute &amp;&amp; $ctrl.csIndexOptions.sortReverse'></span>\n" +
+    "</div>\n" +
+    "<div class='tHCell actions' ng-hide='csIndexOptions[&#39;hide-actions&#39;]'></div>\n" +
+    "");
+}]);
+
+angular.module("components/cs-table/cs-table-row/cs-table-row-template.html", []).run(["$templateCache", function ($templateCache) {
+  $templateCache.put("components/cs-table/cs-table-row/cs-table-row-template.html",
+    "<div class='tCell' ng-click='$ctrl.showItem_()' ng-repeat='column in $ctrl.columns track by $index'>\n" +
+    "{{ $ctrl.fieldValue(column) }}\n" +
+    "<!-- \"ng-if\" => \"$ctrl.columnVisible(column, $index) || true\" -->\n" +
+    "</div>\n" +
+    "<div class='tCell actions'>\n" +
+    "<!-- EDIT --><div class='action show-action' ng-click='$ctrl.selectItem_()'>{{ $ctrl.i18n.t('buttons.edit') }}</div><!-- DELETE --><div class='action delete-action' ng-click='$ctrl.destroyItem_($event)'>{{ $ctrl.i18n.t('buttons.delete') }}</div></div>\n" +
     "");
 }]);
 
