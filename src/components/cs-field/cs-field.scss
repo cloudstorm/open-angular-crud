@@ -10,7 +10,7 @@
   }
 
   .hidden {
-    display : none;
+    display: none;
   }
 
   //----------------
@@ -18,16 +18,16 @@
   //----------------
 
   .container-vertical {
-    display : flex;
+    display: flex;
     flex-direction: column;
   }
 
   .field-1-vertical {
-    flex : 1;
+    flex: 1;
   }
 
   .field-2-vertical {
-    flex : 2;
+    flex: 2;
   }
 
   //-----------------
@@ -35,21 +35,21 @@
   //-----------------
 
   .container-horizontal {
-    display : flex;
+    display: flex;
     align-items: center;
     flex-direction: row;
   }
 
   .field-1-horizontal {
-    flex : 1;
+    flex: 1;
   }
 
   .field-2-horizontal {
-    flex : 2;
+    flex: 2;
   }
 
   .inline {
-    display : flex;
+    display: flex;
   }
 
   .req-star {

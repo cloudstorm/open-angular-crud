@@ -38,39 +38,32 @@
 .cs-datetime table {
   outline: none; }
 
-.cs-field {
-  /*
-  * Vertical align
-  */
-  /*
-  * Horizontal align
-  */ }
-  .cs-field .cs-field-inner {
-    position: relative;
-    padding-bottom: 15px; }
-  .cs-field .hidden {
-    display: none; }
-  .cs-field .container-vertical {
-    display: flex;
-    flex-direction: column; }
-  .cs-field .field-1-vertical {
-    flex: 1; }
-  .cs-field .field-2-vertical {
-    flex: 2; }
-  .cs-field .container-horizontal {
-    display: flex;
-    align-items: center;
-    flex-direction: row; }
-  .cs-field .field-1-horizontal {
-    flex: 1; }
-  .cs-field .field-2-horizontal {
-    flex: 2; }
-  .cs-field .inline {
-    display: flex; }
-  .cs-field .req-star {
-    margin-left: 3px; }
-  .cs-field .label-container {
-    padding-left: 1px; }
+.cs-field .cs-field-inner {
+  position: relative;
+  padding-bottom: 15px; }
+.cs-field .hidden {
+  display: none; }
+.cs-field .container-vertical {
+  display: flex;
+  flex-direction: column; }
+.cs-field .field-1-vertical {
+  flex: 1; }
+.cs-field .field-2-vertical {
+  flex: 2; }
+.cs-field .container-horizontal {
+  display: flex;
+  align-items: center;
+  flex-direction: row; }
+.cs-field .field-1-horizontal {
+  flex: 1; }
+.cs-field .field-2-horizontal {
+  flex: 2; }
+.cs-field .inline {
+  display: flex; }
+.cs-field .req-star {
+  margin-left: 3px; }
+.cs-field .label-container {
+  padding-left: 1px; }
 
 .cs-form {
   width: 60%;
