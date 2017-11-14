@@ -9,10 +9,7 @@ app.component('csTableContainer', {
   controller : function($scope, csSettings, $filter, $element, csResourceFilter){
 
     this.$onChanges = function(changesObj){
-      if(changesObj.csIndexOptions){
-        console.log(changesObj.csIndexOptions.currentValue['filterValue'])
-      }
-      console.log(changesObj)
+      //It is not called unfortunately
     }
 
     $scope.$on('filterValue', (function(event, args){
