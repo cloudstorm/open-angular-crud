@@ -32,31 +32,6 @@
     display : table-cell;
   }
 
-  .header-actions {
-    .input-group-wrap {
-      display: inline-block;
-      vertical-align: top;
-      .input-group {
-        .input-group-addon { width: 0; }
-        .form-control.cs-index-filter { width: auto; }
-      }
-    }
-    .btn { vertical-align: top; }
-  }
-
-  // ========== CS INDEX HEADER ===================
-
-  .header-actions {
-    top: 10px;
-    position: relative;
-
-    .create-button {
-      &.btn { padding: 6px 24px; }
-    }
-
-
-  }
-
   // ========== CS INDEX TABLE ====================
 
   table {
