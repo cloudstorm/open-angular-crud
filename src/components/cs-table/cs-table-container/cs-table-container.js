@@ -25,8 +25,6 @@ app.component('csTableContainer', {
 
     var sortFieldComp;
 
-
-
     this.showItem = function(item){
       this.showItem_({item : item})
     }
@@ -60,16 +58,11 @@ app.component('csTableContainer', {
         this.collection = csResourceFilter.filter(this.collection, this.columns, filterValue)
       }
     }
-
   },
   bindings : {
-    //input
     resource : "<",
     collection : "<",
-    //tableHeader
     csIndexOptions : "<",
-    columns : "<",
-    //tableRow
     columns : "<",
     columnVisible_ : "&",
     showItem_ : "&",
