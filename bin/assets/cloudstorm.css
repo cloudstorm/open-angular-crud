@@ -51,8 +51,8 @@
 .cs-field .field-2-vertical {
   flex: 2; }
 .cs-field .container-horizontal {
-  display: flex;
   align-items: center;
+  display: flex;
   flex-direction: row; }
 .cs-field .field-1-horizontal {
   flex: 1; }
