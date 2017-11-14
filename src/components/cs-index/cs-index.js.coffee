@@ -76,11 +76,11 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
       angular.merge $scope.csIndexOptions, defaultOptions, indexOptions
 
       $scope.columns = resource.descriptor.fields
-      $scope.header  = resource.descriptor.name
-      $scope.subHeader  = resource.descriptor.hint
 
       # ===== SORT =========================================
 
+      $scope.filter = (filterValue) ->
+        $scope.filterValue = filterValue
 
       escapeRegExp = (str) ->
         return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
@@ -108,9 +108,6 @@ app.directive "csIndex", ['ResourceService', 'csDataStore', 'csRestApi', 'csSett
         if hiddenAttrs = $scope.csIndexOptions['hide-attributes'].index
           return hiddenAttrs.indexOf(attribute) > -1
         false
-
-      $scope.createDisabled = () ->
-        resource.descriptor.create_disabled
 
       $scope.sidePanelIsVisible = () ->
         return true if $scope.csIndexOptions.selectedItem

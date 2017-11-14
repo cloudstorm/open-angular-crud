@@ -1,33 +1,16 @@
 .row
   .col-lg-12{ "ng-switch" => "listIsEmpty()"}
-    .row.page-header
-      %h1
-        {{ header }}
-        %small{ "ng-bind" => "subHeader" }
-        .header-actions.pull-right
-          .input-group-wrap
-            .input-group
-              .input-group-addon
-                %span.glyphicon.glyphicon-search
-              %input.form-control.cs-index-filter{ "ng-model" => "csIndexOptions.filterValue",
-                                                   :placeholder => "{{ i18n.t('filter_for_anything') }}",
-                                                   :type => "text" }
-
-          %button.btn.btn-default{ :type => "button", "ng-click" => "refreshIndex()" }
-            %span.glyphicon.glyphicon-refresh
-
-          %button.btn.btn-primary.create-button{ :type => "button",
-                                                 "ng-click" => "openNewResourcePanel()",
-                                                 "ng-disabled" => "createDisabled()" }
-            {{ i18n.t('buttons.new') }}
+    %cs-filter-row{ "resource" => "resource",
+                    "filter" => "filter(filterValue)",
+                    "openNewResourcePanel" => "openNewResourcePanel()",
+                    "refreshIndex" => "refreshIndex()"}
     .row{ "ng-switch-when" => "true" }
       .well.well-lg
         {{header}} {{ i18n.t('index.empty') }}
 
     .row{ "ng-switch-when" => "false" }
-
       %cs-table-container{"ng-class" => "{ 'col-lg-8' : sidePanelIsVisible() && !viewIsCompressed(),
-                                     'col-lg-6' : viewIsCompressed() }",
+                                           'col-lg-6' : viewIsCompressed() }",
                           "resource" => "resource",
                           "collection" => "collection",
                           "columns" => "columns",
