@@ -23,6 +23,23 @@ app.factory('csResourceFilter', function(csSettings){
     return array
   }
 
+  this.filter = function(array, columns, filterValue){
+
+    return _.filter(array, (function(item){
+      search = new RegExp(this.escapeRegExp(filterValue), "i");
+      return _.any(columns, (function(field) {
+        var field_value;
+        if ((field_value = this.fieldValue(item, field))) {
+          return field_value.toString().match(search);
+        }
+      }).bind(this));
+    }).bind(this))
+  }
+
+  this.escapeRegExp = function(str){
+    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+  }
+
   this.fieldValue = function(item, field) {
 
     var associations, display_date, display_time, enum_value, item_data, names, ref, relationship;

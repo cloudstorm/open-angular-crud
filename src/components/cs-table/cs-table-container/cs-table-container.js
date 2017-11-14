@@ -8,6 +8,13 @@ app.component('csTableContainer', {
 
   controller : function($scope, csSettings, $filter, $element, csResourceFilter){
 
+    this.$onChanges = function(changesObj){
+      if(changesObj.csIndexOptions){
+        console.log(changesObj.csIndexOptions.currentValue['filterValue'])
+      }
+      console.log(changesObj)
+    }
+    
     var sortFieldComp = void 0;
     this.i18n = csSettings.settings['i18n-engine']
 
