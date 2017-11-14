@@ -336,7 +336,7 @@ module.exports = function(grunt) {
         files: [
           '<%= app_files.sass %>'
         ],
-        tasks: [ 'sass', 'copy:compiled_assets', 'karma:unit' ]
+        tasks: [ 'sass', 'copy:compiled_assets' ]
       },
       sample_app: {
         files: [
@@ -391,4 +391,59 @@ module.exports = function(grunt) {
     'copy:compiled_assets', 'concat:compile_js'
   ]);
 
+  grunt.registerTask('haml_pre', [
+    'haml', 'html2js'
+  ]);
+
+  grunt.registerTask('haml_compile', [
+    'haml_pre', 'concat:compile_js'
+  ]);
+
+  grunt.registerTask('haml_sass', [
+      'haml_pre', 'sass', 'compile'
+  ]);
+
+  grunt.registerTask('sass_compile', [
+    'sass', 'copy:compiled_assets'
+  ]);
+
+  grunt.registerTask('js_compile', [
+    'concat:compile_js'
+  ]);
+
+  grunt.registerTask('js_compile_t', [
+    'concat:compile_js', 'karma:unit'
+  ]);
+
+  grunt.registerTask('coffee_compile', [
+    'coffee', 'concat:compile_js'
+  ]);
+
+  grunt.registerTask('coffee_compile_t', [
+    'coffee', 'concat:compile_js', 'karma:unit'
+  ]);
+
+  grunt.registerTask('haml_js', [
+    'haml_compile', 'js_compile'
+  ])
+
+  grunt.registerTask('haml_coffee', [
+    'haml_compile', 'coffee_compile'
+  ])
+
+  grunt.registerTask('haml_js_t', [
+    'haml_compile', 'js_compile_t'
+  ])
+
+  grunt.registerTask('aj', [
+    'haml_sass', 'js_compile_t'
+  ])
+
+  grunt.registerTask('a', [
+    'haml_sass', 'coffee_compile_t'
+  ])
+
+  grunt.registerTask('haml_coffee_t', [
+    'haml_compile', 'coffee_compile_t'
+  ])
 };
