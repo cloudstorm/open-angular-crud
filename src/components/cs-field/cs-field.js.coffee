@@ -83,27 +83,26 @@ app.directive "csField", ['$compile', '$templateRequest', 'csInputBase', ($compi
     # ===== STYLE DESCRIPTOR SETTING ===========================
 
     switch $scope.formMode
-        when "edit"
-          styleMap =
-            star : "show",
-            container : "cont_v",
-            field1 : "field1_v",
-            field2 : "field2_v"
-        when "create"
-          styleMap =
-            star : "show",
-            container : "container_v",
-            field1 : "field1_v",
-            field2 : "field2_v"
-        when "show"
-        	styleMap =
-            star : "hidden",
-            container : "cont_h",
-            field1 : "field1_h",
-            field2 : "field2_h"
+      when "edit"
+        styleMap =
+          star : "show",
+          container : "container-vertical",
+          field1 : "field-1-vertical",
+          field2 : "field-2-vertical"
+      when "create"
+        styleMap =
+          star : "show",
+          container : "container-vertical",
+          field1 : "field-1-vertical",
+          field2 : "field-2-vertical"
+      when "show"
+      	styleMap =
+          star : "hidden",
+          container : "container-horizontal",
+          field1 : "field-1-horizontal",
+          field2 : "field-2-horizontal"
 
-    $scope.descriptor =
-        style : styleMap
+    $scope.styleMap = styleMap
 
     # ===== COMPONENT LIFECYCLE ===========================
 
