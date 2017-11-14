@@ -26,7 +26,7 @@ app.factory('csResourceFilter', function(csSettings){
   this.filter = function(array, columns, filterValue){
 
     return _.filter(array, (function(item){
-      search = new RegExp(this.escapeRegExp(filterValue), "i");
+      var search = new RegExp(this.escapeRegExp(filterValue), "i");
       return _.any(columns, (function(field) {
         var field_value;
         if ((field_value = this.fieldValue(item, field))) {

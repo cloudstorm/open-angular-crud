@@ -6,6 +6,7 @@ app.component('csFilterRow', {
 
     bindings : {
       resource : "<",
+      filterValue : "<",
       filter : "&",
       openNewResourcePanel : "&",
       refreshIndex : "&",
@@ -17,6 +18,7 @@ app.component('csFilterRow', {
 
       this.$onInit = function(){
         $element.addClass('cs-filter-row')
+        this.filterVal = ""
         this.header  = this.resource.descriptor.name
         this.subHeader  = this.resource.descriptor.hint
         this.createDisabled = this.resource.descriptor.create_disabled
@@ -25,8 +27,7 @@ app.component('csFilterRow', {
       this.i18n = csSettings.settings['i18n-engine']
 
       this.changeInFilter = function(){
-        if(this.filterValue.length > 0)
-          this.filter({ filterValue : this.filterValue })
+        this.filter({ filterValue : this.filterValue })
       }
 
       this.openNewResourcePanel_ = function(){

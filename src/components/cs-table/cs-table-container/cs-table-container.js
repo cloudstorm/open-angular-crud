@@ -8,8 +8,6 @@ app.component('csTableContainer', {
 
   controller : function($scope, csSettings, $filter, $element, csResourceFilter){
 
-    this.name = "TestName"
-
     this.$onChanges = function(changesObj){
       if(changesObj.csIndexOptions){
         console.log(changesObj.csIndexOptions.currentValue['filterValue'])
@@ -17,9 +15,14 @@ app.component('csTableContainer', {
       console.log(changesObj)
     }
 
+    $scope.$on('filterValue', (function(event, args){
+      this.filter(args.filterValue)
+    }).bind(this))
+
     var sortFieldComp;
 
     this.$onInit = function() {
+      this.initialCollection = this.collection
       $element.addClass('cs-table-container')
     };
 
@@ -49,12 +52,19 @@ app.component('csTableContainer', {
       this.collection = csResourceFilter.sort(this.collection, sortFieldComp, reverse)
     }
 
+    this.filter = function(filterValue) {
+      if(filterValue == ""){
+        this.collection = this.initialCollection
+      } else {
+        this.collection = csResourceFilter.filter(this.collection, this.columns, filterValue)
+      }
+    }
+
   },
   bindings : {
     //input
     resource : "<",
     collection : "<",
-    filterValue : "<",
     //tableHeader
     csIndexOptions : "<",
     columns : "<",

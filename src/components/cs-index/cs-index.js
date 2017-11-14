@@ -11,10 +11,14 @@ app.component('csIndex', {
     items : "<",
     resource : "<",
   },
+
   templateUrl : 'components/cs-index/cs-index-template.html',
-  controller : function(ResourceService, csSettings, $uibModal, csAlertService, csDescriptorService, csRoute){
+  controller : function($scope, ResourceService, csSettings, $uibModal, csAlertService, csDescriptorService, csRoute){
 
     var loadData, resource;
+    this.$onInit = function(){
+      this.filterValue = ""
+    }
 
     this.i18n = csSettings.settings['i18n-engine'];
 
@@ -63,7 +67,7 @@ app.component('csIndex', {
     var escapeRegExp;
 
     this.filter = function(filterValue) {
-      return this.filterValue = filterValue;
+      $scope.$broadcast('filterValue', {filterValue : filterValue})
     };
 
     escapeRegExp = function(str) {
