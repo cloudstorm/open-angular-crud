@@ -64,25 +64,8 @@ app.component('csIndex', {
 
     // ===== SORT =========================================
 
-    var escapeRegExp;
-
     this.filter = function(filterValue) {
       $scope.$broadcast('filterValue', {filterValue : filterValue})
-    };
-
-    escapeRegExp = function(str) {
-      return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
-    };
-
-    this.filterComparison = function(value, index, array) {
-      var search;
-      search = new RegExp(escapeRegExp(this.csIndexOptions.filterValue), "i");
-      return _.any(resource.descriptor.fields, function(field) {
-        var field_value;
-        if ((field_value = this.fieldValue(value, field))) {
-          return field_value.toString().match(search);
-        }
-      });
     };
 
     // ===== GETTERS =========================================
