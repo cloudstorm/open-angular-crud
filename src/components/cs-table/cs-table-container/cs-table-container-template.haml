@@ -7,7 +7,7 @@
                   "change-sorting_" => "$ctrl.changeSorting(column, reverse)"}
     .tBody
       %cs-table-row{"ng-repeat" => "item in $ctrl.collection track by $index",
-              "ng-class" => "{'info' : $ctrl.isSelected(item)}",
+              "ng-class" => "{'selected-row' : $ctrl.isSelected(item)}",
               "item" => "item",
               "columns" => "$ctrl.columns",
               "cs-index-options" => "$ctrl.csIndexOptions",
