@@ -19,7 +19,7 @@
 .cs-checkbox input {
   width: 16px;
   height: 16px;
-  margin: 0; }
+  margin: 2px; }
 .cs-checkbox .show-view {
   margin-left: 5px; }
 
@@ -41,30 +41,29 @@
 .cs-field .cs-field-inner {
   position: relative;
   padding-bottom: 15px; }
-.cs-field .hide {
+.cs-field .hidden {
   display: none; }
-.cs-field .cs-field-row {
+.cs-field .container-vertical {
   display: flex;
-  align-items: center; }
-.cs-field .cs-field-label {
+  flex-direction: column; }
+.cs-field .field-1-vertical {
   flex: 1; }
-.cs-field .cs-field-content {
+.cs-field .field-2-vertical {
   flex: 2; }
-
-.cs-filter-row .header-actions .input-group-wrap {
-  display: inline-block;
-  vertical-align: top; }
-  .cs-filter-row .header-actions .input-group-wrap .input-group .input-group-addon {
-    width: 0; }
-  .cs-filter-row .header-actions .input-group-wrap .input-group .form-control.cs-index-filter {
-    width: auto; }
-.cs-filter-row .header-actions .btn {
-  vertical-align: top; }
-.cs-filter-row .header-actions {
-  top: 10px;
-  position: relative; }
-  .cs-filter-row .header-actions .create-button.btn {
-    padding: 6px 24px; }
+.cs-field .container-horizontal {
+  align-items: center;
+  display: flex;
+  flex-direction: row; }
+.cs-field .field-1-horizontal {
+  flex: 1; }
+.cs-field .field-2-horizontal {
+  flex: 2; }
+.cs-field .inline {
+  display: flex; }
+.cs-field .req-star {
+  margin-left: 3px; }
+.cs-field .label-container {
+  padding-left: 1px; }
 
 .cs-form {
   width: 60%;
@@ -140,18 +139,20 @@
       left: 478px; }
     .cs-index-sidepanel .cs-wizard {
       width: 502px; } }
-.cs-index div.tTable > div.tBody > .cs-row.info {
-  background-color: #d9edf7; }
-.cs-index .tTable {
-  display: table; }
-.cs-index .tHead {
-  display: table-header-group; }
-.cs-index .tBody {
-  display: table-row-group; }
-.cs-index .tRow {
-  display: table-row; }
-.cs-index .tCell {
-  display: table-cell; }
+.cs-index .header-actions .input-group-wrap {
+  display: inline-block;
+  vertical-align: top; }
+  .cs-index .header-actions .input-group-wrap .input-group .input-group-addon {
+    width: 0; }
+  .cs-index .header-actions .input-group-wrap .input-group .form-control.cs-index-filter {
+    width: auto; }
+.cs-index .header-actions .btn {
+  vertical-align: top; }
+.cs-index .header-actions {
+  top: 10px;
+  position: relative; }
+  .cs-index .header-actions .create-button.btn {
+    padding: 6px 24px; }
 .cs-index table th {
   cursor: pointer;
   white-space: nowrap; }
@@ -236,161 +237,6 @@
 
 body > .ui-select-bootstrap.open {
   z-index: 1051; }
-
-.cs-index-sidepanel {
-  position: fixed;
-  height: calc(100% - 190px);
-  top: 190px; }
-  .cs-index-sidepanel .panel-close {
-    position: absolute;
-    width: 20px;
-    left: 382px;
-    top: 10px;
-    cursor: pointer;
-    background-color: white;
-    text-align: center;
-    z-index: 999; }
-  .cs-index-sidepanel .cs-wizard .form-panel {
-    padding-top: 0px; }
-
-@media (max-width: 1200px) {
-  .cs-index-sidepanel {
-    -moz-box-shadow: 0px 0px 140px -10px #000;
-    -webkit-box-shadow: 0px 0px 140px -10px #000;
-    box-shadow: 0px 0px 140px -10px #000;
-    width: 502px;
-    height: 75%;
-    left: 50%;
-    top: 10%;
-    padding: 0;
-    margin-left: -251px;
-    z-index: 1050; }
-    .cs-index-sidepanel .panel-close {
-      left: 478px; }
-    .cs-index-sidepanel .cs-wizard {
-      width: 502px; } }
-.cs-table-header {
-  display: table-row; }
-  .cs-table-header .tHCell {
-    display: table-cell;
-    border-top: 0;
-    vertical-align: bottom;
-    border-bottom: 1px solid #ddd;
-    padding: 8px;
-    line-height: 1.42857143;
-    text-align: left;
-    font-weight: bold;
-    cursor: pointer;
-    white-space: nowrap; }
-
-.cs-index-sidepanel {
-  position: fixed;
-  height: calc(100% - 190px);
-  top: 190px; }
-  .cs-index-sidepanel .panel-close {
-    position: absolute;
-    width: 20px;
-    left: 382px;
-    top: 10px;
-    cursor: pointer;
-    background-color: white;
-    text-align: center;
-    z-index: 999; }
-  .cs-index-sidepanel .cs-wizard .form-panel {
-    padding-top: 0px; }
-
-@media (max-width: 1200px) {
-  .cs-index-sidepanel {
-    -moz-box-shadow: 0px 0px 140px -10px #000;
-    -webkit-box-shadow: 0px 0px 140px -10px #000;
-    box-shadow: 0px 0px 140px -10px #000;
-    width: 502px;
-    height: 75%;
-    left: 50%;
-    top: 10%;
-    padding: 0;
-    margin-left: -251px;
-    z-index: 1050; }
-    .cs-index-sidepanel .panel-close {
-      left: 478px; }
-    .cs-index-sidepanel .cs-wizard {
-      width: 502px; } }
-div.table-striped > div.tBody > .cs-table-row:nth-of-type(odd) {
-  background-color: #f9f9f9; }
-
-.cs-table-row {
-  display: table-row; }
-  .cs-table-row .tCell {
-    display: table-cell;
-    padding: 8px;
-    line-height: 1.42857143;
-    vertical-align: top;
-    border-top: 1px solid #ddd;
-    cursor: pointer; }
-  .cs-table-row div.actions {
-    text-align: right;
-    line-height: 36px;
-    padding-top: 0;
-    padding-bottom: 0;
-    white-space: nowrap;
-    vertical-align: middle; }
-    .cs-table-row div.actions .action {
-      cursor: pointer;
-      display: inline-block;
-      padding: 0 8px; }
-      .cs-table-row div.actions .action.delete-action {
-        color: #777777; }
-      .cs-table-row div.actions .action:hover {
-        text-decoration: underline;
-        background-color: rgba(125, 125, 125, 0.3); }
-        .cs-table-row div.actions .action:hover.delete-action {
-          color: #d9534f; }
-        .cs-table-row div.actions .action:hover.show-action {
-          color: #5bc0de; }
-
-.cs-index-sidepanel {
-  position: fixed;
-  height: calc(100% - 190px);
-  top: 190px; }
-  .cs-index-sidepanel .panel-close {
-    position: absolute;
-    width: 20px;
-    left: 382px;
-    top: 10px;
-    cursor: pointer;
-    background-color: white;
-    text-align: center;
-    z-index: 999; }
-  .cs-index-sidepanel .cs-wizard .form-panel {
-    padding-top: 0px; }
-
-@media (max-width: 1200px) {
-  .cs-index-sidepanel {
-    -moz-box-shadow: 0px 0px 140px -10px #000;
-    -webkit-box-shadow: 0px 0px 140px -10px #000;
-    box-shadow: 0px 0px 140px -10px #000;
-    width: 502px;
-    height: 75%;
-    left: 50%;
-    top: 10%;
-    padding: 0;
-    margin-left: -251px;
-    z-index: 1050; }
-    .cs-index-sidepanel .panel-close {
-      left: 478px; }
-    .cs-index-sidepanel .cs-wizard {
-      width: 502px; } }
-.cs-table-container .tTable {
-  display: table; }
-.cs-table-container .tBody {
-  display: table-row-group; }
-.cs-table-container .no-result {
-  width: 100%;
-  text-align: center;
-  padding: 3px;
-  font-style: italic;
-  font-size: larger;
-  margin-top: 30px; }
 
 .cs-textfield .ui-select-choices {
   display: none !important; }
