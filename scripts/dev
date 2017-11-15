@@ -1,0 +1,3 @@
+# Usage: execute `. ./scripts/dev` from root folder
+source scripts/.aliases
+echo 'Sourced development aiding aliases'
