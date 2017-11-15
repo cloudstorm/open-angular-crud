@@ -9,6 +9,7 @@ app.component('csTableContainer', {
   controller : function($scope, csSettings, $filter, $element, csResourceFilter){
 
     this.$onInit = function() {
+      this.selectedItem = {}
       this.initialCollection = this.collection
       $element.addClass('cs-table-container')
     };
@@ -17,6 +18,10 @@ app.component('csTableContainer', {
 
     this.$onChanges = function(changesObj){
       //It is not called unfortunately
+    }
+
+    this.isSelected = function(item){
+      return item.id == this.selectedItem.id
     }
 
     $scope.$on('filterValue', (function(event, args){
@@ -30,6 +35,7 @@ app.component('csTableContainer', {
     }
 
     this.selectItem = function(item){
+      this.selectedItem = item
       this.selectItem_({item : item})
     }
 
@@ -62,7 +68,7 @@ app.component('csTableContainer', {
   bindings : {
     resource : "<",
     collection : "<",
-    csIndexOptions : "<",
+    csIndexOptions : "=",
     columns : "<",
     columnVisible_ : "&",
     showItem_ : "&",

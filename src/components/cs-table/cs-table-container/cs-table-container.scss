@@ -3,6 +3,10 @@
 
 .cs-table-container {
 
+  div.tTable>div.tBody>.cs-table-row.info {
+    background-color: #d9edf7;
+  }
+
   .tTable {
     display : table;
   }
