@@ -4,7 +4,7 @@ app = angular.module('cloudStorm.field', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRequest) ->
+app.directive "csField", ['$compile', '$templateRequest', 'csInputBase', ($compile, $templateRequest, csInputBase) ->
 
   # ===== COMPILE =============================================================
 
@@ -27,12 +27,12 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
 
   link = ($scope, element, attrs, controller) ->
 
+    csInputBase $scope
 
     if !$scope.field? && $scope.fieldName?
       $scope.field = _.find $scope.formItem.constructor.descriptor.fields, { attribute: $scope.fieldName }
 
     # ===== COMPILE DOM WITH APPROPRIATE DIRECTIVE ========
-
 
     $scope.csFieldOptions.layout =
       alignment : 'horizontal'
@@ -42,8 +42,6 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
       directiveName = override
     else
       type = $scope.field.type
-
-
 
       directiveName = switch
         when type == 'resource' then 'cs-resource-input'
@@ -56,8 +54,7 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
         when type == 'enum'     then 'cs-enum'
         when type == 'boolean'  then 'cs-checkbox'
 
-    wrapperName = ".cs-input-wrapper-" + $scope.formMode
-
+    wrapperName = ".cs-input-wrapper"
     inputTemplate = "<#{directiveName} form-item='formItem'
                                        field-name='fieldName'
                                        field='field'
@@ -65,6 +62,8 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
                                        create-resources='createResources()'
                                        options='csFieldOptions'>
                      </#{directiveName}>"
+
+
 
     innerElement = angular.element(element[0].querySelector(wrapperName))
     innerElement.append($compile(inputTemplate)($scope))
@@ -81,7 +80,29 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
         element.removeClass 'has-error'
         element.addClass 'has-error' if $scope.getError($scope.field)
 
+    # ===== STYLE DESCRIPTOR SETTING ===========================
 
+    switch $scope.formMode
+      when "edit"
+        styleMap =
+          star : "show",
+          container : "container-vertical",
+          field1 : "field-1-vertical",
+          field2 : "field-2-vertical"
+      when "create"
+        styleMap =
+          star : "show",
+          container : "container-vertical",
+          field1 : "field-1-vertical",
+          field2 : "field-2-vertical"
+      when "show"
+      	styleMap =
+          star : "hidden",
+          container : "container-horizontal",
+          field1 : "field-1-horizontal",
+          field2 : "field-2-horizontal"
+
+    $scope.styleMap = styleMap
 
     # ===== COMPONENT LIFECYCLE ===========================
 
@@ -108,15 +129,6 @@ app.directive "csField", ['$compile', '$templateRequest', ($compile, $templateRe
 
     $scope.getHint = (field) ->
       field.hint || null
-
-    $scope.viewMode = () ->
-      return $scope.formMode == "view"
-
-    $scope.editOrCreateMode = () ->
-      return $scope.formMode == "edit" || $scope.formMode == "create"
-
-    $scope.style = (name) ->
-      return $scope.descriptor.style[name]
 
     return
 

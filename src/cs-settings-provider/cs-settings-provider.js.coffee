@@ -35,7 +35,7 @@ app.provider 'csSettings', ['csLocalizationProvider', (csLocalizationProvider) -
           pageType: ($transition$) ->
             'show'
       },{
-        name: 'edit'
+        name: 'cmd'
         url: '/{resourceType}/{id}/{cmd}'
         component: 'csPageRouter'
         resolve:
@@ -46,7 +46,7 @@ app.provider 'csSettings', ['csLocalizationProvider', (csLocalizationProvider) -
           cmd: ($transition$) ->
             $transition$.params().cmd
           pageType: ($transition$) ->
-            'edit'
+            'cmd'
       }]
 
   @settings = defaultSettings
