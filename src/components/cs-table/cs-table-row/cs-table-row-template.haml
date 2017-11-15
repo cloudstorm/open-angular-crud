@@ -3,6 +3,6 @@
   / "ng-if" => "$ctrl.columnVisible(column, $index) || true"
 .tCell.actions
   / EDIT
-  .action.show-action{"ng-click" => "$ctrl.selectItem()"}<> {{ $ctrl.i18n.t('buttons.edit') }}
+  .action.edit-action{"ng-click" => "$ctrl.selectItem()"}<> {{ $ctrl.i18n.t('buttons.edit') }}
   / DELETE
   .action.delete-action{ "ng-click" => "$ctrl.destroyItem($event)" }<> {{ $ctrl.i18n.t('buttons.delete') }}
