@@ -70,7 +70,6 @@ app.component('csIndex', {
 
     // ===== GETTERS =========================================
 
-
     this.listIsEmpty = function() {
       return this.collection === null;
     };
@@ -107,15 +106,6 @@ app.component('csIndex', {
     };
 
     // ===== SETTERS =========================================
-
-    this.changeSorting = function(column) {
-      var sortField;
-      this.csIndexOptions.sortAttribute = column.attribute;
-      this.csIndexOptions.sortReverse = !this.csIndexOptions.sortReverse;
-      return sortField = _.find(resource.descriptor.fields, {
-        attribute: this.csIndexOptions.sortAttribute
-      });
-    };
 
     this.selectItem = function(item) {
       return this.csIndexOptions.selectedItem = item;
