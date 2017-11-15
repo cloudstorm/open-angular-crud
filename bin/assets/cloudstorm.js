@@ -3593,7 +3593,7 @@ angular.module("components/cs-table/cs-table-container/cs-table-container-templa
     "<cs-table-header change-sorting_='$ctrl.changeSorting(column, reverse)' column-visible_='$ctrl.columnVisible(column, index)' columns='$ctrl.columns' cs-index-options='$ctrl.csIndexOptions'></cs-table-header>\n" +
     "</div>\n" +
     "<div class='tBody'>\n" +
-    "<cs-table-row columns='$ctrl.columns' cs-index-options='$ctrl.csIndexOptions' destroy-item_='$ctrl.destroyItem(event, item)' item='item' ng-class='{&#39;selected-row&#39; : $ctrl.isSelected(item)}' ng-repeat='item in $ctrl.collection track by $index' select-item_='$ctrl.selectItem(item)' show-item_='$ctrl.showItem(item)'></cs-table-row>\n" +
+    "<cs-table-row columns='$ctrl.columns' cs-index-options='$ctrl.csIndexOptions' destroy-item_='$ctrl.destroyItem(event, item)' item='item' ng-class='{&#39;selected-row&#39; : $ctrl.csIndexOptions.selectedItem.id == item.id}' ng-repeat='item in $ctrl.collection track by $index' select-item_='$ctrl.selectItem(item)' show-item_='$ctrl.showItem(item)'></cs-table-row>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
