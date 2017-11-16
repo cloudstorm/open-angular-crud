@@ -9,22 +9,54 @@
     //
   }
 
-  .hide {
-    display : none;
+  .hidden {
+    display: none;
   }
 
-  .cs-field-row {
-    display : flex;
-    //Horizontal align - necessary
+  //----------------
+  // Vertical align
+  //----------------
+
+  .container-vertical {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .field-1-vertical {
+    flex: 1;
+  }
+
+  .field-2-vertical {
+    flex: 2;
+  }
+
+  //-----------------
+  // Horizontal align
+  //-----------------
+
+  .container-horizontal {
     align-items: center;
+    display: flex;
+    flex-direction: row;
   }
 
-  .cs-field-label {
-    flex : 1;
+  .field-1-horizontal {
+    flex: 1;
   }
 
-  .cs-field-content {
-    flex : 2;
+  .field-2-horizontal {
+    flex: 2;
   }
 
+  .inline {
+    display: flex;
+  }
+
+  .req-star {
+    margin-left: 3px;
+  }
+
+  .label-container {
+    padding-left: 1px;
+  }
 }

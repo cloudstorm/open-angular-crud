@@ -16,16 +16,20 @@ app.component("csPageRouter", {
         this.testValue = "InitialValue"
         this.loading = true
         this.errors = []
+
+        this.validCommands = ["edit","show"]
         //getDataLoaderObject(this, descriptor)["index"].call()
         this.init = function (){
             switch (this.pageType) {
               case "index": this.resource_index(); break;
-              case "edit":
-                if(this.cmd != "edit" && this.cmd != "show"){
+              case "cmd":
+                if(this.validCommands.indexOf(this.cmd) == -1){
                   this.errors.push("\"" + this.cmd + "\" is not a valid command");
                 }
+                this.pageType = this.cmd
                 this.resource_id();
                 break;
+
               case "show":
                 if(this.id == "new"){
                   this.pageType = "create"

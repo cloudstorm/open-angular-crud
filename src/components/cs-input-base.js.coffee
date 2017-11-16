@@ -23,6 +23,10 @@ app.factory "csInputBase", [ ->
 
     $scope.mode = (mode) ->
       return $scope.formMode == mode
+
+    $scope.style = (name) ->
+      return $scope.styleMap[name]
+
   return build
 
 ]
