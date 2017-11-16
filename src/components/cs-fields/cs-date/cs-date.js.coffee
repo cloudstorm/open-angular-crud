@@ -20,17 +20,27 @@ app.directive "csDate", ['uibDateParser', 'csSettings', 'csInputBase', (uibDateP
     # Post-link: gets called for children recursively after post() traversed the DOM tree
     post: link
 
-
   # ===== LINK ================================================================
 
   format_date = ($scope) ->
+
     format = $scope.options['date-format'] || csSettings.settings['date-format']
-    $scope.input_date = $scope.formItem.attributes[$scope.field.attribute]
+    $scope.formItem.attributes[$scope.field.attribute + "textFormat"] = $scope.formItem.attributes[$scope.field.attribute]
     if format
       input_date = $scope.formItem.attributes[$scope.field.attribute]
       date = uibDateParser.parse(input_date, format)
       date.setHours(14) if date # TODO: 14 is a timezone dependent value, see https://github.com/cloudstorm/cloudstorm/issues/44
       $scope.formItem.attributes[$scope.field.attribute] = date
+      $scope.formItem.attributes[$scope.field.attribute + "textFormat"] = getTextFormat(date)
+
+  getTextFormat = (date) ->
+
+    year = (date.getYear() + 1900).toString()
+    month = date.getMonth().toString()
+    month = if month.length == 1 then '0' + month else month
+    day = date.getDay().toString()
+    day = if day.length == 1 then '0' + day else day
+    year + "-" + month + "-" + day
 
   link = ($scope, element, attrs, controller) ->
     $scope.i18n = csSettings.settings['i18n-engine']
@@ -73,7 +83,7 @@ app.directive "csDate", ['uibDateParser', 'csSettings', 'csInputBase', (uibDateP
         if (newValue != oldValue)
           format_date($scope)
 
-      $scope.$watch 'formItem.attributes[field.attribute]', (newValue, oldValue) ->
+      $scope.$watch 'formItem.attributes[field.attribute + \'dateFormat\']', (newValue, oldValue) ->
         if (newValue != oldValue)
           format_date($scope)
     ]

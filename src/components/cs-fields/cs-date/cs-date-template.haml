@@ -15,6 +15,6 @@
                       "autocomplete" => "off" }
 .form-control.no-cursor{ "ng-if" => "mode('show')",
                          "disabled" => "true"  }
-  {{ input_date }}
+  {{ formItem.attributes[field.attribute + 'textFormat'] }}
 %div.no-wrap{ "ng-if" => "mode('tableView')"}
-  {{ input_date }}
+  {{ formItem.attributes[field.attribute + 'textFormat'] }}

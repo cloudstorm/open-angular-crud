@@ -13,7 +13,7 @@ app.factory('csResourceFilter', function(csSettings){
     var array = _.sortBy(array, (function(item){
       fieldValue = this.fieldValue(item, column)
       if(fieldValue)
-        fieldValue = fieldValue.toLowerCase()
+        fieldValue = fieldValue.toString().toLowerCase()
       return fieldValue
     }).bind(this))
 
@@ -77,6 +77,13 @@ app.factory('csResourceFilter', function(csSettings){
     } else if (field.type === 'datetime') {
       display_date = new Date(item.attributes[field.attribute]);
       return $filter('date')(display_date, 'EEEE, MMMM d, y HH:mm');
+    } else if (field.type === 'date') {
+      var date = item.attributes[field.attribute]
+      if( date != null && (typeof date) == "object"){
+        return date.getTime()
+      } else {
+        return item.attributes[field.attribute + "textFormat"]
+      }
     } else {
       return item.attributes[field.attribute];
     }
