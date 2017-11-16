@@ -16,17 +16,17 @@ app.directive "csTextfield", ['$rootScope', 'csTemplateService', 'csInputBase', 
     # Pre-link: gets called for parent first
     pre: (scope, element, attrs, controller) ->
       return
-    
+
     # Post-link: gets called for children recursively after post() traversed the DOM tree
     post: link
 
   # ===== LINK ================================================================
 
-  link = ($scope, element, attrs, controller) ->    
+  link = ($scope, element, attrs, controller) ->
     csInputBase $scope
     $scope.csTemplateService = csTemplateService
-    $scope.defaultTemplate = 'components/cs-textfield/cs-textfield-template.html'
-            
+    $scope.defaultTemplate = 'components/cs-fields/cs-textfield/cs-textfield-template.html'
+
     # ===== WATCHES =======================================
 
     $scope.$watch 'formItem.attributes[field.attribute]', (newValue, oldValue) ->
@@ -42,7 +42,7 @@ app.directive "csTextfield", ['$rootScope', 'csTemplateService', 'csInputBase', 
     return
 
   # ===== CONFIGURE ===========================================================
-  
+
   return {
     restrict: 'E'
     template: '<ng-include src="csTemplateService.getTemplateUrl(field,options,defaultTemplate)"/>',

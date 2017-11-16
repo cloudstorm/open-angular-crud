@@ -3,8 +3,8 @@
                      "ng-disabled" => "fieldDisabled()",
                      "ng-model" => "formItem.attributes[field.attribute]",
                      "type" => "checkbox" }
-.show-view{"ng-if" => "mode('show')"}
-  %div{"ng-if" => "formItem.attributes[field.attribute]"}
+.show-view{ "ng-if" => "mode('show') || mode('tableView')" }
+  %div{ "ng-if" => "formItem.attributes[field.attribute]"}
     {{ i18n.t('checkbox.checked') }}
-  %div{"ng-if" => "!formItem.attributes[field.attribute]"}
+  %div{ "ng-if" => "!formItem.attributes[field.attribute]"}
     {{ i18n.t('checkbox.unchecked') }}

@@ -38,7 +38,7 @@ app.directive "csResourceInput", [
 
       csInputBase $scope
       $scope.csTemplateService = csTemplateService
-      $scope.defaultTemplate = 'components/cs-resource-input/cs-resource-input-template.html'
+      $scope.defaultTemplate = 'components/cs-fields/cs-resource-input/cs-resource-input-template.html'
 
       setup_associations($scope)
 
@@ -166,6 +166,3 @@ app.directive 'uiSelectOverride', () ->
     $scope.$on '$destroy', () ->
       # Deregistering listeners
       handleScroll()
-
-
-

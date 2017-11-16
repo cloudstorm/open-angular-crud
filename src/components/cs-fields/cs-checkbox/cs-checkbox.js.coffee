@@ -1,10 +1,10 @@
 "use strict"
 
-app = angular.module('cloudStorm.enum', ['ui.select'])
+app = angular.module('cloudStorm.checkbox', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csEnum", ['$rootScope', 'csInputBase', ($rootScope, csInputBase) ->
+app.directive "csCheckbox", ['$rootScope', 'csInputBase', 'csSettings', ($rootScope, csInputBase, csSettings) ->
 
 
   # ===== COMPILE =============================================================
@@ -12,39 +12,46 @@ app.directive "csEnum", ['$rootScope', 'csInputBase', ($rootScope, csInputBase) 
   compile = ($templateElement, $templateAttributes) ->
 
     # Only modify the DOM in compile, use (pre/post) link for others
-    $templateElement.addClass "cs-enum"
+    $templateElement.addClass "cs-checkbox"
 
     # Pre-link: gets called for parent first
     pre: (scope, element, attrs, controller) ->
       return
-    
+
     # Post-link: gets called for children recursively after post() traversed the DOM tree
     post: link
 
 
   # ===== LINK ================================================================
 
-  link = ($scope, element, attrs, controller) ->    
+  link = ($scope, element, attrs, controller) ->
     csInputBase $scope
-        
+
+    $scope.i18n = csSettings.settings['i18n-engine']
+
+    $scope.formItem.attributes[$scope.field.attribute] = !!$scope.formItem.attributes[$scope.field.attribute]
+
     # ===== WATCHES =======================================
 
     $scope.$watch 'formItem.attributes[field.attribute]', (newValue, oldValue) ->
       if (newValue != oldValue)
         $scope.$emit 'input-value-changed', $scope.field
 
+    $scope.$on 'form-reset', () ->
+      $scope.formItem.attributes[$scope.field.attribute] = false
+
     return
 
   # ===== CONFIGURE ===========================================================
-  
+
   return {
     restrict: 'E'
-    templateUrl: 'components/cs-enum/cs-enum-template.html'
+    templateUrl: 'components/cs-fields/cs-checkbox/cs-checkbox-template.html'
     scope:
       field: '=' # The resource item which the form is working with
       formItem: '='
       formMode: '='
-      options: '=' 
+      options: '='
     compile: compile
   }
 

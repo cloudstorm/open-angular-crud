@@ -1,17 +1,18 @@
 "use strict"
 
-app = angular.module('cloudStorm.time', [])
+app = angular.module('cloudStorm.number', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csTime", ['uibDateParser', 'csSettings', 'csInputBase', (uibDateParser, csSettings, csInputBase) ->
+app.directive "csNumber", ['$rootScope', 'csInputBase', ($rootScope, csInputBase) ->
+
 
   # ===== COMPILE =============================================================
 
   compile = ($templateElement, $templateAttributes) ->
 
     # Only modify the DOM in compile, use (pre/post) link for others
-    $templateElement.addClass "cs-time"
+    $templateElement.addClass "cs-number"
 
     # Pre-link: gets called for parent first
     pre: (scope, element, attrs, controller) ->
@@ -24,9 +25,11 @@ app.directive "csTime", ['uibDateParser', 'csSettings', 'csInputBase', (uibDateP
   # ===== LINK ================================================================
 
   link = ($scope, element, attrs, controller) ->
-    $scope.i18n = csSettings.settings['i18n-engine']
-
     csInputBase $scope
+
+    if $scope.formMode == 'create'
+      if $scope.field.default?
+        $scope.formItem.attributes[$scope.field.attribute] = $scope.field.default
 
     # ===== WATCHES =======================================
 
@@ -34,26 +37,19 @@ app.directive "csTime", ['uibDateParser', 'csSettings', 'csInputBase', (uibDateP
       if (newValue != oldValue)
         $scope.$emit 'input-value-changed', $scope.field
 
+    return
 
   # ===== CONFIGURE ===========================================================
 
   return {
     restrict: 'E'
-    templateUrl: 'components/cs-time/cs-time-template.html'
-    priority: 1000
+    templateUrl: 'components/cs-fields/cs-number/cs-number-template.html'
     scope:
       field: '=' # The resource item which the form is working with
       formItem: '='
       formMode: '='
       options: '='
     compile: compile
-    controller: ['$scope',($scope) ->
-      # NGModelOptions cannot be bound in link time, but can be made available on controller scope
-      $scope.getModelOptions = () ->
-        offset = $scope.options['time-zone-offset'] || csSettings.settings['time-zone-offset'] || 'utc'
-        options = { 'timezone': offset }
-    ]
-
   }
 
 ]

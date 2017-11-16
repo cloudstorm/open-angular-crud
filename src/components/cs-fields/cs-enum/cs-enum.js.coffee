@@ -1,10 +1,10 @@
 "use strict"
 
-app = angular.module('cloudStorm.checkbox', [])
+app = angular.module('cloudStorm.enum', ['ui.select'])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csCheckbox", ['$rootScope', 'csInputBase', 'csSettings', ($rootScope, csInputBase, csSettings) ->
+app.directive "csEnum", ['$rootScope', 'csInputBase', ($rootScope, csInputBase) ->
 
 
   # ===== COMPILE =============================================================
@@ -12,7 +12,7 @@ app.directive "csCheckbox", ['$rootScope', 'csInputBase', 'csSettings', ($rootSc
   compile = ($templateElement, $templateAttributes) ->
 
     # Only modify the DOM in compile, use (pre/post) link for others
-    $templateElement.addClass "cs-checkbox"
+    $templateElement.addClass "cs-enum"
 
     # Pre-link: gets called for parent first
     pre: (scope, element, attrs, controller) ->
@@ -27,18 +27,11 @@ app.directive "csCheckbox", ['$rootScope', 'csInputBase', 'csSettings', ($rootSc
   link = ($scope, element, attrs, controller) ->
     csInputBase $scope
 
-    $scope.i18n = csSettings.settings['i18n-engine']
-
-    $scope.formItem.attributes[$scope.field.attribute] = !!$scope.formItem.attributes[$scope.field.attribute]
-
     # ===== WATCHES =======================================
 
     $scope.$watch 'formItem.attributes[field.attribute]', (newValue, oldValue) ->
       if (newValue != oldValue)
         $scope.$emit 'input-value-changed', $scope.field
-
-    $scope.$on 'form-reset', () ->
-      $scope.formItem.attributes[$scope.field.attribute] = false
 
     return
 
@@ -46,7 +39,7 @@ app.directive "csCheckbox", ['$rootScope', 'csInputBase', 'csSettings', ($rootSc
 
   return {
     restrict: 'E'
-    templateUrl: 'components/cs-checkbox/cs-checkbox-template.html'
+    templateUrl: 'components/cs-fields/cs-enum/cs-enum-template.html'
     scope:
       field: '=' # The resource item which the form is working with
       formItem: '='

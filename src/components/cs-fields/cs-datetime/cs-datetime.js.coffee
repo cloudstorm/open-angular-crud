@@ -52,7 +52,7 @@ app.directive "csDatetime", ['uibDateParser', 'csSettings', 'csInputBase', (uibD
 
   return {
     restrict: 'E'
-    templateUrl: 'components/cs-datetime/cs-datetime-template.html'
+    templateUrl: 'components/cs-fields/cs-datetime/cs-datetime-template.html'
     priority: 1000
     scope:
       field: '=' # The resource item which the form is working with
