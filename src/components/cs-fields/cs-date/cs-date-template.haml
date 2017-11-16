@@ -13,6 +13,8 @@
                       "ng-model-options" => "getModelOptions()",
                       "type" => "text",
                       "autocomplete" => "off" }
-.form-control.no-cursor{ "ng-if" => "mode('show') || mode('tableView')",
+.form-control.no-cursor{ "ng-if" => "mode('show')",
                          "disabled" => "true"  }
+  {{ input_date }}
+%div.no-wrap{ "ng-if" => "mode('tableView')"}
   {{ input_date }}
