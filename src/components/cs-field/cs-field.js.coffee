@@ -34,25 +34,21 @@ app.directive "csField", ['$compile', '$templateRequest', 'csInputBase', ($compi
 
     # ===== COMPILE DOM WITH APPROPRIATE DIRECTIVE ========
 
-    $scope.csFieldOptions.layout =
-      alignment : 'horizontal'
-      fieldType : 'view'
-
     if override = getDirectiveOverride($scope)
       directiveName = override
     else
       type = $scope.field.type
 
       directiveName = switch
-        when type == 'resource' then 'cs-resource-input'
-        when type == 'string'   then 'cs-textfield'
+        when type == 'boolean'  then 'cs-checkbox'
         when type == 'date'     then 'cs-date'
-        when type == 'time'     then 'cs-time'
         when type == 'datetime' then 'cs-datetime'
+        when type == 'enum'     then 'cs-enum'
         when type == 'integer'  then 'cs-number'
         when type == 'float'    then 'cs-number'
-        when type == 'enum'     then 'cs-enum'
-        when type == 'boolean'  then 'cs-checkbox'
+        when type == 'resource' then 'cs-resource-input'
+        when type == 'string'   then 'cs-textfield'
+        when type == 'time'     then 'cs-time'
 
     wrapperName = ".cs-input-wrapper"
     inputTemplate = "<#{directiveName} form-item='formItem'
@@ -62,8 +58,6 @@ app.directive "csField", ['$compile', '$templateRequest', 'csInputBase', ($compi
                                        create-resources='createResources()'
                                        options='csFieldOptions'>
                      </#{directiveName}>"
-
-
 
     innerElement = angular.element(element[0].querySelector(wrapperName))
     innerElement.append($compile(inputTemplate)($scope))
@@ -100,6 +94,12 @@ app.directive "csField", ['$compile', '$templateRequest', 'csInputBase', ($compi
           star : "hidden",
           container : "container-horizontal",
           field1 : "field-1-horizontal",
+          field2 : "field-2-horizontal"
+      when "tableView"
+      	styleMap =
+          star : "hidden",
+          container : "container-horizontal",
+          field1 : "hidden",
           field2 : "field-2-horizontal"
 
     $scope.styleMap = styleMap
