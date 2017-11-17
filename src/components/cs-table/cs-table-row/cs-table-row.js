@@ -12,6 +12,11 @@ app.component('csTableRow', {
 
     this.$onInit = function() {
       $element.addClass('cs-table-row')
+      //TODO - Later the different field directive must be prepared if the
+      //options input is not defined. i.e. the cs-date would throw and error.
+      this.fieldOptions = {}
+      console.log("tableRow")
+      console.log(this)
     };
 
     this.showItem = function(){

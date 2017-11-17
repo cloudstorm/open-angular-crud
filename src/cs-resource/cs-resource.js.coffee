@@ -263,6 +263,7 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
       # TODO: $relationship and $relationships should be merged and $assign_association should use the unified
 
       $relationship: (rel, opts = {}) ->
+        console.log(rel)
         return null unless rel
         if opts.datastore
           opts.datastore.get(rel.type, rel.id)

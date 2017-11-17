@@ -26,3 +26,5 @@
                          "ng-model" => "$parent.formItem.attributes[$parent.field.attribute]",
                          "disabled" => true }
   {{ formItem.attributes[field.attribute] }}
+%div{ "ng-if" => "mode('tableView')"}
+  {{ formItem.attributes[field.attribute] }}

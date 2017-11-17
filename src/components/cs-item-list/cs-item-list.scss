@@ -16,6 +16,17 @@
   white-space: nowrap;
 }
 
+.table-view {
+  flex : 1;
+  color: $gray;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin: 2px;
+  background-color: $gray-lighter;
+  text-align: center;
+  white-space: nowrap;
+}
+
 .no-item {
   color: #b11c1c;
   font-size: 13px;

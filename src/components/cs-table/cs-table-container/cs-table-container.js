@@ -42,13 +42,21 @@ app.component('csTableContainer', {
     }
 
     this.changeSorting = function(column, reverse){
+      /*
       this.name = column.attribute
       this.csIndexOptions.sortAttribute = column.attribute
       this.csIndexOptions.sortReverse = !this.csIndexOptions.sortReverse
       sortFieldComp = _.find(this.resource.descriptor.fields, {
         attribute: this.csIndexOptions.sortAttribute
       });
+      console.log(sortFieldComp);
       this.collection = csResourceFilter.sort(this.collection, sortFieldComp, reverse)
+      console.log(this.collection)
+      */
+      var arr = []
+      arr[0] = this.collection[3]
+      this.collection = arr
+      //this.collection.reverse()
     }
 
     this.filter = function(filterValue) {

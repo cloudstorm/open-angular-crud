@@ -45,25 +45,34 @@ app.directive "csResourceInput", [
 
       # ===== WATCHES =======================================
 
-      if $scope.field.cardinality == 'one'
-        $scope.$watch '{id: model.object.id, type: model.object.type}', (newValue, oldValue) ->
-          if (newValue.id != oldValue.id) || (newValue.type != oldValue.type)
-            $scope.formItem.$assign_association($scope.field, $scope.model.object)
-            $scope.$emit 'input-value-changed', $scope.field
-
-      if $scope.field.cardinality == 'many'
-        $scope.$watchCollection 'model.object', (newItems, oldItems) ->
-          $scope.formItem.$assign_association($scope.field, newItems)
-          $scope.$emit 'input-value-changed', $scope.field
+      # if $scope.field.cardinality == 'one'
+      #   $scope.$watch '{id: model.object.id, type: model.object.type}', (newValue, oldValue) ->
+      #
+      #     ###
+      #     console.log "card:one"
+      #     console.log "Old"
+      #     console.log oldValue
+      #     console.log "New"
+      #     console.log newValue
+      #     ###
+      #     if (newValue.id != oldValue.id) || (newValue.type != oldValue.type)
+      #       $scope.formItem.$assign_association($scope.field, $scope.model.object)
+      #       $scope.$emit 'input-value-changed', $scope.field
+      #
+      #
+      # if $scope.field.cardinality == 'many'
+      #   $scope.$watchCollection 'model.object', (newItems, oldItems) ->
+      #     $scope.formItem.$assign_association($scope.field, newItems)
+      #     $scope.$emit 'input-value-changed', $scope.field
 
       $scope.$watch 'formItem.id', (newValue, oldValue) ->
         if (newValue != oldValue)
           setup_associations($scope)
           $scope.$emit 'input-value-changed', $scope.field
 
-      $scope.$watch 'formItem.relationships[field.relationship].data.id', (newValue, oldValue) ->
-        if (newValue != oldValue)
-          $scope.model.object = $scope.formItem.$association($scope.field)
+      # $scope.$watch 'formItem.relationships[field.relationship].data.id', (newValue, oldValue) ->
+      #   if (newValue != oldValue)
+      #     $scope.model.object = $scope.formItem.$association($scope.field)
 
 
       # ===== COMPONENT LIFECYCLE ===========================
@@ -128,12 +137,15 @@ app.directive "csResourceInput", [
       return
 
     setup_associations = ($scope) ->
+
+      console.log "setup associations"
       $scope.resource = ResourceService.get($scope.field.resource)
       $scope.model = {object: $scope.formItem.$association($scope.field)}
+      console.log $scope.model.object
 
       if $scope.associates
         $scope.associates = []
-        $scope.refresh()
+        #$scope.refresh()
       else
         $scope.associates = []
 
