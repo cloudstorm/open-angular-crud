@@ -2784,7 +2784,7 @@ app.component("csItemList", {
   },
 
   templateUrl : "components/cs-item-list/cs-item-list-template.html",
-  controller : function($scope, csRoute, csSettings, csInputBase){
+  controller : function(csRoute, csSettings, csInputBase){
 
     csInputBase(this)
     this.i18n = csSettings.settings['i18n-engine']
@@ -2864,7 +2864,6 @@ app.component('csTableContainer', {
     this.$onInit = function() {
       this.initialCollection = this.collection
       $element.addClass('cs-table-container')
-      console.log(this.collection)
     };
 
     this.i18n = csSettings.settings['i18n-engine'];
@@ -2903,14 +2902,7 @@ app.component('csTableContainer', {
       sortFieldComp = _.find(this.resource.descriptor.fields, {
         attribute: this.csIndexOptions.sortAttribute
       });
-      //console.log(sortFieldComp);
       this.collection = csResourceFilter.sort(this.collection, sortFieldComp, reverse)
-      //console.log(this.collection)
-      //
-      // var arr = []
-      // arr[0] = this.collection[3]
-      // this.collection = arr
-      // //this.collection.reverse()
     }
 
     this.filter = function(filterValue) {
@@ -3710,9 +3702,6 @@ angular.module("components/cs-item-list/cs-item-list-template.html", []).run(["$
     "{{ $ctrl.i18n.t('alert.no_linked_resource') + $ctrl.field.attribute }}\n" +
     "</div>\n" +
     "</div>\n" +
-    "<!--\n" +
-    "<div class='item-container' ng-if='!$ctrl.many'></div>\n" +
-    "-->\n" +
     "");
 }]);
 
