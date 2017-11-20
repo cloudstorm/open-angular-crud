@@ -191,15 +191,17 @@ app.component('csIndex', {
         }
       };
       angular.merge(this.wizardOptions, this.csIndexOptions);
+
+      var scp = $scope
       modalInstance = $uibModal.open({
-        scope: this,
+        scope: $scope,
         keyboard: false,
         backdrop: 'static',
         windowTopClass: 'modal-wizard',
-        template: "<div cs-wizard cs-wizard-options=wizardOptions></div>",
+        template: "<div cs-wizard cs-wizard-options=$ctrl.wizardOptions></div>",
         resolve: {
           dummy: function() {
-            return this.dummy;
+            return $scope.dummy;
           }
         }
       });

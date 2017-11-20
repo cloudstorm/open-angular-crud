@@ -3,8 +3,8 @@
     %cs-filter-row{ "resource" => "$ctrl.resource",
                     "filterValue" => "$ctrl.filterValue",
                     "filter" => "$ctrl.filter(filterValue)",
-                    "openNewResourcePanel" => "$ctrl.openNewResourcePanel()",
-                    "refreshIndex" => "$ctrl.refreshIndex()"}
+                    "open-new-resource-panel" => "$ctrl.openNewResourcePanel()",
+                    "refresh-index" => "$ctrl.refreshIndex()"}
     .row{ "ng-switch-when" => "true" }
       .well.well-lg
         {{$ctrl.header}} {{ $ctrl.i18n.t('index.empty') }}
