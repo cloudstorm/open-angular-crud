@@ -25,13 +25,14 @@ app.directive "csDate", ['uibDateParser', 'csSettings', 'csInputBase', (uibDateP
   format_date = ($scope) ->
 
     format = $scope.options['date-format'] || csSettings.settings['date-format']
-    $scope.formItem.attributes[$scope.field.attribute + "textFormat"] = $scope.formItem.attributes[$scope.field.attribute]
+    $scope.input_date = $scope.formItem.attributes[$scope.field.attribute]
+    #$scope.formItem.attributes[$scope.field.attribute + "textFormat"] = $scope.formItem.attributes[$scope.field.attribute]
     if format
       input_date = $scope.formItem.attributes[$scope.field.attribute]
       date = uibDateParser.parse(input_date, format)
       date.setHours(14) if date # TODO: 14 is a timezone dependent value, see https://github.com/cloudstorm/cloudstorm/issues/44
       $scope.formItem.attributes[$scope.field.attribute] = date
-      $scope.formItem.attributes[$scope.field.attribute + "textFormat"] = getTextFormat(date)
+      $scope.input_date = getTextFormat(date)
 
   getTextFormat = (date) ->
 
