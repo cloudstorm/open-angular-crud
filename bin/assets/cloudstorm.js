@@ -1,5 +1,5 @@
 /**
- * cloudstorm - v0.0.15 - 2017-11-17
+ * cloudstorm - v0.0.15 - 2017-11-20
  * https://github.com/cloudstorm/cloudstorm#readme
  *
  * Copyright (c) 2017 Virtual Solutions Ltd <info@cloudstorm.io>
@@ -557,10 +557,29 @@ app.directive("csResourceInput", [
       $scope.csTemplateService = csTemplateService;
       $scope.defaultTemplate = 'components/cs-fields/cs-resource-input/cs-resource-input-template.html';
       setup_associations($scope);
+      if ($scope.field.cardinality === 'one') {
+        $scope.$watch('{id: model.object.id, type: model.object.type}', function(newValue, oldValue) {
+          if ((newValue.id !== oldValue.id) || (newValue.type !== oldValue.type)) {
+            $scope.formItem.$assign_association($scope.field, $scope.model.object);
+            return $scope.$emit('input-value-changed', $scope.field);
+          }
+        });
+      }
+      if ($scope.field.cardinality === 'many') {
+        $scope.$watchCollection('model.object', function(newItems, oldItems) {
+          $scope.formItem.$assign_association($scope.field, newItems);
+          return $scope.$emit('input-value-changed', $scope.field);
+        });
+      }
       $scope.$watch('formItem.id', function(newValue, oldValue) {
         if (newValue !== oldValue) {
           setup_associations($scope);
           return $scope.$emit('input-value-changed', $scope.field);
+        }
+      });
+      $scope.$watch('formItem.relationships[field.relationship].data.id', function(newValue, oldValue) {
+        if (newValue !== oldValue) {
+          return $scope.model.object = $scope.formItem.$association($scope.field);
         }
       });
       $scope.$on('form-reset', function() {
@@ -2759,17 +2778,13 @@ app.component("csItemList", {
     field : "<",
     itemList : "<",
     key : "<",
+    many : "<",
     uiConfig : "<",
-    formMode : "<"
+    formMode : "<",
   },
-  templateUrl : "components/cs-item-list/cs-item-list-template.html",
-  controller : function(csRoute, csSettings, csInputBase){
 
-    if(!Array.isArray(this.itemList)){
-      //console.log(this.itemList)
-      this.itemList = [this.itemList]
-    }
-    console.log(this.itemList)
+  templateUrl : "components/cs-item-list/cs-item-list-template.html",
+  controller : function($scope, csRoute, csSettings, csInputBase){
 
     csInputBase(this)
     this.i18n = csSettings.settings['i18n-engine']
@@ -2849,6 +2864,7 @@ app.component('csTableContainer', {
     this.$onInit = function() {
       this.initialCollection = this.collection
       $element.addClass('cs-table-container')
+      console.log(this.collection)
     };
 
     this.i18n = csSettings.settings['i18n-engine'];
@@ -2880,21 +2896,21 @@ app.component('csTableContainer', {
     }
 
     this.changeSorting = function(column, reverse){
-      /*
+
       this.name = column.attribute
       this.csIndexOptions.sortAttribute = column.attribute
       this.csIndexOptions.sortReverse = !this.csIndexOptions.sortReverse
       sortFieldComp = _.find(this.resource.descriptor.fields, {
         attribute: this.csIndexOptions.sortAttribute
       });
-      console.log(sortFieldComp);
+      //console.log(sortFieldComp);
       this.collection = csResourceFilter.sort(this.collection, sortFieldComp, reverse)
-      console.log(this.collection)
-      */
-      var arr = []
-      arr[0] = this.collection[3]
-      this.collection = arr
-      //this.collection.reverse()
+      //console.log(this.collection)
+      //
+      // var arr = []
+      // arr[0] = this.collection[3]
+      // this.collection = arr
+      // //this.collection.reverse()
     }
 
     this.filter = function(filterValue) {
@@ -3515,10 +3531,10 @@ angular.module("components/cs-fields/cs-resource-input/cs-resource-input-templat
     "</ui-select>\n" +
     "</div>\n" +
     "<!-- && field.cardinality == 'many'\", -->\n" +
-    "<cs-item-list field='field' form-mode='formMode' item-list='model.object' key='resource.descriptor.fields[0].attribute' ng-if='(mode(&#39;show&#39;) || mode(&#39;tableView&#39;))'></cs-item-list>\n" +
+    "<cs-item-list field='field' form-mode='formMode' item-list='model.object' key='resource.descriptor.fields[0].attribute' many='field.cardinality == &#39;many&#39;' ng-if='(mode(&#39;show&#39;) || mode(&#39;tableView&#39;))'></cs-item-list>\n" +
     "<!--\n" +
     "<div ng-if='mode(&#39;tableView&#39;) &amp;&amp; field.cardinality == &#39;one&#39;'>\n" +
-    "{{ model.object[resource.descriptor.fields[0].attribute] }}\n" +
+    "{{ model.object.attributes[resource.descriptor.fields[0].attribute] }}\n" +
     "</div>\n" +
     "-->\n" +
     "<div class='input-group cs-resource-input-group' ng-if='(mode(&#39;create&#39;) || mode(&#39;edit&#39;)) &amp;&amp; field.cardinality == &#39;many&#39;'>\n" +
@@ -3684,14 +3700,19 @@ angular.module("components/cs-item-list/cs-item-list-template.html", []).run(["$
   $templateCache.put("components/cs-item-list/cs-item-list-template.html",
     "<div class='item-container'>\n" +
     "<div ng-class='{&#39;item-item&#39; : $ctrl.mode(&#39;show&#39;),\n" +
-    "&#39;table-view&#39; : $ctrl.mode(&#39;tableView&#39;)}' ng-click='$ctrl.click(item)' ng-repeat='item in $ctrl.itemList'>\n" +
-    "<!-- {{ item.attributes[$ctrl.key] }} -->\n" +
-    "{{ item.type }}\n" +
+    "&#39;table-view&#39; : $ctrl.mode(&#39;tableView&#39;)}' ng-click='$ctrl.click(item)' ng-if='$ctrl.many' ng-repeat='item in $ctrl.itemList'>\n" +
+    "{{ item.attributes[$ctrl.key] }}\n" +
+    "</div>\n" +
+    "<div ng-if='!$ctrl.many'>\n" +
+    "{{ $ctrl.itemList.attributes[$ctrl.key] }}\n" +
     "</div>\n" +
     "<div class='no-item' ng-if='$ctrl.itemList.length == 0 &amp;&amp; !$ctrl.mode(&#39;tableView&#39;)'>\n" +
     "{{ $ctrl.i18n.t('alert.no_linked_resource') + $ctrl.field.attribute }}\n" +
     "</div>\n" +
     "</div>\n" +
+    "<!--\n" +
+    "<div class='item-container' ng-if='!$ctrl.many'></div>\n" +
+    "-->\n" +
     "");
 }]);
 

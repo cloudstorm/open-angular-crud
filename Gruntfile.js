@@ -440,7 +440,7 @@ module.exports = function(grunt) {
   ])
 
   grunt.registerTask('a', [
-    'haml_sass', 'coffee_compile_t'
+    'haml_sass', 'coffee_compile'
   ])
 
   grunt.registerTask('haml_coffee_t', [
