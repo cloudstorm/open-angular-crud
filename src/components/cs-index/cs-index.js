@@ -33,16 +33,13 @@ app.component('csIndex', {
         (function() {
           return this.resource.$index({ include: '*'})
         }).bind(this)).then( (function(items) {
-            this.setCollection(items)
+            return this.collection = items
           }).bind(this), (function(reason) {
-            this.setCollection(null)
+            return this.collection = null
           }).bind(this)
         )
     };
 
-    this.setCollection = function(coll){
-      this.collection = coll
-    }
     var defaultOptions, indexOptions, sortField;
 
     sortField = void 0;
