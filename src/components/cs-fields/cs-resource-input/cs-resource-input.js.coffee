@@ -48,12 +48,6 @@ app.directive "csResourceInput", [
       if $scope.field.cardinality == 'one'
         $scope.$watch '{id: model.object.id, type: model.object.type}', (newValue, oldValue) ->
 
-          # console.log "card:one"
-          # console.log "Old"
-          # console.log oldValue
-          # console.log "New"
-          # console.log newValue
-
           if (newValue.id != oldValue.id) || (newValue.type != oldValue.type)
             $scope.formItem.$assign_association($scope.field, $scope.model.object)
             $scope.$emit 'input-value-changed', $scope.field
@@ -137,10 +131,8 @@ app.directive "csResourceInput", [
 
     setup_associations = ($scope) ->
 
-      console.log "setup associations"
       $scope.resource = ResourceService.get($scope.field.resource)
       $scope.model = {object: $scope.formItem.$association($scope.field)}
-      console.log $scope.model.object
 
       if $scope.associates
         $scope.associates = []

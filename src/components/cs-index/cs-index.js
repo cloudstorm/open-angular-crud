@@ -180,14 +180,14 @@ app.component('csIndex', {
             modalInstance.close();
             return csAlertService.addAlert(((ref = this.i18n) != null ? ref.t('alert.no_resource_created') : void 0) || 'translation missing', 'info');
           },
-          'wizard-submited': function(resource) {
+          'wizard-submited': (function(resource) {
             var ref;
-            pushNewItem(this.collection, resource);
+            this.pushNewItem(this.collection, resource);
             if (!this.wizardOptions['keep-first']) {
               modalInstance.close();
             }
             return csAlertService.addAlert(((ref = this.i18n) != null ? ref.t('alert.new_resource_created') : void 0) || 'translation missing', 'success');
-          }
+          }).bind(this)
         }
       };
       angular.merge(this.wizardOptions, this.csIndexOptions);
@@ -212,7 +212,7 @@ app.component('csIndex', {
       });
     };
 
-    pushNewItem = function(collection, item) {
+    this.pushNewItem = function(collection, item) {
       var newItem;
       newItem = item.constructor.$new();
       newItem.$clone(item);
