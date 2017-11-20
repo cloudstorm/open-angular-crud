@@ -15,7 +15,7 @@ app.component('csIndex', {
   templateUrl : 'components/cs-index/cs-index-template.html',
   controller : function($scope, ResourceService, csSettings, $uibModal, csAlertService, csDescriptorService, csRoute){
 
-    var loadData, resource;
+    var resource;
     this.$onInit = function(){
       this.filterValue = ""
     }
@@ -27,17 +27,22 @@ app.component('csIndex', {
 
     resource = this.resource;
 
-    loadData = function() {
-      return csDescriptorService.getPromises().then(function() {
-        return this.resource.$index({
-          include: '*'
-        }).then(function(items) {}, this.collection = items, function(reason) {
-          this.collection = null;
-          return function() {};
-        });
-      });
+    this.loadData = function() {
+
+      csDescriptorService.getPromises().then(
+        (function() {
+          return this.resource.$index({ include: '*'})
+        }).bind(this)).then( (function(items) {
+            this.setCollection(items)
+          }).bind(this), (function(reason) {
+            this.setCollection(null)
+          }).bind(this)
+        )
     };
 
+    this.setCollection = function(coll){
+      this.collection = coll
+    }
     var defaultOptions, indexOptions, sortField;
 
     sortField = void 0;
@@ -159,7 +164,7 @@ app.component('csIndex', {
 
     this.refreshIndex = function() {
       this.unselectItem();
-      return loadData();
+      this.loadData();
     };
 
     this.testEvent = function(test) {
