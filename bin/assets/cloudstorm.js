@@ -92,6 +92,235 @@ app.directive("csAlert", [
 "use strict";
 var app;
 
+app = angular.module('cloudStorm.checkbox', []);
+
+app.directive("csCheckbox", [
+  '$rootScope', 'csInputBase', 'csSettings', function($rootScope, csInputBase, csSettings) {
+    var compile, link;
+    compile = function($templateElement, $templateAttributes) {
+      $templateElement.addClass("cs-checkbox");
+      return {
+        pre: function(scope, element, attrs, controller) {},
+        post: link
+      };
+    };
+    link = function($scope, element, attrs, controller) {
+      csInputBase($scope);
+      $scope.i18n = csSettings.settings['i18n-engine'];
+      $scope.formItem.attributes[$scope.field.attribute] = !!$scope.formItem.attributes[$scope.field.attribute];
+      $scope.$watch('formItem.attributes[field.attribute]', function(newValue, oldValue) {
+        if (newValue !== oldValue) {
+          return $scope.$emit('input-value-changed', $scope.field);
+        }
+      });
+      $scope.$on('form-reset', function() {
+        return $scope.formItem.attributes[$scope.field.attribute] = false;
+      });
+    };
+    return {
+      restrict: 'E',
+      templateUrl: 'components/cs-checkbox/cs-checkbox-template.html',
+      scope: {
+        field: '=',
+        formItem: '=',
+        formMode: '=',
+        options: '='
+      },
+      compile: compile
+    };
+  }
+]);
+
+"use strict";
+var app;
+
+app = angular.module('cloudStorm.date', []);
+
+app.directive("csDate", [
+  'uibDateParser', 'csSettings', 'csInputBase', function(uibDateParser, csSettings, csInputBase) {
+    var compile, format_date, link;
+    compile = function($templateElement, $templateAttributes) {
+      $templateElement.addClass("cs-date");
+      return {
+        pre: function(scope, element, attrs, controller) {},
+        post: link
+      };
+    };
+    format_date = function($scope) {
+      var date, format, input_date;
+      format = $scope.options['date-format'] || csSettings.settings['date-format'];
+      $scope.input_date = $scope.formItem.attributes[$scope.field.attribute];
+      if (format) {
+        input_date = $scope.formItem.attributes[$scope.field.attribute];
+        date = uibDateParser.parse(input_date, format);
+        if (date) {
+          date.setHours(14);
+        }
+        return $scope.formItem.attributes[$scope.field.attribute] = date;
+      }
+    };
+    link = function($scope, element, attrs, controller) {
+      $scope.i18n = csSettings.settings['i18n-engine'];
+      $scope.getType = function() {
+        return typeof $scope.formItem.attributes[$scope.field.attribute];
+      };
+      csInputBase($scope);
+      format_date($scope);
+      $scope.$on('field-submit', function(e, data) {
+        return console.log("field submit event " + data);
+      });
+      return $scope.$watch('formItem.attributes[field.attribute]', function(newValue, oldValue) {
+        if (newValue !== oldValue) {
+          return $scope.$emit('input-value-changed', $scope.field);
+        }
+      });
+    };
+    return {
+      restrict: 'E',
+      templateUrl: 'components/cs-date/cs-date-template.html',
+      priority: 1000,
+      scope: {
+        field: '=',
+        formItem: '=',
+        formMode: '=',
+        options: '='
+      },
+      compile: compile,
+      controller: [
+        '$scope', function($scope) {
+          $scope.getModelOptions = function() {
+            var offset, options;
+            offset = $scope.options['time-zone-offset'] || csSettings.settings['time-zone-offset'];
+            return options = {
+              'timezone': offset
+            };
+          };
+          $scope.$watch('formItem.id', function(newValue, oldValue) {
+            if (newValue !== oldValue) {
+              return format_date($scope);
+            }
+          });
+          return $scope.$watch('formItem.attributes[field.attribute]', function(newValue, oldValue) {
+            if (newValue !== oldValue) {
+              return format_date($scope);
+            }
+          });
+        }
+      ]
+    };
+  }
+]);
+
+"use strict";
+var app;
+
+app = angular.module('cloudStorm.datetime', ['ui.bootstrap']);
+
+app.directive("csDatetime", [
+  'uibDateParser', 'csSettings', 'csInputBase', function(uibDateParser, csSettings, csInputBase) {
+    var compile, format_date, link;
+    compile = function($templateElement, $templateAttributes) {
+      $templateElement.addClass("cs-datetime");
+      return {
+        pre: function(scope, element, attrs, controller) {},
+        post: link
+      };
+    };
+    format_date = function($scope) {
+      var date, date_format, input_date;
+      date_format = $scope.options['datetime-format'] || csSettings.settings['datetime-format'];
+      if (date_format) {
+        input_date = $scope.formItem.attributes[$scope.field.attribute];
+        if (input_date) {
+          if (!angular.isDate(input_date)) {
+            input_date = input_date.substring(0, input_date.length - 1);
+          }
+          date = uibDateParser.parse(new Date(input_date), date_format);
+          return $scope.formItem.attributes[$scope.field.attribute] = date;
+        }
+      }
+    };
+    link = function($scope, element, attrs, controller) {
+      $scope.i18n = csSettings.settings['i18n-engine'];
+      csInputBase($scope);
+      format_date($scope);
+      return $scope.$watch('formItem.attributes[field.attribute]', function(newValue, oldValue) {
+        if (newValue !== oldValue) {
+          return $scope.$emit('input-value-changed', $scope.field);
+        }
+      });
+    };
+    return {
+      restrict: 'E',
+      templateUrl: 'components/cs-datetime/cs-datetime-template.html',
+      priority: 1000,
+      scope: {
+        field: '=',
+        formItem: '=',
+        formMode: '=',
+        options: '='
+      },
+      compile: compile,
+      controller: [
+        '$scope', function($scope) {
+          $scope.getModelOptions = function() {
+            var offset, options;
+            offset = $scope.options['time-zone-offset'] || csSettings.settings['time-zone-offset'] || 'utc';
+            return options = {
+              'timezone': offset
+            };
+          };
+          return $scope.$watch('formItem.id', function(newValue, oldValue) {
+            if (newValue !== oldValue) {
+              return format_date($scope);
+            }
+          });
+        }
+      ]
+    };
+  }
+]);
+
+"use strict";
+var app;
+
+app = angular.module('cloudStorm.enum', ['ui.select']);
+
+app.directive("csEnum", [
+  '$rootScope', 'csInputBase', function($rootScope, csInputBase) {
+    var compile, link;
+    compile = function($templateElement, $templateAttributes) {
+      $templateElement.addClass("cs-enum");
+      return {
+        pre: function(scope, element, attrs, controller) {},
+        post: link
+      };
+    };
+    link = function($scope, element, attrs, controller) {
+      csInputBase($scope);
+      $scope.$watch('formItem.attributes[field.attribute]', function(newValue, oldValue) {
+        if (newValue !== oldValue) {
+          return $scope.$emit('input-value-changed', $scope.field);
+        }
+      });
+    };
+    return {
+      restrict: 'E',
+      templateUrl: 'components/cs-enum/cs-enum-template.html',
+      scope: {
+        field: '=',
+        formItem: '=',
+        formMode: '=',
+        options: '='
+      },
+      compile: compile
+    };
+  }
+]);
+
+"use strict";
+var app;
+
 app = angular.module('cloudStorm.field', []);
 
 app.directive("csField", [
@@ -994,6 +1223,271 @@ app.directive("csIndexSidepanel", [
 "use strict";
 var app;
 
+app = angular.module('cloudStorm.index', []);
+
+app.directive("csIndex", [
+  'ResourceService', 'csDataStore', 'csRestApi', 'csSettings', '$uibModal', 'csAlertService', '$filter', 'csDescriptorService', 'csRoute', function(ResourceService, csDataStore, csRestApi, csSettings, $uibModal, csAlertService, $filter, csDescriptorService, csRoute) {
+    var compile;
+    compile = function($templateElement, $templateAttributes) {
+      var link;
+      $templateElement.addClass("cs-index");
+      ({
+        pre: function($scope, element, attrs, controller) {
+          return returns;
+        },
+        post: link
+      });
+      return link = function($scope, element, attrs, ctrl) {
+        return csDescriptorService.getPromises().then(function() {
+          var attributeToHide, defaultOptions, escapeRegExp, indexOptions, loadData, pushNewItem, resource, sortField;
+          $scope.i18n = csSettings.settings['i18n-engine'];
+          $scope.collection = $scope.items;
+          resource = ResourceService.get($scope.resourceType);
+          loadData = function() {
+            return resource.$index({
+              include: '*'
+            }).then(function(items) {
+              return $scope.collection = items;
+            }, function(reason) {
+              return $scope.collection = null;
+            });
+          };
+          loadData();
+          sortField = void 0;
+          defaultOptions = {
+            'selectedItem': null,
+            'sortAttribute': resource.descriptor.fields[0].attribute,
+            'filterValue': "",
+            'sortReverse': false,
+            'condensedView': false,
+            'hide-actions': false,
+            'hide-attributes': resource.descriptor.attributes_to_hide || {}
+          };
+          $scope.csIndexOptions || ($scope.csIndexOptions = {});
+          indexOptions = angular.copy($scope.csIndexOptions);
+          angular.copy({}, $scope.csIndexOptions);
+          angular.merge($scope.csIndexOptions, defaultOptions, indexOptions);
+          $scope.columns = resource.descriptor.fields;
+          $scope.header = resource.descriptor.name;
+          $scope.subHeader = resource.descriptor.hint;
+          sortField = _.find(resource.descriptor.fields, {
+            attribute: $scope.csIndexOptions.sortAttribute
+          });
+          $scope.comparisonValue = function(item) {
+            if (sortField) {
+              return $scope.fieldValue(item, sortField);
+            }
+          };
+          escapeRegExp = function(str) {
+            return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+          };
+          $scope.filterComparison = function(value, index, array) {
+            var search;
+            search = new RegExp(escapeRegExp($scope.csIndexOptions.filterValue), "i");
+            return _.any(resource.descriptor.fields, function(field) {
+              var field_value;
+              if ((field_value = $scope.fieldValue(value, field))) {
+                return field_value.toString().match(search);
+              }
+            });
+          };
+          $scope.listIsEmpty = function() {
+            return $scope.collection === null;
+          };
+          $scope.fieldValue = function(item, field) {
+            var associations, display_date, display_time, enum_value, item_data, names, ref, relationship;
+            if (field.resource) {
+              if (field.cardinality === 'many') {
+                associations = item.$association(field);
+                names = _.map(associations, function(assoc) {
+                  return assoc.$display_name();
+                });
+                return names.join(", ");
+              } else {
+                if (!(item.relationships && item.relationships[field.relationship])) {
+                  return item.attributes[field.attribute];
+                }
+                item_data = item.relationships[field.relationship].data;
+                relationship = item.$relationship(item_data);
+                if (!relationship) {
+                  return item.attributes[field.attribute];
+                }
+                return relationship.$display_name();
+              }
+            } else if (field["enum"]) {
+              enum_value = _.find(field["enum"], {
+                value: item.attributes[field.attribute]
+              });
+              if (enum_value) {
+                return enum_value.name;
+              }
+              return item.attributes[field.attribute];
+            } else if (field.type === 'boolean') {
+              return ((ref = $scope.i18n) != null ? ref.t(item.attributes[field.attribute]) : void 0) || item.attributes[field.attribute];
+            } else if (field.type === 'time') {
+              display_time = new Date(item.attributes[field.attribute]);
+              return $filter('date')(display_time, 'HH:mm');
+            } else if (field.type === 'datetime') {
+              display_date = new Date(item.attributes[field.attribute]);
+              return $filter('date')(display_date, 'EEEE, MMMM d, y HH:mm');
+            } else {
+              return item.attributes[field.attribute];
+            }
+          };
+          $scope.columnVisible = function(column, index) {
+            var length;
+            length = $scope.columns.length;
+            if (attributeToHide(column.attribute)) {
+              return false;
+            }
+            if ($scope.viewIsCompressed() && !_.contains([0, 1, 2], index)) {
+              return false;
+            }
+            return true;
+          };
+          attributeToHide = function(attribute) {
+            var hiddenAttrs;
+            if (hiddenAttrs = $scope.csIndexOptions['hide-attributes'].index) {
+              return hiddenAttrs.indexOf(attribute) > -1;
+            }
+            return false;
+          };
+          $scope.createDisabled = function() {
+            return resource.descriptor.create_disabled;
+          };
+          $scope.sidePanelIsVisible = function() {
+            if ($scope.csIndexOptions.selectedItem) {
+              return true;
+            }
+            return false;
+          };
+          $scope.viewIsCompressed = function() {
+            return $scope.sidePanelIsVisible() && $scope.csIndexOptions.condensedView;
+          };
+          $scope.changeSorting = function(column) {
+            $scope.csIndexOptions.sortAttribute = column.attribute;
+            $scope.csIndexOptions.sortReverse = !$scope.csIndexOptions.sortReverse;
+            return sortField = _.find(resource.descriptor.fields, {
+              attribute: $scope.csIndexOptions.sortAttribute
+            });
+          };
+          $scope.selectItem = function(item) {
+            return $scope.csIndexOptions.selectedItem = item;
+          };
+          $scope.destroyItem = function($event, item) {
+            var ref;
+            $event.stopPropagation();
+            if (confirm((ref = $scope.i18n) != null ? ref.t('confirm.delete') : void 0)) {
+              return item.$destroy().then(function(result) {
+                var index;
+                $scope.csIndexOptions.selectedItem = null;
+                index = $scope.collection.indexOf(item);
+                return $scope.collection.splice(index, 1);
+              }, function(reason) {
+                var alert, ref1, ref2;
+                alert = (ref1 = reason.data) != null ? ref1.errors[0].detail : void 0;
+                return csAlertService.addAlert(alert || ((ref2 = $scope.i18n) != null ? ref2.t('alert.error_happened') : void 0), 'danger');
+              });
+            }
+          };
+          $scope.showItem = function(item) {
+            if ($scope.csIndexOptions.selectedItem === null) {
+              if (csRoute.state) {
+                return csRoute.go("show", {
+                  resourceType: $scope.resourceType,
+                  id: item.attributes.id
+                });
+              } else {
+                return $scope.selectItem(item);
+              }
+            } else {
+              return $scope.selectItem(item);
+            }
+          };
+          $scope.unselectItem = function() {
+            return $scope.csIndexOptions.selectedItem = null;
+          };
+          $scope.getPanelNumber = function(length) {
+            if (length > 1) {
+              return $scope.csIndexOptions.condensedView = true;
+            } else {
+              return $scope.csIndexOptions.condensedView = false;
+            }
+          };
+          $scope.refreshIndex = function() {
+            $scope.unselectItem();
+            return loadData();
+          };
+          $scope.openNewResourcePanel = function() {
+            var modalInstance;
+            $scope.unselectItem();
+            $scope.wizardOptions = {
+              "resource-type": $scope.resourceType,
+              "form-item": {},
+              "form-mode": "create",
+              "reset-on-submit": true,
+              "events": {
+                'wizard-canceled': function(resource) {
+                  var ref;
+                  modalInstance.close();
+                  return csAlertService.addAlert(((ref = $scope.i18n) != null ? ref.t('alert.no_resource_created') : void 0) || 'translation missing', 'info');
+                },
+                'wizard-submited': function(resource) {
+                  var ref;
+                  pushNewItem($scope.collection, resource);
+                  if (!$scope.wizardOptions['keep-first']) {
+                    modalInstance.close();
+                  }
+                  return csAlertService.addAlert(((ref = $scope.i18n) != null ? ref.t('alert.new_resource_created') : void 0) || 'translation missing', 'success');
+                }
+              }
+            };
+            angular.merge($scope.wizardOptions, $scope.csIndexOptions);
+            modalInstance = $uibModal.open({
+              scope: $scope,
+              keyboard: false,
+              backdrop: 'static',
+              windowTopClass: 'modal-wizard',
+              template: "<div cs-wizard cs-wizard-options=wizardOptions></div>",
+              resolve: {
+                dummy: function() {
+                  return $scope.dummy;
+                }
+              }
+            });
+            return modalInstance.result.then((function(selectedItem) {
+              return $scope.selected = selectedItem;
+            }), function() {
+              return console.info('Modal dismissed at: ' + new Date());
+            });
+          };
+          return pushNewItem = function(collection, item) {
+            var newItem;
+            newItem = item.constructor.$new();
+            newItem.$clone(item);
+            return collection.push(newItem);
+          };
+        });
+      };
+    };
+    return {
+      restrict: 'E',
+      compile: compile,
+      templateUrl: 'components/cs-index/cs-index-template.html',
+      scope: {
+        csIndexOptions: '=',
+        resourceType: '=',
+        itemId: '=',
+        items: "<",
+        resource: "<"
+      }
+    };
+  }
+]);
+
+"use strict";
+var app;
+
 app = angular.module('cloudStorm.inputBase', []);
 
 app.factory("csInputBase", [
@@ -1064,6 +1558,294 @@ app.directive("csMenu", [
         resourceType: '=',
         itemId: '='
       }
+    };
+  }
+]);
+
+"use strict";
+var app;
+
+app = angular.module('cloudStorm.number', []);
+
+app.directive("csNumber", [
+  '$rootScope', 'csInputBase', function($rootScope, csInputBase) {
+    var compile, link;
+    compile = function($templateElement, $templateAttributes) {
+      $templateElement.addClass("cs-number");
+      return {
+        pre: function(scope, element, attrs, controller) {},
+        post: link
+      };
+    };
+    link = function($scope, element, attrs, controller) {
+      csInputBase($scope);
+      if ($scope.formMode === 'create') {
+        if ($scope.field["default"] != null) {
+          $scope.formItem.attributes[$scope.field.attribute] = $scope.field["default"];
+        }
+      }
+      $scope.$watch('formItem.attributes[field.attribute]', function(newValue, oldValue) {
+        if (newValue !== oldValue) {
+          return $scope.$emit('input-value-changed', $scope.field);
+        }
+      });
+    };
+    return {
+      restrict: 'E',
+      templateUrl: 'components/cs-number/cs-number-template.html',
+      scope: {
+        field: '=',
+        formItem: '=',
+        formMode: '=',
+        options: '='
+      },
+      compile: compile
+    };
+  }
+]);
+
+"use strict";
+var app;
+
+app = angular.module('cloudStorm.resourceInput', ['ui.select']);
+
+app.directive("csResourceInput", [
+  '$rootScope', 'ResourceService', 'csTemplateService', 'csInputBase', 'csSettings', function($rootScope, ResourceService, csTemplateService, csInputBase, csSettings) {
+    var compile, link, setup_associations;
+    compile = function($templateElement, $templateAttributes) {
+      $templateElement.addClass("cs-resource-input");
+      return {
+        pre: function(scope, element, attrs, controller) {},
+        post: link
+      };
+    };
+    link = function($scope, element, attrs, controller) {
+      var refreshAndSelect;
+      $scope.i18n = csSettings.settings['i18n-engine'];
+      csInputBase($scope);
+      $scope.csTemplateService = csTemplateService;
+      $scope.defaultTemplate = 'components/cs-resource-input/cs-resource-input-template.html';
+      setup_associations($scope);
+      if ($scope.field.cardinality === 'one') {
+        $scope.$watch('{id: model.object.id, type: model.object.type}', function(newValue, oldValue) {
+          if ((newValue.id !== oldValue.id) || (newValue.type !== oldValue.type)) {
+            $scope.formItem.$assign_association($scope.field, $scope.model.object);
+            return $scope.$emit('input-value-changed', $scope.field);
+          }
+        });
+      }
+      if ($scope.field.cardinality === 'many') {
+        $scope.$watchCollection('model.object', function(newItems, oldItems) {
+          $scope.formItem.$assign_association($scope.field, newItems);
+          return $scope.$emit('input-value-changed', $scope.field);
+        });
+      }
+      $scope.$watch('formItem.id', function(newValue, oldValue) {
+        if (newValue !== oldValue) {
+          setup_associations($scope);
+          return $scope.$emit('input-value-changed', $scope.field);
+        }
+      });
+      $scope.$watch('formItem.relationships[field.relationship].data.id', function(newValue, oldValue) {
+        if (newValue !== oldValue) {
+          return $scope.model.object = $scope.formItem.$association($scope.field);
+        }
+      });
+      $scope.$on('form-reset', function() {
+        return $scope.model = {
+          object: $scope.formItem.$association($scope.field)
+        };
+      });
+      $rootScope.$on('form-submit', function(event, formItem) {
+        var itemID;
+        if (formItem.type === $scope.field.resource) {
+          if (event.stopPropagation) {
+            event.stopPropagation();
+          }
+          itemID = formItem.id.slice();
+          if (itemID !== $scope.formItem.id) {
+            return refreshAndSelect(itemID);
+          }
+        }
+      });
+      $scope.refresh = function(value) {
+        var search_options;
+        search_options = angular.merge({
+          datastore: $scope.formItem.$datastore
+        }, $scope.field.resource_endpoint);
+        return $scope.resource.$search(value, search_options).then(function(items) {
+          var ref, relationships;
+          $scope.associates = items;
+          if (relationships = (ref = $scope.formItem.relationships) != null ? ref[$scope.field.relationship] : void 0) {
+            return $scope.model.object = $scope.formItem.$association($scope.field);
+          }
+        }, function(reason) {
+          return console.log(reason);
+        }, function() {});
+      };
+      $scope.pushPanel = function() {
+        return $scope.$emit('create-resource', $scope.field.resource, $scope.field.attribute, $scope.formItem);
+      };
+      $scope.canCreateResources = function() {
+        var ref, ref1, ref2;
+        return $scope.createResources() && !((ref = $scope.formItem.relationships) != null ? (ref1 = ref[$scope.field.relationship]) != null ? (ref2 = ref1.data) != null ? ref2.id : void 0 : void 0 : void 0);
+      };
+      refreshAndSelect = function(itemID) {
+        var search_options;
+        search_options = angular.merge({}, $scope.field.resource_endpoint);
+        return $scope.resource.$search(null, search_options).then(function(items) {
+          var base;
+          $scope.associates = items;
+          if ($scope.field.cardinality === 'one') {
+            return $scope.model.object = _.findWhere(items, {
+              id: itemID
+            });
+          } else {
+            (base = $scope.model).object || (base.object = []);
+            return $scope.model.object.push(_.findWhere(items, {
+              id: itemID
+            }));
+          }
+        }, function(reason) {
+          return console.log(reason);
+        }, function() {});
+      };
+    };
+    setup_associations = function($scope) {
+      $scope.resource = ResourceService.get($scope.field.resource);
+      $scope.model = {
+        object: $scope.formItem.$association($scope.field)
+      };
+      if ($scope.associates) {
+        $scope.associates = [];
+        return $scope.refresh();
+      } else {
+        return $scope.associates = [];
+      }
+    };
+    return {
+      restrict: 'E',
+      template: '<ng-include src="csTemplateService.getTemplateUrl(field,options,defaultTemplate)"/>',
+      scope: {
+        field: '=',
+        formItem: '=',
+        formMode: '=',
+        options: '=',
+        createResources: '&'
+      },
+      compile: compile
+    };
+  }
+]);
+
+app.directive('uiSelectOverride', function() {
+  return {
+    require: 'uiSelect',
+    link: function($scope, element, attrs, $select) {
+      var handleScroll;
+      handleScroll = $scope.$on('form-scroll', function(event, field) {
+        if ($select.multiple) {
+          $select.close();
+        }
+        return $scope.$apply();
+      });
+      return $scope.$on('$destroy', function() {
+        return handleScroll();
+      });
+    }
+  };
+});
+
+"use strict";
+var app;
+
+app = angular.module('cloudStorm.textfield', ['ui.select']);
+
+app.directive("csTextfield", [
+  '$rootScope', 'csTemplateService', 'csInputBase', function($rootScope, csTemplateService, csInputBase) {
+    var compile, link;
+    compile = function($templateElement, $templateAttributes) {
+      $templateElement.addClass("cs-textfield");
+      return {
+        pre: function(scope, element, attrs, controller) {},
+        post: link
+      };
+    };
+    link = function($scope, element, attrs, controller) {
+      csInputBase($scope);
+      $scope.csTemplateService = csTemplateService;
+      $scope.defaultTemplate = 'components/cs-textfield/cs-textfield-template.html';
+      $scope.$watch('formItem.attributes[field.attribute]', function(newValue, oldValue) {
+        if (newValue !== oldValue) {
+          return $scope.$emit('input-value-changed', $scope.field);
+        }
+      });
+      $scope.keyPressed = function($event) {
+        if ($event.keyCode === 13) {
+          return $scope.$emit('submit-form-on-enter', $scope.field);
+        }
+      };
+    };
+    return {
+      restrict: 'E',
+      template: '<ng-include src="csTemplateService.getTemplateUrl(field,options,defaultTemplate)"/>',
+      scope: {
+        field: '=',
+        formItem: '=',
+        formMode: '=',
+        options: '='
+      },
+      compile: compile
+    };
+  }
+]);
+
+"use strict";
+var app;
+
+app = angular.module('cloudStorm.time', []);
+
+app.directive("csTime", [
+  'uibDateParser', 'csSettings', 'csInputBase', function(uibDateParser, csSettings, csInputBase) {
+    var compile, link;
+    compile = function($templateElement, $templateAttributes) {
+      $templateElement.addClass("cs-time");
+      return {
+        pre: function(scope, element, attrs, controller) {},
+        post: link
+      };
+    };
+    link = function($scope, element, attrs, controller) {
+      $scope.i18n = csSettings.settings['i18n-engine'];
+      csInputBase($scope);
+      return $scope.$watch('formItem.attributes[field.attribute]', function(newValue, oldValue) {
+        if (newValue !== oldValue) {
+          return $scope.$emit('input-value-changed', $scope.field);
+        }
+      });
+    };
+    return {
+      restrict: 'E',
+      templateUrl: 'components/cs-time/cs-time-template.html',
+      priority: 1000,
+      scope: {
+        field: '=',
+        formItem: '=',
+        formMode: '=',
+        options: '='
+      },
+      compile: compile,
+      controller: [
+        '$scope', function($scope) {
+          return $scope.getModelOptions = function() {
+            var offset, options;
+            offset = $scope.options['time-zone-offset'] || csSettings.settings['time-zone-offset'] || 'utc';
+            return options = {
+              'timezone': offset
+            };
+          };
+        }
+      ]
     };
   }
 ]);
@@ -2478,9 +3260,6 @@ app.component("csLoader", {
         radius: '<',
     },
     templateUrl: 'cs-utils/cs-loader/cs-loader-template.html',
-    controller: function (csInputBase) {
-        csInputBase(this);
-    }
 });
 var app;
 
@@ -3397,13 +4176,75 @@ app.component("csError", {
   templateUrl : "cs-utils/cs-error-template/cs-error-template.html",
 })
 
-angular.module('cloudStorm.templates', ['components/cs-alert/cs-alert-template.html', 'components/cs-field/cs-field-template.html', 'components/cs-fields/cs-checkbox/cs-checkbox-template.html', 'components/cs-fields/cs-date/cs-date-template.html', 'components/cs-fields/cs-datetime/cs-datetime-template.html', 'components/cs-fields/cs-enum/cs-enum-template.html', 'components/cs-fields/cs-number/cs-number-template.html', 'components/cs-fields/cs-resource-input/cs-resource-input-template.html', 'components/cs-fields/cs-textfield/cs-textfield-template.html', 'components/cs-fields/cs-time/cs-time-template.html', 'components/cs-filter-row/cs-filter-row-template.html', 'components/cs-form/cs-form-template.html', 'components/cs-index/cs-index-sidepanel/cs-index-sidepanel-template.html', 'components/cs-index/cs-index-template.html', 'components/cs-item-list/cs-item-list-template.html', 'components/cs-main/cs-main-template.html', 'components/cs-menu/cs-menu-template.html', 'components/cs-table/cs-table-container/cs-table-container-template.html', 'components/cs-table/cs-table-header/cs-table-header-template.html', 'components/cs-table/cs-table-row/cs-table-row-template.html', 'components/cs-wizard/cs-wizard-panel-template.html', 'components/cs-wizard/cs-wizard-template.html', 'cs-route-provider/router-component/cs-page-router-template.html', 'cs-utils/cs-error-template/cs-error-template.html', 'cs-utils/cs-loader/cs-loader-template.html']);
+angular.module('cloudStorm.templates', ['components/cs-alert/cs-alert-template.html', 'components/cs-checkbox/cs-checkbox-template.html', 'components/cs-date/cs-date-template.html', 'components/cs-datetime/cs-datetime-template.html', 'components/cs-enum/cs-enum-template.html', 'components/cs-field/cs-field-template.html', 'components/cs-fields/cs-checkbox/cs-checkbox-template.html', 'components/cs-fields/cs-date/cs-date-template.html', 'components/cs-fields/cs-datetime/cs-datetime-template.html', 'components/cs-fields/cs-enum/cs-enum-template.html', 'components/cs-fields/cs-number/cs-number-template.html', 'components/cs-fields/cs-resource-input/cs-resource-input-template.html', 'components/cs-fields/cs-textfield/cs-textfield-template.html', 'components/cs-fields/cs-time/cs-time-template.html', 'components/cs-filter-row/cs-filter-row-template.html', 'components/cs-form/cs-form-template.html', 'components/cs-index/cs-index-sidepanel/cs-index-sidepanel-template.html', 'components/cs-index/cs-index-template.html', 'components/cs-item-list/cs-item-list-template.html', 'components/cs-main/cs-main-template.html', 'components/cs-menu/cs-menu-template.html', 'components/cs-number/cs-number-template.html', 'components/cs-resource-input/cs-resource-input-template.html', 'components/cs-table/cs-table-container/cs-table-container-template.html', 'components/cs-table/cs-table-header/cs-table-header-template.html', 'components/cs-table/cs-table-row/cs-table-row-template.html', 'components/cs-textfield/cs-textfield-template.html', 'components/cs-time/cs-time-template.html', 'components/cs-wizard/cs-wizard-panel-template.html', 'components/cs-wizard/cs-wizard-template.html', 'cs-route-provider/router-component/cs-page-router-template.html', 'cs-utils/cs-error-template/cs-error-template.html', 'cs-utils/cs-loader/cs-loader-template.html']);
 
 angular.module("components/cs-alert/cs-alert-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-alert/cs-alert-template.html",
     "<uib-alert close='csAlertService.dismissAlert(alert.id)' dismiss-on-timeout='{{csAlertService.timeoutForAlert(alert)}}' ng-click='csAlertService.dismissAlert(alert.id)' ng-repeat='alert in csAlertService.getAlerts()' type='{{alert.type}}'>\n" +
     "{{alert.message}}\n" +
     "</uib-alert>\n" +
+    "");
+}]);
+
+angular.module("components/cs-checkbox/cs-checkbox-template.html", []).run(["$templateCache", function ($templateCache) {
+  $templateCache.put("components/cs-checkbox/cs-checkbox-template.html",
+    "<!-- Only valid for cardinality:one -->\n" +
+    "<input class='form-control' ng-disabled='fieldDisabled()' ng-if='mode(&#39;create&#39;) || mode(&#39;edit&#39;)' ng-model='formItem.attributes[field.attribute]' type='checkbox'>\n" +
+    "<div class='show-view' ng-if='mode(&#39;show&#39;)'>\n" +
+    "<div ng-if='formItem.attributes[field.attribute]'>\n" +
+    "{{ i18n.t('checkbox.checked') }}\n" +
+    "</div>\n" +
+    "<div ng-if='!formItem.attributes[field.attribute]'>\n" +
+    "{{ i18n.t('checkbox.unchecked') }}\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "");
+}]);
+
+angular.module("components/cs-date/cs-date-template.html", []).run(["$templateCache", function ($templateCache) {
+  $templateCache.put("components/cs-date/cs-date-template.html",
+    "<input autocomplete='off' class='form-control' clear-text='{{ i18n.t(&#39;buttons.clear&#39;) }}' close-text='{{ i18n.t(&#39;buttons.close&#39;) }}' current-text='{{ i18n.t(&#39;today&#39;) }}' datepicker-append-to-body='true' datepicker-options='{startingDay: 1, showWeeks: false}' is-open='dt.open' ng-click='dt.open = true' ng-disabled='fieldDisabled()' ng-if='mode(&#39;edit&#39;) || mode(&#39;create&#39;)' ng-model-options='getModelOptions()' ng-model='formItem.attributes[field.attribute]' ng-required='fieldRequired()' type='text' uib-datepicker-popup=''>\n" +
+    "<div class='form-control no-cursor' disabled='true' ng-if='mode(&#39;show&#39;)'>\n" +
+    "{{ input_date }}\n" +
+    "</div>\n" +
+    "");
+}]);
+
+angular.module("components/cs-datetime/cs-datetime-template.html", []).run(["$templateCache", function ($templateCache) {
+  $templateCache.put("components/cs-datetime/cs-datetime-template.html",
+    "<div class='container-flex'>\n" +
+    "<input autocomplete='off' class='form-control first' clear-text='{{ i18n.t(&#39;buttons.clear&#39;) }}' close-text='{{ i18n.t(&#39;buttons.close&#39;) }}' current-text='{{ i18n.t(&#39;today&#39;) }}' datepicker-append-to-body='true' datepicker-options='{startingDay: 1, showWeeks: false}' is-open='dt.open' ng-click='dt.open = true' ng-disabled='fieldDisabled()' ng-model-options='getModelOptions()' ng-model='formItem.attributes[field.attribute]' ng-required='fieldRequired()' type='text' uib-datepicker-popup=''>\n" +
+    "<div ng-disabled='fieldDisabled()' ng-model-options='getModelOptions()' ng-model='formItem.attributes[field.attribute]' ng-required='fieldRequired()' show-spinners='false' uib-timepicker=''></div>\n" +
+    "</div>\n" +
+    "");
+}]);
+
+angular.module("components/cs-enum/cs-enum-template.html", []).run(["$templateCache", function ($templateCache) {
+  $templateCache.put("components/cs-enum/cs-enum-template.html",
+    "<ui-select close-on-select='true' ng-disabled='fieldDisabled()' ng-if='field.cardinality == &#39;one&#39;' ng-model='formItem.attributes[field.attribute]' ng-required='fieldRequired()'>\n" +
+    "<ui-select-match>\n" +
+    "<span>\n" +
+    "{{$select.selected.name}}\n" +
+    "</span>\n" +
+    "</ui-select-match>\n" +
+    "<ui-select-choices repeat='item.value as item in (field.enum | filter:$select.search) track by $index'>\n" +
+    "<span>\n" +
+    "{{item.name}}\n" +
+    "</span>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "<ui-select multiple='' ng-disabled='fieldDisabled()' ng-if='field.cardinality == &#39;many&#39;' ng-model='formItem.attributes[field.attribute]' ng-required='fieldRequired()'>\n" +
+    "<ui-select-match>\n" +
+    "<span>\n" +
+    "{{$item.name}}\n" +
+    "</span>\n" +
+    "</ui-select-match>\n" +
+    "<ui-select-choices repeat='item.value as item in (field.enum | filter:$select.search) track by $index'>\n" +
+    "<span>\n" +
+    "{{item.name}}\n" +
+    "</span>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
     "");
 }]);
 
@@ -3730,6 +4571,53 @@ angular.module("components/cs-menu/cs-menu-template.html", []).run(["$templateCa
     "");
 }]);
 
+angular.module("components/cs-number/cs-number-template.html", []).run(["$templateCache", function ($templateCache) {
+  $templateCache.put("components/cs-number/cs-number-template.html",
+    "<input class='form-control' ng-disabled='fieldDisabled()' ng-model='formItem.attributes[field.attribute]' ng-required='fieldRequired()' type='number'>\n" +
+    "");
+}]);
+
+angular.module("components/cs-resource-input/cs-resource-input-template.html", []).run(["$templateCache", function ($templateCache) {
+  $templateCache.put("components/cs-resource-input/cs-resource-input-template.html",
+    "<div class='input-group cs-resource-input-group' ng-if='field.cardinality == &#39;one&#39; &amp;&amp; !mode(&#39;show&#39;)'>\n" +
+    "<ui-select append-to-body='true' close-on-select='true' ng-disabled='fieldDisabled()' ng-model='model.object' ng-required='fieldRequired()'>\n" +
+    "<ui-select-match allow-clear>\n" +
+    "<span>\n" +
+    "{{$select.selected.$display_name()}}\n" +
+    "</span>\n" +
+    "</ui-select-match>\n" +
+    "<ui-select-choices refresh-delay='200' refresh='refresh($select.search)' repeat='item in associates track by $index'>\n" +
+    "<span>\n" +
+    "{{item.$display_name()}}\n" +
+    "</span>\n" +
+    "<span class='input-group-btn' ng-if='canCreateResources() || createDisabled()'>\n" +
+    "<button class='btn btn-default' ng-click='pushPanel()' ng-disabled='fieldDisabled()' type='button'>{{ i18n.t('buttons.new') }}</button>\n" +
+    "</span>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "</div>\n" +
+    "<cs-item-list item-list='model.object' key='resource.descriptor.fields[0].attribute' ng-if='mode(&#39;show&#39;)'></cs-item-list>\n" +
+    "<div class='input-group cs-resource-input-group' ng-if='!mode(&#39;show&#39;) &amp;&amp; field.cardinality == &#39;many&#39;'>\n" +
+    "<ui-select append-to-body='true' close-on-select='true' enable='false' multiple ng-disabled='fieldDisabled()' ng-model='model.object' ng-required='fieldRequired()' ui-select-override=''>\n" +
+    "<ui-select-match ui-lock-choice='mode(&#39;show&#39;)'>\n" +
+    "<span>\n" +
+    "{{$item.$display_name()}}\n" +
+    "</span>\n" +
+    "</ui-select-match>\n" +
+    "<ui-select-choices refresh-delay='200' refresh='refresh($select.search)' repeat='item in associates track by $index'>\n" +
+    "<span>\n" +
+    "{{item.$display_name()}}\n" +
+    "</span>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "<span class='input-group-btn' ng-if='createResources() &amp;&amp; !createDisabled() &amp;&amp; !mode(&#39;show&#39;)'>\n" +
+    "<button class='btn btn-default' ng-click='pushPanel()' ng-disabled='fieldDisabled()' type='button'>{{ i18n.t('buttons.new') }}</button>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div class='cover'></div>\n" +
+    "");
+}]);
+
 angular.module("components/cs-table/cs-table-container/cs-table-container-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-table/cs-table-container/cs-table-container-template.html",
     "<div class='table-responsive'>\n" +
@@ -3771,6 +4659,33 @@ angular.module("components/cs-table/cs-table-row/cs-table-row-template.html", []
     "</div>\n" +
     "<div class='tCell actions'>\n" +
     "<!-- EDIT --><div class='action edit-action' ng-click='$ctrl.selectItem()'>{{ $ctrl.i18n.t('buttons.edit') }}</div><!-- DELETE --><div class='action delete-action' ng-click='$ctrl.destroyItem($event)'>{{ $ctrl.i18n.t('buttons.delete') }}</div></div>\n" +
+    "");
+}]);
+
+angular.module("components/cs-textfield/cs-textfield-template.html", []).run(["$templateCache", function ($templateCache) {
+  $templateCache.put("components/cs-textfield/cs-textfield-template.html",
+    "<!-- ng-if creates an isolate scope so all data is available through $parent -->\n" +
+    "<!-- %ui-select-choices is only here to disable typeahed dropdown as there should be not typeahed in this controller -->\n" +
+    "<div ng-if='mode(&#39;create&#39;) || mode(&#39;edit&#39;)'>\n" +
+    "<input class='form-control' ng-disabled='fieldDisabled()' ng-if='field.cardinality == &#39;one&#39;' ng-keyup='keyPressed($event)' ng-model='$parent.formItem.attributes[$parent.field.attribute]' ng-required='fieldRequired()' type='text'>\n" +
+    "<ui-select multiple='' ng-disabled='fieldDisabled()' ng-if='field.cardinality == &#39;many&#39;' ng-model='$parent.formItem.attributes[$parent.field.attribute]' ng-required='fieldRequired()' tagging-label='newTag' tagging=''>\n" +
+    "<ui-select-match>\n" +
+    "<span>\n" +
+    "{{$item}}\n" +
+    "</span>\n" +
+    "</ui-select-match>\n" +
+    "<ui-select-choices repeat='item in []'></ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "</div>\n" +
+    "<div class='form-control no-cursor' disabled ng-if='mode(&#39;show&#39;)' ng-model='$parent.formItem.attributes[$parent.field.attribute]'>\n" +
+    "{{ formItem.attributes[field.attribute] }}\n" +
+    "</div>\n" +
+    "");
+}]);
+
+angular.module("components/cs-time/cs-time-template.html", []).run(["$templateCache", function ($templateCache) {
+  $templateCache.put("components/cs-time/cs-time-template.html",
+    "<div ng-disabled='fieldDisabled()' ng-model-options='getModelOptions()' ng-model='formItem.attributes[field.attribute]' ng-required='fieldRequired()' show-spinners='false' uib-timepicker=''></div>\n" +
     "");
 }]);
 
