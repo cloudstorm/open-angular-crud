@@ -175,18 +175,18 @@ app.component('csIndex', {
         "form-mode": "create",
         "reset-on-submit": true,
         "events": {
-          'wizard-canceled': function(resource) {
+          'wizard-canceled': (function(resource) {
             var ref;
             modalInstance.close();
-            return csAlertService.addAlert(((ref = this.i18n) != null ? ref.t('alert.no_resource_created') : void 0) || 'translation missing', 'info');
-          },
+            return csAlertService.info('no_resource_created')
+          }).bind(this),
           'wizard-submited': (function(resource) {
             var ref;
             this.pushNewItem(this.collection, resource);
             if (!this.wizardOptions['keep-first']) {
               modalInstance.close();
             }
-            return csAlertService.addAlert(((ref = this.i18n) != null ? ref.t('alert.new_resource_created') : void 0) || 'translation missing', 'success');
+            return csAlertService.success('new_resource_created')
           }).bind(this)
         }
       };
@@ -207,9 +207,9 @@ app.component('csIndex', {
       });
       return modalInstance.result.then((function(selectedItem) {
         return this.selected = selectedItem;
-      }), function() {
+      }).bind(this), (function() {
         return console.info('Modal dismissed at: ' + new Date());
-      });
+      }).bind(this));
     };
 
     this.pushNewItem = function(collection, item) {

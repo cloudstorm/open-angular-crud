@@ -29,11 +29,17 @@ app.service 'csAlertService', ['csSettings', (csSettings) ->
     @alerts.push {id:@sequence, message: message, type: type}
     @sequence++
 
-  @success = (type) ->
-    @addAlert(@i18n.t('alert.' + type), 'success')
+  @success = (msgType) ->
+    @addAlert(@getText(msgType), 'success')
 
-  @warning = (warning) ->
-    @addAlert(@i18n.t('alert.' + type), 'warning')
+  @info = (msgType) ->
+    @addAlert(@getText(msgType), 'info')
+
+  @warning = (msgType) ->
+    @addAlert(@getText(msgType), 'warning')
+
+  @getText = (type) ->
+    @i18n.t('alert.' + type) || 'translation missing'
 
   @dismissAlert = (idToDismiss) ->
     @alerts = _.without @alerts, _.findWhere(@alerts, {id: idToDismiss})
