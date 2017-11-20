@@ -23,11 +23,12 @@
                "field" => "field",
                "item-list" => "model.object",
                "form-mode" => "formMode",
+               "many" => "field.cardinality == 'many'",
                "key" => "resource.descriptor.fields[0].attribute" }
 
 /
   %div{ "ng-if" => "mode('tableView') && field.cardinality == 'one'"}
-    {{ model.object[resource.descriptor.fields[0].attribute] }}
+    {{ model.object.attributes[resource.descriptor.fields[0].attribute] }}
 
 .input-group.cs-resource-input-group{ "ng-if" => "(mode('create') || mode('edit')) && field.cardinality == 'many'" }
   %ui-select{ "ui-select-override" => "",

@@ -6,18 +6,13 @@ app.component("csItemList", {
     field : "<",
     itemList : "<",
     key : "<",
+    many : "<",
     uiConfig : "<",
-    formMode : "<"
+    formMode : "<",
   },
 
   templateUrl : "components/cs-item-list/cs-item-list-template.html",
   controller : function(csRoute, csSettings, csInputBase){
-
-    if(!Array.isArray(this.itemList)){
-      //console.log(this.itemList)
-      this.itemList = [this.itemList]
-    }
-    console.log(this.itemList)
 
     csInputBase(this)
     this.i18n = csSettings.settings['i18n-engine']
