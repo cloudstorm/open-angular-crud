@@ -1,4 +1,5 @@
-.item-container{ "ng-class" => "{ 'row-container' : $ctrl.modalMode}" }
+/.item-container{ "ng-class" => "{ 'row-container' : $ctrl.modalMode}" }
+.item-container{ "class" => "{{$ctrl.CL.itemContainer}}" }
   .listContainer{ "ng-repeat" => "item in $ctrl.itemList track by $index",
         "ng-if" => "$ctrl.many && ($index < 3 || $ctrl.modalMode)",
         "ng-click" => "$ctrl.click(item)",

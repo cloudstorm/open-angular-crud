@@ -22,6 +22,9 @@ app.component("csItemList", {
     this.hiddenFlag = false;
     this.modalMode = this.modalMode || false
 
+    this.CL = {}
+    this.CL.itemContainer = this.modalMode ? 'row-container' : ''
+
     //Text on UI for the UI
     this.UI = {}
     this.UI.fieldName = this.field ? this.field.attribute : ""
