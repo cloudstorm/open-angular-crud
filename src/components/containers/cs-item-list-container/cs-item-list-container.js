@@ -13,12 +13,14 @@ app.component('csItemListContainer', {
     formMode : "<",
     modalMode : "<",
     modalInstance : "<",
-    fieldName : "<",
   },
   templateUrl : "components/containers/cs-item-list-container/cs-item-list-container-template.html",
   controller : function(csSettings){
 
     this.i18n = csSettings.settings['i18n-engine'];
+
+    this.UI = {}
+    this.UI.fieldName = this.field.attribute
 
     this.close = function(){
       this.modalInstance.close()

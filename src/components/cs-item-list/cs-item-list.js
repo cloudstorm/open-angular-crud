@@ -24,7 +24,7 @@ app.component("csItemList", {
 
     //Text on UI for the UI
     this.UI = {}
-    this.UI.fieldName = this.field.attribute
+    this.UI.fieldName = this.field ? this.field.attribute : ""
     this.UI.noItem = this.i18n.t('alert.no_linked_resource') + " " + this.UI.fieldName
 
     //Display conditions
@@ -36,7 +36,7 @@ app.component("csItemList", {
         modal-instance="$ctrl.modalInstance",
         item="$ctrl.item",
         item-list="$ctrl.itemList",
-        field-name="$ctrl.field.attribute",
+        field="$ctrl.field",
         many="$ctrl.many",
         modal-mode="true",
         form-mode="$ctrl.formMode",
