@@ -16,18 +16,20 @@ app.component("csItemList", {
   controller : function($scope, $uibModal, csRoute, csSettings, csInputBase){
 
     csInputBase(this)
+    this.i18n = csSettings.settings['i18n-engine'];
+
     this.clickText = '...'
     this.hiddenFlag = false;
     this.modalMode = this.modalMode || false
 
-    //Initializing
+    //Text on UI for the UI
+    this.UI = {}
+    this.UI.fieldName = this.field.attribute
+    this.UI.noItem = this.i18n.t('alert.no_linked_resource') + " " + this.UI.fieldName
 
-    this.display = {
-      
-
-    }
-
-    this.modalInstanece
+    //Display conditions
+    this.display = {}
+    this.display.noItem = (this.itemList.length == 0 && !this.mode('tableView'))
 
     var modalTemplate = `
       <cs-item-list-container

@@ -13,5 +13,5 @@
   %div{ "ng-if" => "!$ctrl.many",
         "ng-class" => "{'item-item' : $ctrl.mode('show')}"}
     {{ $ctrl.itemList.attributes[$ctrl.key] }}
-  .no-item{ "ng-if" => "$ctrl.itemList.length == 0 && !$ctrl.mode('tableView')" }
-    {{ $ctrl.i18n.t('alert.no_linked_resource') + $ctrl.field.attribute }}
+  .no-item{ "ng-if" => "$ctrl.display.noItem" }
+    {{$ctrl.UI.noItem}}
