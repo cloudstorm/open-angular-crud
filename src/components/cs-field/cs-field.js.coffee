@@ -29,6 +29,9 @@ app.directive "csField", ['$compile', '$templateRequest', 'csInputBase', ($compi
 
     csInputBase $scope
 
+    $scope.CL = {}
+    $scope.containerStyle = if $scope.formMode == 'tableView' then 'cs-field-inner-table' else 'cs-field-inner-form'
+
     if !$scope.field? && $scope.fieldName?
       $scope.field = _.find $scope.formItem.constructor.descriptor.fields, { attribute: $scope.fieldName }
 

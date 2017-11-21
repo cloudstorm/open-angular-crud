@@ -10,7 +10,7 @@ app.component('csItemListContainer', {
     key : "<",
     many : "<",
     uiConfig : "<",
-    formMode : "<",
+    cMode : "<",
     modalMode : "<",
     modalInstance : "<",
   },

@@ -1,8 +1,13 @@
 .cs-field {
 
-  .cs-field-inner {
+  .cs-field-inner-form {
     position: relative;
-    padding-bottom: 15px;
+    margin: 16px 0;
+  }
+
+  .cs-field-inner-table {
+    position: relative;
+    margin: 4px 0;
   }
 
   .show {

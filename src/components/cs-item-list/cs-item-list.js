@@ -8,7 +8,7 @@ app.component("csItemList", {
     key : "<",
     many : "<",
     uiConfig : "<",
-    formMode : "<",
+    cMode : "<",
     modalMode : "<",
   },
 
@@ -22,22 +22,39 @@ app.component("csItemList", {
     csInputBase(this)
     this.i18n = csSettings.settings['i18n-engine'];
 
-    this.hiddenFlag = false;
+    this.cMode = this.cMode || this.formMode
     this.modalMode = this.modalMode || false
 
-    this.styleMap = {}
-
     this.CL = {}
-    this.CL.itemContainer = this.modalMode ? 'row-container' : ''
+
+    switch(this.cMode){
+
+      case "show":
+        this.CL.itemContainer = "show-mode"
+        this.CL.item = "item-show"
+        break
+
+      case "tableView":
+        this.CL.itemContainer = "row-mode"
+        this.CL.item = "item-table"
+        break
+
+      case "modal":
+        this.CL.itemContainer = "column-mode"
+        this.CL.item = "item-table"
+        break
+    }
 
     //Text on UI for the UI
     this.UI = {}
     this.UI.fieldName = this.field ? this.field.attribute : ""
     this.UI.noItem = this.i18n.t('alert.no_linked_resource') + " " + this.UI.fieldName
     this.UI.clickText = "..."
+
     //Display conditions
-    this.display = {}
-    this.display.noItem = (this.itemList.length == 0 && !this.mode('tableView'))
+    this.condition = {}
+    this.condition.noItem = (this.itemList.length == 0 && this.cMode != 'tableView')
+    this.condition.tableMode = this.cMode == 'tableView'
 
     var modalTemplate = `
       <cs-item-list-container
@@ -46,8 +63,7 @@ app.component("csItemList", {
         item-list="$ctrl.itemList",
         field="$ctrl.field",
         many="$ctrl.many",
-        modal-mode="true",
-        form-mode="$ctrl.formMode",
+        c-mode="'modal'",
         key="$ctrl.key">
       </cs-item-list-container>`;
 

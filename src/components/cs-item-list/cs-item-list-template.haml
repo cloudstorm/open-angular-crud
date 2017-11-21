@@ -1,18 +1,16 @@
 /.item-container{ "ng-class" => "{ 'row-container' : $ctrl.modalMode}" }
-.item-container{ "class" => "{{$ctrl.CL.itemContainer}}" }
-  .listContainer{ "ng-repeat" => "item in $ctrl.itemList track by $index",
-        "ng-if" => "$ctrl.many && ($index < 3 || $ctrl.modalMode)",
+.item-container{ "ng-class" => "$ctrl.CL.itemContainer" }
+  .item{ "ng-repeat" => "item in $ctrl.itemList track by $index",
+        "ng-if" => "$ctrl.many && ($index < 3 || !$ctrl.condition.tableMode)",
         "ng-click" => "$ctrl.click(item)",
-        "ng-class" => "{'item-item' : $ctrl.mode('show'),
-                        'table-view' : $ctrl.mode('tableView')}"}
+        "ng-class" => "$ctrl.CL.item"}
     {{ item.attributes[$ctrl.key] }}
-  .listContainer{ "ng-if" => "$ctrl.itemList.length > 3 && !$ctrl.modalMode",
+  .item{ "ng-if" => "$ctrl.itemList.length > 3 && $ctrl.condition.tableMode",
                   "ng-click" => "$ctrl.showItems()",
-                  "ng-class" => "{'item-item' : $ctrl.mode('show'),
-                                  'table-view' : $ctrl.mode('tableView')}"}
+                  "ng-class" => "$ctrl.CL.item" }
     {{$ctrl.UI.clickText}}
-  %div{ "ng-if" => "!$ctrl.many",
+  .single-item{ "ng-if" => "!$ctrl.many",
         "ng-class" => "{'item-item' : $ctrl.mode('show')}"}
     {{ $ctrl.itemList.attributes[$ctrl.key] }}
-  .no-item{ "ng-if" => "$ctrl.display.noItem" }
+  .no-item{ "ng-if" => "$ctrl.condition.noItem" }
     {{$ctrl.UI.noItem}}

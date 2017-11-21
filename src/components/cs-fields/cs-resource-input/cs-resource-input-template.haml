@@ -18,17 +18,13 @@
                                  "ng-click" => "pushPanel()",
                                  "type" => "button" } {{ i18n.t('buttons.new') }}
 
-/&& field.cardinality == 'many'",
+
 %cs-item-list{ "ng-if" => "(mode('show') || mode('tableView'))",
                "field" => "field",
                "item-list" => "model.object",
                "many" => "field.cardinality == 'many'",
-               "form-mode" => "formMode",
+               "c-mode" => "formMode",
                "key" => "resource.descriptor.fields[0].attribute" }
-
-/
-  %div{ "ng-if" => "mode('tableView') && field.cardinality == 'one'"}
-    {{ model.object.attributes[resource.descriptor.fields[0].attribute] }}
 
 .input-group.cs-resource-input-group{ "ng-if" => "(mode('create') || mode('edit')) && field.cardinality == 'many'" }
   %ui-select{ "ui-select-override" => "",
