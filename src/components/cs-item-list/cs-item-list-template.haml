@@ -10,7 +10,7 @@
                   "ng-click" => "$ctrl.showItems()",
                   "ng-class" => "{'item-item' : $ctrl.mode('show'),
                                   'table-view' : $ctrl.mode('tableView')}"}
-    {{$ctrl.clickText}}
+    {{$ctrl.UI.clickText}}
   %div{ "ng-if" => "!$ctrl.many",
         "ng-class" => "{'item-item' : $ctrl.mode('show')}"}
     {{ $ctrl.itemList.attributes[$ctrl.key] }}
