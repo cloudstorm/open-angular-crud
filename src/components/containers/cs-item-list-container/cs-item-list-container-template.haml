@@ -1,0 +1,17 @@
+.modal-header
+  %button.close{ "ng-click" => "$ctrl.close()"}
+    &times
+  %h4.modal-title
+    {{ $ctrl.fieldName }}
+
+%cs-item-list{ "item" => "$ctrl.item",
+                "item-list" => "$ctrl.itemList",
+                "many" => "$ctrl.many",
+                "modal-mode" => "true",
+                "form-mode" => "$ctrl.formMode",
+                "key" => "$ctrl.key"}
+/
+  %button.btn.btn-link{ "ng-click" => "$ctrl.close()",
+                        "type" => "button" }
+    %span
+      {{ $ctrl.i18n.t('buttons.close') }}

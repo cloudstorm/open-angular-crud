@@ -9,13 +9,60 @@ app.component("csItemList", {
     many : "<",
     uiConfig : "<",
     formMode : "<",
+    modalMode : "<",
   },
 
   templateUrl : "components/cs-item-list/cs-item-list-template.html",
-  controller : function(csRoute, csSettings, csInputBase){
+  controller : function($scope, $uibModal, csRoute, csSettings, csInputBase){
 
     csInputBase(this)
+    this.clickText = '...'
+    this.hiddenFlag = false;
+    this.modalMode = this.modalMode || false
+
+    //Initializing
+
+    this.display = {
+      
+
+    }
+
+    this.modalInstanece
+
+    var modalTemplate = `
+      <cs-item-list-container
+        modal-instance="$ctrl.modalInstance",
+        item="$ctrl.item",
+        item-list="$ctrl.itemList",
+        field-name="$ctrl.field.attribute",
+        many="$ctrl.many",
+        modal-mode="true",
+        form-mode="$ctrl.formMode",
+        key="$ctrl.key">
+      </cs-item-list-container>`;
+
+    this.showItems = function(){
+
+      this.modalInstance = $uibModal.open({
+        scope: $scope,
+        keyboard: false,
+        backdrop: 'static',
+        //windowTopClass: 'modal-wizard',
+        template: modalTemplate,
+        resolve: {
+          dummy: function() {
+            return $scope.dummy;
+          }
+        }
+      })
+    }
+
     this.i18n = csSettings.settings['i18n-engine']
+
+    this.hidden = function(num){
+      console.log(this.hiddenFrom  + "   " + num)
+      return this.hiddenFrom <= num
+    }
 
     this.$onInit = function(){
       this.cnt = 0;
