@@ -13,14 +13,19 @@ app.component("csItemList", {
   },
 
   templateUrl : "components/cs-item-list/cs-item-list-template.html",
-  controller : function($scope, $uibModal, csRoute, csSettings, csInputBase){
+  controller : function($scope, $element, $uibModal, csRoute, csSettings, csInputBase){
+
+    this.$onInit = function() {
+      $element.addClass('cs-item-list')
+    }
 
     csInputBase(this)
     this.i18n = csSettings.settings['i18n-engine'];
 
-    this.clickText = '...'
     this.hiddenFlag = false;
     this.modalMode = this.modalMode || false
+
+    this.styleMap = {}
 
     this.CL = {}
     this.CL.itemContainer = this.modalMode ? 'row-container' : ''
@@ -29,7 +34,7 @@ app.component("csItemList", {
     this.UI = {}
     this.UI.fieldName = this.field ? this.field.attribute : ""
     this.UI.noItem = this.i18n.t('alert.no_linked_resource') + " " + this.UI.fieldName
-
+    this.UI.clickText = "..."
     //Display conditions
     this.display = {}
     this.display.noItem = (this.itemList.length == 0 && !this.mode('tableView'))
@@ -67,13 +72,6 @@ app.component("csItemList", {
     this.hidden = function(num){
       console.log(this.hiddenFrom  + "   " + num)
       return this.hiddenFrom <= num
-    }
-
-    this.$onInit = function(){
-      this.cnt = 0;
-      this.remainingSpace = 200;
-      this.padding = 3;
-      this.margin = 5;
     }
 
     this.click = function(item){
