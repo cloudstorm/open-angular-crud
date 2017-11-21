@@ -19,6 +19,7 @@ angular.module('cloudStorm.localizationProvider', [])
     'buttons.submit': 'Submit'
     'buttons.delete': 'Delete'
     'buttons.edit': 'Edit'
+    'buttons.show': 'Show'
     'index.empty': ' list empty'
     'buttons.new': 'New'
     'buttons.clear': 'Clear'
