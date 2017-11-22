@@ -70,7 +70,20 @@
   }
 
   .single-item {
+    background-color: $gray-lighter;
+  }
 
+  .single-item:hover {
+    cursor : pointer;
+    background-color: $gray-lighter;
+  }
+
+  .singe-item-container {
+    background-color: $gray-lighter;
+  }
+
+  .singe-item-container:hover {
+    border: 1px solid $gray-dark;
   }
 
   .no-item {

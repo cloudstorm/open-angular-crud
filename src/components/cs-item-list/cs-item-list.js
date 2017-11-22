@@ -32,6 +32,9 @@ app.component("csItemList", {
       case "show":
         this.CL.itemContainer = "show-mode"
         this.CL.item = "item-show"
+        if(!this.many){
+          this.CL.itemContainer += " singe-item-container"
+        }
         break
 
       case "tableView":
@@ -43,6 +46,10 @@ app.component("csItemList", {
         this.CL.itemContainer = "column-mode"
         this.CL.item = "item-table"
         break
+    }
+
+    if(!this.many){
+
     }
 
     //Text on UI for the UI
@@ -90,7 +97,11 @@ app.component("csItemList", {
       return this.hiddenFrom <= num
     }
 
-    this.click = function(item){
+    this.selectSingle = function(){
+        this.select(this.itemList)
+    }
+
+    this.select = function(item){
       csRoute.go("show", {resourceType : item.type, id : item.attributes.id})
     }
 
