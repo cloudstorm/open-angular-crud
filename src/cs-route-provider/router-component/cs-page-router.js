@@ -4,109 +4,113 @@ app = angular.module("cloudStorm.uiPageRouter", [])
 
 app.component("csPageRouter", {
 
-    bindings : {
-        resourceType : "<",
-        id : "<",
-        cmd : "<",
-        pageType : "<",
-    },
-    templateUrl : "cs-route-provider/router-component/cs-page-router-template.html",
-    controller : function($scope, csRoute, ResourceService, csDescriptorService, csAlertService){
+  bindings : {
+      resourceType : "<",
+      id : "<",
+      cmd : "<",
+      pageType : "<",
+  },
+  templateUrl : "cs-route-provider/router-component/cs-page-router-template.html",
+  controller : function($scope, csRoute, ResourceService, csDescriptorService, csAlertService){
 
-        this.testValue = "InitialValue"
-        this.loading = true
-        this.errors = []
+      this.testValue = "InitialValue"
+      this.loading = true
+      this.errors = []
 
-        this.validCommands = ["edit","show"]
-        //getDataLoaderObject(this, descriptor)["index"].call()
-        this.init = function (){
-            switch (this.pageType) {
-              case "index": this.resource_index(); break;
-              case "cmd":
-                if(this.validCommands.indexOf(this.cmd) == -1){
-                  this.errors.push("\"" + this.cmd + "\" is not a valid command");
-                }
-                this.pageType = this.cmd
-                this.resource_id();
-                break;
-
-              case "show":
-                if(this.id == "new"){
-                  this.pageType = "create"
-                  this.resource();
-                } else {
-                  this.resource_id();
-                }
-                break;
-              default:
-                this.errors.push("This is not a valid URL");
-                this.finished()
-                break;
+      this.validCommands = ["edit","show"]
+      //getDataLoaderObject(this, descriptor)["index"].call()
+      this.init = function (){
+        switch (this.pageType) {
+          case "index": this.resource_index(); break;
+          case "cmd":
+            if(this.validCommands.indexOf(this.cmd) == -1){
+              this.errors.push("\"" + this.cmd + "\" is not a valid command");
             }
+            this.pageType = this.cmd
+            this.resource_id();
+            break;
+
+          case "show":
+            if(this.id == "new"){
+              this.pageType = "create"
+              this.resource();
+            } else {
+              this.resource_id();
+            }
+            break;
+          default:
+            this.errors.push("This is not a valid URL");
+            this.finished()
+            break;
         }
+      }
 
-        this.resource = function(){
+      this.resource = function(){
 
-          csDescriptorService.getPromises().then(
-            (function(){
-              return ResourceService.get(this.resourceType)
-            }).bind(this)).then(
-              (function(resource){
-                this.resource = resource
-                this.finished()
-              }).bind(this), (function(){
-                this.errors.push("\"" + this.resourceType + "\" is not a resource")
-                this.finished()
-              }).bind(this)
-            )
-        }
-
-        this.resource_id = function(){
-
-          csDescriptorService.getPromises().then(
-            (function(){
-              return ResourceService.get(this.resourceType)
-            }).bind(this)).then(
-              (function(resource){
-                this.resource = resource
-                return resource.$get(this.id, {include: '*'})
-              }).bind(this), (function(){
-                this.errors.push("\"" + this.resourceType + "\" is not a resource")
-              }).bind(this)
-            ).then((function(item){
-                this.item = item
-                this.finished()
-            }).bind(this), (function(){
-              this.errors.push("There is no " + this.resource.descriptor.name + " with the id: " + this.id)
+        csDescriptorService.getPromises().then(
+          (function(){
+            return ResourceService.get(this.resourceType)
+          }).bind(this)).then(
+            (function(resource){
+              this.resource = resource
               this.finished()
-            }).bind(this))
-        }
+            }).bind(this), (function(){
+              this.errors.push("\"" + this.resourceType + "\" is not a resource")
+              this.finished()
+            }).bind(this)
+          )
+      }
 
-        this.resource_index = function(){
+      this.resource_id = function(){
 
-          csDescriptorService.getPromises()
-            .then((function(){
-              return ResourceService.get(this.resourceType)
+        csDescriptorService.getPromises().then(
+          (function(){
+            return ResourceService.get(this.resourceType)
+          }).bind(this)).then(
+            (function(resource){
+              this.resource = resource
+              return resource.$get(this.id, {include: '*'})
+            }).bind(this), (function(){
+              this.errors.push("\"" + this.resourceType + "\" is not a resource")
+            }).bind(this)
+          ).then((function(item){
+              this.item = item
+              this.finished()
+          }).bind(this), (function(){
+            this.errors.push("There is no " + this.resource.descriptor.name + " with the id: " + this.id)
+            this.finished()
+          }).bind(this))
+      }
+
+      this.resource_index = function(){
+
+        csDescriptorService.getPromises()
+          .then((function(){
+            return ResourceService.get(this.resourceType)
+          }).bind(this))
+          .then(
+            (function(resource){
+              this.resource = resource
+              return resource.$index({include: '*'})
+              this.finished()
+            }).bind(this), (function(){
+              this.errors.push("\"" + this.resourceType +
+                "\" is not a resource")
             }).bind(this))
-            .then(
-              (function(resource){
-                this.resource = resource
-                return resource.$index({include: '*'})
+          .then((function(items){
+                this.items = items
                 this.finished()
-              }).bind(this), (function(){
-                this.errors.push("\"" + this.resourceType +
-                  "\" is not a resource")
-              }).bind(this))
-            .then((function(items){
-                  this.items = items
-                  this.finished()
-              }).bind(this)
-            )
-        }
+            }).bind(this)
+          )
+      }
 
-        this.finished = function(){
+      this.finished = function(){
 
-          this.wizardOptions = {
+        this.options = {};
+        var form = this.pageType == "show" || this.pageType == "edit"
+          || this.pageType == "create"
+        if(form){
+          this.options = {
             "resource-type" : this.resourceType,
             "form-item": this.item || {},
             "form-mode": this.pageType,
@@ -126,19 +130,40 @@ app.component("csPageRouter", {
                       break;
                   }
 
-                  if(this.wizardOptions['keep-first']){
+                  if(this.options['keep-first']){
                     csRoute.go("show", {resourceType : this.resourceType, id : "new"})
                   } else {
                     csRoute.go("index", {resourceType : this.resourceType})
                   }
-              }).bind(this)
+              }).bind(this),
+              'wizard-error': function(){
+                csAlertService.warning('error_happened')
+              }
             }
           }
-          this.loading = false
-          $scope.$apply()
-      }
-      this.init()
+        }
+        this.loading = false
+        $scope.$apply()
+        /*
+        this.options['override'] = csSetting.getOverrides(this.pageType, this.resourceType)
+
+        if(this.pageType = "edit" ){
+          this.wizardOptions['directive-overrides'] = []
+          this.wizardOptions['directive-overrides'].push({
+            type : "boolean",
+            directive : "cs-checkbox1"
+          })
+        }
+
+        this.options.overrides = csSettings.getOverride({
+            pageType: this.pageType,
+            resourceType: this.resourceType,
+        })
+        */
+
     }
+    this.init()
+  }
 })
 
 /*
