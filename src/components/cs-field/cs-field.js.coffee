@@ -4,10 +4,9 @@ app = angular.module('cloudStorm.field', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csField", ['$compile', '$templateRequest', 'csInputBase', ($compile, $templateRequest, csInputBase) ->
+app.directive "csField", ['$compile', '$templateRequest', 'csInputBase', 'csTemplateService', ($compile, $templateRequest, csInputBase, csTemplateService) ->
 
   # ===== COMPILE =============================================================
-
 
   compile = ($templateElement, $templateAttributes, $scope) ->
 
@@ -28,6 +27,10 @@ app.directive "csField", ['$compile', '$templateRequest', 'csInputBase', ($compi
   link = ($scope, element, attrs, controller) ->
 
     csInputBase $scope
+
+    $scope.componentName = 'cs-field'
+    $scope.defaultTemplate = 'components/cs-field/cs-field-template.html'
+    # Here we have to check the if there is override
 
     $scope.CL = {}
     $scope.containerStyle = if $scope.formMode == 'tableView' then 'cs-field-inner-table' else 'cs-field-inner-form'
@@ -158,6 +161,7 @@ app.directive "csField", ['$compile', '$templateRequest', 'csInputBase', ($compi
 
   return {
     restrict: 'E'
+  #  templateUrl: '<ng-include src="csTemplateService.getTemplateUrl(field, options, defaultTemplate)"/>'
     templateUrl: 'components/cs-field/cs-field-template.html'
     scope:
       field: '=?' # The resource item which the form is working with
