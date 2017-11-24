@@ -36,6 +36,10 @@ app.directive "csCheckbox", ['$rootScope', 'CSInputBase', ($rootScope, CSInputBa
   link = ($scope, element, attrs, controller) ->    
     CSInputBase $scope
     
+    if $scope.formMode == 'create'
+      if $scope.field.default?
+        $scope.formItem.attributes[$scope.field.attribute] = $scope.field.default
+
     $scope.formItem.attributes[$scope.field.attribute] = !!$scope.formItem.attributes[$scope.field.attribute]
     
     # ===== WATCHES =======================================
