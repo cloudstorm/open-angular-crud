@@ -1,0 +1,15 @@
+
+.vertical.border-shadow.b-1.b-r-3.margin-10
+  .flex-vertical.padding-5
+    %cs-field{  "ng-repeat" => "field in $ctrl.fields",
+                "field" => "field",
+                "form-mode" => "'tableView'",
+                "cs-field-options" => "$ctrl.options",
+                "form-item" => "$ctrl.item" }
+  .flex-horizontal-center.border-top.padding-5.w-100p
+    .margin-2-10.button{ "ng-click" => "$ctrl.jumpEvent(event)"}
+      %span.glyphicon.glyphicon-share-alt
+    .margin-2-10.button{ "ng-click" => "$ctrl.editEvent(event)"}
+      %span.glyphicon.glyphicon-edit
+    .margin-2-10.button{ "ng-click" => "$ctrl.editEvent(event)"}
+      %span.glyphicon.glyphicon-trash
