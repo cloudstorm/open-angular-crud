@@ -39,7 +39,7 @@ app.service 'csAlertService', ['csSettings', (csSettings) ->
     @addAlert(@getText(msgType), 'warning')
 
   @danger = (msgType) ->
-    @addAlert(customMessage || @getText(msgType), 'danger')
+    @addAlert(@getText(msgType), 'danger')
 
   @getText = (type) ->
     @i18n.t('alert.' + type) || 'translation missing'
