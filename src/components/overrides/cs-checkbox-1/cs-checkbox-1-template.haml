@@ -1,0 +1,13 @@
+.flex-cont{ "ng-if" => "$ctrl.editMode"}
+  .flex
+    %input.form-control{ "ng-model" => "$ctrl.formItem.attributes[$ctrl.field.attribute]",
+                       "type" => "checkbox" }
+  .flex{ "ng-click" => "$ctrl.save()" }
+    %span.glyphicon.glyphicon-ok
+.flex-cont{ "ng-if" => "!$ctrl.editMode"}
+  .flex{ "ng-if" => "$ctrl.formItem.attributes[$ctrl.field.attribute]"}
+    {{ $ctrl.i18n.t('checkbox.checked') }}
+  .flex{ "ng-if" => "!$ctrl.formItem.attributes[$ctrl.field.attribute]"}
+    {{ $ctrl.i18n.t('checkbox.unchecked') }}
+  .flex{ "ng-click" => "$ctrl.edit()"}
+    %span.glyphicon.glyphicon-edit
