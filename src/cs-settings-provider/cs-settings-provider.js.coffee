@@ -13,6 +13,29 @@ app.provider 'csSettings', ['csLocalizationProvider', (csLocalizationProvider) -
     'time-zone-offset': 'utc'
   }
 
+  @getOverride = (object) ->
+
+    object.pageType
+    object.fieldType
+    object.resourceType
+
+    if object.pageType && object.resourceType
+      if @overrides[object.pageType]
+        if @overrides[object.pageType][object.resourceType]
+          return @overrides[object.pageType][object.resourceType]
+
+
+  # The settings are
+
+  @getIndexOptions = (pageType, resourceType) ->
+
+    if @overrides['index']
+      overrides = []
+      for override in @overrides[index]
+        if @overrides['index'][resourceType]
+          return @overrides['index'][resourceType]
+    return null
+
   @states = [
       {
         name: 'index'
