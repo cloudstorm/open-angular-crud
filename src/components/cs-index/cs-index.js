@@ -11,14 +11,16 @@ app.component('csIndex', {
     items : "<",
     resource : "<",
   },
-
   templateUrl : 'components/cs-index/cs-index-template.html',
   controller : function($scope, ResourceService, csSettings, $uibModal, csAlertService, csDescriptorService, csRoute){
 
     var resource;
     this.$onInit = function(){
       this.filterValue = ""
+
+
     }
+    this.override = "cs-card";
 
     this.i18n = csSettings.settings['i18n-engine'];
 

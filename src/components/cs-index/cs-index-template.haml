@@ -1,5 +1,15 @@
+/The main task of the index is to iterate through the given list of resources
 .row
-  .col-lg-12{ "ng-switch" => "$ctrl.listIsEmpty()"}
+  .flex-wrap{ "ng-if" => "$ctrl.override",
+              "ng-class" => "$ctrl.overrideClass()"}
+    %cs-item{ "ng-repeat" => "item in $ctrl.collection",
+              "delete-item_" => "$ctrl.deleteItem(event, item)",
+              "item" => "item",
+              "resource" => "$ctrl.resource",
+              "options" => "$ctrl.csIndexOptions",
+              "override" => "$ctrl.override" }
+  .col-lg-12{ "ng-switch" => "$ctrl.listIsEmpty()",
+              "ng-if" => "!$ctrl.override"}
     %cs-filter-row{ "resource" => "$ctrl.resource",
                     "filterValue" => "$ctrl.filterValue",
                     "filter" => "$ctrl.filter(filterValue)",
