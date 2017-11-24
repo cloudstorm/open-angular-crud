@@ -42,4 +42,8 @@ app = angular.module 'cloudStorm', [
   'cloudStorm.loader'
   'cloudStorm.error'
   'cloudStorm.uiPageRouter'
+  'cloudStorm.checkBox1'
+  'cloudStorm.card'
+  'cloudStorm.item'
+  'cloudStorm.icon'
 ]
