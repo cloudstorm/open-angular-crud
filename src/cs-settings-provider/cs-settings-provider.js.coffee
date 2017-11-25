@@ -13,6 +13,9 @@ app.provider 'csSettings', ['csLocalizationProvider', (csLocalizationProvider) -
     'time-zone-offset': 'utc'
   }
 
+  @overrides = {}
+
+  ###
   @getOverride = (object) ->
 
     object.pageType
@@ -24,17 +27,42 @@ app.provider 'csSettings', ['csLocalizationProvider', (csLocalizationProvider) -
         if @overrides[object.pageType][object.resourceType]
           return @overrides[object.pageType][object.resourceType]
 
+  @addOverride = (address, definition)
+
+    if address.pageType && address.resourceTyoe
+      if !@overrides[address.pageType]
+        @overrides[address.pageType] = {}
+      @overrides[address.pageType][address.resourceType] = definition
+  ###
+
+  @addOverride = (override) ->
+
+    if !@overrides[override.conditions.component]
+      @overrides[override.conditions.component] = []
+
+    @overrides[override.conditions.component].push(override)
+    console.log @overrides
 
   # The settings are
+  @setOverrides = (scope) ->
 
-  @getIndexOptions = (pageType, resourceType) ->
+    if @overrides[scope.componentName]
+      flag = true
+      for key,value in override.conditions
+        if scope[key] != value
+          flag = false
+          break
+      if flag
+        scope.childOptions[override.componentToOverride] = override.definition
 
-    if @overrides['index']
-      overrides = []
-      for override in @overrides[index]
-        if @overrides['index'][resourceType]
-          return @overrides['index'][resourceType]
-    return null
+  ###
+  if @overrides['index']
+    overrides = []
+    for override in @overrides[index]
+      if @overrides['index'][resourceType]
+        return @overrides['index'][resourceType]
+  ###
+
 
   @states = [
       {
