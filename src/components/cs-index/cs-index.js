@@ -16,12 +16,19 @@ app.component('csIndex', {
 
     var resource;
     this.$onInit = function(){
+      this.componentName = "cs-index"
+      this.childOptions = {}
+      if(csSettings.setOverride(this)){
+        this.override = true
+      }
       this.filterValue = ""
-
-
     }
-    this.override = "cs-card";
 
+    this.overrideContainer = function(componentName){
+      return this.childOptions[componentName].override.layout
+    }
+
+    //this.override = "cs-card";
     this.i18n = csSettings.settings['i18n-engine'];
 
     this.collection = this.items;
