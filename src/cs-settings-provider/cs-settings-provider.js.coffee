@@ -4,7 +4,7 @@ app = angular.module("cloudStorm.settings", [])
 
 ###############################################################################
 
-app.provider 'csSettings', ['csLocalizationProvider', (csLocalizationProvider) ->
+app.provider 'csSettings', ['csLocalizationProvider', 'csDataOpsProvider', (csLocalizationProvider, csDataOpsProvider) ->
 
   defaultSettings = {
     'i18n-engine': csLocalizationProvider.$get()
@@ -15,53 +15,31 @@ app.provider 'csSettings', ['csLocalizationProvider', (csLocalizationProvider) -
 
   @overrides = {}
 
-  ###
-  @getOverride = (object) ->
-
-    object.pageType
-    object.fieldType
-    object.resourceType
-
-    if object.pageType && object.resourceType
-      if @overrides[object.pageType]
-        if @overrides[object.pageType][object.resourceType]
-          return @overrides[object.pageType][object.resourceType]
-
-  @addOverride = (address, definition)
-
-    if address.pageType && address.resourceTyoe
-      if !@overrides[address.pageType]
-        @overrides[address.pageType] = {}
-      @overrides[address.pageType][address.resourceType] = definition
-  ###
-
   @addOverride = (override) ->
 
-    if !@overrides[override.conditions.component]
-      @overrides[override.conditions.component] = []
+    if !@overrides[override.baseComponent]
+      @overrides[override.baseComponent] = []
 
-    @overrides[override.conditions.component].push(override)
+    @overrides[override.baseComponent].push(override)
     console.log @overrides
 
-  # The settings are
-  @setOverrides = (scope) ->
+  @setOverride = (scope) ->
 
     if @overrides[scope.componentName]
-      flag = true
-      for key,value in override.conditions
-        if scope[key] != value
-          flag = false
-          break
-      if flag
-        scope.childOptions[override.componentToOverride] = override.definition
-
-  ###
-  if @overrides['index']
-    overrides = []
-    for override in @overrides[index]
-      if @overrides['index'][resourceType]
-        return @overrides['index'][resourceType]
-  ###
+      for override in @overrides[scope.componentName]
+        flag = true
+        for key,value of override.conditions
+          if scope[key] != value
+            flag = false
+            break
+        if flag
+          csDataOpsProvider.object(scope, 'childOptions')
+          csDataOpsProvider.object(scope.childOptions, override.componentToOverride)
+          csDataOpsProvider.object(scope.childOptions[override.componentToOverride], 'override')
+          scope.childOptions[override.componentToOverride].override = override.definition
+          return true
+        else
+          return false
 
 
   @states = [

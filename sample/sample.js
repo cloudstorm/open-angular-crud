@@ -10,12 +10,11 @@ app.controller('MainCtrl', function($scope, csAlertService, csDescriptorService,
   csRoute.setState($state)
 
   var override = {
-    //It is an array because there can be multiple overrides in one component
+    baseComponent: "cs-index",
+    componentToOverride : 'cs-item',
     conditions : {
-      component: "cs-index",
       resourceType: "categories",
     },
-    componetToOverride : 'cs-item',
     definition : {
       //This is a special case because index
       name : 'cs-card',
