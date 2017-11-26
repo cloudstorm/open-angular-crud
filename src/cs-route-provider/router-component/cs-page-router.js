@@ -144,22 +144,6 @@ app.component("csPageRouter", {
         }
         this.loading = false
         $scope.$apply()
-        /*
-        this.options['override'] = csSetting.getOverrides(this.pageType, this.resourceType)
-
-        if(this.pageType = "edit" ){
-          this.wizardOptions['directive-overrides'] = []
-          this.wizardOptions['directive-overrides'].push({
-            type : "boolean",
-            directive : "cs-checkbox1"
-          })
-        }
-
-        this.options.overrides = csSettings.getOverride({
-            pageType: this.pageType,
-            resourceType: this.resourceType,
-        })
-        */
 
     }
     this.init()
