@@ -11,7 +11,7 @@ app.factory 'csTemplateService', [() ->
 
       if (overrides = options['template-overrides'])
 
-        __(overrides).forEach (override) ->
+        _(overrides).forEach (override) ->
           if (override.component == options.componentName) && override.template
             template = override.template
 

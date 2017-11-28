@@ -63,8 +63,8 @@ app.component("csItemList", {
     this.condition.noItem = (this.itemList.length == 0 && this.cMode != 'tableView')
     this.condition.tableMode = this.cMode == 'tableView'
 
-    var modalTemplate = `
-      <cs-item-list-container
+    var modalTemplate = "";
+    /*  <cs-item-list-container
         modal-instance="$ctrl.modalInstance",
         item="$ctrl.item",
         item-list="$ctrl.itemList",
@@ -72,7 +72,7 @@ app.component("csItemList", {
         many="$ctrl.many",
         c-mode="'modal'",
         key="$ctrl.key">
-      </cs-item-list-container>`;
+      </cs-item-list-container>`; */
 
     this.showItems = function(){
 
