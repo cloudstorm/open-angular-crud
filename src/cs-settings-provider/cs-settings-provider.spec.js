@@ -1,14 +1,17 @@
 describe('csSettings', function() {
 
+  var csDataOps;
   var csSettings;
   var csLocalization;
 
   beforeEach(angular.mock.module('cloudStorm.localizationProvider'));
+  beforeEach(angular.mock.module('cloudStorm.dataOpsProvider'));
   beforeEach(angular.mock.module('cloudStorm.settings'));
 
-  beforeEach(inject(function (_csSettings_, _csLocalization_) {
+  beforeEach(inject(function (_csSettings_, _csLocalization_, _csDataOps_) {
     csSettings = _csSettings_;
     csLocalization = _csLocalization_
+    csDataOps = _csDataOps_
   }));
 
   it('should exist', function() {

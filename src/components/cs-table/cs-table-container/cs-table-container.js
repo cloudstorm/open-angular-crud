@@ -11,6 +11,7 @@ app.component('csTableContainer', {
     this.$onInit = function() {
       this.initialCollection = this.collection
       $element.addClass('cs-table-container')
+      this.changeSorting(this.columns)
     };
 
     this.i18n = csSettings.settings['i18n-engine'];

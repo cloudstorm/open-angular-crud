@@ -27,6 +27,7 @@ app = angular.module 'cloudStorm', [
   'cloudStorm.tableContainer'
   'cloudStorm.inputBase'
   'cloudStorm.dataStore'
+  'cloudStorm.dataOpsProvider'
   'cloudStorm.localizationProvider'
   'cloudStorm.resource'
   'cloudStorm.resourceService'
@@ -46,4 +47,9 @@ app = angular.module 'cloudStorm', [
   'cloudStorm.card'
   'cloudStorm.item'
   'cloudStorm.icon'
+  'cloudStorm.descriptors'
+  'cloudStorm.resourceList'
+  'cloudStorm.resourceListProvider'
+  'cloudStorm.indexTable'
+  'cloudStorm.dataOpsProvider'
 ]

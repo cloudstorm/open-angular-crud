@@ -7,6 +7,8 @@
               "item" => "item",
               "resource" => "$ctrl.resource",
               "options" => "$ctrl.childOptions['cs-item']"}
+    %cs-add{ "ng-repeat" => ""}
+
   .col-lg-12{ "ng-switch" => "$ctrl.listIsEmpty()",
               "ng-if" => "!$ctrl.override"}
     %cs-filter-row{ "resource" => "$ctrl.resource",

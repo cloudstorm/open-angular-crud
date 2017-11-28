@@ -8,23 +8,29 @@ app.component('csTableHeader', {
 
   controller : function(csSettings, $filter, $element){
 
+    this.sortAttribute = this.columns[1]
     this.$onInit = function() {
       $element.addClass('cs-table-header')
       this.sortReverse = true
     };
 
     this.changeSorting = function(column){
+      this.sortAttribute = column.attribute
       this.sortReverse = ! this.sortReverse
-      return this.changeSorting_({column : column, reverse : this.sortReverse })
+      this.rsEvent({
+        eventName : "changeSorting",
+        column : column,
+        reverse : this.sortReverse
+      })
     }
 
     this.columnVisible = function(column, index){
-      return this.columnVisible_({column : column, index : index})
+      //return this.columnVisible_({column : column, index : index})
+      return true;
     }
   },
 
   bindings : {
-    csIndexOptions : "=",
     columns : "<",
     columnVisible_ : "&",
     changeSorting_ : "&",

@@ -17,6 +17,7 @@ app.controller('MainCtrl', function($scope, csAlertService, csDescriptorService,
     },
     definition : {
       //This is a special case because index
+      type : "list",
       name : 'cs-card',
       layout : "horizontal",
       childOverride : {

@@ -4,13 +4,19 @@ var app = angular.module('cloudStorm.dataOpsProvider', [])
 
 app.provider('csDataOps', [ function(){
 
+    this.object = function(base, key){
+      if(base[key] == undefined){
+          base[key] = {}
+      }
+    }
+
     this.objectKeys = function(base, array){
       //LATER
     }
 
-    this.object = function(base, key){
-      if(base[key] == undefined){
-          base[key] = {}
+    this.init = function(variable, value){
+      if(!variable){
+        variable = value
       }
     }
 
