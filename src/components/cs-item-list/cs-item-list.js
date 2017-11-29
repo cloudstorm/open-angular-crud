@@ -63,19 +63,18 @@ app.component("csItemList", {
     this.condition.noItem = (this.itemList.length == 0 && this.cMode != 'tableView')
     this.condition.tableMode = this.cMode == 'tableView'
 
-    var modalTemplate = `
-      <cs-item-list-container
-        modal-instance="$ctrl.modalInstance",
-        item="$ctrl.item",
-        item-list="$ctrl.itemList",
-        field="$ctrl.field",
-        many="$ctrl.many",
-        c-mode="'modal'",
-        key="$ctrl.key">
-      </cs-item-list-container>`;
+    var modalTemplate = "" +
+    "<cs-item-list-container  " +
+      "modal-instance=\"$ctrl.modalInstance\", " +
+      "item=\"$ctrl.item\", " +
+      "item-list=\"$ctrl.itemList\", " +
+      "field=\"$ctrl.field\", " +
+      "many=\"$ctrl.many\", " +
+      "c-mode=\"'modal'\", " +
+      "key=\"$ctrl.key\">  " +
+    " </cs-item-list-container>";
 
     this.showItems = function(){
-
       this.modalInstance = $uibModal.open({
         scope: $scope,
         keyboard: false,
