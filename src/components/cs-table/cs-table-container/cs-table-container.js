@@ -56,7 +56,7 @@ app.component('csTableContainer', {
       if(filterValue == ""){
         this.collection = this.initialCollection
       } else {
-        this.collection = csResourceFilter.filter(this.collection, this.columns, filterValue)
+        this.collection = csResourceFilter.filter(this.initialCollection, this.columns, filterValue)
       }
     }
   },
