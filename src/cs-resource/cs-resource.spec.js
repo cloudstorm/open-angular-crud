@@ -92,6 +92,7 @@ describe('csResource', function() {
   beforeEach(angular.mock.module('cloudStorm.restApi'));
   beforeEach(angular.mock.module('cloudStorm.dataStore'));
   beforeEach(angular.mock.module('cloudStorm.localizationProvider'));
+  beforeEach(angular.mock.module('cloudStorm.dataOpsProvider'));
   beforeEach(angular.mock.module('cloudStorm.settings'));
   beforeEach(angular.mock.module('cloudStorm.resource'));
 

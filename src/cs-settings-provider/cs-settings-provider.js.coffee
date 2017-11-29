@@ -4,10 +4,9 @@ app = angular.module("cloudStorm.settings", [])
 
 ###############################################################################
 
+
 #app.provider 'csSettings', ['csLocalizationProvider', 'csDataOpsProvider', (csLocalizationProvider, csDataOpsProvider) ->
-
 app.provider 'csSettings', ['csLocalizationProvider', (csLocalizationProvider) ->
-
 
   defaultSettings = {
     'i18n-engine': csLocalizationProvider.$get()
@@ -36,9 +35,9 @@ app.provider 'csSettings', ['csLocalizationProvider', (csLocalizationProvider) -
             flag = false
             break
         if flag
-          # csDataOpsProvider.object(scope, 'childOptions')
-          # csDataOpsProvider.object(scope.childOptions, override.componentToOverride)
-          # csDataOpsProvider.object(scope.childOptions[override.componentToOverride], 'override')
+          #csDataOpsProvider.object(scope, 'childOptions')
+          #csDataOpsProvider.object(scope.childOptions, override.componentToOverride)
+          #csDataOpsProvider.object(scope.childOptions[override.componentToOverride], 'override')
           scope.childOptions[override.componentToOverride].override = override.definition
           return true
         else

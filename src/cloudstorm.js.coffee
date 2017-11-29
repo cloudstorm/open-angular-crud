@@ -46,10 +46,8 @@ app = angular.module 'cloudStorm', [
   'cloudStorm.checkBox1'
   'cloudStorm.card'
   'cloudStorm.item'
-  'cloudStorm.icon'
   'cloudStorm.descriptors'
   'cloudStorm.resourceList'
   'cloudStorm.resourceListProvider'
-  'cloudStorm.indexTable'
   'cloudStorm.dataOpsProvider'
 ]

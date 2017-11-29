@@ -1,6 +1,6 @@
 var app = angular.module('cloudStorm.resourceListProvider', [])
 
-app.provider('csResourceList', ['csDataOps', function(csDataOps){
+app.provider('csResourceList', ['csDataOpsProvider', function(csDataOpsProvider){
 
   var defaultHeader = "cs-table-header"
 
@@ -10,7 +10,7 @@ app.provider('csResourceList', ['csDataOps', function(csDataOps){
       //This is the table
       return this.defaultTemplate
     }
-    csDataOps.check(scope, listDescriptor)
+    csDataOpsProvider.check(scope, listDescriptor)
   }
 
   this.defaultTemplate = function(){
@@ -25,7 +25,7 @@ app.provider('csResourceList', ['csDataOps', function(csDataOps){
 
   this.getHeader = function(directive){
 
-    csDataOps.init(directive, defaultHeader)
+    csDataOpsProvider.init(directive, defaultHeader)
     return '' +
     "<" + directive +
       "columns = '$ctrl.columns'," +
@@ -47,9 +47,9 @@ app.provider('csResourceList', ['csDataOps', function(csDataOps){
           directive = descriptor.list.directive
           break;
         case "template-override":
-          csDataOps.object(scope.options, 'row')
-          csDataOps.object(scope.options.row, 'override')
-          csDataOps.check(descriptor.options)
+          csDataOpsProvider.object(scope.options, 'row')
+          csDataOpsProvider.object(scope.options.row, 'override')
+          csDataOpsProvider.check(descriptor.options)
 
           scope.options.row.override = {
             type : 'template-override',
