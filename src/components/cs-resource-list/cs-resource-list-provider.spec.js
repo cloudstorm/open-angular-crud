@@ -8,6 +8,7 @@ describe('csResourceListProvider', function(){
     csResourceList = _csResourceList_
   }));
 
+  /*
   it("tableHeader", function(){
 
     var headerTemplate =  "" +
@@ -19,7 +20,7 @@ describe('csResourceListProvider', function(){
 
     expect(csResourceListProvider.getHeader()).toEqual(headerTemplate)
   })
-
+  */
   /*
   var defaultTemplate =
      "<div class="table-responsive">

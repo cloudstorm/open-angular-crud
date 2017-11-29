@@ -1,5 +1,5 @@
 /**
- * cloudstorm - v0.0.15 - 2017-11-28
+ * cloudstorm - v0.0.15 - 2017-11-29
  * https://github.com/cloudstorm/cloudstorm#readme
  *
  * Copyright (c) 2017 Virtual Solutions Ltd <info@cloudstorm.io>
@@ -2379,7 +2379,7 @@ var app;
 app = angular.module("cloudStorm.settings", []);
 
 app.provider('csSettings', [
-  'csLocalizationProvider', 'csDataOpsProvider', function(csLocalizationProvider, csDataOpsProvider) {
+  'csLocalizationProvider', function(csLocalizationProvider) {
     var defaultSettings;
     defaultSettings = {
       'i18n-engine': csLocalizationProvider.$get(),
@@ -2411,9 +2411,6 @@ app.provider('csSettings', [
             }
           }
           if (flag) {
-            csDataOpsProvider.object(scope, 'childOptions');
-            csDataOpsProvider.object(scope.childOptions, override.componentToOverride);
-            csDataOpsProvider.object(scope.childOptions[override.componentToOverride], 'override');
             scope.childOptions[override.componentToOverride].override = override.definition;
             return true;
           } else {
@@ -2878,7 +2875,6 @@ app.component("csItemList", {
     cMode : "<",
     modalMode : "<",
   },
-
   templateUrl : "components/cs-item-list/cs-item-list-template.html",
   controller : function($scope, $element, $uibModal, csRoute, csSettings, csInputBase){
 
@@ -3855,44 +3851,6 @@ app.component("csError", {
     errors : "<",
   },
   templateUrl : "cs-utils/cs-error-template/cs-error-template.html",
-})
-
-'use strict'
-
-var app = angular.module('cloudStorm.icon', [])
-
-app.component('csIcon', {
-  bindings : {
-    type : "<",
-    options : "<",
-    width : "<",
-  },
-  templateUrl : "cs-utils/cs-icon/cs-icon-template.html",
-  controller : function(){
-
-      this.notFound = false;
-      this.iconMap = {
-        delete : "rubbish-bin.png",
-        jump : "right-arrow.png",
-        warning : "warning.png",
-        left : "left-curve-arrow.png",
-      }
-      if(!this.iconMap[this.type]){
-        this.type = 'warning'
-        this.notFound = true;
-      } {
-        this.src = "cs-utils/cs-icon/icons/" +
-          this.iconMap[this.type]
-      }
-
-      this.click = function(){
-        if(this.notFound){
-          this.alert("Image not found")
-        } else {
-          this.options.event()
-        }
-      }
-  }
 })
 
 angular.module('cloudStorm.templates', ['components/containers/cs-item-list-container/cs-item-list-container-template.html', 'components/cs-alert/cs-alert-template.html', 'components/cs-field/cs-field-template.html', 'components/cs-fields/cs-checkbox/cs-checkbox-template.html', 'components/cs-fields/cs-date/cs-date-template.html', 'components/cs-fields/cs-datetime/cs-datetime-template.html', 'components/cs-fields/cs-enum/cs-enum-template.html', 'components/cs-fields/cs-number/cs-number-template.html', 'components/cs-fields/cs-resource-input/cs-resource-input-template.html', 'components/cs-fields/cs-textfield/cs-textfield-template.html', 'components/cs-fields/cs-time/cs-time-template.html', 'components/cs-filter-row/cs-filter-row-template.html', 'components/cs-form/cs-form-template.html', 'components/cs-index/cs-index-sidepanel/cs-index-sidepanel-template.html', 'components/cs-index/cs-index-template.html', 'components/cs-item-list/cs-item-list-template.html', 'components/cs-item/cs-item-template.html', 'components/cs-main/cs-main-template.html', 'components/cs-menu/cs-menu-template.html', 'components/cs-resource-list/cs-resource-list-template.html', 'components/cs-table/cs-table-container/cs-table-container-template.html', 'components/cs-table/cs-table-header/cs-table-header-template.html', 'components/cs-table/cs-table-row/cs-table-row-template.html', 'components/cs-wizard/cs-wizard-panel-template.html', 'components/cs-wizard/cs-wizard-template.html', 'components/overrides/cs-card/cs-card-template.html', 'components/overrides/cs-card/cs-field-card-template.html', 'components/overrides/cs-checkbox-1/cs-checkbox-1-template.html', 'components/overrides/cs-row-default/cs-row-default-template.html', 'components/overrides/cs-table-row-index/cs-table-row-index-template.html', 'cs-route-provider/router-component/cs-page-router-template.html', 'cs-utils/cs-error-template/cs-error-template.html', 'cs-utils/cs-loader/cs-loader-template.html']);

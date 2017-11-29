@@ -11,7 +11,6 @@ app.component("csItemList", {
     cMode : "<",
     modalMode : "<",
   },
-
   templateUrl : "components/cs-item-list/cs-item-list-template.html",
   controller : function($scope, $element, $uibModal, csRoute, csSettings, csInputBase){
 
