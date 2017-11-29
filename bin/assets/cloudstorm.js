@@ -2532,7 +2532,7 @@ app.component("csLoader", {
 });
 var app;
 
-app = angular.module('cloudStorm', ['cloudStorm.alertService', 'cloudStorm.alert', 'cloudStorm.field', 'cloudStorm.form', 'cloudStorm.wizard', 'cloudStorm.itemListContainer', 'cloudStorm.checkbox', 'cloudStorm.menu', 'cloudStorm.date', 'cloudStorm.time', 'cloudStorm.datetime', 'cloudStorm.enum', 'cloudStorm.field', 'cloudStorm.filterRow', 'cloudStorm.form', 'cloudStorm.index', 'cloudStorm.index.sidePanel', 'cloudStorm.itemList', 'cloudStorm.main', 'cloudStorm.menu', 'cloudStorm.number', 'cloudStorm.resourceInput', 'cloudStorm.textfield', 'cloudStorm.tableHeader', 'cloudStorm.tableRow', 'cloudStorm.tableContainer', 'cloudStorm.inputBase', 'cloudStorm.dataStore', 'cloudStorm.dataOpsProvider', 'cloudStorm.localizationProvider', 'cloudStorm.resource', 'cloudStorm.resourceService', 'cloudStorm.restApi', 'cloudStorm.resourceFilter', 'cloudStorm.settings', 'cloudStorm.templateService', 'cloudStorm.templates', 'cloudStorm.descriptorService', 'ui.router', 'cloudStorm.routeProvider', 'ui.bootstrap', 'cloudStorm.loader', 'cloudStorm.error', 'cloudStorm.uiPageRouter', 'cloudStorm.checkBox1', 'cloudStorm.card', 'cloudStorm.item', 'cloudStorm.icon', 'cloudStorm.descriptors', 'cloudStorm.resourceList', 'cloudStorm.resourceListProvider', 'cloudStorm.indexTable', 'cloudStorm.dataOpsProvider']);
+app = angular.module('cloudStorm', ['cloudStorm.alertService', 'cloudStorm.alert', 'cloudStorm.field', 'cloudStorm.form', 'cloudStorm.wizard', 'cloudStorm.itemListContainer', 'cloudStorm.checkbox', 'cloudStorm.menu', 'cloudStorm.date', 'cloudStorm.time', 'cloudStorm.datetime', 'cloudStorm.enum', 'cloudStorm.field', 'cloudStorm.filterRow', 'cloudStorm.form', 'cloudStorm.index', 'cloudStorm.index.sidePanel', 'cloudStorm.itemList', 'cloudStorm.main', 'cloudStorm.menu', 'cloudStorm.number', 'cloudStorm.resourceInput', 'cloudStorm.textfield', 'cloudStorm.tableHeader', 'cloudStorm.tableRow', 'cloudStorm.tableContainer', 'cloudStorm.inputBase', 'cloudStorm.dataStore', 'cloudStorm.dataOpsProvider', 'cloudStorm.localizationProvider', 'cloudStorm.resource', 'cloudStorm.resourceService', 'cloudStorm.restApi', 'cloudStorm.resourceFilter', 'cloudStorm.settings', 'cloudStorm.templateService', 'cloudStorm.templates', 'cloudStorm.descriptorService', 'ui.router', 'cloudStorm.routeProvider', 'ui.bootstrap', 'cloudStorm.loader', 'cloudStorm.error', 'cloudStorm.uiPageRouter', 'cloudStorm.checkBox1', 'cloudStorm.card', 'cloudStorm.item', 'cloudStorm.descriptors', 'cloudStorm.resourceList', 'cloudStorm.resourceListProvider', 'cloudStorm.dataOpsProvider']);
 
 'use strict'
 
@@ -3054,7 +3054,7 @@ app.component('csMain', {
 
 var app = angular.module('cloudStorm.resourceListProvider', [])
 
-app.provider('csResourceList', ['csDataOps', function(csDataOps){
+app.provider('csResourceList', ['csDataOpsProvider', function(csDataOpsProvider){
 
   var defaultHeader = "cs-table-header"
 
@@ -3064,7 +3064,7 @@ app.provider('csResourceList', ['csDataOps', function(csDataOps){
       //This is the table
       return this.defaultTemplate
     }
-    csDataOps.check(scope, listDescriptor)
+    csDataOpsProvider.check(scope, listDescriptor)
   }
 
   this.defaultTemplate = function(){
@@ -3079,7 +3079,7 @@ app.provider('csResourceList', ['csDataOps', function(csDataOps){
 
   this.getHeader = function(directive){
 
-    csDataOps.init(directive, defaultHeader)
+    csDataOpsProvider.init(directive, defaultHeader)
     return '' +
     "<" + directive +
       "columns = '$ctrl.columns'," +
@@ -3101,9 +3101,9 @@ app.provider('csResourceList', ['csDataOps', function(csDataOps){
           directive = descriptor.list.directive
           break;
         case "template-override":
-          csDataOps.object(scope.options, 'row')
-          csDataOps.object(scope.options.row, 'override')
-          csDataOps.check(descriptor.options)
+          csDataOpsProvider.object(scope.options, 'row')
+          csDataOpsProvider.object(scope.options.row, 'override')
+          csDataOpsProvider.check(descriptor.options)
 
           scope.options.row.override = {
             type : 'template-override',
