@@ -1,0 +1,14 @@
+.tCell{ "ng-repeat" => "column in $ctrl.columns track by $index"}
+  %cs-field{ "form-mode" => "'tableView'",
+             "field" => "column",
+             "form-item" => "$ctrl.item",
+             "cs-field-options" =>"$ctrl.fieldOptions",
+          }
+  / "ng-if" => "$ctrl.columnVisible(column, $index) || true"
+.tCell.actions
+  / SHOW
+  .action.edit-action{ "ng-click" => "$ctrl.showItem()"}<> {{ $ctrl.i18n.t('buttons.show') }}
+  / EDIT
+  .action.edit-action{ "ng-click" => "$ctrl.selectItem()"}<> {{ $ctrl.i18n.t('buttons.edit') }}
+  / DELETE
+  .action.delete-action{ "ng-click" => "$ctrl.destroyItem($event)" }<> {{ $ctrl.i18n.t('buttons.delete') }}
