@@ -48,24 +48,24 @@ app.service('csAlertService', ['csSettings', function(csSettings){
     return this.sequence++;
   };
 
-  this.success = function(msgType) {
-    return this.addAlert(this.getText(msgType), 'success');
+  this.success = function(msgType, customMessage) {
+    return this.addAlert(customMessage || this.getText(msgType, customMessage), 'success');
   };
 
-  this.info = function(msgType) {
-    return this.addAlert(this.getText(msgType), 'info');
+  this.info = function(msgType, customMessage) {
+    return this.addAlert(customMessage || this.getText(msgType, customMessage), 'info');
   };
 
-  this.warning = function(msgType) {
-    return this.addAlert(this.getText(msgType), 'warning');
+  this.warning = function(msgType, customMessage) {
+    return this.addAlert(customMessage || this.getText(msgType, customMessage), 'warning');
   };
 
-  this.danger = function(msgType) {
+  this.danger = function(msgType, customMessage) {
     return this.addAlert(customMessage || this.getText(msgType), 'danger');
   };
 
-  this.getText = function(type) {
-    return this.i18n.t('alert.' + type) || 'translation missing';
+  this.getText = function(type, customMessage) {
+    return this.i18n.t('alert.' + type) || '\*translation missing';
   };
 
   this.dismissAlert = function(idToDismiss) {

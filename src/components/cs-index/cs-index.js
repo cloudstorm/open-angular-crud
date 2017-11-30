@@ -116,16 +116,17 @@ app.component('csIndex', {
     this.destroyItem = function($event, item) {
       var ref;
       $event.stopPropagation();
-      if (confirm((ref = this.i18n) != null ? ref.t('confirm.delete') : void 0)) {
+      if (confirm( this.i18n.t('confirm.delete'))) {
         return item.$destroy().then((function(result) {
           var index;
           this.csIndexOptions.selectedItem = null;
           index = this.collection.indexOf(item);
           return this.collection.splice(index, 1);
         }).bind(this), (function(reason) {
-          var alert, ref1, ref2;
-          alert = (ref1 = reason.data) != null ? ref1.errors[0].detail : void 0;
-          return csAlertService.addAlert(alert || ((ref2 = this.i18n) != null ? ref2.t('alert.error_happened') : void 0), 'danger');
+          var alert = null
+          if(reason.data)
+            alert = ref1.errors[0].detail
+          return csAlertService.danger("error_happened", alert)
         }).bind(this));
       }
     };
