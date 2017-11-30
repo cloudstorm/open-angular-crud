@@ -15,7 +15,7 @@ app.component('csItemListContainer', {
     modalInstance : "<",
   },
   templateUrl : "components/containers/cs-item-list-container/cs-item-list-container-template.html",
-  controller : function(csSettings){
+  controller : function(csSettings) {
 
     this.i18n = csSettings.settings['i18n-engine'];
 

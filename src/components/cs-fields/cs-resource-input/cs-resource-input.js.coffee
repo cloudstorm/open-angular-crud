@@ -136,7 +136,7 @@ app.directive "csResourceInput", [
 
       if $scope.associates
         $scope.associates = []
-        #$scope.refresh()
+        $scope.refresh()
       else
         $scope.associates = []
 

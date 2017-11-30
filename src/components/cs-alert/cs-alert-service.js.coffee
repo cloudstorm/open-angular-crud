@@ -42,7 +42,7 @@ app.service 'csAlertService', ['csSettings', (csSettings) ->
     @addAlert(customMessage || @getText(msgType), 'danger')
 
   @getText = (type) ->
-    @i18n.t('alert.' + type) || 'translation missing'
+    @i18n.t('alert.' + type) || type
 
   @dismissAlert = (idToDismiss) ->
     @alerts = _.without @alerts, _.findWhere(@alerts, {id: idToDismiss})
