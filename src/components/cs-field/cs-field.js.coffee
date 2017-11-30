@@ -8,7 +8,6 @@ app.directive "csField", ['$compile', '$templateRequest', 'csInputBase', ($compi
 
   # ===== COMPILE =============================================================
 
-
   compile = ($templateElement, $templateAttributes, $scope) ->
 
     # Only modify the DOM in compile, use (pre/post) link for others
@@ -28,9 +27,6 @@ app.directive "csField", ['$compile', '$templateRequest', 'csInputBase', ($compi
   link = ($scope, element, attrs, controller) ->
 
     csInputBase $scope
-
-    $scope.CL = {}
-    $scope.CL.containerStyle = if $scope.formMode == 'tableView' then 'cs-field-inner-table' else 'cs-field-inner-form'
 
     if !$scope.field? && $scope.fieldName?
       $scope.field = _.find $scope.formItem.constructor.descriptor.fields, { attribute: $scope.fieldName }
@@ -82,30 +78,31 @@ app.directive "csField", ['$compile', '$templateRequest', 'csInputBase', ($compi
     switch $scope.formMode
       when "edit"
         styleMap =
-          star : "show",
+          required : "show",
           container : "container-vertical",
-          field1 : "field-1-vertical",
-          field2 : "field-2-vertical"
+          label : "field-1-vertical",
+          value : "field-2-vertical"
       when "create"
         styleMap =
-          star : "show",
+          required : "show",
           container : "container-vertical",
-          field1 : "field-1-vertical",
-          field2 : "field-2-vertical",
+          label : "field-1-vertical",
+          value : "field-2-vertical",
       when "show"
       	styleMap =
-          star : "hidden",
+          required : "hidden",
           container : "container-horizontal",
-          field1 : "field-1-horizontal",
-          field2 : "field-2-horizontal",
+          label : "field-1-horizontal",
+          value : "field-2-horizontal",
       when "tableView"
       	styleMap =
-          star : "hidden",
+          required : "hidden",
           container : "container-horizontal",
-          field1 : "hidden",
-          field2 : "field-2-horizontal",
+          label : "hidden",
+          value : "field-2-horizontal",
 
-    $scope.styleMap = styleMap
+    $scope.CL = styleMap
+    $scope.CL.containerStyle = if $scope.formMode == 'tableView' then 'cs-field-inner-table' else 'cs-field-inner-form'
 
     # ===== COMPONENT LIFECYCLE ===========================
 
