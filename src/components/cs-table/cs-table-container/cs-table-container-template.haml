@@ -1,11 +1,11 @@
 .table-responsive
-  .tTable.table.table-striped.table-hover
-    .tBody
+  .cs-table.table.table-striped.table-hover
+    .cs-table-body
       %cs-table-header{ "columns" => "$ctrl.columns",
                         "cs-index-options" => "$ctrl.csIndexOptions",
                         "column-visible_" => "$ctrl.columnVisible(column, index)",
                         "sort_" => "$ctrl.sort(column, direction)" }
-    .tBody
+    .cs-table-body
       %cs-table-row{ "ng-repeat" => "item in $ctrl.collection track by $index",
                      "ng-class" => "{'selected-row' : $ctrl.csIndexOptions.selectedItem.id == item.id}",
                      "item" => "item",
