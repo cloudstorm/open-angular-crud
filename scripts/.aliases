@@ -5,7 +5,7 @@ alias h='grunt haml html2js concat:compile_js'
 alias s='grunt sass copy:compiled_assets'
 
 #JavaScript
-alias j='concat:compile_js'
+alias j='grunt concat:compile_js'
 
 #CoffeScript #JavaScript
 alias c='grunt coffee concat:compile_js'
