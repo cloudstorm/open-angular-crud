@@ -3,6 +3,6 @@
       "ng-if" => "$ctrl.columnVisible(column, $index)",
       "ng-click" => "$ctrl.changeSorting(column)" }
   {{column.label}}
-  %span.glyphicon.glyphicon-triangle-top{ "ng-if" => "$ctrl.csIndexOptions.sortAttribute==column.attribute && !$ctrl.csIndexOptions.sortReverse" }
-  %span.glyphicon.glyphicon-triangle-bottom{ "ng-if" => "$ctrl.csIndexOptions.sortAttribute==column.attribute && $ctrl.csIndexOptions.sortReverse" }
+  %span.glyphicon.glyphicon-triangle-top{ "ng-if" => "$ctrl.csIndexOptions.sortAttribute==column.attribute && $ctrl.direction == 'asc'" }
+  %span.glyphicon.glyphicon-triangle-bottom{ "ng-if" => "$ctrl.csIndexOptions.sortAttribute==column.attribute && $ctrl.direction == 'desc'" }
 .tHCell.actions{ "ng-hide" => "csIndexOptions['hide-actions']" }

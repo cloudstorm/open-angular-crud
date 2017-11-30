@@ -2,19 +2,19 @@
   .tTable.table.table-striped.table-hover
     .tBody
       %cs-table-header{ "columns" => "$ctrl.columns",
-                  "cs-index-options" => "$ctrl.csIndexOptions",
-                  "column-visible_" => "$ctrl.columnVisible(column, index)",
-                  "change-sorting_" => "$ctrl.changeSorting(column, reverse)"}
+                        "cs-index-options" => "$ctrl.csIndexOptions",
+                        "column-visible_" => "$ctrl.columnVisible(column, index)",
+                        "sort_" => "$ctrl.sort(column, direction)" }
     .tBody
-      %cs-table-row{"ng-repeat" => "item in $ctrl.collection track by $index",
-              "ng-class" => "{'selected-row' : $ctrl.csIndexOptions.selectedItem.id == item.id}",
-              "item" => "item",
-              "columns" => "$ctrl.columns",
-              "cs-index-options" => "$ctrl.csIndexOptions",
-              "show-item_" => "$ctrl.showItem(item)",
-              "select-item_" => "$ctrl.selectItem(item)",
-              "destroy-item_" => "$ctrl.destroyItem(event, item)"}
+      %cs-table-row{ "ng-repeat" => "item in $ctrl.collection track by $index",
+                     "ng-class" => "{'selected-row' : $ctrl.csIndexOptions.selectedItem.id == item.id}",
+                     "item" => "item",
+                     "columns" => "$ctrl.columns",
+                     "cs-index-options" => "$ctrl.csIndexOptions",
+                     "show-item_" => "$ctrl.showItem(item)",
+                     "select-item_" => "$ctrl.selectItem(item)",
+                     "destroy-item_" => "$ctrl.destroyItem(event, item)" }
 
-.row.no-result{ "ng-if" => "$ctrl.collection.length == 0"}
+.row.no-result{ "ng-if" => "$ctrl.collection.length == 0" }
   .col-lg-12
     {{ $ctrl.i18n.t('info.no_item') }}

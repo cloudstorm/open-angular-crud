@@ -41,15 +41,14 @@ app.component('csTableContainer', {
       return this.columnVisible_({column : column, index : index})
     }
 
-    this.changeSorting = function(column, reverse){
+    this.sort = function(column, direction){
 
       this.name = column.attribute
       this.csIndexOptions.sortAttribute = column.attribute
-      this.csIndexOptions.sortReverse = !this.csIndexOptions.sortReverse
       sortFieldComp = _.find(this.resource.descriptor.fields, {
         attribute: this.csIndexOptions.sortAttribute
       });
-      this.collection = csResourceFilter.sort(this.collection, sortFieldComp, reverse)
+      this.collection = csResourceFilter.sort(this.collection, sortFieldComp, direction)
     }
 
     this.filter = function(filterValue) {

@@ -42,7 +42,6 @@ app.directive "csResourceInput", [
 
       setup_associations($scope)
 
-
       # ===== WATCHES =======================================
 
       if $scope.field.cardinality == 'one'
@@ -51,7 +50,6 @@ app.directive "csResourceInput", [
           if (newValue.id != oldValue.id) || (newValue.type != oldValue.type)
             $scope.formItem.$assign_association($scope.field, $scope.model.object)
             $scope.$emit 'input-value-changed', $scope.field
-
 
       if $scope.field.cardinality == 'many'
         $scope.$watchCollection 'model.object', (newItems, oldItems) ->
@@ -67,6 +65,8 @@ app.directive "csResourceInput", [
         if (newValue != oldValue)
           $scope.model.object = $scope.formItem.$association($scope.field)
 
+      $scope.selectItem = () ->
+        console.log($scope.model)
 
       # ===== COMPONENT LIFECYCLE ===========================
 
@@ -76,6 +76,10 @@ app.directive "csResourceInput", [
 
       # TODO: refactor into a better pattern, perhaps involving the wizard as message broker
       $rootScope.$on 'form-submit', (event, formItem) ->
+        if $scope.formMode == "tableView"
+          $scope.resource = ResourceService.get($scope.field.resource)
+          $scope.model = {object: $scope.formItem.$association($scope.field)}
+
         if formItem.type == $scope.field.resource
           event.stopPropagation() if event.stopPropagation
           itemID = formItem.id.slice()

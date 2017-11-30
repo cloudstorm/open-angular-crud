@@ -8,7 +8,7 @@ app.factory('csResourceFilter', function(csSettings){
 
   this.i18n = csSettings.settings['i18n-engine']
 
-  this.sort = function(array, column, desc){
+  this.sort = function(array, column, direction){
     var fieldValue;
     var array = _.sortBy(array, (function(item){
       fieldValue = this.fieldValue(item, column)
@@ -17,7 +17,7 @@ app.factory('csResourceFilter', function(csSettings){
       return fieldValue
     }).bind(this))
 
-    if(desc){
+    if(direction == "desc"){
       array = array.reverse()
     }
     return array
