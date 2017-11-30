@@ -30,7 +30,7 @@ app.directive "csField", ['$compile', '$templateRequest', 'csInputBase', ($compi
     csInputBase $scope
 
     $scope.CL = {}
-    $scope.containerStyle = if $scope.formMode == 'tableView' then 'cs-field-inner-table' else 'cs-field-inner-form'
+    $scope.CL.containerStyle = if $scope.formMode == 'tableView' then 'cs-field-inner-table' else 'cs-field-inner-form'
 
     if !$scope.field? && $scope.fieldName?
       $scope.field = _.find $scope.formItem.constructor.descriptor.fields, { attribute: $scope.fieldName }
@@ -91,19 +91,19 @@ app.directive "csField", ['$compile', '$templateRequest', 'csInputBase', ($compi
           star : "show",
           container : "container-vertical",
           field1 : "field-1-vertical",
-          field2 : "field-2-vertical"
+          field2 : "field-2-vertical",
       when "show"
       	styleMap =
           star : "hidden",
           container : "container-horizontal",
           field1 : "field-1-horizontal",
-          field2 : "field-2-horizontal"
+          field2 : "field-2-horizontal",
       when "tableView"
       	styleMap =
           star : "hidden",
           container : "container-horizontal",
           field1 : "hidden",
-          field2 : "field-2-horizontal"
+          field2 : "field-2-horizontal",
 
     $scope.styleMap = styleMap
 
