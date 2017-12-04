@@ -245,8 +245,8 @@ var app;
 app = angular.module('cloudStorm.date', []);
 
 app.directive("csDate", [
-  'uibDateParser', 'csSettings', 'csInputBase', function(uibDateParser, csSettings, csInputBase) {
-    var compile, format_date, getTextFormat, link;
+  'uibDateParser', 'csSettings', 'csInputBase', '$filter', function(uibDateParser, csSettings, csInputBase, $filter) {
+    var compile, format_date, link;
     compile = function($templateElement, $templateAttributes) {
       $templateElement.addClass("cs-date");
       return {
@@ -265,17 +265,8 @@ app.directive("csDate", [
           date.setHours(14);
         }
         $scope.formItem.attributes[$scope.field.attribute] = date;
-        return $scope.input_date = getTextFormat(date);
+        return $scope.input_date = $filter('date')(date, format);
       }
-    };
-    getTextFormat = function(date) {
-      var day, month, year;
-      year = (date.getYear() + 1900).toString();
-      month = date.getMonth().toString();
-      month = month.length === 1 ? '0' + month : month;
-      day = date.getDay().toString();
-      day = day.length === 1 ? '0' + day : day;
-      return year + "-" + month + "-" + day;
     };
     link = function($scope, element, attrs, controller) {
       $scope.i18n = csSettings.settings['i18n-engine'];
@@ -600,7 +591,8 @@ app.directive("csResourceInput", [
         object: $scope.formItem.$association($scope.field)
       };
       if ($scope.associates) {
-        return $scope.associates = [];
+        $scope.associates = [];
+        return $scope.refresh();
       } else {
         return $scope.associates = [];
       }
@@ -3938,12 +3930,12 @@ angular.module("components/cs-table/cs-table-header/cs-table-header-template.htm
 
 angular.module("components/cs-table/cs-table-row/cs-table-row-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-table/cs-table-row/cs-table-row-template.html",
-    "<div class='tCell' ng-repeat='column in $ctrl.columns track by $index'>\n" +
+    "<div class='cs-table-cell' ng-repeat='column in $ctrl.columns track by $index'>\n" +
     "<!-- {{ $ctrl.fieldValue(column) }} -->\n" +
     "<cs-field cs-field-options='$ctrl.fieldOptions' field='column' form-item='$ctrl.item' form-mode='&#39;tableView&#39;'></cs-field>\n" +
     "<!-- \"ng-if\" => \"$ctrl.columnVisible(column, $index) || true\" -->\n" +
     "</div>\n" +
-    "<div class='tCell actions'>\n" +
+    "<div class='cs-table-cell actions'>\n" +
     "<!-- SHOW --><div class='action edit-action' ng-click='$ctrl.showItem()'>{{ $ctrl.i18n.t('buttons.show') }}</div><!-- EDIT --><div class='action edit-action' ng-click='$ctrl.selectItem()'>{{ $ctrl.i18n.t('buttons.edit') }}</div><!-- DELETE --><div class='action delete-action' ng-click='$ctrl.destroyItem($event)'>{{ $ctrl.i18n.t('buttons.delete') }}</div></div>\n" +
     "");
 }]);

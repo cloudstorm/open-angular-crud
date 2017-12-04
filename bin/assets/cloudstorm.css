@@ -26,8 +26,8 @@
   position: relative;
   margin: 16px 0; }
 .cs-field .cs-field-inner-table {
-  position: relative;
-  margin: 4px 0; }
+  margin: 4px 0;
+  position: relative; }
 .cs-field .hidden {
   display: none; }
 .cs-field .container-vertical {
@@ -153,8 +153,8 @@ body > .ui-select-bootstrap.open {
   content: '';
   display: inline-block;
   height: 100%;
-  vertical-align: middle;
-  margin-right: -4px; }
+  margin-right: -4px;
+  vertical-align: middle; }
 
 .modal-dialog {
   display: inline-block;
@@ -165,31 +165,31 @@ body > .ui-select-bootstrap.open {
   display: flex;
   flex-flow: row wrap; }
 .cs-item-list .column-mode {
-  margin: 10px auto;
-  flex-direction: column; }
+  flex-direction: column;
+  margin: 10px auto; }
 .cs-item-list .show-mode {
-  flex-direction: row;
-  border: 1px solid #B3B3B3;
-  padding: 3px;
+  border: 1px solid #BBBBBB;
   border-radius: 5px;
-  justify-content: space-around; }
+  flex-direction: row;
+  justify-content: space-around;
+  padding: 3px; }
 .cs-item-list .row-mode {
-  max-width: 220px;
-  flex-direction: row; }
+  flex-direction: row;
+  max-width: 220px; }
 .cs-item-list .item {
   flex: 1;
   color: #555555;
   border-radius: 4px;
-  border: 1px solid #ccc;
+  border: 1px solid #CCCCCC;
   background-color: #eeeeee;
   text-align: center;
   white-space: nowrap; }
 .cs-item-list .item:hover {
-  cursor: pointer;
-  border: 1px solid #333333; }
+  border: 1px solid #333333;
+  cursor: pointer; }
 .cs-item-list .item-show {
-  padding: 6px 12px;
-  margin: 5px; }
+  margin: 5px;
+  padding: 6px 12px; }
 .cs-item-list .item-table {
   margin: 3px 7px;
   text-align: center;
@@ -316,11 +316,10 @@ div.table-striped > div.cs-table-body > .cs-table-row:nth-of-type(odd) {
 
 .cs-table-row {
   display: table-row; }
-  .cs-table-row .tCell {
+  .cs-table-row .cs-table-cell {
     display: table-cell;
     padding: 8px;
     line-height: 1.42857143;
-    vertical-align: top;
     border-top: 1px solid #ddd;
     vertical-align: middle; }
   .cs-table-row div.actions {
