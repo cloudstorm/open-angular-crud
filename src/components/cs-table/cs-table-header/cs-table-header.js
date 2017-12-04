@@ -32,6 +32,17 @@ app.component('csTableHeader', {
     this.columnVisible = function(column, index){
       return this.columnVisible_({column : column, index : index})
     }
+
+    this.asc = function(column){
+      return (this.csIndexOptions.sortAttribute == column.attribute
+        && this.direction == 'asc')
+    }
+
+    this.desc = function(column){
+      return (this.csIndexOptions.sortAttribute == column.attribute
+        && this.direction == 'desc')
+    }
+
   },
   bindings : {
     csIndexOptions : "=",

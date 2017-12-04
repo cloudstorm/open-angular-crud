@@ -3,19 +3,21 @@
     .cs-table-body
       %cs-table-header{ "columns" => "$ctrl.columns",
                         "cs-index-options" => "$ctrl.csIndexOptions",
-                        "column-visible_" => "$ctrl.columnVisible(column, index)",
+                        "column-visible_" => "" + |
+                          "$ctrl.columnVisible(column, index)", |
                         "sort_" => "$ctrl.sort(column, direction)" }
     .cs-table-body
       %cs-table-row{ "ng-repeat" => "item in $ctrl.collection track by $index",
-                     "ng-class" => "{'selected-row' : $ctrl.csIndexOptions.selectedItem.id == item.id,
-                                     'selectable-row' : $ctrl.csIndexOptions.selectedItem != null }",
-                     "item" => "item",
-                     "columns" => "$ctrl.columns",
-                     "cs-index-options" => "$ctrl.csIndexOptions",
-                     "show-item_" => "$ctrl.showItem(item)",
-                     "ng-click" => "$ctrl.clickRow(item)",
-                     "select-item_" => "$ctrl.selectItem(item)",
-                     "destroy-item_" => "$ctrl.destroyItem(event, item)" }
+       "ng-class" => " {  " + |
+          "'selected-row' : $ctrl.csIndexOptions.selectedItem.id == item.id, |
+           'selectable-row' : $ctrl.csIndexOptions.selectedItem != null }",
+       "item" => "item",
+       "columns" => "$ctrl.columns",
+       "cs-index-options" => "$ctrl.csIndexOptions",
+       "show-item_" => "$ctrl.showItem(item)",
+       "ng-click" => "$ctrl.clickRow(item)",
+       "select-item_" => "$ctrl.selectItem(item)",
+       "destroy-item_" => "$ctrl.destroyItem(event, item)" }
 
 .row.no-result{ "ng-if" => "$ctrl.collection.length == 0" }
   .col-lg-12

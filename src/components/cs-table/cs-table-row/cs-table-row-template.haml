@@ -8,8 +8,11 @@
   / "ng-if" => "$ctrl.columnVisible(column, $index) || true"
 .cs-table-cell.actions
   / SHOW
-  .action.edit-action{ "ng-click" => "$ctrl.showItem()"}<> {{ $ctrl.i18n.t('buttons.show') }}
+  .action.edit-action{ "ng-click" => "$ctrl.showItem()" }
+    {{ $ctrl.i18n.t('buttons.show') }}
   / EDIT
-  .action.edit-action{ "ng-click" => "$ctrl.selectItem()"}<> {{ $ctrl.i18n.t('buttons.edit') }}
+  .action.edit-action{ "ng-click" => "$ctrl.selectItem()" }
+    {{ $ctrl.i18n.t('buttons.edit') }}
   / DELETE
-  .action.delete-action{ "ng-click" => "$ctrl.destroyItem($event)" }<> {{ $ctrl.i18n.t('buttons.delete') }}
+  .action.delete-action{ "ng-click" => "$ctrl.destroyItem($event)" }
+    {{ $ctrl.i18n.t('buttons.delete') }}

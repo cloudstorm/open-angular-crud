@@ -5,6 +5,6 @@
   .inline
     {{column.label}}
   .inline.arrow-container
-    %span.glyphicon.glyphicon-triangle-top{ "ng-if" => "$ctrl.csIndexOptions.sortAttribute==column.attribute && $ctrl.direction == 'asc'" }
-    %span.glyphicon.glyphicon-triangle-bottom{ "ng-if" => "$ctrl.csIndexOptions.sortAttribute==column.attribute && $ctrl.direction == 'desc'" }
+    %span.glyphicon.glyphicon-triangle-top{ "ng-if" => "$ctrl.asc(column)" }
+    %span.glyphicon.glyphicon-triangle-bottom{"ng-if" => "$ctrl.desc(column)" }
 .cs-table-header-cell.actions{ "ng-hide" => "csIndexOptions['hide-actions']" }
