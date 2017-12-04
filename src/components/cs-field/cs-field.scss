@@ -1,8 +1,13 @@
 .cs-field {
 
-  .cs-field-inner {
+  .cs-field-inner-form {
+    margin: 16px 0;
     position: relative;
-    padding-bottom: 15px;
+  }
+
+  .cs-field-inner-table {
+    margin: 4px 0;
+    position: relative;
   }
 
   .show {
@@ -22,11 +27,11 @@
     flex-direction: column;
   }
 
-  .field-1-vertical {
+  .label-vertical {
     flex: 1;
   }
 
-  .field-2-vertical {
+  .value-vertical {
     flex: 2;
   }
 
@@ -40,11 +45,11 @@
     flex-direction: row;
   }
 
-  .field-1-horizontal {
+  .label-horizontal {
     flex: 1;
   }
 
-  .field-2-horizontal {
+  .value-horizontal {
     flex: 2;
   }
 

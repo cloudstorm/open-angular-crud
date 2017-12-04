@@ -1,12 +1,12 @@
 / CloudStorm Form Field component
 / Renders different kind of inputs for different types of items
-.cs-field-inner
-  %div{ "ng-class" => "style('container')" }
-    .inline.label-container{ "ng-class" => "style('field1')" }
+.cs-field-inner{ "ng-class" => "CL.containerStyle"}
+  %div{ "ng-class" => "CL.container" }
+    .inline.label-container{ "ng-class" => "CL.label" }
       %label.control-label {{field.label}}
       %span.req-star{ "ng-if" => "field.required",
-                      "ng-class" => "style('star')" } *
-    %div{ "ng-class" => "style('field2')" }
+                      "ng-class" => "CL.required" } *
+    %div{ "ng-class" => "CL.value" }
       .cs-input-wrapper
     %span.help-block{ "ng-if" => "field.errors.length > 0" }
       {{ getError(field) }}

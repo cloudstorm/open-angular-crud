@@ -19,6 +19,7 @@ angular.module('cloudStorm.localizationProvider', [])
     'buttons.submit': 'Submit'
     'buttons.delete': 'Delete'
     'buttons.edit': 'Edit'
+    'buttons.show': 'Show'
     'index.empty': ' list empty'
     'buttons.new': 'New'
     'buttons.clear': 'Clear'
@@ -28,7 +29,8 @@ angular.module('cloudStorm.localizationProvider', [])
     'alert.no_resource_created': 'Nothing created'
     'alert.new_resource_created': 'New resource successfully created'
     'alert.resource_not_found': 'There is no resource with the ID: '
-    'alert.no_linked_resource': 'There is no linked resource'
+    'alert.no_linked_resource': 'There are no linked '
+    'info.no_item': 'There is no item to show'
     'confirm.delete': "Are you sure you want to delete the item?"
     'filter_for_anything': 'Filter for anything'
     'checkbox.checked': '✓'

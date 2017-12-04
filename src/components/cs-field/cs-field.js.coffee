@@ -8,7 +8,6 @@ app.directive "csField", ['$compile', '$templateRequest', 'csInputBase', ($compi
 
   # ===== COMPILE =============================================================
 
-
   compile = ($templateElement, $templateAttributes, $scope) ->
 
     # Only modify the DOM in compile, use (pre/post) link for others
@@ -34,25 +33,21 @@ app.directive "csField", ['$compile', '$templateRequest', 'csInputBase', ($compi
 
     # ===== COMPILE DOM WITH APPROPRIATE DIRECTIVE ========
 
-    $scope.csFieldOptions.layout =
-      alignment : 'horizontal'
-      fieldType : 'view'
-
     if override = getDirectiveOverride($scope)
       directiveName = override
     else
       type = $scope.field.type
 
       directiveName = switch
-        when type == 'resource' then 'cs-resource-input'
-        when type == 'string'   then 'cs-textfield'
+        when type == 'boolean'  then 'cs-checkbox'
         when type == 'date'     then 'cs-date'
-        when type == 'time'     then 'cs-time'
         when type == 'datetime' then 'cs-datetime'
+        when type == 'enum'     then 'cs-enum'
         when type == 'integer'  then 'cs-number'
         when type == 'float'    then 'cs-number'
-        when type == 'enum'     then 'cs-enum'
-        when type == 'boolean'  then 'cs-checkbox'
+        when type == 'resource' then 'cs-resource-input'
+        when type == 'string'   then 'cs-textfield'
+        when type == 'time'     then 'cs-time'
 
     wrapperName = ".cs-input-wrapper"
     inputTemplate = "<#{directiveName} form-item='formItem'
@@ -62,8 +57,6 @@ app.directive "csField", ['$compile', '$templateRequest', 'csInputBase', ($compi
                                        create-resources='createResources()'
                                        options='csFieldOptions'>
                      </#{directiveName}>"
-
-
 
     innerElement = angular.element(element[0].querySelector(wrapperName))
     innerElement.append($compile(inputTemplate)($scope))
@@ -85,24 +78,31 @@ app.directive "csField", ['$compile', '$templateRequest', 'csInputBase', ($compi
     switch $scope.formMode
       when "edit"
         styleMap =
-          star : "show",
+          required : "show",
           container : "container-vertical",
-          field1 : "field-1-vertical",
-          field2 : "field-2-vertical"
+          label : "field-vertical",
+          value : "value-vertical"
       when "create"
         styleMap =
-          star : "show",
+          required : "show",
           container : "container-vertical",
-          field1 : "field-1-vertical",
-          field2 : "field-2-vertical"
+          label : "field-vertical",
+          value : "value-vertical"
       when "show"
       	styleMap =
-          star : "hidden",
+          required : "hidden",
           container : "container-horizontal",
-          field1 : "field-1-horizontal",
-          field2 : "field-2-horizontal"
+          label : "label-horizontal",
+          value : "value-horizontal",
+      when "tableView"
+      	styleMap =
+          required : "hidden",
+          container : "container-horizontal",
+          label : "hidden",
+          value : "value-horizontal",
 
-    $scope.styleMap = styleMap
+    $scope.CL = styleMap
+    $scope.CL.containerStyle = if $scope.formMode == 'tableView' then 'cs-field-inner-table' else 'cs-field-inner-form'
 
     # ===== COMPONENT LIFECYCLE ===========================
 

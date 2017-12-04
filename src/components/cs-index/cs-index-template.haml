@@ -1,65 +1,31 @@
 .row
-  .col-lg-12{ "ng-switch" => "listIsEmpty()"}
-    .row.page-header
-      %h1
-        {{ header }}
-        %small{ "ng-bind" => "subHeader" }
-        .header-actions.pull-right
-          .input-group-wrap
-            .input-group
-              .input-group-addon
-                %span.glyphicon.glyphicon-search
-              %input.form-control.cs-index-filter{ "ng-model" => "csIndexOptions.filterValue",
-                                                   :placeholder => "{{ i18n.t('filter_for_anything') }}",
-                                                   :type => "text" }
-
-          %button.btn.btn-default{ :type => "button", "ng-click" => "refreshIndex()" }
-            %span.glyphicon.glyphicon-refresh
-
-          %button.btn.btn-primary.create-button{ :type => "button",
-                                                 "ng-click" => "openNewResourcePanel()",
-                                                 "ng-disabled" => "createDisabled()" }
-            {{ i18n.t('buttons.new') }}
+  .col-lg-12{ "ng-switch" => "$ctrl.listIsEmpty()"}
+    %cs-filter-row{ "resource" => "$ctrl.resource",
+                    "filterValue" => "$ctrl.filterValue",
+                    "filter" => "$ctrl.filter(filterValue)",
+                    "open-new-resource-panel" => "$ctrl.openNewResourcePanel()",
+                    "refresh-index" => "$ctrl.refreshIndex()"}
     .row{ "ng-switch-when" => "true" }
       .well.well-lg
-        {{header}} {{ i18n.t('index.empty') }}
+        {{$ctrl.header}} {{ $ctrl.i18n.t('index.empty') }}
 
     .row{ "ng-switch-when" => "false" }
-      .index-table{"ng-class" => "{ 'col-lg-8' : sidePanelIsVisible() && !viewIsCompressed(),
-                                     'col-lg-6' : viewIsCompressed() }" }
-        .table-responsive
+      %cs-table-container{"ng-class" => "{ 'col-lg-8' : $ctrl.sidePanelIsVisible() && !$ctrl.viewIsCompressed(),
+                                           'col-lg-6' : $ctrl.viewIsCompressed() }",
+                          "resource" => "$ctrl.resource",
+                          "collection" => "$ctrl.collection",
+                          "columns" => "$ctrl.columns",
+                          "cs-index-options" => "$ctrl.csIndexOptions",
+                          "column-visible_" => "$ctrl.columnVisible(column, index)",
+                          "show-item_" => "$ctrl.showItem(item)",
+                          "select-item_" => "$ctrl.selectItem(item)",
+                          "destroy-item_" => "$ctrl.destroyItem(event, item)"}
 
-          %table.table.table-striped.table-hover
-            %thead
-              %tr
-                / TODO: static header
-                %th{ "ng-repeat" => "column in columns track by $index",
-                     "ng-if" => "columnVisible(column, $index)",
-                     "ng-click" => "changeSorting(column)" }
-                  {{column.label}}
-                  %span.glyphicon.glyphicon-triangle-top{ "ng-if" => "csIndexOptions.sortAttribute==column.attribute && !csIndexOptions.sortReverse" }
-                  %span.glyphicon.glyphicon-triangle-bottom{ "ng-if" => "csIndexOptions.sortAttribute==column.attribute && csIndexOptions.sortReverse" }
-                %th.actions{ "ng-hide" => "csIndexOptions['hide-actions']" }
-
-            %tbody
-              %tr{ "ng-repeat" => "item in collection | orderBy:comparisonValue:csIndexOptions.sortReverse | filter:filterComparison track by $index ",
-                   "ng-class" => "{'info' : csIndexOptions.selectedItem.id == item.id}",
-                   "ng-click" => "showItem(item)",
-                   "ng-dblclick" => "showItem(item)" }
-                %td{ "ng-repeat" => "column in columns track by $index",
-                     "ng-if" => "columnVisible(column, $index)" }
-                  {{ fieldValue(item, column) }}
-                %td.actions{ "ng-hide" => "csIndexOptions['hide-actions']" }
-                  / EDIT
-                  .action.show-action{"ng-click" => "selectItem(item)"}<> {{ i18n.t('buttons.edit') }}
-                  / DELETE
-                  .action.delete-action{ "ng-click" => "destroyItem($event, item)" }<> {{ i18n.t('buttons.delete') }}
-
-      %cs-index-sidepanel{ "ng-if" => "sidePanelIsVisible()",
-                           "cs-index-sidepanel-options" => "csIndexOptions",
-                           "resource-type" => "resourceType",
-                           "item" => "csIndexOptions.selectedItem",
-                           "unselect-item" => "unselectItem()",
-                           "ng-class" => "{ 'col-lg-4' : !viewIsCompressed() && sidePanelIsVisible(),
-                                            'col-lg-6' : viewIsCompressed() }",
-                           "panel-number-callback" => "getPanelNumber" }
+      %cs-index-sidepanel{ "ng-if" => "$ctrl.sidePanelIsVisible()",
+                           "cs-index-sidepanel-options" => "$ctrl.csIndexOptions",
+                           "resource-type" => "$ctrl.resourceType",
+                           "item" => "$ctrl.csIndexOptions.selectedItem",
+                           "unselect-item" => "$ctrl.unselectItem()",
+                           "ng-class" => "{ 'col-lg-4' : !$ctrl.viewIsCompressed() && $ctrl.sidePanelIsVisible(),
+                                            'col-lg-6' : $ctrl.viewIsCompressed() }",
+                           "panel-number-callback_" => "$ctrl.getPanelNumber(length)" }

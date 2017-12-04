@@ -1,1 +1,27 @@
-alias b='grunt a'
+#Haml - #JavaScript
+alias h='grunt haml html2js concat:compile_js'
+
+#Sass
+alias s='grunt sass copy:compiled_assets'
+
+#JavaScript
+alias j='grunt concat:compile_js'
+
+#CoffeScript #JavaScript
+alias c='grunt coffee concat:compile_js'
+
+#Sample App
+alias sa='grunt copy:sample_app'
+
+#Test
+alias test='grunt karma:unit'
+
+#All
+alias a="grunt coffee; h; s; sa"
+
+#Combinations
+alias jt='j; test'
+alias ct='c; test'
+alias hj='h;j;'
+alias hs='h;s'
+alias hc='grunt coffee; h'

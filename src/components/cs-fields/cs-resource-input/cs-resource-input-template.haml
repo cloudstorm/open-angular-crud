@@ -1,0 +1,54 @@
+.input-group.cs-resource-input-group{ 'ng-if' => "field.cardinality == 'one' && (mode('create') || mode('edit'))" }
+  %ui-select{ "ng-disabled" => "fieldDisabled()",
+              "ng-required" => "fieldRequired()",
+              "ng-model" => "model.object",
+              "close-on-select" => "true",
+              "append-to-body" => "true" }
+    %ui-select-match{"allow-clear" => true}
+      %span
+        {{$select.selected.$display_name()}}
+    %ui-select-choices{ "repeat" => "item in associates track by $index",
+                        "refresh" => "refresh($select.search)",
+                        "refresh-delay" => "200" }
+      %span
+        {{item.$display_name()}}
+
+      %span.input-group-btn{ "ng-if" => "canCreateResources() || createDisabled()" }
+        %button.btn.btn-default{ "ng-disabled" => "fieldDisabled()",
+                                 "ng-click" => "pushPanel()",
+                                 "type" => "button" } {{ i18n.t('buttons.new') }}
+
+
+%cs-item-list{ "ng-if" => "(mode('show') || mode('tableView'))",
+               "field" => "field",
+               "item-list" => "model.object",
+               "many" => "field.cardinality == 'many'",
+               "c-mode" => "formMode",
+               "optins" => "options",
+               "key" => "resource.descriptor.fields[0].attribute" }
+
+.input-group.cs-resource-input-group{ "ng-if" => "(mode('create') || mode('edit')) && field.cardinality == 'many'" }
+  %ui-select{ "ui-select-override" => "",
+              "ng-disabled" => "fieldDisabled()",
+              "ng-required" => "fieldRequired()",
+              "ng-model" => "model.object",
+              "append-to-body" => "true",
+              "close-on-select" => "true",
+              "on-select" => "selectItem()",
+              "multiple" => true,
+              "enable" => "false" }
+    %ui-select-match{ "ui-lock-choice" => "mode('show')" }
+      %span
+        {{$item.$display_name()}}
+    %ui-select-choices{ "repeat" => "item in associates track by $index",
+                        "refresh" => "refresh($select.search)",
+                        "refresh-delay" => "200" }
+      %span
+        {{item.$display_name()}}
+
+  %span.input-group-btn{ "ng-if" => "createResources() && !createDisabled() && (mode('create') || mode('edit'))" }
+    %button.btn.btn-default{ "ng-disabled" => "fieldDisabled()",
+                             "ng-click" => "pushPanel()",
+                             "type" => "button" } {{ i18n.t('buttons.new') }}
+
+.cover
