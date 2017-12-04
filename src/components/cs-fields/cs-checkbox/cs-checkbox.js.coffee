@@ -29,6 +29,10 @@ app.directive "csCheckbox", ['$rootScope', 'csInputBase', 'csSettings', ($rootSc
 
     $scope.i18n = csSettings.settings['i18n-engine']
 
+    if $scope.formMode == 'create'
+      if $scope.field.default?
+        $scope.formItem.attributes[$scope.field.attribute] = $scope.field.default
+
     $scope.formItem.attributes[$scope.field.attribute] = !!$scope.formItem.attributes[$scope.field.attribute]
 
     # ===== WATCHES =======================================
