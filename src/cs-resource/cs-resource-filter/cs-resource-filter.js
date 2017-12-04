@@ -9,18 +9,18 @@ app.factory('csResourceFilter', function(csSettings){
   this.i18n = csSettings.settings['i18n-engine']
 
   this.sort = function(array, column, direction){
-    var fieldValue;
-    var array = _.sortBy(array, (function(item){
-      fieldValue = this.fieldValue(item, column)
+
+    return _.sortBy(array, (function(item){
+      var fieldValue = this.fieldValue(item, column)
       if(fieldValue)
         fieldValue = fieldValue.toString().toLowerCase()
       return fieldValue
     }).bind(this))
 
-    if(direction == "desc"){
-      array = array.reverse()
-    }
-    return array
+    // if(direction == "desc"){
+    //   array = array.reverse()
+    // }
+    // return array
   }
 
   this.filter = function(array, columns, filterValue){

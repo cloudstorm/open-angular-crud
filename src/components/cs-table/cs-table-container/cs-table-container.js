@@ -48,7 +48,11 @@ app.component('csTableContainer', {
       sortFieldComp = _.find(this.resource.descriptor.fields, {
         attribute: this.csIndexOptions.sortAttribute
       });
-      this.collection = csResourceFilter.sort(this.collection, sortFieldComp, direction)
+
+      this.collection = csResourceFilter.sort(this.initialCollection, sortFieldComp)
+      if(direction == "desc"){
+          this.collection = this.collection.reverse()
+      }
     }
 
     this.filter = function(filterValue) {
