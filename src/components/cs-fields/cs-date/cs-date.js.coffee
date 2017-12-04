@@ -4,7 +4,8 @@ app = angular.module('cloudStorm.date', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csDate", ['uibDateParser', 'csSettings', 'csInputBase', '$filter', (uibDateParser, csSettings, csInputBase, $filter) ->
+app.directive "csDate", ['uibDateParser', 'csSettings', 'csInputBase', '$filter', (uibDateParser,
+csSettings, csInputBase, $filter) ->
 
   # ===== COMPILE =============================================================
 

@@ -11,12 +11,11 @@ div.table-striped > div.cs-table-body > .cs-table-row:nth-of-type(odd){
 
   display : table-row;
 
-  .tCell {
+  .cs-table-cell {
     display : table-cell;
     //bootstrap -- .table>tbody>tr>td
     padding: 8px;
     line-height: 1.42857143;
-    vertical-align: top;
     border-top: 1px solid #ddd;
     //cs-index
     vertical-align: middle;
