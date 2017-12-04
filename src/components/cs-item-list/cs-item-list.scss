@@ -8,8 +8,8 @@
   content: '';
   display: inline-block;
   height: 100%;
-  vertical-align: middle;
   margin-right: -4px;
+  vertical-align: middle;
 }
 
 .modal-dialog {
@@ -21,46 +21,46 @@
 .cs-item-list {
 
   .item-container {
-    display : flex;
+    display: flex;
     flex-flow: row wrap;
   }
 
   .column-mode {
-    margin : 10px auto;
     flex-direction: column;
+    margin : 10px auto;
   }
 
   .show-mode {
-    flex-direction: row;
-    border: 1px solid #B3B3B3;
-    padding: 3px;
+    border: 1px solid $show-mode-border;
     border-radius: 5px;
+    flex-direction: row;
     justify-content: space-around;
+    padding: 3px;
   }
 
   .row-mode {
-    max-width: 220px;
     flex-direction: row;
+    max-width: 220px;
   }
 
   .item {
-    flex : 1;
+    flex: 1;
     color: $gray;
     border-radius: 4px;
-    border: 1px solid #ccc;
+    border: 1px solid $item-color-gray;
     background-color: $gray-lighter;
     text-align: center;
     white-space: nowrap;
   }
 
   .item:hover {
-    cursor: pointer;
     border: 1px solid $gray-dark;
+    cursor: pointer;
   }
 
   .item-show {
-    padding: 6px 12px;
     margin: 5px;
+    padding: 6px 12px;
   }
 
   .item-table {
@@ -70,8 +70,8 @@
   }
 
   .single-item:hover {
-    cursor : pointer;
-    text-decoration : underline;
+    cursor: pointer;
+    text-decoration: underline;
   }
 
   .singe-item-container {
@@ -83,7 +83,7 @@
   }
 
   .no-item {
-    color: #929292;;
+    color: $no-item-msg;
     font-size: 13px;
     font-style: italic;
     padding-left: 3px;
