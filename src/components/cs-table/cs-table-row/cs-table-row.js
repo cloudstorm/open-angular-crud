@@ -31,7 +31,7 @@ app.component('csTableRow', {
 
     this.fieldValue = function(field) {
       var item = this.item
-      var associations, display_date, display_time, enum_value, item_data, names, ref, relationship;
+      var associations, display_date, display_time, enum_value, item_data, names, relationship;
       if (field.resource) {
         if (field.cardinality === 'many') {
           associations = item.$association(field);
@@ -59,7 +59,11 @@ app.component('csTableRow', {
         }
         return item.attributes[field.attribute];
       } else if (field.type === 'boolean') {
-        return ((ref = this.i18n) != null ? ref.t(item.attributes[field.attribute]) : void 0) || item.attributes[field.attribute];
+        if (this.i18n) {
+          return this.i18n.t(item.attributes[field.attribute]) || item.attributes[field.attribute];
+        } else {
+          return item.attributes[field.attribute];
+        }
       } else if (field.type === 'time') {
         display_time = new Date(item.attributes[field.attribute]);
         return $filter('date')(display_time, 'HH:mm');

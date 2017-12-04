@@ -70,7 +70,11 @@ app.factory('csResourceFilter', function(csSettings){
       }
       return item.attributes[field.attribute];
     } else if (field.type === 'boolean') {
-      return ((ref = this.i18n) != null ? ref.t(item.attributes[field.attribute]) : void 0) || item.attributes[field.attribute];
+      if (this.i18n) {
+        return this.i18n.t(item.attributes[field.attribute]) || item.attributes[field.attribute];
+      } else {
+        return item.attributes[field.attribute];
+      }
     } else if (field.type === 'time') {
       display_time = new Date(item.attributes[field.attribute]);
       return $filter('date')(display_time, 'HH:mm');
