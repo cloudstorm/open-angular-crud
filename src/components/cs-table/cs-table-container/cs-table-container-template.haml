@@ -7,7 +7,8 @@
                         "sort_" => "$ctrl.sort(column, direction)" }
     .cs-table-body
       %cs-table-row{ "ng-repeat" => "item in $ctrl.collection track by $index",
-                     "ng-class" => "{'selected-row' : $ctrl.csIndexOptions.selectedItem.id == item.id}",
+                     "ng-class" => "{'selected-row' : $ctrl.csIndexOptions.selectedItem.id == item.id,
+                                     'selectable-row' : $ctrl.csIndexOptions.selectedItem != null }",
                      "item" => "item",
                      "columns" => "$ctrl.columns",
                      "cs-index-options" => "$ctrl.csIndexOptions",

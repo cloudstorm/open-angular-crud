@@ -23,4 +23,10 @@
     font-size: larger;
     margin-top: 30px;
   }
+
+  .selectable-row:hover {
+    cursor: pointer;
+    background-color: #efefef!important;
+  }
+
 }
