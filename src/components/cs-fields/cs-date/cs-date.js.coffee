@@ -4,7 +4,7 @@ app = angular.module('cloudStorm.date', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csDate", ['uibDateParser', 'csSettings', 'csInputBase', (uibDateParser, csSettings, csInputBase) ->
+app.directive "csDate", ['uibDateParser', 'csSettings', 'csInputBase', '$filter', (uibDateParser, csSettings, csInputBase, $filter) ->
 
   # ===== COMPILE =============================================================
 
@@ -32,16 +32,8 @@ app.directive "csDate", ['uibDateParser', 'csSettings', 'csInputBase', (uibDateP
       date = uibDateParser.parse(input_date, format)
       date.setHours(14) if date # TODO: 14 is a timezone dependent value, see https://github.com/cloudstorm/cloudstorm/issues/44
       $scope.formItem.attributes[$scope.field.attribute] = date
-      $scope.input_date = getTextFormat(date)
-
-  getTextFormat = (date) ->
-
-    year = (date.getYear() + 1900).toString()
-    month = date.getMonth().toString()
-    month = if month.length == 1 then '0' + month else month
-    day = date.getDay().toString()
-    day = if day.length == 1 then '0' + day else day
-    year + "-" + month + "-" + day
+      # TODO: use moment.js
+      $scope.input_date = $filter('date')(date, format)
 
   link = ($scope, element, attrs, controller) ->
     $scope.i18n = csSettings.settings['i18n-engine']

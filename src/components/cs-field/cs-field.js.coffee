@@ -80,26 +80,26 @@ app.directive "csField", ['$compile', '$templateRequest', 'csInputBase', ($compi
         styleMap =
           required : "show",
           container : "container-vertical",
-          label : "field-1-vertical",
-          value : "field-2-vertical"
+          label : "field-vertical",
+          value : "value-vertical"
       when "create"
         styleMap =
           required : "show",
           container : "container-vertical",
-          label : "field-1-vertical",
-          value : "field-2-vertical",
+          label : "field-vertical",
+          value : "value-vertical"
       when "show"
       	styleMap =
           required : "hidden",
           container : "container-horizontal",
-          label : "field-1-horizontal",
-          value : "field-2-horizontal",
+          label : "label-horizontal",
+          value : "value-horizontal",
       when "tableView"
       	styleMap =
           required : "hidden",
           container : "container-horizontal",
           label : "hidden",
-          value : "field-2-horizontal",
+          value : "value-horizontal",
 
     $scope.CL = styleMap
     $scope.CL.containerStyle = if $scope.formMode == 'tableView' then 'cs-field-inner-table' else 'cs-field-inner-form'

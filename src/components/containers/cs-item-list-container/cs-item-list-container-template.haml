@@ -1,12 +1,12 @@
 .modal-header
-  %button.close{ "ng-click" => "$ctrl.close()"}
+  %button.close{ "ng-click" => "$ctrl.close()" }
     &times
   %h4.modal-title
     {{ $ctrl.UI.fieldName }}
 
 %cs-item-list{ "item" => "$ctrl.item",
-                "item-list" => "$ctrl.itemList",
-                "many" => "$ctrl.many",
-                "field" => "$ctrl.field",
-                "c-mode" => "$ctrl.cMode",
-                "key" => "$ctrl.key"}
+               "item-list" => "$ctrl.itemList",
+               "many" => "$ctrl.many",
+               "field" => "$ctrl.field",
+               "c-mode" => "$ctrl.cMode",
+               "key" => "$ctrl.key" }

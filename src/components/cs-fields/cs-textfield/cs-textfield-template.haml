@@ -7,7 +7,7 @@
                        "ng-required" => "fieldRequired()",
                        "ng-model" => "$parent.formItem.attributes[$parent.field.attribute]",
                        "ng-keyup" => "keyPressed($event)",
-                       type: "text" }
+                       "type" => "text" }
 
   %ui-select{ "ng-if" => "field.cardinality == 'many'",
               "ng-disabled" => "fieldDisabled()",
@@ -19,12 +19,12 @@
               "tagging-label" => "newTag" }
     %ui-select-match
       %span
-        {{$item}}
+        {{ $item }}
     %ui-select-choices{ :repeat => "item in []" }
 
 .form-control.no-cursor{ "ng-if" => "mode('show')",
                          "ng-model" => "$parent.formItem.attributes[$parent.field.attribute]",
                          "disabled" => true }
   {{ formItem.attributes[field.attribute] }}
-%div{ "ng-if" => "mode('tableView')"}
+%div{ "ng-if" => "mode('tableView')" }
   {{ formItem.attributes[field.attribute] }}
