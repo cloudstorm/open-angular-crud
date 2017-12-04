@@ -58,6 +58,15 @@ app.component('csTableContainer', {
         this.collection = csResourceFilter.filter(this.initialCollection, this.columns, filterValue)
       }
     }
+
+    this.clickRow = function(item){
+      //It works only in edit mode
+      if(this.csIndexOptions.selectedItem != null){
+        this.selectItem(item)
+      }
+    }
+
+
   },
   bindings : {
     resource : "<",
