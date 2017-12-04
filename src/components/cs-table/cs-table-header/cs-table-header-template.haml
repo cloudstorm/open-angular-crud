@@ -2,7 +2,9 @@
 .cs-table-header-cell{ "ng-repeat" => "column in $ctrl.columns track by $index",
                        "ng-if" => "$ctrl.columnVisible(column, $index)",
                        "ng-click" => "$ctrl.changeSorting(column)" }
-  {{column.label}}
-  %span.glyphicon.glyphicon-triangle-top{ "ng-if" => "$ctrl.csIndexOptions.sortAttribute==column.attribute && $ctrl.direction == 'asc'" }
-  %span.glyphicon.glyphicon-triangle-bottom{ "ng-if" => "$ctrl.csIndexOptions.sortAttribute==column.attribute && $ctrl.direction == 'desc'" }
+  .inline
+    {{column.label}}
+  .inline.arrow-container
+    %span.glyphicon.glyphicon-triangle-top{ "ng-if" => "$ctrl.csIndexOptions.sortAttribute==column.attribute && $ctrl.direction == 'asc'" }
+    %span.glyphicon.glyphicon-triangle-bottom{ "ng-if" => "$ctrl.csIndexOptions.sortAttribute==column.attribute && $ctrl.direction == 'desc'" }
 .cs-table-header-cell.actions{ "ng-hide" => "csIndexOptions['hide-actions']" }
