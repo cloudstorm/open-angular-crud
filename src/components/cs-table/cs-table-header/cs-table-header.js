@@ -11,7 +11,7 @@ app.component('csTableHeader', {
       this.selectedColumn = null
       this.direction = "asc"
       $element.addClass('cs-table-header')
-      this.sortReverse = true
+
     };
 
     this.changeSorting = function(column){
@@ -20,7 +20,7 @@ app.component('csTableHeader', {
         this.flipDirection()
       } else {
         this.selectedColumn = column
-        this.direction = "desc"
+        this.direction = "asc"
       }
       return this.sort_({column : column, direction : this.direction })
     }
