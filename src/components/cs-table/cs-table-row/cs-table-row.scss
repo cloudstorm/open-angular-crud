@@ -1,7 +1,7 @@
 @import '../../cs-index/cs-index-sidepanel/cs-index-sidepanel';
 
 
-div.table-striped > div.tBody>.cs-table-row:nth-of-type(odd){
+div.table-striped > div.cs-table-body > .cs-table-row:nth-of-type(odd){
   background-color: #f9f9f9;
 }
 
