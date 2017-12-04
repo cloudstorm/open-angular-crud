@@ -1,77 +1,10 @@
 /**
- * cloudstorm - v0.0.15 - 2017-11-22
+ * cloudstorm - v0.0.15 - 2017-12-04
  * https://github.com/cloudstorm/cloudstorm#readme
  *
  * Copyright (c) 2017 Virtual Solutions Ltd <info@cloudstorm.io>
  * Licensed MIT 
  */
-"use strict";
-var app;
-
-app = angular.module('cloudStorm.alertService', []);
-
-app.service('csAlertService', [
-  'csSettings', function(csSettings) {
-    this.i18n = csSettings.settings['i18n-engine'];
-    this.sequence = 0;
-    this.alerts = [];
-    this.getAlerts = function() {
-      if (this.alerts) {
-        return this.alerts;
-      } else {
-        return [];
-      }
-    };
-    this.timeoutForAlert = function(alert) {
-      switch (alert.type) {
-        case 'success':
-          return 3500;
-        case 'info':
-          return 3500;
-        case 'warning':
-          return 3500;
-        case 'danger':
-          return 3500;
-      }
-    };
-    this.addAlert = function(message, type) {
-      if (type == null) {
-        type = 'warning';
-      }
-      if (!this.alerts) {
-        this.alerts = [];
-      }
-      this.alerts.push({
-        id: this.sequence,
-        message: message,
-        type: type
-      });
-      return this.sequence++;
-    };
-    this.success = function(msgType) {
-      return this.addAlert(this.getText(msgType), 'success');
-    };
-    this.info = function(msgType) {
-      return this.addAlert(this.getText(msgType), 'info');
-    };
-    this.warning = function(msgType) {
-      return this.addAlert(this.getText(msgType), 'warning');
-    };
-    this.danger = function(msgType) {
-      return this.addAlert(customMessage || this.getText(msgType), 'danger');
-    };
-    this.getText = function(type) {
-      return this.i18n.t('alert.' + type) || 'translation missing';
-    };
-    this.dismissAlert = function(idToDismiss) {
-      return this.alerts = _.without(this.alerts, _.findWhere(this.alerts, {
-        id: idToDismiss
-      }));
-    };
-    return window.csAlerts = this;
-  }
-]);
-
 "use strict";
 var app;
 
@@ -116,8 +49,6 @@ app.directive("csField", [
     link = function($scope, element, attrs, controller) {
       var directiveName, innerElement, inputTemplate, override, styleMap, type, wrapperName;
       csInputBase($scope);
-      $scope.CL = {};
-      $scope.containerStyle = $scope.formMode === 'tableView' ? 'cs-field-inner-table' : 'cs-field-inner-form';
       if (($scope.field == null) && ($scope.fieldName != null)) {
         $scope.field = _.find($scope.formItem.constructor.descriptor.fields, {
           attribute: $scope.fieldName
@@ -173,37 +104,38 @@ app.directive("csField", [
       switch ($scope.formMode) {
         case "edit":
           styleMap = {
-            star: "show",
+            required: "show",
             container: "container-vertical",
-            field1: "field-1-vertical",
-            field2: "field-2-vertical"
+            label: "field-vertical",
+            value: "value-vertical"
           };
           break;
         case "create":
           styleMap = {
-            star: "show",
+            required: "show",
             container: "container-vertical",
-            field1: "field-1-vertical",
-            field2: "field-2-vertical"
+            label: "field-vertical",
+            value: "value-vertical"
           };
           break;
         case "show":
           styleMap = {
-            star: "hidden",
+            required: "hidden",
             container: "container-horizontal",
-            field1: "field-1-horizontal",
-            field2: "field-2-horizontal"
+            label: "label-horizontal",
+            value: "value-horizontal"
           };
           break;
         case "tableView":
           styleMap = {
-            star: "hidden",
+            required: "hidden",
             container: "container-horizontal",
-            field1: "hidden",
-            field2: "field-2-horizontal"
+            label: "hidden",
+            value: "value-horizontal"
           };
       }
-      $scope.styleMap = styleMap;
+      $scope.CL = styleMap;
+      $scope.CL.containerStyle = $scope.formMode === 'tableView' ? 'cs-field-inner-table' : 'cs-field-inner-form';
       $scope.$on('field-error', function(event, reason) {
         var errors;
         errors = reason.data.errors;
@@ -593,6 +525,9 @@ app.directive("csResourceInput", [
           return $scope.model.object = $scope.formItem.$association($scope.field);
         }
       });
+      $scope.selectItem = function() {
+        return console.log($scope.model);
+      };
       $scope.$on('form-reset', function() {
         return $scope.model = {
           object: $scope.formItem.$association($scope.field)
@@ -600,6 +535,12 @@ app.directive("csResourceInput", [
       });
       $rootScope.$on('form-submit', function(event, formItem) {
         var itemID;
+        if ($scope.formMode === "tableView") {
+          $scope.resource = ResourceService.get($scope.field.resource);
+          $scope.model = {
+            object: $scope.formItem.$association($scope.field)
+          };
+        }
         if (formItem.type === $scope.field.resource) {
           if (event.stopPropagation) {
             event.stopPropagation();
@@ -2512,7 +2453,7 @@ app.component('csItemListContainer', {
     modalInstance : "<",
   },
   templateUrl : "components/containers/cs-item-list-container/cs-item-list-container-template.html",
-  controller : function(csSettings){
+  controller : function(csSettings) {
 
     this.i18n = csSettings.settings['i18n-engine'];
 
@@ -2525,6 +2466,86 @@ app.component('csItemListContainer', {
   }
 
 })
+
+"use strict"
+
+app = angular.module('cloudStorm.alertService', [])
+
+// ===== SERVICE ===============================================================
+
+app.service('csAlertService', ['csSettings', function(csSettings){
+
+  this.i18n = csSettings.settings['i18n-engine'];
+
+  this.sequence = 0;
+
+  this.alerts = [];
+
+  this.getAlerts = function() {
+    if (this.alerts) {
+      return this.alerts;
+    } else {
+      return [];
+    }
+  };
+
+  this.timeoutForAlert = function(alert) {
+    switch (alert.type) {
+      case 'success':
+        return 3500;
+      case 'info':
+        return 3500;
+      case 'warning':
+        return 3500;
+      case 'danger':
+        return 3500;
+    }
+  };
+
+  this.addAlert = function(message, type) {
+    if (type == null) {
+      type = 'warning';
+    }
+    if (!this.alerts) {
+      this.alerts = [];
+    }
+    this.alerts.push({
+      id: this.sequence,
+      message: message,
+      type: type
+    });
+    return this.sequence++;
+  };
+
+  this.success = function(msgType, customMessage) {
+    return this.addAlert(customMessage || this.getText(msgType, customMessage), 'success');
+  };
+
+  this.info = function(msgType, customMessage) {
+    return this.addAlert(customMessage || this.getText(msgType, customMessage), 'info');
+  };
+
+  this.warning = function(msgType, customMessage) {
+    return this.addAlert(customMessage || this.getText(msgType, customMessage), 'warning');
+  };
+
+  this.danger = function(msgType, customMessage) {
+    return this.addAlert(customMessage || this.getText(msgType), 'danger');
+  };
+
+  this.getText = function(type, customMessage) {
+    return this.i18n.t('alert.' + type) || '\*translation missing';
+  };
+
+  this.dismissAlert = function(idToDismiss) {
+    return this.alerts = _.without(this.alerts, _.findWhere(this.alerts, {
+      id: idToDismiss
+    }));
+  };
+
+  window.csAlerts = this;
+
+}])
 
 'use string'
 
@@ -2687,16 +2708,17 @@ app.component('csIndex', {
     this.destroyItem = function($event, item) {
       var ref;
       $event.stopPropagation();
-      if (confirm((ref = this.i18n) != null ? ref.t('confirm.delete') : void 0)) {
+      if (confirm( this.i18n.t('confirm.delete'))) {
         return item.$destroy().then((function(result) {
           var index;
           this.csIndexOptions.selectedItem = null;
           index = this.collection.indexOf(item);
           return this.collection.splice(index, 1);
         }).bind(this), (function(reason) {
-          var alert, ref1, ref2;
-          alert = (ref1 = reason.data) != null ? ref1.errors[0].detail : void 0;
-          return csAlertService.addAlert(alert || ((ref2 = this.i18n) != null ? ref2.t('alert.error_happened') : void 0), 'danger');
+          var alert = null
+          if(reason.data)
+            alert = ref1.errors[0].detail
+          return csAlertService.danger("error_happened", alert)
         }).bind(this));
       }
     };
@@ -2879,19 +2901,18 @@ app.component("csItemList", {
     this.condition.noItem = (this.itemList.length == 0 && this.cMode != 'tableView')
     this.condition.tableMode = this.cMode == 'tableView'
 
-    var modalTemplate = `
-      <cs-item-list-container
-        modal-instance="$ctrl.modalInstance",
-        item="$ctrl.item",
-        item-list="$ctrl.itemList",
-        field="$ctrl.field",
-        many="$ctrl.many",
-        c-mode="'modal'",
-        key="$ctrl.key">
-      </cs-item-list-container>`;
+    var modalTemplate = "" +
+    "<cs-item-list-container  " +
+      "modal-instance=\"$ctrl.modalInstance\", " +
+      "item=\"$ctrl.item\", " +
+      "item-list=\"$ctrl.itemList\", " +
+      "field=\"$ctrl.field\", " +
+      "many=\"$ctrl.many\", " +
+      "c-mode=\"'modal'\", " +
+      "key=\"$ctrl.key\">  " +
+    " </cs-item-list-container>";
 
     this.showItems = function(){
-
       this.modalInstance = $uibModal.open({
         scope: $scope,
         keyboard: false,
@@ -3015,24 +3036,32 @@ app.component('csTableContainer', {
       return this.columnVisible_({column : column, index : index})
     }
 
-    this.changeSorting = function(column, reverse){
+    this.sort = function(column, direction){
 
       this.name = column.attribute
       this.csIndexOptions.sortAttribute = column.attribute
-      this.csIndexOptions.sortReverse = !this.csIndexOptions.sortReverse
       sortFieldComp = _.find(this.resource.descriptor.fields, {
         attribute: this.csIndexOptions.sortAttribute
       });
-      this.collection = csResourceFilter.sort(this.collection, sortFieldComp, reverse)
+      this.collection = csResourceFilter.sort(this.collection, sortFieldComp, direction)
     }
 
     this.filter = function(filterValue) {
       if(filterValue == ""){
         this.collection = this.initialCollection
       } else {
-        this.collection = csResourceFilter.filter(this.collection, this.columns, filterValue)
+        this.collection = csResourceFilter.filter(this.initialCollection, this.columns, filterValue)
       }
     }
+
+    this.clickRow = function(item){
+      //It works only in edit mode
+      if(this.csIndexOptions.selectedItem != null){
+        this.selectItem(item)
+      }
+    }
+
+
   },
   bindings : {
     resource : "<",
@@ -3053,29 +3082,39 @@ var app = angular.module('cloudStorm.tableHeader', [])
 app.component('csTableHeader', {
 
   templateUrl : 'components/cs-table/cs-table-header/cs-table-header-template.html',
-
   controller : function(csSettings, $filter, $element){
 
     this.$onInit = function() {
+      this.selectedColumn = null
+      this.direction = "asc"
       $element.addClass('cs-table-header')
       this.sortReverse = true
     };
 
     this.changeSorting = function(column){
-      this.sortReverse = ! this.sortReverse
-      return this.changeSorting_({column : column, reverse : this.sortReverse })
+
+      if(this.selectedColumn == column) {
+        this.flipDirection()
+      } else {
+        this.selectedColumn = column
+        this.direction = "desc"
+      }
+      return this.sort_({column : column, direction : this.direction })
+    }
+
+    this.flipDirection = function(){
+      this.direction = this.direction == "asc" ? "desc" : "asc"
     }
 
     this.columnVisible = function(column, index){
       return this.columnVisible_({column : column, index : index})
     }
   },
-
   bindings : {
     csIndexOptions : "=",
     columns : "<",
     columnVisible_ : "&",
-    changeSorting_ : "&",
+    sort_ : "&",
   },
 })
 
@@ -3173,7 +3212,7 @@ app.factory('csResourceFilter', function(csSettings){
 
   this.i18n = csSettings.settings['i18n-engine']
 
-  this.sort = function(array, column, desc){
+  this.sort = function(array, column, direction){
     var fieldValue;
     var array = _.sortBy(array, (function(item){
       fieldValue = this.fieldValue(item, column)
@@ -3182,7 +3221,7 @@ app.factory('csResourceFilter', function(csSettings){
       return fieldValue
     }).bind(this))
 
-    if(desc){
+    if(direction == "desc"){
       array = array.reverse()
     }
     return array
@@ -3544,13 +3583,13 @@ angular.module("components/cs-field/cs-field-template.html", []).run(["$template
   $templateCache.put("components/cs-field/cs-field-template.html",
     "<!-- CloudStorm Form Field component -->\n" +
     "<!-- Renders different kind of inputs for different types of items -->\n" +
-    "<div class='cs-field-inner' ng-class='containerStyle'>\n" +
-    "<div ng-class='style(&#39;container&#39;)'>\n" +
-    "<div class='inline label-container' ng-class='style(&#39;field1&#39;)'>\n" +
+    "<div class='cs-field-inner' ng-class='CL.containerStyle'>\n" +
+    "<div ng-class='CL.container'>\n" +
+    "<div class='inline label-container' ng-class='CL.label'>\n" +
     "<label class='control-label'>{{field.label}}</label>\n" +
-    "<span class='req-star' ng-class='style(&#39;star&#39;)' ng-if='field.required'>*</span>\n" +
+    "<span class='req-star' ng-class='CL.required' ng-if='field.required'>*</span>\n" +
     "</div>\n" +
-    "<div ng-class='style(&#39;field2&#39;)'>\n" +
+    "<div ng-class='CL.value'>\n" +
     "<div class='cs-input-wrapper'></div>\n" +
     "</div>\n" +
     "<span class='help-block' ng-if='field.errors.length &gt; 0'>\n" +
@@ -3655,9 +3694,9 @@ angular.module("components/cs-fields/cs-resource-input/cs-resource-input-templat
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "</div>\n" +
-    "<cs-item-list c-mode='formMode' field='field' item-list='model.object' key='resource.descriptor.fields[0].attribute' many='field.cardinality == &#39;many&#39;' ng-if='(mode(&#39;show&#39;) || mode(&#39;tableView&#39;))'></cs-item-list>\n" +
+    "<cs-item-list c-mode='formMode' field='field' item-list='model.object' key='resource.descriptor.fields[0].attribute' many='field.cardinality == &#39;many&#39;' ng-if='(mode(&#39;show&#39;) || mode(&#39;tableView&#39;))' optins='options'></cs-item-list>\n" +
     "<div class='input-group cs-resource-input-group' ng-if='(mode(&#39;create&#39;) || mode(&#39;edit&#39;)) &amp;&amp; field.cardinality == &#39;many&#39;'>\n" +
-    "<ui-select append-to-body='true' close-on-select='true' enable='false' multiple ng-disabled='fieldDisabled()' ng-model='model.object' ng-required='fieldRequired()' ui-select-override=''>\n" +
+    "<ui-select append-to-body='true' close-on-select='true' enable='false' multiple ng-disabled='fieldDisabled()' ng-model='model.object' ng-required='fieldRequired()' on-select='selectItem()' ui-select-override=''>\n" +
     "<ui-select-match ui-lock-choice='mode(&#39;show&#39;)'>\n" +
     "<span>\n" +
     "{{$item.$display_name()}}\n" +
@@ -3686,7 +3725,7 @@ angular.module("components/cs-fields/cs-textfield/cs-textfield-template.html", [
     "<ui-select multiple='' ng-disabled='fieldDisabled()' ng-if='field.cardinality == &#39;many&#39;' ng-model='$parent.formItem.attributes[$parent.field.attribute]' ng-required='fieldRequired()' tagging-label='newTag' tagging=''>\n" +
     "<ui-select-match>\n" +
     "<span>\n" +
-    "{{$item}}\n" +
+    "{{ $item }}\n" +
     "</span>\n" +
     "</ui-select-match>\n" +
     "<ui-select-choices repeat='item in []'></ui-select-choices>\n" +
@@ -3863,12 +3902,13 @@ angular.module("components/cs-menu/cs-menu-template.html", []).run(["$templateCa
 angular.module("components/cs-table/cs-table-container/cs-table-container-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-table/cs-table-container/cs-table-container-template.html",
     "<div class='table-responsive'>\n" +
-    "<div class='tTable table table-striped table-hover'>\n" +
-    "<div class='tBody'>\n" +
-    "<cs-table-header change-sorting_='$ctrl.changeSorting(column, reverse)' column-visible_='$ctrl.columnVisible(column, index)' columns='$ctrl.columns' cs-index-options='$ctrl.csIndexOptions'></cs-table-header>\n" +
+    "<div class='cs-table table table-striped table-hover'>\n" +
+    "<div class='cs-table-body'>\n" +
+    "<cs-table-header column-visible_='$ctrl.columnVisible(column, index)' columns='$ctrl.columns' cs-index-options='$ctrl.csIndexOptions' sort_='$ctrl.sort(column, direction)'></cs-table-header>\n" +
     "</div>\n" +
-    "<div class='tBody'>\n" +
-    "<cs-table-row columns='$ctrl.columns' cs-index-options='$ctrl.csIndexOptions' destroy-item_='$ctrl.destroyItem(event, item)' item='item' ng-class='{&#39;selected-row&#39; : $ctrl.csIndexOptions.selectedItem.id == item.id}' ng-repeat='item in $ctrl.collection track by $index' select-item_='$ctrl.selectItem(item)' show-item_='$ctrl.showItem(item)'></cs-table-row>\n" +
+    "<div class='cs-table-body'>\n" +
+    "<cs-table-row columns='$ctrl.columns' cs-index-options='$ctrl.csIndexOptions' destroy-item_='$ctrl.destroyItem(event, item)' item='item' ng-class='{&#39;selected-row&#39; : $ctrl.csIndexOptions.selectedItem.id == item.id,\n" +
+    "&#39;selectable-row&#39; : $ctrl.csIndexOptions.selectedItem != null }' ng-click='$ctrl.clickRow(item)' ng-repeat='item in $ctrl.collection track by $index' select-item_='$ctrl.selectItem(item)' show-item_='$ctrl.showItem(item)'></cs-table-row>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -3883,12 +3923,16 @@ angular.module("components/cs-table/cs-table-container/cs-table-container-templa
 angular.module("components/cs-table/cs-table-header/cs-table-header-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-table/cs-table-header/cs-table-header-template.html",
     "<!-- .tRow is the style of the component template -->\n" +
-    "<div class='tHCell' ng-click='$ctrl.changeSorting(column)' ng-if='$ctrl.columnVisible(column, $index)' ng-repeat='column in $ctrl.columns track by $index'>\n" +
+    "<div class='cs-table-header-cell' ng-click='$ctrl.changeSorting(column)' ng-if='$ctrl.columnVisible(column, $index)' ng-repeat='column in $ctrl.columns track by $index'>\n" +
+    "<div class='inline'>\n" +
     "{{column.label}}\n" +
-    "<span class='glyphicon glyphicon-triangle-top' ng-if='$ctrl.csIndexOptions.sortAttribute==column.attribute &amp;&amp; !$ctrl.csIndexOptions.sortReverse'></span>\n" +
-    "<span class='glyphicon glyphicon-triangle-bottom' ng-if='$ctrl.csIndexOptions.sortAttribute==column.attribute &amp;&amp; $ctrl.csIndexOptions.sortReverse'></span>\n" +
     "</div>\n" +
-    "<div class='tHCell actions' ng-hide='csIndexOptions[&#39;hide-actions&#39;]'></div>\n" +
+    "<div class='inline arrow-container'>\n" +
+    "<span class='glyphicon glyphicon-triangle-top' ng-if='$ctrl.csIndexOptions.sortAttribute==column.attribute &amp;&amp; $ctrl.direction == &#39;asc&#39;'></span>\n" +
+    "<span class='glyphicon glyphicon-triangle-bottom' ng-if='$ctrl.csIndexOptions.sortAttribute==column.attribute &amp;&amp; $ctrl.direction == &#39;desc&#39;'></span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class='cs-table-header-cell actions' ng-hide='csIndexOptions[&#39;hide-actions&#39;]'></div>\n" +
     "");
 }]);
 

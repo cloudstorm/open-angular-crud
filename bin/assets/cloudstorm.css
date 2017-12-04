@@ -33,17 +33,17 @@
 .cs-field .container-vertical {
   display: flex;
   flex-direction: column; }
-.cs-field .field-1-vertical {
+.cs-field .label-vertical {
   flex: 1; }
-.cs-field .field-2-vertical {
+.cs-field .value-vertical {
   flex: 2; }
 .cs-field .container-horizontal {
   align-items: center;
   display: flex;
   flex-direction: row; }
-.cs-field .field-1-horizontal {
+.cs-field .label-horizontal {
   flex: 1; }
-.cs-field .field-2-horizontal {
+.cs-field .value-horizontal {
   flex: 2; }
 .cs-field .inline {
   display: flex; }
@@ -195,18 +195,17 @@ body > .ui-select-bootstrap.open {
   text-align: center;
   padding: 2px 4px; }
 .cs-item-list .single-item:hover {
-  cursor: pointer; }
+  cursor: pointer;
+  text-decoration: underline; }
 .cs-item-list .singe-item-container {
   background-color: #eeeeee; }
 .cs-item-list .singe-item-container:hover {
   border: 1px solid #333333; }
 .cs-item-list .no-item {
-  color: #b11c1c;
+  color: #929292;
   font-size: 13px;
   font-style: italic;
-  padding-left: 3px;
-  margin-bottom: 14px;
-  margin-left: 6px; }
+  padding-left: 3px; }
 
 .cs-menu .flex {
   display: flex; }
@@ -264,7 +263,7 @@ body > .ui-select-bootstrap.open {
       width: 502px; } }
 .cs-table-header {
   display: table-row; }
-  .cs-table-header .tHCell {
+  .cs-table-header .cs-table-header-cell {
     display: table-cell;
     border-top: 0;
     vertical-align: bottom;
@@ -275,6 +274,10 @@ body > .ui-select-bootstrap.open {
     font-weight: bold;
     cursor: pointer;
     white-space: nowrap; }
+  .cs-table-header .inline {
+    display: inline-block; }
+  .cs-table-header .arrow-container {
+    width: 15px; }
 
 .cs-index-sidepanel {
   position: fixed;
@@ -308,7 +311,7 @@ body > .ui-select-bootstrap.open {
       left: 478px; }
     .cs-index-sidepanel .cs-wizard {
       width: 502px; } }
-div.table-striped > div.tBody > .cs-table-row:nth-of-type(odd) {
+div.table-striped > div.cs-table-body > .cs-table-row:nth-of-type(odd) {
   background-color: #f9f9f9; }
 
 .cs-table-row {
@@ -377,9 +380,9 @@ div.table-striped > div.tBody > .cs-table-row:nth-of-type(odd) {
       width: 502px; } }
 .cs-table-container div.tTable > div.tBody > .cs-table-row.selected-row {
   background-color: #d9edf7; }
-.cs-table-container .tTable {
+.cs-table-container .cs-table {
   display: table; }
-.cs-table-container .tBody {
+.cs-table-container .cs-table-body {
   display: table-row-group; }
 .cs-table-container .no-result {
   width: 100%;
@@ -388,6 +391,9 @@ div.table-striped > div.tBody > .cs-table-row:nth-of-type(odd) {
   font-style: italic;
   font-size: larger;
   margin-top: 30px; }
+.cs-table-container .selectable-row:hover {
+  cursor: pointer;
+  background-color: #efefef !important; }
 
 .cs-wizard {
   position: relative;
