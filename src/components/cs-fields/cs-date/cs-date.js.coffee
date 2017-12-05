@@ -53,6 +53,7 @@ csSettings, csInputBase, $filter) ->
     $scope.$watch 'formItem.attributes[field.attribute]', (newValue, oldValue) ->
       if (newValue != oldValue)
         $scope.$emit 'input-value-changed', $scope.field
+        format_date($scope)
 
 
   # ===== CONFIGURE ===========================================================
@@ -77,9 +78,6 @@ csSettings, csInputBase, $filter) ->
         if (newValue != oldValue)
           format_date($scope)
 
-      $scope.$watch 'formItem.attributes[field.attribute + \'dateFormat\']', (newValue, oldValue) ->
-        if (newValue != oldValue)
-          format_date($scope)
     ]
 
   }
