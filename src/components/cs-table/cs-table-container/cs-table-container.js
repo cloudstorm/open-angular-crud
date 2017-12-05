@@ -6,7 +6,7 @@ app.component('csTableContainer', {
 
   templateUrl : 'components/cs-table/cs-table-container/cs-table-container-template.html',
 
-  controller : function($scope, csSettings, $filter, $element, csResourceFilter){
+  controller : ['$scope','csSettings','$filter','$element','csResourceFilter', function($scope, csSettings, $filter, $element, csResourceFilter){
 
     this.$onInit = function() {
       this.initialCollection = this.collection
@@ -15,8 +15,8 @@ app.component('csTableContainer', {
 
     this.i18n = csSettings.settings['i18n-engine'];
 
-    this.$onChanges = function(changesObj){
-      //It is not called unfortunately
+    this.$onChanges = function(changesObj) {
+      this.initialCollection = this.collection
     }
 
     $scope.$on('filterValue', (function(event, args){
@@ -56,10 +56,10 @@ app.component('csTableContainer', {
     }
 
     this.filter = function(filterValue) {
-      if(filterValue == ""){
-        this.collection = this.initialCollection
+      if(filterValue == "") {
+        this.collection = this.initialCollection;
       } else {
-        this.collection = csResourceFilter.filter(this.initialCollection, this.columns, filterValue)
+        this.collection = csResourceFilter.filter(this.initialCollection, this.columns, filterValue);
       }
     }
 
@@ -71,7 +71,7 @@ app.component('csTableContainer', {
     }
 
 
-  },
+  } ],
   bindings : {
     resource : "<",
     collection : "<",

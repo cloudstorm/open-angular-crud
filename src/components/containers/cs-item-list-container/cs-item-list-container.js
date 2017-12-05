@@ -16,15 +16,15 @@ app.component('csItemListContainer', {
   },
   templateUrl : "components/containers/cs-item-list-container/cs-item-list-container-template.html",
   controller : function(csSettings) {
+    this.$onInit = function() {
+      this.i18n = csSettings.settings['i18n-engine'];
 
-    this.i18n = csSettings.settings['i18n-engine'];
+      this.UI = {};
+      this.UI.fieldName = this.field.attribute;
 
-    this.UI = {}
-    this.UI.fieldName = this.field.attribute
-
-    this.close = function(){
-      this.modalInstance.close()
-    }
+      this.close = function() {
+        this.modalInstance.close();
+      };
+    };
   }
-
-})
+});

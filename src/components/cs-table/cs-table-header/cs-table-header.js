@@ -5,7 +5,7 @@ var app = angular.module('cloudStorm.tableHeader', [])
 app.component('csTableHeader', {
 
   templateUrl : 'components/cs-table/cs-table-header/cs-table-header-template.html',
-  controller : function(csSettings, $filter, $element){
+  controller : [ 'csSettings','$filter','$element', function(csSettings, $filter, $element){
 
     this.$onInit = function() {
       this.selectedColumn = null
@@ -43,7 +43,7 @@ app.component('csTableHeader', {
         && this.direction == 'desc')
     }
 
-  },
+  }],
   bindings : {
     csIndexOptions : "=",
     columns : "<",

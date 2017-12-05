@@ -4,39 +4,52 @@ var app = angular.module('cloudStorm.filterRow', [])
 
 app.component('csFilterRow', {
 
-    bindings : {
-      resource : "<",
-      filterValue : "<",
-      filter : "&",
-      openNewResourcePanel : "&",
-      refreshIndex : "&",
-    },
+  bindings : {
+    resource : "<",
+    filterValue : "<",
+    filter : "&",
+    openNewResourcePanel : "&",
+    refreshIndex : "&",
+  },
 
-    templateUrl : "components/cs-filter-row/cs-filter-row-template.html",
+  templateUrl : "components/cs-filter-row/cs-filter-row-template.html",
 
-    controller : function($element, csSettings){
+  controller : [ '$element','csSettings', 'csDescriptorService', function($element, csSettings, csDescriptorService) {
 
-      this.$onInit = function(){
-        $element.addClass('cs-filter-row')
-        this.filterVal = ""
-        this.header  = this.resource.descriptor.name
-        this.subHeader  = this.resource.descriptor.hint
-        this.createDisabled = this.resource.descriptor.create_disabled
+    var vm = this;
+
+    this.$onInit = function() {
+      csDescriptorService.getPromises().then( function() {
+        $element.addClass('cs-filter-row');
+        vm.filterVal = "";
+        if (vm.resource) {
+          vm.header  = vm.resource.descriptor.name;
+          vm.subHeader  = vm.resource.descriptor.hint;
+          vm.createDisabled = vm.resource.descriptor.create_disabled;
+        }
+      });
+    };
+
+    this.i18n = csSettings.settings['i18n-engine'];
+
+    this.changeInFilter = function() {
+      this.filter({ filterValue : this.filterValue })
+    };
+
+    this.openNewResourcePanel_ = function() {
+      this.openNewResourcePanel();
+    };
+
+    this.refreshIndex_ = function() {
+      this.refreshIndex();
+    };
+
+    this.$onChanges = function (changesObj) {
+      if (vm.resource) {
+        vm.header  = vm.resource.descriptor.name;
+        vm.subHeader  = vm.resource.descriptor.hint;
+        vm.createDisabled = vm.resource.descriptor.create_disabled;
       }
-
-      this.i18n = csSettings.settings['i18n-engine']
-
-      this.changeInFilter = function(){
-        this.filter({ filterValue : this.filterValue })
-      }
-
-      this.openNewResourcePanel_ = function(){
-        this.openNewResourcePanel();
-      }
-
-      this.refreshIndex_ = function(){
-        this.refreshIndex();
-      }
-
-    }
-})
+    };
+  }]
+});

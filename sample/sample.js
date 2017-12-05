@@ -7,6 +7,7 @@ app.controller('MainCtrl', function($scope, csAlertService, csDescriptorService,
   csDescriptorService.registerDescriptorUrl('resourceDescriptors/itemResourceDescriptor.json');
   csDescriptorService.registerDescriptorUrl('resourceDescriptors/categoryResourceDescriptor.json');
   csDescriptorService.registerDescriptorUrl('resourceDescriptors/userResourceDescriptor.json');
-  csRoute.setState($state)
+
+  csRoute.init();
 
 });

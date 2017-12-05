@@ -4,7 +4,7 @@ var app;
 
 app = angular.module('cloudStorm.resourceFilter', [])
 
-app.factory('csResourceFilter', function(csSettings){
+app.factory('csResourceFilter', [ 'csSettings','$filter', function(csSettings, $filter) {
 
   this.i18n = csSettings.settings['i18n-engine']
 
@@ -80,7 +80,7 @@ app.factory('csResourceFilter', function(csSettings){
       return $filter('date')(display_time, 'HH:mm');
     } else if (field.type === 'datetime') {
       display_date = new Date(item.attributes[field.attribute]);
-      return $filter('date')(display_date, 'EEEE, MMMM d, y HH:mm');
+      return $filter('date')(display_date, 'YYYY-MM-DD HH:mm');
     } else if (field.type === 'date') {
       var date = item.attributes[field.attribute]
       if( date != null && (typeof date) == "object"){
@@ -94,4 +94,4 @@ app.factory('csResourceFilter', function(csSettings){
   };
 
   return this;
-})
+}])

@@ -4,7 +4,7 @@ app = angular.module('cloudStorm.menu', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csMenu", ['ResourceService', 'csDescriptorService', 'csRoute', (ResourceService, csDescriptorService, csRoute) ->
+app.directive "csMenu", ['ResourceService', 'csDescriptorService', 'csRoute', 'csSettings',  (ResourceService, csDescriptorService, csRoute, csSettings) ->
 
   # ===== COMPILE =============================================================
 
@@ -29,7 +29,7 @@ app.directive "csMenu", ['ResourceService', 'csDescriptorService', 'csRoute', (R
         $scope.resources = ResourceService.getResources()
         $scope.$apply()
 
-      $scope.title = "Sample application"
+      $scope.title = csSettings.settings['app-title']
       $scope.selected = null
       $scope.isSelected = (type) ->
         return (type == $scope.selected)

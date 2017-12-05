@@ -1,4 +1,4 @@
-.container-flex
+.container-flex{ "ng-if" => "mode('edit') || mode('create')" }
   %input.form-control.first{ "uib-datepicker-popup" => "",
                              "datepicker-options" => "{startingDay: 1, showWeeks: false}",
                              "datepicker-append-to-body" => "true",
@@ -19,3 +19,9 @@
         "ng-required" => "fieldRequired()",
         "ng-model" => "formItem.attributes[field.attribute]",
         "ng-model-options" => "getModelOptions()"}
+
+.form-control.no-cursor{ "ng-if" => "mode('show')",
+                         "disabled" => "true"  }
+  {{ input_date }}
+.no-wrap{ "ng-if" => "mode('tableView')" }
+  {{ input_date }}

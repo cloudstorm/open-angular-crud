@@ -48,6 +48,7 @@ app.directive "csField", ['$compile', '$templateRequest', 'csInputBase', ($compi
         when type == 'resource' then 'cs-resource-input'
         when type == 'string'   then 'cs-textfield'
         when type == 'time'     then 'cs-time'
+        when type == 'code'     then 'cs-code'
 
     wrapperName = ".cs-input-wrapper"
     inputTemplate = "<#{directiveName} form-item='formItem'

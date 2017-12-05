@@ -11,17 +11,17 @@ app.component("csPageRouter", {
         pageType : "<",
     },
     templateUrl : "cs-route-provider/router-component/cs-page-router-template.html",
-    controller : function($scope, csRoute, ResourceService, csDescriptorService, csAlertService){
-
-        this.testValue = "InitialValue"
+    controller : [ '$scope','csRoute','ResourceService','csDescriptorService','csAlertService', function($scope, csRoute, ResourceService, csDescriptorService, csAlertService){
         this.loading = true
         this.errors = []
-
         this.validCommands = ["edit","show"]
         //getDataLoaderObject(this, descriptor)["index"].call()
-        this.init = function (){
+        this.init = function () {
             switch (this.pageType) {
-              case "index": this.resource_index(); break;
+              case "index":
+                this.resource_index();
+                break;
+
               case "cmd":
                 if(this.validCommands.indexOf(this.cmd) == -1){
                   this.errors.push("\"" + this.cmd + "\" is not a valid command");
@@ -38,8 +38,10 @@ app.component("csPageRouter", {
                   this.resource_id();
                 }
                 break;
+
               default:
                 this.errors.push("This is not a valid URL");
+                console.log(this.pageType, this)
                 this.finished()
                 break;
             }
@@ -135,10 +137,15 @@ app.component("csPageRouter", {
             }
           }
           this.loading = false
+          // TODO: double-check wheter this could be avoided
           $scope.$apply()
-      }
-      this.init()
-    }
+        }
+
+        var vm = this;
+        this.$onInit = function () {
+          vm.init();
+        }
+    }]
 })
 
 /*

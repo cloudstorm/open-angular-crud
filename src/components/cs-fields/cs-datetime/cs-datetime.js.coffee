@@ -4,7 +4,7 @@ app = angular.module('cloudStorm.datetime', ['ui.bootstrap'])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csDatetime", ['uibDateParser', 'csSettings', 'csInputBase', (uibDateParser, csSettings, csInputBase) ->
+app.directive "csDatetime", ['uibDateParser', 'csSettings', 'csInputBase', '$filter', (uibDateParser, csSettings, csInputBase, $filter) ->
 
   # ===== COMPILE =============================================================
 
@@ -33,6 +33,7 @@ app.directive "csDatetime", ['uibDateParser', 'csSettings', 'csInputBase', (uibD
         # console.log(input_date)
         date = uibDateParser.parse(new Date(input_date), date_format)
         $scope.formItem.attributes[$scope.field.attribute] = date
+        $scope.input_date = $filter('date')(date, 'EEEE, MMMM d, y HH:mm')
 
   link = ($scope, element, attrs, controller) ->
     $scope.i18n = csSettings.settings['i18n-engine']
@@ -46,7 +47,7 @@ app.directive "csDatetime", ['uibDateParser', 'csSettings', 'csInputBase', (uibD
     $scope.$watch 'formItem.attributes[field.attribute]', (newValue, oldValue) ->
       if (newValue != oldValue)
         $scope.$emit 'input-value-changed', $scope.field
-        format_date($scope)
+        # format_date($scope)
 
   # ===== CONFIGURE ===========================================================
 

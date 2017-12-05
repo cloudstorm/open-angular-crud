@@ -1,4 +1,10 @@
-%input.form-control{ "ng-disabled" => "fieldDisabled()",
+%input.form-control{ "ng-if" => "mode('create') || mode('edit')",
+                     "ng-disabled" => "fieldDisabled()",
                      "ng-required" => "fieldRequired()",
-            		     "ng-model" => "formItem.attributes[field.attribute]", 
+            		     "ng-model" => "formItem.attributes[field.attribute]",
                      type: "number" }
+.form-control.no-cursor{ "ng-if" => "mode('show')",
+                         "disabled" => "true"  }
+  {{ formItem.attributes[field.attribute] }}
+.no-wrap{ "ng-if" => "mode('tableView')" }
+  {{ formItem.attributes[field.attribute] }}

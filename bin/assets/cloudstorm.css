@@ -10,6 +10,9 @@
 .text-center {
   text-align: center; }
 
+.auto-height {
+  height: auto !important; }
+
 .cs-alert {
   position: fixed;
   width: 30%;
@@ -23,8 +26,8 @@
     box-shadow: 7px 7px 30px 0px rgba(50, 50, 50, 0.4); }
 
 .cs-field .cs-field-inner-form {
-  position: relative;
-  margin: 16px 0; }
+  margin: 16px 0;
+  position: relative; }
 .cs-field .cs-field-inner-table {
   margin: 4px 0;
   position: relative; }
@@ -168,7 +171,7 @@ body > .ui-select-bootstrap.open {
   flex-direction: column;
   margin: 10px auto; }
 .cs-item-list .show-mode {
-  border: 1px solid #BBBBBB;
+  border: 1px solid #bbbbbbb;
   border-radius: 5px;
   flex-direction: row;
   justify-content: space-around;
@@ -180,7 +183,7 @@ body > .ui-select-bootstrap.open {
   flex: 1;
   color: #555555;
   border-radius: 4px;
-  border: 1px solid #CCCCCC;
+  border: 1px solid #cccccc;
   background-color: #eeeeee;
   text-align: center;
   white-space: nowrap; }

@@ -2,12 +2,14 @@ var app = angular.module('cloudStormSample', [
   'cloudStorm',
 ])
 
-app.controller('MainCtrl', function($scope, csAlertService, csDescriptorService, csRoute, $state) {
+app.controller('MainCtrl', function($scope, csAlertService, csDescriptorService) {
 
   csDescriptorService.registerDescriptorUrl('resourceDescriptors/itemResourceDescriptor.json');
   csDescriptorService.registerDescriptorUrl('resourceDescriptors/categoryResourceDescriptor.json');
   csDescriptorService.registerDescriptorUrl('resourceDescriptors/userResourceDescriptor.json');
 
-  csRoute.init();
+  csAlertService.addAlert('Welcome to CloudStorm', 'info');
+
+  $scope.resourceType = 'items';
 
 });

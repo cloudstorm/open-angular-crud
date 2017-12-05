@@ -30,7 +30,11 @@ app.service 'csDescriptorService', [ '$q', '$http', 'ResourceService', 'csResour
         'Accept': 'application/json'
 
     descriptorPromise = $http(request).then( (response) =>
-      @registerDescriptor(response.data);
+      typeIsArray = Array.isArray || ( value ) -> return {}.toString.call( value ) is '[object Array]'
+      if typeIsArray response.data
+        response.data.forEach (descriptor) => @registerDescriptor(descriptor);
+      else
+        @registerDescriptor(response.data);
     ).catch( (response) =>
       console.log("CS-002: Error while receiving descriptor from '#{descriptorUrl}'")
     );

@@ -7,16 +7,7 @@ app.provider 'csRoute', ['$stateProvider', 'csSettingsProvider', ($stateProvider
   @state
 
   @go = (type, params, options) ->
-    @state.go(type, params, options)
-
-  @transitionTo = (type, params) ->
-
-    @state.go(type, params, {
-      location: true,
-      reload : false,
-      inherit: true,
-      relative: @state.$current,
-      notify: false})
+    @state.go(csSettingsProvider.settings['router-path-prefix'] + type, params, options)
 
   @setState = (state) ->
     @state = state
@@ -27,8 +18,9 @@ app.provider 'csRoute', ['$stateProvider', 'csSettingsProvider', ($stateProvider
   @$get = ->
     @
 
-  for state in csSettingsProvider.states
-    @addState state
+  @init = ->
+    for state in csSettingsProvider.settings['router-states']()
+      @setState (@addState state).$get()
 
   return
 

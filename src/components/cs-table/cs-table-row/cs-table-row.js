@@ -6,7 +6,7 @@ app.component('csTableRow', {
 
   templateUrl : 'components/cs-table/cs-table-row/cs-table-row-template.html',
 
-  controller : function(csSettings, $filter, $element){
+  controller : [ 'csSettings','$filter','$element', function(csSettings, $filter, $element){
 
     this.i18n = csSettings.settings['i18n-engine']
 
@@ -74,7 +74,7 @@ app.component('csTableRow', {
         return item.attributes[field.attribute];
       }
     };
-  },
+  }],
   bindings : {
     item : "<",
     csIndexOptions : "=",

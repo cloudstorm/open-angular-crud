@@ -10,6 +10,7 @@ app = angular.module 'cloudStorm', [
   'cloudStorm.date'
   'cloudStorm.time'
   'cloudStorm.datetime'
+  'cloudStorm.code'
   'cloudStorm.enum'
   'cloudStorm.field'
   'cloudStorm.filterRow'
