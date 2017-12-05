@@ -114,7 +114,6 @@ app.component('csIndex', {
     };
 
     this.destroyItem = function($event, item) {
-      var ref;
       $event.stopPropagation();
       if (confirm( this.i18n.t('confirm.delete'))) {
         return item.$destroy().then((function(result) {
@@ -124,8 +123,8 @@ app.component('csIndex', {
           return this.collection.splice(index, 1);
         }).bind(this), (function(reason) {
           var alert = null
-          if(reason.data)
-            alert = ref1.errors[0].detail
+          if(reason && reason.data && reason.data.errors && reason.data.errors[0])
+            alert = reason.data.errors[0].detail
           return csAlertService.danger("error_happened", alert)
         }).bind(this));
       }
@@ -179,12 +178,10 @@ app.component('csIndex', {
         "reset-on-submit": true,
         "events": {
           'wizard-canceled': (function(resource) {
-            var ref;
             modalInstance.close();
             return csAlertService.info('no_resource_created')
           }).bind(this),
           'wizard-submited': (function(resource) {
-            var ref;
             this.pushNewItem(this.collection, resource);
             if (!this.wizardOptions['keep-first']) {
               modalInstance.close();
