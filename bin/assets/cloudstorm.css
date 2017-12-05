@@ -13,6 +13,9 @@
 .auto-height {
   height: auto !important; }
 
+.pointer-cursor {
+  cursor: pointer; }
+
 .cs-alert {
   position: fixed;
   width: 30%;

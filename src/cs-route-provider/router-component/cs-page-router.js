@@ -41,7 +41,6 @@ app.component("csPageRouter", {
 
               default:
                 this.errors.push("This is not a valid URL");
-                console.log(this.pageType, this)
                 this.finished()
                 break;
             }

@@ -1,0 +1,9 @@
+.modal-header
+  %button.close{ "ng-click" => "$ctrl.close()" }
+    &times
+  %h4.modal-title
+    {{ $ctrl.UI.title }}
+.modal-body
+  %pre
+    %code
+      {{ $ctrl.UI.content }}

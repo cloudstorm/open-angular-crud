@@ -252,7 +252,7 @@ var app;
 app = angular.module('cloudStorm.code', ['ui.select']);
 
 app.directive("csCode", [
-  '$rootScope', 'csTemplateService', 'csInputBase', function($rootScope, csTemplateService, csInputBase) {
+  '$rootScope', 'csTemplateService', 'csInputBase', '$uibModal', function($rootScope, csTemplateService, csInputBase, $uibModal) {
     var compile, format_code, link;
     compile = function($templateElement, $templateAttributes) {
       $templateElement.addClass("cs-code");
@@ -262,12 +262,25 @@ app.directive("csCode", [
       };
     };
     format_code = function($scope) {
-      var e, error;
+      var codeString, e, error;
+      codeString = $scope.formItem.attributes[$scope.field.attribute] || 'null';
       try {
-        return $scope.formatted_code = JSON.stringify(JSON.parse($scope.formItem.attributes[$scope.field.attribute]), null, '  ');
+        if (typeof codeString === 'string') {
+          codeString = JSON.stringify(JSON.parse($scope.formItem.attributes[$scope.field.attribute]), null, '  ');
+        } else {
+          codeString = JSON.stringify($scope.formItem.attributes[$scope.field.attribute], null, ' ');
+        }
       } catch (error) {
         e = error;
-        return $scope.formatted_code = $scope.formItem.attributes[$scope.field.attribute];
+        codeString = $scope.formItem.attributes[$scope.field.attribute] || 'null';
+      }
+      $scope.formatted_code = codeString;
+      if (codeString.length > 10) {
+        $scope.formatted_code_short = codeString.substring(0, 10) + '\n...';
+        return $scope.trimmed = true;
+      } else {
+        $scope.formatted_code_short = codeString;
+        return $scope.trimmed = false;
       }
     };
     link = function($scope, element, attrs, controller) {
@@ -284,6 +297,16 @@ app.directive("csCode", [
         if ($event.keyCode === 13) {
           return $scope.$emit('submit-form-on-enter', $scope.field);
         }
+      };
+      $scope.showFullCode = function($event) {
+        var modalTemplate;
+        modalTemplate = "" + "<cs-full-code " + "modal-instance=\"modalInstance\", " + "content=\"formatted_code\", " + "title=\"field.attribute\" " + " </cs-full-code>";
+        return $scope.modalInstance = $uibModal.open({
+          scope: $scope,
+          keyboard: false,
+          backdrop: 'static',
+          template: modalTemplate
+        });
       };
     };
     return {
@@ -2528,7 +2551,7 @@ app.component("csLoader", {
 });
 var app;
 
-app = angular.module('cloudStorm', ['cloudStorm.alertService', 'cloudStorm.alert', 'cloudStorm.field', 'cloudStorm.form', 'cloudStorm.wizard', 'cloudStorm.itemListContainer', 'cloudStorm.checkbox', 'cloudStorm.menu', 'cloudStorm.date', 'cloudStorm.time', 'cloudStorm.datetime', 'cloudStorm.code', 'cloudStorm.enum', 'cloudStorm.field', 'cloudStorm.filterRow', 'cloudStorm.form', 'cloudStorm.index', 'cloudStorm.index.sidePanel', 'cloudStorm.itemList', 'cloudStorm.main', 'cloudStorm.menu', 'cloudStorm.number', 'cloudStorm.resourceInput', 'cloudStorm.textfield', 'cloudStorm.tableHeader', 'cloudStorm.tableRow', 'cloudStorm.tableContainer', 'cloudStorm.inputBase', 'cloudStorm.dataStore', 'cloudStorm.localizationProvider', 'cloudStorm.resource', 'cloudStorm.resourceService', 'cloudStorm.restApi', 'cloudStorm.resourceFilter', 'cloudStorm.settings', 'cloudStorm.templateService', 'cloudStorm.templates', 'cloudStorm.descriptorService', 'ui.router', 'cloudStorm.routeProvider', 'ui.bootstrap', 'cloudStorm.loader', 'cloudStorm.error', 'cloudStorm.uiPageRouter']);
+app = angular.module('cloudStorm', ['cloudStorm.alertService', 'cloudStorm.alert', 'cloudStorm.field', 'cloudStorm.form', 'cloudStorm.wizard', 'cloudStorm.itemListContainer', 'cloudStorm.checkbox', 'cloudStorm.menu', 'cloudStorm.date', 'cloudStorm.time', 'cloudStorm.datetime', 'cloudStorm.code', 'cloudStorm.fullCode', 'cloudStorm.enum', 'cloudStorm.field', 'cloudStorm.filterRow', 'cloudStorm.form', 'cloudStorm.index', 'cloudStorm.index.sidePanel', 'cloudStorm.itemList', 'cloudStorm.main', 'cloudStorm.menu', 'cloudStorm.number', 'cloudStorm.resourceInput', 'cloudStorm.textfield', 'cloudStorm.tableHeader', 'cloudStorm.tableRow', 'cloudStorm.tableContainer', 'cloudStorm.inputBase', 'cloudStorm.dataStore', 'cloudStorm.localizationProvider', 'cloudStorm.resource', 'cloudStorm.resourceService', 'cloudStorm.restApi', 'cloudStorm.resourceFilter', 'cloudStorm.settings', 'cloudStorm.templateService', 'cloudStorm.templates', 'cloudStorm.descriptorService', 'ui.router', 'cloudStorm.routeProvider', 'ui.bootstrap', 'cloudStorm.loader', 'cloudStorm.error', 'cloudStorm.uiPageRouter']);
 
 'use strict'
 
@@ -2640,6 +2663,33 @@ app.service('csAlertService', ['csSettings', function(csSettings){
   window.csAlerts = this;
 
 }])
+
+'use strict'
+
+var app = angular.module('cloudStorm.fullCode', [])
+
+app.component('csFullCode', {
+
+  bindings : {
+    title : "<",
+    content : "<",
+    modalInstance : "<",
+  },
+  templateUrl : "components/cs-fields/cs-code/cs-full-code/cs-full-code-template.html",
+  controller : function(csSettings) {
+    this.$onInit = function() {
+      this.i18n = csSettings.settings['i18n-engine'];
+
+      this.UI = {};
+      this.UI.title = this.title;
+      this.UI.content = this.content
+
+      this.close = function() {
+        this.modalInstance.close();
+      };
+    };
+  }
+});
 
 'use string'
 
@@ -3462,7 +3512,6 @@ app.component("csPageRouter", {
 
               default:
                 this.errors.push("This is not a valid URL");
-                console.log(this.pageType, this)
                 this.finished()
                 break;
             }
@@ -3685,7 +3734,7 @@ app.component("csError", {
   templateUrl : "cs-utils/cs-error-template/cs-error-template.html",
 })
 
-angular.module('cloudStorm.templates', ['components/containers/cs-item-list-container/cs-item-list-container-template.html', 'components/cs-alert/cs-alert-template.html', 'components/cs-field/cs-field-template.html', 'components/cs-fields/cs-checkbox/cs-checkbox-template.html', 'components/cs-fields/cs-code/cs-code-template.html', 'components/cs-fields/cs-date/cs-date-template.html', 'components/cs-fields/cs-datetime/cs-datetime-template.html', 'components/cs-fields/cs-enum/cs-enum-template.html', 'components/cs-fields/cs-number/cs-number-template.html', 'components/cs-fields/cs-resource-input/cs-resource-input-template.html', 'components/cs-fields/cs-textfield/cs-textfield-template.html', 'components/cs-fields/cs-time/cs-time-template.html', 'components/cs-filter-row/cs-filter-row-template.html', 'components/cs-form/cs-form-template.html', 'components/cs-index/cs-index-sidepanel/cs-index-sidepanel-template.html', 'components/cs-index/cs-index-template.html', 'components/cs-item-list/cs-item-list-template.html', 'components/cs-main/cs-main-template.html', 'components/cs-menu/cs-menu-template.html', 'components/cs-table/cs-table-container/cs-table-container-template.html', 'components/cs-table/cs-table-header/cs-table-header-template.html', 'components/cs-table/cs-table-row/cs-table-row-template.html', 'components/cs-wizard/cs-wizard-panel-template.html', 'components/cs-wizard/cs-wizard-template.html', 'cs-route-provider/router-component/cs-page-router-template.html', 'cs-utils/cs-error-template/cs-error-template.html', 'cs-utils/cs-loader/cs-loader-template.html']);
+angular.module('cloudStorm.templates', ['components/containers/cs-item-list-container/cs-item-list-container-template.html', 'components/cs-alert/cs-alert-template.html', 'components/cs-field/cs-field-template.html', 'components/cs-fields/cs-checkbox/cs-checkbox-template.html', 'components/cs-fields/cs-code/cs-code-template.html', 'components/cs-fields/cs-code/cs-full-code/cs-full-code-template.html', 'components/cs-fields/cs-date/cs-date-template.html', 'components/cs-fields/cs-datetime/cs-datetime-template.html', 'components/cs-fields/cs-enum/cs-enum-template.html', 'components/cs-fields/cs-number/cs-number-template.html', 'components/cs-fields/cs-resource-input/cs-resource-input-template.html', 'components/cs-fields/cs-textfield/cs-textfield-template.html', 'components/cs-fields/cs-time/cs-time-template.html', 'components/cs-filter-row/cs-filter-row-template.html', 'components/cs-form/cs-form-template.html', 'components/cs-index/cs-index-sidepanel/cs-index-sidepanel-template.html', 'components/cs-index/cs-index-template.html', 'components/cs-item-list/cs-item-list-template.html', 'components/cs-main/cs-main-template.html', 'components/cs-menu/cs-menu-template.html', 'components/cs-table/cs-table-container/cs-table-container-template.html', 'components/cs-table/cs-table-header/cs-table-header-template.html', 'components/cs-table/cs-table-row/cs-table-row-template.html', 'components/cs-wizard/cs-wizard-panel-template.html', 'components/cs-wizard/cs-wizard-template.html', 'cs-route-provider/router-component/cs-page-router-template.html', 'cs-utils/cs-error-template/cs-error-template.html', 'cs-utils/cs-loader/cs-loader-template.html']);
 
 angular.module("components/containers/cs-item-list-container/cs-item-list-container-template.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("components/containers/cs-item-list-container/cs-item-list-container-template.html",
@@ -3752,12 +3801,29 @@ angular.module("components/cs-fields/cs-checkbox/cs-checkbox-template.html", [])
 angular.module("components/cs-fields/cs-code/cs-code-template.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("components/cs-fields/cs-code/cs-code-template.html",
     "<div ng-if=\"mode('create') || mode('edit')\">\n" +
-    "  <textarea class='form-control' ng-disabled='fieldDisabled()' ng-keyup='keyPressed($event)' ng-model='$parent.formItem.attributes[$parent.field.attribute]' ng-required='fieldRequired()' rows='3'></textarea>\n" +
+    "  <textarea class='form-control' ng-disabled='fieldDisabled()' ng-keyup='keyPressed($event)' ng-model='formItem.attributes[field.attribute]' ng-required='fieldRequired()' rows='3'></textarea>\n" +
     "</div>\n" +
-    "<pre ng-if=\"mode('show')\" ng-model='$parent.formItem.attributes[$parent.field.attribute]'><code>{{ formatted_code }}</code></pre>\n" +
-    "<pre ng-if=\"mode('tableView')\" ng-model='$parent.formItem.attributes[$parent.field.attribute]'><code>{{ formatted_code }}</code></pre>\n" +
+    "<pre ng-if=\"mode('show')\" ng-model='formItem.attributes[field.attribute]'><code>{{ formatted_code }}</code></pre>\n" +
+    "<pre ng-if=\"mode('tableView') &amp;&amp; !trimmed\" ng-model='formItem.attributes[field.attribute]'><code>{{ formatted_code_short }}</code></pre>\n" +
+    "<pre class='pointer-cursor' ng-click='showFullCode()' ng-if=\"mode('tableView') &amp;&amp; trimmed\" ng-model='formItem.attributes[field.attribute]'><code>{{ formatted_code_short }}</code></pre>\n" +
     "<!-- %div{ \"ng-if\" => \"mode('tableView')\" } -->\n" +
     "<!-- {{ formItem.attributes[field.attribute] }} -->\n" +
+    "");
+}]);
+
+angular.module("components/cs-fields/cs-code/cs-full-code/cs-full-code-template.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("components/cs-fields/cs-code/cs-full-code/cs-full-code-template.html",
+    "<div class='modal-header'>\n" +
+    "  <button class='close' ng-click='$ctrl.close()'>\n" +
+    "    &times\n" +
+    "  </button>\n" +
+    "  <h4 class='modal-title'>\n" +
+    "    {{ $ctrl.UI.title }}\n" +
+    "  </h4>\n" +
+    "</div>\n" +
+    "<div class='modal-body'>\n" +
+    "  <pre><code>{{ $ctrl.UI.content }}</code></pre>\n" +
+    "</div>\n" +
     "");
 }]);
 

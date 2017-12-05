@@ -4,7 +4,7 @@ app = angular.module('cloudStorm.code', ['ui.select'])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csCode", ['$rootScope', 'csTemplateService', 'csInputBase', ($rootScope, csTemplateService, csInputBase) ->
+app.directive "csCode", ['$rootScope', 'csTemplateService', 'csInputBase', '$uibModal', ($rootScope, csTemplateService, csInputBase, $uibModal) ->
 
   # ===== COMPILE =============================================================
 
@@ -23,10 +23,22 @@ app.directive "csCode", ['$rootScope', 'csTemplateService', 'csInputBase', ($roo
   # ===== LINK ================================================================
 
   format_code = ($scope) ->
+    codeString = $scope.formItem.attributes[$scope.field.attribute] || 'null'
     try
-      $scope.formatted_code = JSON.stringify(JSON.parse($scope.formItem.attributes[$scope.field.attribute]), null, '  ')
+      if typeof codeString is 'string'
+        codeString = JSON.stringify(JSON.parse($scope.formItem.attributes[$scope.field.attribute]), null, '  ')
+      else
+        codeString = JSON.stringify($scope.formItem.attributes[$scope.field.attribute], null, ' ')
     catch e
-      $scope.formatted_code = $scope.formItem.attributes[$scope.field.attribute]
+      codeString = $scope.formItem.attributes[$scope.field.attribute] || 'null'
+
+    $scope.formatted_code = codeString
+    if codeString.length > 10
+      $scope.formatted_code_short = codeString.substring(0, 10) + '\n...'
+      $scope.trimmed = true
+    else
+      $scope.formatted_code_short = codeString
+      $scope.trimmed = false
 
 
   link = ($scope, element, attrs, controller) ->
@@ -47,6 +59,21 @@ app.directive "csCode", ['$rootScope', 'csTemplateService', 'csInputBase', ($roo
     $scope.keyPressed = ($event) ->
       if $event.keyCode == 13
         $scope.$emit 'submit-form-on-enter', $scope.field
+
+    $scope.showFullCode = ($event) ->
+        modalTemplate = "" +
+        "<cs-full-code " +
+          "modal-instance=\"modalInstance\", " +
+          "content=\"formatted_code\", " +
+          "title=\"field.attribute\" " +
+        " </cs-full-code>"
+
+        $scope.modalInstance = $uibModal.open( {
+          scope: $scope,
+          keyboard: false,
+          backdrop: 'static',
+          template: modalTemplate
+        })
 
     return
 

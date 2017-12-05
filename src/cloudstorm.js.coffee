@@ -11,6 +11,7 @@ app = angular.module 'cloudStorm', [
   'cloudStorm.time'
   'cloudStorm.datetime'
   'cloudStorm.code'
+  'cloudStorm.fullCode'
   'cloudStorm.enum'
   'cloudStorm.field'
   'cloudStorm.filterRow'

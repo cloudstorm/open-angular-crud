@@ -1,19 +1,26 @@
 %div{ "ng-if" => "mode('create') || mode('edit')" }
   %textarea.form-control{ "ng-disabled" => "fieldDisabled()",
                           "ng-required" => "fieldRequired()",
-                          "ng-model" => "$parent.formItem.attributes[$parent.field.attribute]",
+                          "ng-model" => "formItem.attributes[field.attribute]",
                           "ng-keyup" => "keyPressed($event)",
                           rows: "3" }
 
 %pre{ "ng-if" => "mode('show')",
-      "ng-model" => "$parent.formItem.attributes[$parent.field.attribute]" }
+      "ng-model" => "formItem.attributes[field.attribute]" }
   %code
     {{ formatted_code }}
 
-%pre{ "ng-if" => "mode('tableView')",
-      "ng-model" => "$parent.formItem.attributes[$parent.field.attribute]" }
+
+%pre{ "ng-if" => "mode('tableView') && !trimmed",
+      "ng-model" => "formItem.attributes[field.attribute]" }
   %code
-    {{ formatted_code }}
+    {{ formatted_code_short }}
+
+%pre.pointer-cursor{ "ng-if" => "mode('tableView') && trimmed",
+      "ng-model" => "formItem.attributes[field.attribute]",
+      "ng-click" => "showFullCode()" }
+  %code
+    {{ formatted_code_short }}
 
 / %div{ "ng-if" => "mode('tableView')" }
 /   {{ formItem.attributes[field.attribute] }}
