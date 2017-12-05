@@ -17,3 +17,12 @@
 .pointer-cursor {
   cursor: pointer;
 }
+
+.pointer-cursor:hover {
+  border: 1px solid $gray-light;
+  cursor: pointer;
+}
+
+pre {
+  background-color: $gray-lighter;
+}

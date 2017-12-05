@@ -16,6 +16,13 @@
 .pointer-cursor {
   cursor: pointer; }
 
+.pointer-cursor:hover {
+  border: 1px solid #777777;
+  cursor: pointer; }
+
+pre {
+  background-color: #eeeeee; }
+
 .cs-alert {
   position: fixed;
   width: 30%;
