@@ -46,7 +46,7 @@ app.directive "csDatetime", ['uibDateParser', 'csSettings', 'csInputBase', (uibD
     $scope.$watch 'formItem.attributes[field.attribute]', (newValue, oldValue) ->
       if (newValue != oldValue)
         $scope.$emit 'input-value-changed', $scope.field
-
+        format_date($scope)
 
   # ===== CONFIGURE ===========================================================
 
