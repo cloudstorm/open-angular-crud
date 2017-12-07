@@ -168,7 +168,8 @@ module.exports = function(grunt) {
           ]
         },
         files: {
-          '<%= build_dir %>/assets/<%= pkg.name %>.css': '<%= app_files.sass_main %>'
+          '<%= build_dir %>/assets/<%= pkg.name %>.css': '<%= app_files.sass_main %>',
+          '<%= build_dir %>/assets/<%= pkg.name %>-<%= grunt.file.readJSON("package.json").version %>.css': '<%= app_files.sass_main %>'
         }
       }
     },
@@ -191,7 +192,22 @@ module.exports = function(grunt) {
           // 'module.suffix'
         ],
         dest: '<%= compile_dir %>/assets/<%= pkg.name %>.js'
-      }
+      },
+
+      compile_versioned_js: {
+        options: {
+          banner: '<%= meta.banner %>',
+          sourceMap: true
+        },
+        src: [
+          // 'module.prefix',
+          '<%= app_files.built_js %>',
+          '<%= app_files.js %>',
+          '<%= html2js.build.dest %>',
+          // 'module.suffix'
+        ],
+        dest: '<%= compile_dir %>/assets/<%= pkg.name %>-<%= grunt.file.readJSON("package.json").version %>.js'
+      },
     },
 
     /**
@@ -388,6 +404,6 @@ module.exports = function(grunt) {
    * minifying your code.
    */
   grunt.registerTask( 'compile', [
-    'copy:compiled_assets', 'concat:compile_js'
+    'copy:compiled_assets', 'concat:compile_js', 'concat:compile_versioned_js'
   ]);
 };
