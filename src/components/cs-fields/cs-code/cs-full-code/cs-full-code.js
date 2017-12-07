@@ -10,7 +10,7 @@ app.component('csFullCode', {
     modalInstance : "<",
   },
   templateUrl : "components/cs-fields/cs-code/cs-full-code/cs-full-code-template.html",
-  controller : function(csSettings) {
+  controller : [ 'csSettings', function(csSettings) {
     this.$onInit = function() {
       this.i18n = csSettings.settings['i18n-engine'];
 
@@ -22,5 +22,5 @@ app.component('csFullCode', {
         this.modalInstance.close();
       };
     };
-  }
+  }]
 });
