@@ -25,15 +25,15 @@ app.component('csTableContainer', {
 
     var sortFieldComp;
 
-    this.showItem = function(item){
+    this.showItem = function(item) {
       this.showItem_({item : item})
     }
 
-    this.selectItem = function(item){
+    this.selectItem = function(item) {
       this.selectItem_({item : item})
     }
 
-    this.destroyItem = function(event, item){
+    this.destroyItem = function(event, item) {
       this.destroyItem_({event : event, item : item})
     }
 
@@ -41,8 +41,7 @@ app.component('csTableContainer', {
       return this.columnVisible_({column : column, index : index})
     }
 
-    this.sort = function(column, direction){
-
+    this.sort = function(column, direction) {
       this.name = column.attribute
       this.csIndexOptions.sortAttribute = column.attribute
       sortFieldComp = _.find(this.resource.descriptor.fields, {
@@ -51,7 +50,7 @@ app.component('csTableContainer', {
 
       this.collection = csResourceFilter.sort(this.initialCollection, sortFieldComp)
       if(direction == "desc"){
-          this.collection = this.collection.reverse()
+          this.collection = this.collection.slice().reverse()
       }
     }
 
@@ -63,13 +62,12 @@ app.component('csTableContainer', {
       }
     }
 
-    this.clickRow = function(item){
+    this.clickRow = function(item) {
       //It works only in edit mode
       if(this.csIndexOptions.selectedItem != null){
         this.selectItem(item)
       }
     }
-
 
   } ],
   bindings : {

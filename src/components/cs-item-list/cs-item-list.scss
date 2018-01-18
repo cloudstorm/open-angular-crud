@@ -8,7 +8,7 @@
   content: '';
   display: inline-block;
   height: 100%;
-  margin-right: -4px;
+
   vertical-align: middle;
 }
 
@@ -45,12 +45,10 @@
 
   .item {
     flex: 1;
-    color: $gray;
-    border-radius: 4px;
-    border: 1px solid $item-color-gray;
     background-color: $gray-lighter;
     text-align: center;
     white-space: nowrap;
+    width: auto;
   }
 
   .item:hover {
@@ -64,22 +62,8 @@
   }
 
   .item-table {
-    margin: 3px 7px;
+    margin: 3px;
     text-align: center;
-    padding: 2px 4px;
-  }
-
-  .single-item:hover {
-    cursor: pointer;
-    text-decoration: underline;
-  }
-
-  .singe-item-container {
-    background-color: $gray-lighter;
-  }
-
-  .singe-item-container:hover {
-    border: 1px solid $gray-dark;
   }
 
   .no-item {

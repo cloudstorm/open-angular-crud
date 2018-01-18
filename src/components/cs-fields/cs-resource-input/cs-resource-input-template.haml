@@ -13,10 +13,10 @@
       %span
         {{item.$display_name()}}
 
-      %span.input-group-btn{ "ng-if" => "canCreateResources() || createDisabled()" }
-        %button.btn.btn-default{ "ng-disabled" => "fieldDisabled()",
-                                 "ng-click" => "pushPanel()",
-                                 "type" => "button" } {{ i18n.t('buttons.new') }}
+  %span.input-group-btn{ "ng-if" => "canCreateResources() || createDisabled()" }
+    %button.btn.btn-default{ "ng-disabled" => "fieldDisabled()",
+                             "ng-click" => "pushPanel()",
+                             "type" => "button" } {{ i18n.t('buttons.new') }}
 
 
 %cs-item-list{ "ng-if" => "(mode('show') || mode('tableView'))",

@@ -1,17 +1,21 @@
 /.item-container{ "ng-class" => "{ 'row-container' : $ctrl.modalMode}" }
-.item-container{ "ng-class" => "$ctrl.CL.itemContainer" }
-  .item{ "ng-repeat" => "item in $ctrl.itemList track by $index",
+.item-container{ "ng-class" => "$ctrl.CL.itemContainer", "ng-if" => "$ctrl.many" }
+  .form-control.item{ "ng-repeat" => "item in $ctrl.itemList track by $index",
         "ng-if" => "$ctrl.many && ($index < 3 || !$ctrl.condition.tableMode)",
         "ng-click" => "$ctrl.select(item)",
         "ng-class" => "$ctrl.CL.item"}
     {{ item.attributes[$ctrl.key] }}
-  .item{ "ng-if" => "$ctrl.itemList.length > 3 && $ctrl.condition.tableMode",
+  .form-control.item{ "ng-if" => "$ctrl.itemList.length > 3 && $ctrl.condition.tableMode",
                   "ng-click" => "$ctrl.showItems()",
                   "ng-class" => "$ctrl.CL.item" }
     {{$ctrl.UI.clickText}}
-  .single-item{ "ng-if" => "!$ctrl.many",
-                "ng-click" => "$ctrl.selectSingle()",
-                "ng-class" => "{'item-item' : $ctrl.mode('show')}"}
-    {{ $ctrl.itemList.attributes[$ctrl.key] }}
   .no-item{ "ng-if" => "$ctrl.condition.noItem" }
     {{$ctrl.UI.noItem}}
+
+/ single item
+.form-control.item{ "ng-if" => "!$ctrl.many && !$ctrl.condition.noItem",
+       "ng-click" => "$ctrl.selectSingle()"}
+  {{ $ctrl.itemList.$display_name() }}
+
+.no-item{ "ng-if" => "!$ctrl.many && $ctrl.condition.noItem" }
+  {{$ctrl.UI.noItem}}

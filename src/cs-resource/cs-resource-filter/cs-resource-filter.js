@@ -12,7 +12,7 @@ app.factory('csResourceFilter', [ 'csSettings','$filter', function(csSettings, $
 
     return _.sortBy(array, (function(item){
       var fieldValue = this.fieldValue(item, column)
-      if(fieldValue)
+      if (fieldValue)
         fieldValue = fieldValue.toString().toLowerCase()
       return fieldValue
     }).bind(this))

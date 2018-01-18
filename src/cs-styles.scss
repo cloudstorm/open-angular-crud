@@ -26,3 +26,8 @@
 pre {
   background-color: $gray-lighter;
 }
+
+.form-control {
+  height: auto;
+  min-height: 34px;
+}

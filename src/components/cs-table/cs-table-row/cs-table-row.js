@@ -25,7 +25,7 @@ app.component('csTableRow', {
       this.selectItem_({item : this.item})
     }
 
-    this.destroyItem = function(event){
+    this.destroyItem = function(event) {
       this.destroyItem_({event : event, item : this.item})
     }
 

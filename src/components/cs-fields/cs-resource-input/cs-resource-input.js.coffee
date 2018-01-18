@@ -46,7 +46,6 @@ app.directive "csResourceInput", [
 
       if $scope.field.cardinality == 'one'
         $scope.$watch '{id: model.object.id, type: model.object.type}', (newValue, oldValue) ->
-
           if (newValue.id != oldValue.id) || (newValue.type != oldValue.type)
             $scope.formItem.$assign_association($scope.field, $scope.model.object)
             $scope.$emit 'input-value-changed', $scope.field
@@ -66,7 +65,7 @@ app.directive "csResourceInput", [
           $scope.model.object = $scope.formItem.$association($scope.field)
 
       $scope.selectItem = () ->
-        console.log($scope.model)
+        # console.log($scope.model)
 
       # ===== COMPONENT LIFECYCLE ===========================
 
@@ -134,7 +133,6 @@ app.directive "csResourceInput", [
       return
 
     setup_associations = ($scope) ->
-
       $scope.resource = ResourceService.get($scope.field.resource)
       $scope.model = {object: $scope.formItem.$association($scope.field)}
 
