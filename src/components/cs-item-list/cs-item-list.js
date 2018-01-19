@@ -66,17 +66,6 @@ app.component("csItemList", {
 
       // console.log(this.itemList);
       // console.log('noItem',this.condition.noItem);
-
-      var modalTemplate = "" +
-      "<cs-item-list-container  " +
-        "modal-instance=\"$ctrl.modalInstance\", " +
-        "item=\"$ctrl.item\", " +
-        "item-list=\"$ctrl.itemList\", " +
-        "field=\"$ctrl.field\", " +
-        "many=\"$ctrl.many\", " +
-        "c-mode=\"'modal'\", " +
-        "key=\"$ctrl.key\">  " +
-      " </cs-item-list-container>";
     }
 
     this.$onInit = function() {
@@ -84,6 +73,17 @@ app.component("csItemList", {
     };
 
     this.showItems = function() {
+      var modalTemplate = "" +
+        "<cs-item-list-container  " +
+          "modal-instance=\"$ctrl.modalInstance\", " +
+          "item=\"$ctrl.item\", " +
+          "item-list=\"$ctrl.itemList\", " +
+          "field=\"$ctrl.field\", " +
+          "many=\"$ctrl.many\", " +
+          "c-mode=\"'modal'\", " +
+          "key=\"$ctrl.key\">  " +
+        " </cs-item-list-container>";
+
       this.modalInstance = $uibModal.open( {
         scope: $scope,
         keyboard: false,

@@ -11,5 +11,10 @@
   table {
     outline: none;
   }
+}
 
+div[uib-datepicker-popup-wrap] {
+  ul.uib-datepicker-popup.dropdown-menu {
+    z-index: 99999;
+  }
 }

@@ -36,6 +36,8 @@ describe('csResource', function() {
         }
       };
 
+      ResourceService.register('users', User)
+
       return User;
 
     })(csResource);
@@ -100,6 +102,7 @@ describe('csResource', function() {
     $q = _$q_;
     $httpBackend = _$httpBackend_;
     csDataStore = _csDataStore_;
+    ResourceService = _ResourceService_;
   }));
 
   it('should exist', function() {

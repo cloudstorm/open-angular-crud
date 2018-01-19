@@ -83,11 +83,19 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
 
         csRestApi.index(actual_endpoint, index_params).then(
           (data) =>  # successCallback
-            objects   = _.map data.data, ((i) => new @(i, datastore: datastore))
+            objects = _.map data.data, (i) =>
+              object = datastore.get(i.type, i.id)
+              if object
+                object.$assign(i)
+                return object
+              else
+                resource = ResourceService.get(i.type)
+                return new resource(i, datastore: datastore)
+
             included  = _.map data.included, (i) ->
               assoc = datastore.get(i.type, i.id)
               if assoc
-                assoc.$assign(i)
+                assoc.$merge(i)
                 return assoc
               else
                 resource = ResourceService.get(i.type)
@@ -112,7 +120,6 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
       ################################################################################################
 
       @$get: (id, params) ->
-
         # TODO - make the URL for get
         actual_endpoint = memberEndpointUrl(@, id)
         base_url = baseUrl(@)
@@ -133,7 +140,6 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
       ################################################################################################
 
       $reload: (params) ->
-
         endpoint = @links.self.href || memberEndpointUrl(@.constructor, @id)
         csRestApi.get(endpoint, params).then(
           (data) =>  # successCallback
@@ -172,7 +178,16 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
 
         csRestApi.create(endpoint, entity).then(
           (data) =>  # successCallback
-            return @.$assign(data.data)
+            object = @.$assign(data.data)
+            included = _.map data.included, (i) =>
+              assoc = object.$datastore.get(i.type, i.id)
+              if assoc
+                assoc.$assign(i)
+                return assoc
+              else
+                resource = ResourceService.get(i.type)
+                return new resource(i, datastore: object.$datastore)
+            return object
           (reason) -> # errorCallback
             return $q.reject(reason)
           (value) ->  # notifyCallback
@@ -231,6 +246,26 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
         delete @meta
         angular.merge(@, _.pick(value_object, "id", "type", "attributes", "relationships", "links", "meta"))
 
+        if value_object.$datastore
+          for name, rel of @relationships
+            if angular.isArray(rel.data)
+              for item in rel.data
+                assoc = value_object.$relationship(item)
+                if assoc
+                  @.$datastore.put item.type, item.id, assoc
+            else
+              assoc = value_object.$relationship(rel.data)
+              if assoc
+                @.$datastore.put rel.data.type, rel.data.id, assoc
+        return @
+
+      ################################################################################################
+
+      $merge: (value_object) ->
+        console.log('merge -------')
+        # this = value_object, while keeping the existing attributes if they exist
+        delete @meta
+        angular.merge(@, _.pick(value_object, "id", "type", "attributes", "relationships", "links", "meta"))
 
         if value_object.$datastore
           for name, rel of @relationships
