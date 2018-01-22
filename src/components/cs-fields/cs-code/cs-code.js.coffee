@@ -70,10 +70,11 @@ app.directive "csCode", ['$rootScope', 'csTemplateService', 'csInputBase', '$uib
 
         $scope.modalInstance = $uibModal.open( {
           scope: $scope,
-          keyboard: false,
+          keyboard: true,
           backdrop: 'static',
           template: modalTemplate
-        })
+        # Ignore 'Possibly unhandled rejection: escape key press' error
+        }).result.finally(angular.noop).then(angular.noop, angular.noop)
 
     return
 
