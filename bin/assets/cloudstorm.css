@@ -23,6 +23,10 @@
 pre {
   background-color: #eeeeee; }
 
+.form-control {
+  height: auto;
+  min-height: 34px; }
+
 .cs-alert {
   position: fixed;
   width: 30%;
@@ -78,6 +82,9 @@ pre {
   white-space: nowrap; }
 .cs-date table {
   outline: none; }
+
+div[uib-datepicker-popup-wrap] ul.uib-datepicker-popup.dropdown-menu {
+  z-index: 99999; }
 
 .cs-datetime .container-flex {
   width: 100%;
@@ -166,7 +173,6 @@ body > .ui-select-bootstrap.open {
   content: '';
   display: inline-block;
   height: 100%;
-  margin-right: -4px;
   vertical-align: middle; }
 
 .modal-dialog {
@@ -191,12 +197,10 @@ body > .ui-select-bootstrap.open {
   max-width: 220px; }
 .cs-item-list .item {
   flex: 1;
-  color: #555555;
-  border-radius: 4px;
-  border: 1px solid #cccccc;
   background-color: #eeeeee;
   text-align: center;
-  white-space: nowrap; }
+  white-space: nowrap;
+  width: auto; }
 .cs-item-list .item:hover {
   border: 1px solid #333333;
   cursor: pointer; }
@@ -204,16 +208,8 @@ body > .ui-select-bootstrap.open {
   margin: 5px;
   padding: 6px 12px; }
 .cs-item-list .item-table {
-  margin: 3px 7px;
-  text-align: center;
-  padding: 2px 4px; }
-.cs-item-list .single-item:hover {
-  cursor: pointer;
-  text-decoration: underline; }
-.cs-item-list .singe-item-container {
-  background-color: #eeeeee; }
-.cs-item-list .singe-item-container:hover {
-  border: 1px solid #333333; }
+  margin: 3px;
+  text-align: center; }
 .cs-item-list .no-item {
   color: #929292;
   font-size: 13px;
