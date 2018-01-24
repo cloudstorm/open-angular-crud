@@ -73,8 +73,9 @@ app.directive "csCode", ['$rootScope', 'csTemplateService', 'csInputBase', '$uib
           keyboard: true,
           backdrop: 'static',
           template: modalTemplate
+        })
         # Ignore 'Possibly unhandled rejection: escape key press' error
-        }).result.finally(angular.noop).then(angular.noop, angular.noop)
+        $scope.modalInstance.result.finally(angular.noop).then(angular.noop, angular.noop);
 
     return
 

@@ -95,8 +95,9 @@ app.component("csItemList", {
             return $scope.dummy;
           }
         }
+      });
       // Ignore 'Possibly unhandled rejection: escape key press' error
-      }).result.finally(angular.noop).then(angular.noop, angular.noop);
+      this.modalInstance.result.finally(angular.noop).then(angular.noop, angular.noop);
     };
 
     this.hidden = function(num) {
