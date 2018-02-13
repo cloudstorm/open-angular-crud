@@ -125,11 +125,15 @@ app.component('csIndex', {
 
     this.destroyItem = function($event, item) {
       $event.stopPropagation();
-      if (confirm( this.i18n.t('confirm.delete'))) {
+      if (confirm( item.$display_name() + '\n\n' + this.i18n.t('confirm.delete'))) {
         return item.$destroy().then((function(result) {
-          var index;
           this.csIndexOptions.selectedItem = null;
-          index = this.items.indexOf(item);
+          var index = this.items.indexOf(result);
+          if (index == -1) {
+            console.log('Warning: Destroyed item not found in collection, retry search with type and id check.');
+            index = this.items.findIndex(function(i) { return (i.id === result.id && i.type === result.type); } );
+            console.log('Index:', index);
+          }
           this.items.splice(index, 1);
           // force angular rebind
           this.items = this.items.slice();

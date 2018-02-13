@@ -31,6 +31,13 @@ app.directive "csMenu", ['ResourceService', 'csDescriptorService', 'csRoute', 'c
 
       $scope.title = csSettings.settings['app-title']
       $scope.selected = null
+
+      $scope.$watch (->
+        ResourceService.getResources()
+      ), (newVal) ->
+        csDescriptorService.getPromises().then () ->
+          $scope.resources = ResourceService.getResources()
+
       $scope.isSelected = (type) ->
         return (type == $scope.selected)
 
@@ -38,14 +45,9 @@ app.directive "csMenu", ['ResourceService', 'csDescriptorService', 'csRoute', 'c
         $scope.selected = type
         csRoute.go("index", {resourceType : type})
 
-
   return {
     restrict: 'E'
     compile: compile
     templateUrl: 'components/cs-menu/cs-menu-template.html'
-    scope:
-      csIndexOptions: '='
-      resourceType: '='
-      itemId : '='
   }
 ]

@@ -11,8 +11,14 @@ app.component('csTableHeader', {
       this.selectedColumn = null
       this.direction = "asc"
       $element.addClass('cs-table-header')
-
     };
+
+    // this.$onChanges = function(changesObj) {
+    //   console.log(changesObj)
+    //   if (changesObj.columns.currentValue) {
+    //     //this.changeSorting(changesObj.columns.currentValue[0]);
+    //   }
+    // }
 
     this.changeSorting = function(column){
 
@@ -25,20 +31,22 @@ app.component('csTableHeader', {
       return this.sort_({column : column, direction : this.direction })
     }
 
-    this.flipDirection = function(){
+    this.flipDirection = function() {
       this.direction = this.direction == "asc" ? "desc" : "asc"
     }
 
-    this.columnVisible = function(column, index){
+    this.columnVisible = function(column, index) {
       return this.columnVisible_({column : column, index : index})
     }
 
     this.asc = function(column){
+      if (this.selectedColumn == null) {return false;}
       return (this.csIndexOptions.sortAttribute == column.attribute
         && this.direction == 'asc')
     }
 
     this.desc = function(column){
+      if (this.selectedColumn == null) {return false;}
       return (this.csIndexOptions.sortAttribute == column.attribute
         && this.direction == 'desc')
     }

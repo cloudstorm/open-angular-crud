@@ -2,7 +2,7 @@
 .cs-index-sidepanel {
   position: fixed;
   height: calc(100% - #{$navbar-and-page-header-height});
-  top: $sidebar-top;
+  top: auto;
 
   .panel-close {
     position: absolute;
@@ -10,14 +10,15 @@
     left: 382px;
     top: 10px;
     cursor: pointer;
-    background-color: white;
+    background-color: #ffffff;
     text-align: center;
     z-index: 999;
   }
 
   .cs-wizard {
     .form-panel {
-      padding-top: 0px;
+      height: auto; // buttons (Save, Cancel) are better (?) positioned this way
+      padding-top: 0;
     }
   }
 }

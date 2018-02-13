@@ -12,19 +12,13 @@ app.factory('csResourceFilter', [ 'csSettings','$filter', function(csSettings, $
 
     return _.sortBy(array, (function(item){
       var fieldValue = this.fieldValue(item, column)
-      if (fieldValue)
+      if (fieldValue &&  (typeof fieldValue === 'string' || fieldValue instanceof String))
         fieldValue = fieldValue.toString().toLowerCase()
       return fieldValue
     }).bind(this))
-
-    // if(direction == "desc"){
-    //   array = array.reverse()
-    // }
-    // return array
   }
 
-  this.filter = function(array, columns, filterValue){
-
+  this.filter = function(array, columns, filterValue) {
     return _.filter(array, (function(item){
       var search = new RegExp(this.escapeRegExp(filterValue), "i");
       return _.any(columns, (function(field) {
@@ -41,7 +35,7 @@ app.factory('csResourceFilter', [ 'csSettings','$filter', function(csSettings, $
   }
 
   this.fieldValue = function(item, field) {
-
+    if (!field) { return '';}
     var associations, display_date, display_time, enum_value, item_data, names, ref, relationship;
     if (field.resource) {
       if (field.cardinality === 'many') {
@@ -80,14 +74,14 @@ app.factory('csResourceFilter', [ 'csSettings','$filter', function(csSettings, $
       return $filter('date')(display_time, 'HH:mm');
     } else if (field.type === 'datetime') {
       display_date = new Date(item.attributes[field.attribute]);
-      return $filter('date')(display_date, 'YYYY-MM-DD HH:mm');
+      return $filter('date')(display_date, 'yyyy-MM-dd HH:mm');
     } else if (field.type === 'date') {
-      var date = item.attributes[field.attribute]
-      if( date != null && (typeof date) == "object"){
-        return date.getTime()
-      } else {
-        return item.attributes[field.attribute + "textFormat"]
-      }
+      display_date = new Date(item.attributes[field.attribute]);
+      return $filter('date')(display_date, 'yyyy-MM-dd');
+    } else if (field.type === 'integer') {
+      return +item.attributes[field.attribute];
+    } else if (field.type === 'float') {
+      return +item.attributes[field.attribute];
     } else {
       return item.attributes[field.attribute];
     }
