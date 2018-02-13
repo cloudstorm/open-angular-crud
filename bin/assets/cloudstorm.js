@@ -1,5 +1,5 @@
 /**
- * cloudstorm - v0.0.18 - 2018-01-24
+ * cloudstorm - v0.0.19 - 2018-02-14
  * https://github.com/cloudstorm/cloudstorm#readme
  *
  * Copyright (c) 2018 Virtual Solutions Ltd <info@cloudstorm.io>
@@ -1080,6 +1080,13 @@ app.directive("csMenu", [
         });
         $scope.title = csSettings.settings['app-title'];
         $scope.selected = null;
+        $scope.$watch((function() {
+          return ResourceService.getResources();
+        }), function(newVal) {
+          return csDescriptorService.getPromises().then(function() {
+            return $scope.resources = ResourceService.getResources();
+          });
+        });
         $scope.isSelected = function(type) {
           return type === $scope.selected;
         };
@@ -1094,12 +1101,7 @@ app.directive("csMenu", [
     return {
       restrict: 'E',
       compile: compile,
-      templateUrl: 'components/cs-menu/cs-menu-template.html',
-      scope: {
-        csIndexOptions: '=',
-        resourceType: '=',
-        itemId: '='
-      }
+      templateUrl: 'components/cs-menu/cs-menu-template.html'
     };
   }
 ]);
@@ -2926,11 +2928,15 @@ app.component('csIndex', {
 
     this.destroyItem = function($event, item) {
       $event.stopPropagation();
-      if (confirm( this.i18n.t('confirm.delete'))) {
+      if (confirm( item.$display_name() + '\n\n' + this.i18n.t('confirm.delete'))) {
         return item.$destroy().then((function(result) {
-          var index;
           this.csIndexOptions.selectedItem = null;
-          index = this.items.indexOf(item);
+          var index = this.items.indexOf(result);
+          if (index == -1) {
+            console.log('Warning: Destroyed item not found in collection, retry search with type and id check.');
+            index = this.items.findIndex(function(i) { return (i.id === result.id && i.type === result.type); } );
+            console.log('Index:', index);
+          }
           this.items.splice(index, 1);
           // force angular rebind
           this.items = this.items.slice();
@@ -3206,65 +3212,80 @@ app.component('csTableContainer', {
 
   templateUrl : 'components/cs-table/cs-table-container/cs-table-container-template.html',
 
-  controller : ['$scope','csSettings','$filter','$element','csResourceFilter', function($scope, csSettings, $filter, $element, csResourceFilter){
+  controller : ['$scope','csSettings','$element','csResourceFilter', function($scope, csSettings, $element, csResourceFilter) {
 
     this.$onInit = function() {
       this.initialCollection = this.collection
       $element.addClass('cs-table-container')
+      this.sortAndFilter();
     };
 
+    this.filterValue = "";
+    this.sortDirection = "";
+    this.sortColumn = null;
     this.i18n = csSettings.settings['i18n-engine'];
 
     this.$onChanges = function(changesObj) {
-      this.initialCollection = this.collection
+      if (changesObj.collection && changesObj.collection.currentValue && changesObj.collection.previousValue != changesObj.collection.currentValue) {
+        this.initialCollection = this.collection
+        this.sortAndFilter();
+      }
     }
 
-    $scope.$on('filterValue', (function(event, args){
+    $scope.$on('filterValue', (function(event, args) {
       this.filter(args.filterValue)
     }).bind(this))
 
-    var sortFieldComp;
-
-    this.showItem = function(item) {
-      this.showItem_({item : item})
-    }
-
-    this.selectItem = function(item) {
-      this.selectItem_({item : item})
-    }
-
-    this.destroyItem = function(event, item) {
-      this.destroyItem_({event : event, item : item})
-    }
-
-    this.columnVisible = function(column, index){
-      return this.columnVisible_({column : column, index : index})
-    }
-
-    this.sort = function(column, direction) {
-      this.name = column.attribute
-      this.csIndexOptions.sortAttribute = column.attribute
-      sortFieldComp = _.find(this.resource.descriptor.fields, {
+    this.sortAndFilter = function() {
+      this.name = this.sortColumn ? this.sortColumn.attribute : '';
+      this.csIndexOptions.sortAttribute = this.name
+      var sortFieldComp = _.find(this.resource.descriptor.fields, {
         attribute: this.csIndexOptions.sortAttribute
       });
 
-      this.collection = csResourceFilter.sort(this.initialCollection, sortFieldComp)
-      if(direction == "desc"){
-          this.collection = this.collection.slice().reverse()
+      if (this.filterValue == "" || this.filterValue == undefined) {
+        this.collection = this.initialCollection;
+      } else {
+        this.collection = csResourceFilter.filter(this.initialCollection, this.columns, this.filterValue);
+      }
+      if (sortFieldComp) {
+        this.collection = csResourceFilter.sort(this.collection, sortFieldComp)
+        if(this.sortDirection == "desc") {
+            this.collection = this.collection.slice().reverse()
+        }
       }
     }
 
+    this.showItem = function(item) {
+      this.showItem_( { item : item } );
+    }
+
+    this.selectItem = function(item) {
+      this.selectItem_( { item : item } );
+    }
+
+    this.destroyItem = function(event, item) {
+      this.destroyItem_( { event : event, item : item } );
+    }
+
+    this.columnVisible = function(column, index) {
+      return this.columnVisible_( { column : column, index : index } );
+    }
+
+    this.sort = function(column, direction) {
+      this.sortDirection = direction;
+      this.sortColumn = column;
+      this.sortAndFilter();
+    }
+
     this.filter = function(filterValue) {
-      if(filterValue == "") {
-        this.collection = this.initialCollection;
-      } else {
-        this.collection = csResourceFilter.filter(this.initialCollection, this.columns, filterValue);
-      }
+      this.filterValue = filterValue;
+      this.sortAndFilter();
     }
 
     this.clickRow = function(item) {
       //It works only in edit mode
-      if(this.csIndexOptions.selectedItem != null){
+      if (this.csIndexOptions.selectedItem != null) {
         this.selectItem(item)
       }
     }
@@ -3295,8 +3316,14 @@ app.component('csTableHeader', {
       this.selectedColumn = null
       this.direction = "asc"
       $element.addClass('cs-table-header')
-
     };
+
+    // this.$onChanges = function(changesObj) {
+    //   console.log(changesObj)
+    //   if (changesObj.columns.currentValue) {
+    //     //this.changeSorting(changesObj.columns.currentValue[0]);
+    //   }
+    // }
 
     this.changeSorting = function(column){
 
@@ -3309,20 +3336,22 @@ app.component('csTableHeader', {
       return this.sort_({column : column, direction : this.direction })
     }
 
-    this.flipDirection = function(){
+    this.flipDirection = function() {
       this.direction = this.direction == "asc" ? "desc" : "asc"
     }
 
-    this.columnVisible = function(column, index){
+    this.columnVisible = function(column, index) {
       return this.columnVisible_({column : column, index : index})
     }
 
     this.asc = function(column){
+      if (this.selectedColumn == null) {return false;}
       return (this.csIndexOptions.sortAttribute == column.attribute
         && this.direction == 'asc')
     }
 
     this.desc = function(column){
+      if (this.selectedColumn == null) {return false;}
       return (this.csIndexOptions.sortAttribute == column.attribute
         && this.direction == 'desc')
     }
@@ -3438,19 +3467,13 @@ app.factory('csResourceFilter', [ 'csSettings','$filter', function(csSettings, $
 
     return _.sortBy(array, (function(item){
       var fieldValue = this.fieldValue(item, column)
-      if (fieldValue)
+      if (fieldValue &&  (typeof fieldValue === 'string' || fieldValue instanceof String))
         fieldValue = fieldValue.toString().toLowerCase()
       return fieldValue
     }).bind(this))
-
-    // if(direction == "desc"){
-    //   array = array.reverse()
-    // }
-    // return array
   }
 
-  this.filter = function(array, columns, filterValue){
-
+  this.filter = function(array, columns, filterValue) {
     return _.filter(array, (function(item){
       var search = new RegExp(this.escapeRegExp(filterValue), "i");
       return _.any(columns, (function(field) {
@@ -3467,7 +3490,7 @@ app.factory('csResourceFilter', [ 'csSettings','$filter', function(csSettings, $
   }
 
   this.fieldValue = function(item, field) {
-
+    if (!field) { return '';}
     var associations, display_date, display_time, enum_value, item_data, names, ref, relationship;
     if (field.resource) {
       if (field.cardinality === 'many') {
@@ -3506,14 +3529,14 @@ app.factory('csResourceFilter', [ 'csSettings','$filter', function(csSettings, $
       return $filter('date')(display_time, 'HH:mm');
     } else if (field.type === 'datetime') {
       display_date = new Date(item.attributes[field.attribute]);
-      return $filter('date')(display_date, 'YYYY-MM-DD HH:mm');
+      return $filter('date')(display_date, 'yyyy-MM-dd HH:mm');
     } else if (field.type === 'date') {
-      var date = item.attributes[field.attribute]
-      if( date != null && (typeof date) == "object"){
-        return date.getTime()
-      } else {
-        return item.attributes[field.attribute + "textFormat"]
-      }
+      display_date = new Date(item.attributes[field.attribute]);
+      return $filter('date')(display_date, 'yyyy-MM-dd');
+    } else if (field.type === 'integer') {
+      return +item.attributes[field.attribute];
+    } else if (field.type === 'float') {
+      return +item.attributes[field.attribute];
     } else {
       return item.attributes[field.attribute];
     }

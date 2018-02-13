@@ -241,18 +241,19 @@ body > .ui-select-bootstrap.open {
 .cs-index-sidepanel {
   position: fixed;
   height: calc(100% - 190px);
-  top: 190px; }
+  top: auto; }
   .cs-index-sidepanel .panel-close {
     position: absolute;
     width: 20px;
     left: 382px;
     top: 10px;
     cursor: pointer;
-    background-color: white;
+    background-color: #ffffff;
     text-align: center;
     z-index: 999; }
   .cs-index-sidepanel .cs-wizard .form-panel {
-    padding-top: 0px; }
+    height: auto;
+    padding-top: 0; }
 
 @media (max-width: 1200px) {
   .cs-index-sidepanel {
@@ -291,18 +292,19 @@ body > .ui-select-bootstrap.open {
 .cs-index-sidepanel {
   position: fixed;
   height: calc(100% - 190px);
-  top: 190px; }
+  top: auto; }
   .cs-index-sidepanel .panel-close {
     position: absolute;
     width: 20px;
     left: 382px;
     top: 10px;
     cursor: pointer;
-    background-color: white;
+    background-color: #ffffff;
     text-align: center;
     z-index: 999; }
   .cs-index-sidepanel .cs-wizard .form-panel {
-    padding-top: 0px; }
+    height: auto;
+    padding-top: 0; }
 
 @media (max-width: 1200px) {
   .cs-index-sidepanel {
@@ -357,18 +359,19 @@ div.table-striped > div.cs-table-body > .cs-table-row:nth-of-type(odd) {
 .cs-index-sidepanel {
   position: fixed;
   height: calc(100% - 190px);
-  top: 190px; }
+  top: auto; }
   .cs-index-sidepanel .panel-close {
     position: absolute;
     width: 20px;
     left: 382px;
     top: 10px;
     cursor: pointer;
-    background-color: white;
+    background-color: #ffffff;
     text-align: center;
     z-index: 999; }
   .cs-index-sidepanel .cs-wizard .form-panel {
-    padding-top: 0px; }
+    height: auto;
+    padding-top: 0; }
 
 @media (max-width: 1200px) {
   .cs-index-sidepanel {
