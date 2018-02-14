@@ -1,6 +1,6 @@
 {
   "name": "cloudstorm",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "description": "Frontend framework for automatically creating forms and workflows for AngularJS",
   "main": "src/cloudstorm.js.coffee",
   "directories": {
