@@ -244,7 +244,8 @@ body > .ui-select-bootstrap.open {
 .cs-index-sidepanel {
   position: fixed;
   height: calc(100% - 190px);
-  top: auto; }
+  top: auto;
+  border-radius: 6px; }
   .cs-index-sidepanel .panel-close {
     position: absolute;
     width: 20px;
@@ -255,6 +256,7 @@ body > .ui-select-bootstrap.open {
     text-align: center;
     z-index: 999; }
   .cs-index-sidepanel .cs-wizard .form-panel {
+    height: auto;
     padding-top: 0; }
 
 @media (max-width: 1200px) {
@@ -268,11 +270,15 @@ body > .ui-select-bootstrap.open {
     top: 10%;
     padding: 0;
     margin-left: -251px;
-    z-index: 1050; }
+    z-index: 1050;
+    border-radius: 6px; }
     .cs-index-sidepanel .panel-close {
       left: 478px; }
     .cs-index-sidepanel .cs-wizard {
-      width: 502px; } }
+      width: 502px; }
+      .cs-index-sidepanel .cs-wizard .form-panel {
+        height: 100%;
+        padding-top: 0; } }
 .cs-table-header {
   display: table-row; }
   .cs-table-header .cs-table-header-cell {
@@ -296,7 +302,8 @@ body > .ui-select-bootstrap.open {
 .cs-index-sidepanel {
   position: fixed;
   height: calc(100% - 190px);
-  top: auto; }
+  top: auto;
+  border-radius: 6px; }
   .cs-index-sidepanel .panel-close {
     position: absolute;
     width: 20px;
@@ -307,6 +314,7 @@ body > .ui-select-bootstrap.open {
     text-align: center;
     z-index: 999; }
   .cs-index-sidepanel .cs-wizard .form-panel {
+    height: auto;
     padding-top: 0; }
 
 @media (max-width: 1200px) {
@@ -320,11 +328,15 @@ body > .ui-select-bootstrap.open {
     top: 10%;
     padding: 0;
     margin-left: -251px;
-    z-index: 1050; }
+    z-index: 1050;
+    border-radius: 6px; }
     .cs-index-sidepanel .panel-close {
       left: 478px; }
     .cs-index-sidepanel .cs-wizard {
-      width: 502px; } }
+      width: 502px; }
+      .cs-index-sidepanel .cs-wizard .form-panel {
+        height: 100%;
+        padding-top: 0; } }
 div.table-striped > div.cs-table-body > .cs-table-row:nth-of-type(odd) {
   background-color: #f9f9f9; }
 
@@ -359,10 +371,14 @@ div.table-striped > div.cs-table-body > .cs-table-row:nth-of-type(odd) {
         .cs-table-row div.actions .action:hover.edit-action {
           color: #5bc0de; }
 
+.cs-table-row:focus {
+  outline: none; }
+
 .cs-index-sidepanel {
   position: fixed;
   height: calc(100% - 190px);
-  top: auto; }
+  top: auto;
+  border-radius: 6px; }
   .cs-index-sidepanel .panel-close {
     position: absolute;
     width: 20px;
@@ -373,6 +389,7 @@ div.table-striped > div.cs-table-body > .cs-table-row:nth-of-type(odd) {
     text-align: center;
     z-index: 999; }
   .cs-index-sidepanel .cs-wizard .form-panel {
+    height: auto;
     padding-top: 0; }
 
 @media (max-width: 1200px) {
@@ -386,11 +403,15 @@ div.table-striped > div.cs-table-body > .cs-table-row:nth-of-type(odd) {
     top: 10%;
     padding: 0;
     margin-left: -251px;
-    z-index: 1050; }
+    z-index: 1050;
+    border-radius: 6px; }
     .cs-index-sidepanel .panel-close {
       left: 478px; }
     .cs-index-sidepanel .cs-wizard {
-      width: 502px; } }
+      width: 502px; }
+      .cs-index-sidepanel .cs-wizard .form-panel {
+        height: 100%;
+        padding-top: 0; } }
 .cs-table-container div.tTable > div.tBody > .cs-table-row.selected-row {
   background-color: #d9edf7; }
 .cs-table-container .cs-table {
