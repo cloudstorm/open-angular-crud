@@ -50,3 +50,7 @@ div.table-striped > div.cs-table-body > .cs-table-row:nth-of-type(odd){
     }
   }
 }
+
+.cs-table-row:focus {
+  outline: none;
+}

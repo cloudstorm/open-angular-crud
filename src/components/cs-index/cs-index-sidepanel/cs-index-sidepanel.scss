@@ -3,6 +3,7 @@
   position: fixed;
   height: calc(100% - #{$navbar-and-page-header-height});
   top: auto;
+  border-radius: 6px;
 
   .panel-close {
     position: absolute;
@@ -17,7 +18,7 @@
 
   .cs-wizard {
     .form-panel {
-      // height: auto; // buttons (Save, Cancel) are better (?) positioned this way
+      height: auto; // buttons (Save, Cancel) are better (?) positioned this way
       padding-top: 0;
     }
   }
@@ -34,6 +35,7 @@
     padding: 0;
     margin-left: - $wizard-width-narrow / 2;
     z-index: 1050; // Same As Uib-modal
+    border-radius: 6px;
 
     .panel-close {
       left: 478px;
@@ -41,6 +43,10 @@
 
     .cs-wizard {
       width: $wizard-width-narrow;
+      .form-panel {
+        height: 100%;
+        padding-top: 0;
+      }
     }
   }
 }
