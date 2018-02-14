@@ -1,35 +1,39 @@
 .cs-menu {
 
   .flex {
-      display : flex; 
+      display : flex;
   }
- 
+
   .nav {
-    background-color : #F8F7F8;  
+    background-color : #F8F7F8;
   }
 
   .navElement {
     color: #555555;
     display: block;
-    padding : 20px;  
+    padding : 20px;
   }
-  
+
+  .navElement:focus {
+    outline: none;
+  }
+
   .nav {
     font-weight: bold;
   }
- 
+
   .navElement:hover {
-    color: #333333; 
-    cursor: pointer;  
+    color: #333333;
+    cursor: pointer;
   }
 
   .appTitle {
     font-weight: normal;
     font-size: 18px;
   }
-  
+
   .appTitle:hover {
-    cursor: initial; 
+    cursor: initial;
     color: #555555;
   }
 

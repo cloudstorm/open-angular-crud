@@ -22,6 +22,10 @@
     white-space: nowrap;
   }
 
+  .cs-table-header-cell:focus {
+    outline: none;
+  }
+
   .inline {
     display : inline-block;
   }
