@@ -225,6 +225,8 @@ body > .ui-select-bootstrap.open {
   color: #555555;
   display: block;
   padding: 20px; }
+.cs-menu .navElement:focus {
+  outline: none; }
 .cs-menu .nav {
   font-weight: bold; }
 .cs-menu .navElement:hover {
@@ -284,6 +286,8 @@ body > .ui-select-bootstrap.open {
     font-weight: bold;
     cursor: pointer;
     white-space: nowrap; }
+  .cs-table-header .cs-table-header-cell:focus {
+    outline: none; }
   .cs-table-header .inline {
     display: inline-block; }
   .cs-table-header .arrow-container {

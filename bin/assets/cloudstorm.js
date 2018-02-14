@@ -1,5 +1,5 @@
 /**
- * cloudstorm - v0.0.20 - 2018-02-14
+ * cloudstorm - v0.0.21 - 2018-02-14
  * https://github.com/cloudstorm/cloudstorm#readme
  *
  * Copyright (c) 2018 Virtual Solutions Ltd <info@cloudstorm.io>
