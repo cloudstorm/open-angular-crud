@@ -23,6 +23,7 @@
       &:nth-child(#{$i}) {
         // margin-left: 75px * $i;
         background-color: white;
+        border-radius: 6px;
         z-index: $i;
 
         &:not(:first-of-type) {
@@ -47,12 +48,13 @@
       margin-left: 0;
     }
 
-    &.active{
+    &.active {
     }
 
-    &:not(.active){
+    &:not(.active) {
       padding-left: 5px;
       background-color: lightgray;
+      border-radius: 6px;
     }
 
   } // .form-panel END

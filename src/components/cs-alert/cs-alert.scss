@@ -1,13 +1,13 @@
-.cs-alert{ 
+.cs-alert {
   position: fixed;
   width: 30%;
   top: 55px;
   right: 20px;
   z-index: 99999;
 
-  .alert{
+  .alert {
     word-break: break-word;
-    
+    display: block;
     -webkit-box-shadow: 7px 7px 30px 0px rgba(50, 50, 50, 0.4);
     -moz-box-shadow:    7px 7px 30px 0px rgba(50, 50, 50, 0.4);
     box-shadow:         7px 7px 30px 0px rgba(50, 50, 50, 0.4);

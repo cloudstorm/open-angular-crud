@@ -103,7 +103,7 @@ describe('csAlert', function() {
     expect(element.html()).toContain("test alert 3");
 
     // click test alert 1 TODO: move this to a function...
-    var alerts = element[0].getElementsByTagName("uib-alert");
+    var alerts = element[0].querySelectorAll('[uib-alert]');
     var searchText = "test alert 1";
     var testAlert1;
 

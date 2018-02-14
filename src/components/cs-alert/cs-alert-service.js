@@ -69,7 +69,7 @@ app.service('csAlertService', ['csSettings', function(csSettings){
   };
 
   this.dismissAlert = function(idToDismiss) {
-    return this.alerts = _.without(this.alerts, _.findWhere(this.alerts, {
+    return this.alerts = _.without(this.alerts, _.find(this.alerts, {
       id: idToDismiss
     }));
   };

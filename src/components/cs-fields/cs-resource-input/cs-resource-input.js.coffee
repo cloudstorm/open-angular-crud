@@ -119,10 +119,10 @@ app.directive "csResourceInput", [
           (items) ->
             $scope.associates = items
             if $scope.field.cardinality == 'one'
-              $scope.model.object = _.findWhere(items,{id:itemID})
+              $scope.model.object = _.find(items,{id:itemID})
             else
               $scope.model.object ||= []
-              $scope.model.object.push _.findWhere(items,{id:itemID})
+              $scope.model.object.push _.find(items,{id:itemID})
 
           # errorCallback
           (reason) ->
