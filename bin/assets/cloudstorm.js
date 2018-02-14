@@ -1,5 +1,5 @@
 /**
- * cloudstorm - v0.0.19 - 2018-02-14
+ * cloudstorm - v0.0.20 - 2018-02-14
  * https://github.com/cloudstorm/cloudstorm#readme
  *
  * Copyright (c) 2018 Virtual Solutions Ltd <info@cloudstorm.io>
@@ -665,12 +665,12 @@ app.directive("csResourceInput", [
           var base;
           $scope.associates = items;
           if ($scope.field.cardinality === 'one') {
-            return $scope.model.object = _.findWhere(items, {
+            return $scope.model.object = _.find(items, {
               id: itemID
             });
           } else {
             (base = $scope.model).object || (base.object = []);
-            return $scope.model.object.push(_.findWhere(items, {
+            return $scope.model.object.push(_.find(items, {
               id: itemID
             }));
           }
@@ -2428,39 +2428,6 @@ angular.module('cloudStorm.restApi', []).factory('csRestApi', [
 "use strict";
 var app;
 
-app = angular.module('cloudStorm.routeProvider', []);
-
-app.provider('csRoute', [
-  '$stateProvider', 'csSettingsProvider', function($stateProvider, csSettingsProvider) {
-    this.state;
-    this.go = function(type, params, options) {
-      return this.state.go(csSettingsProvider.settings['router-path-prefix'] + type, params, options);
-    };
-    this.setState = function(state) {
-      return this.state = state;
-    };
-    this.addState = function(config) {
-      return $stateProvider.state(config);
-    };
-    this.$get = function() {
-      return this;
-    };
-    this.init = function() {
-      var i, len, ref, results, state;
-      ref = csSettingsProvider.settings['router-states']();
-      results = [];
-      for (i = 0, len = ref.length; i < len; i++) {
-        state = ref[i];
-        results.push(this.setState((this.addState(state)).$get()));
-      }
-      return results;
-    };
-  }
-]);
-
-"use strict";
-var app;
-
 app = angular.module("cloudStorm.settings", []);
 
 app.provider('csSettings', [
@@ -2709,7 +2676,7 @@ app.service('csAlertService', ['csSettings', function(csSettings){
   };
 
   this.dismissAlert = function(idToDismiss) {
-    return this.alerts = _.without(this.alerts, _.findWhere(this.alerts, {
+    return this.alerts = _.without(this.alerts, _.find(this.alerts, {
       id: idToDismiss
     }));
   };
@@ -3545,6 +3512,47 @@ app.factory('csResourceFilter', [ 'csSettings','$filter', function(csSettings, $
   return this;
 }])
 
+"use strict";
+var app;
+
+app = angular.module('cloudStorm.routeProvider', []);
+
+app.provider('csRoute', [
+  '$stateProvider', 'csSettingsProvider', function($stateProvider, csSettingsProvider) {
+
+    this.go = function(type, params, options) {
+      if (this.state) {
+        return this.state.go(csSettingsProvider.settings['router-path-prefix'] + type, params, options);
+      } else {
+        console.log('No current router state, cannot navite to', type, params, options)
+      }
+    };
+
+    this.setState = function(state) {
+      return this.state = state;
+    };
+
+    this.addState = function(config) {
+      return $stateProvider.state(config);
+    };
+
+    this.$get = function() {
+      return this;
+    };
+
+    this.init = function() {
+      var i, len, ref, results, state;
+      ref = csSettingsProvider.settings['router-states']();
+      results = [];
+      for (i = 0, len = ref.length; i < len; i++) {
+        state = ref[i];
+        results.push(this.setState((this.addState(state)).$get()));
+      }
+      return results;
+    };
+  }
+]);
+
 var app
 
 app = angular.module("cloudStorm.uiPageRouter", [])
@@ -3828,9 +3836,9 @@ angular.module("components/containers/cs-item-list-container/cs-item-list-contai
 
 angular.module("components/cs-alert/cs-alert-template.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("components/cs-alert/cs-alert-template.html",
-    "<uib-alert close='csAlertService.dismissAlert(alert.id)' dismiss-on-timeout='{{csAlertService.timeoutForAlert(alert)}}' ng-click='csAlertService.dismissAlert(alert.id)' ng-repeat='alert in csAlertService.getAlerts()' type='{{alert.type}}'>\n" +
+    "<div close='csAlertService.dismissAlert(alert.id)' dismiss-on-timeout='{{csAlertService.timeoutForAlert(alert)}}' ng-class=\"'alert alert-dismissible alert-' + (alert.type || 'warning')\" ng-click='csAlertService.dismissAlert(alert.id)' ng-repeat='alert in csAlertService.getAlerts()' uib-alert=''>\n" +
     "  {{alert.message}}\n" +
-    "</uib-alert>\n" +
+    "</div>\n" +
     "");
 }]);
 

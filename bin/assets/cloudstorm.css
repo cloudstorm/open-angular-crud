@@ -35,6 +35,7 @@ pre {
   z-index: 99999; }
   .cs-alert .alert {
     word-break: break-word;
+    display: block;
     -webkit-box-shadow: 7px 7px 30px 0px rgba(50, 50, 50, 0.4);
     -moz-box-shadow: 7px 7px 30px 0px rgba(50, 50, 50, 0.4);
     box-shadow: 7px 7px 30px 0px rgba(50, 50, 50, 0.4); }
@@ -252,7 +253,6 @@ body > .ui-select-bootstrap.open {
     text-align: center;
     z-index: 999; }
   .cs-index-sidepanel .cs-wizard .form-panel {
-    height: auto;
     padding-top: 0; }
 
 @media (max-width: 1200px) {
@@ -303,7 +303,6 @@ body > .ui-select-bootstrap.open {
     text-align: center;
     z-index: 999; }
   .cs-index-sidepanel .cs-wizard .form-panel {
-    height: auto;
     padding-top: 0; }
 
 @media (max-width: 1200px) {
@@ -370,7 +369,6 @@ div.table-striped > div.cs-table-body > .cs-table-row:nth-of-type(odd) {
     text-align: center;
     z-index: 999; }
   .cs-index-sidepanel .cs-wizard .form-panel {
-    height: auto;
     padding-top: 0; }
 
 @media (max-width: 1200px) {
@@ -421,6 +419,7 @@ div.table-striped > div.cs-table-body > .cs-table-row:nth-of-type(odd) {
     padding: 15px; }
     .cs-wizard .form-panel:nth-child(1) {
       background-color: white;
+      border-radius: 6px;
       z-index: 1; }
       .cs-wizard .form-panel:nth-child(1):not(:first-of-type) {
         -moz-box-shadow: 0px 0px 25px 0px #000;
@@ -434,6 +433,7 @@ div.table-striped > div.cs-table-body > .cs-table-row:nth-of-type(odd) {
           margin-left: 100px; }
     .cs-wizard .form-panel:nth-child(2) {
       background-color: white;
+      border-radius: 6px;
       z-index: 2; }
       .cs-wizard .form-panel:nth-child(2):not(:first-of-type) {
         -moz-box-shadow: 0px 0px 25px 0px #000;
@@ -447,6 +447,7 @@ div.table-striped > div.cs-table-body > .cs-table-row:nth-of-type(odd) {
           margin-left: 200px; }
     .cs-wizard .form-panel:nth-child(3) {
       background-color: white;
+      border-radius: 6px;
       z-index: 3; }
       .cs-wizard .form-panel:nth-child(3):not(:first-of-type) {
         -moz-box-shadow: 0px 0px 25px 0px #000;
@@ -460,6 +461,7 @@ div.table-striped > div.cs-table-body > .cs-table-row:nth-of-type(odd) {
           margin-left: 300px; }
     .cs-wizard .form-panel:nth-child(4) {
       background-color: white;
+      border-radius: 6px;
       z-index: 4; }
       .cs-wizard .form-panel:nth-child(4):not(:first-of-type) {
         -moz-box-shadow: 0px 0px 25px 0px #000;
@@ -473,6 +475,7 @@ div.table-striped > div.cs-table-body > .cs-table-row:nth-of-type(odd) {
           margin-left: 400px; }
     .cs-wizard .form-panel:nth-child(5) {
       background-color: white;
+      border-radius: 6px;
       z-index: 5; }
       .cs-wizard .form-panel:nth-child(5):not(:first-of-type) {
         -moz-box-shadow: 0px 0px 25px 0px #000;
@@ -488,7 +491,8 @@ div.table-striped > div.cs-table-body > .cs-table-row:nth-of-type(odd) {
       margin-left: 0; }
     .cs-wizard .form-panel:not(.active) {
       padding-left: 5px;
-      background-color: lightgray; }
+      background-color: lightgray;
+      border-radius: 6px; }
 
 .modal-wizard .modal-dialog {
   height: calc(100% - 2 * 30px); }
