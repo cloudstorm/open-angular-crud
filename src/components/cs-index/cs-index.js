@@ -27,7 +27,24 @@ app.component('csIndex', {
     }
 
     this.$onInit = function() {
-      this.csIndexOptions || (this.csIndexOptions = {});
+      // console.log('CS-INDEX:onInit()');
+
+      var defaultOptions, indexOptions;
+      defaultOptions = {
+        'selectedItem': null,
+        'sortAttribute': vm.resource.descriptor.fields[0].attribute,
+        'filterValue': "",
+        'sortReverse': false,
+        'condensedView': false,
+        'hide-actions': false,
+        'hide-attributes': vm.resource.descriptor.attributes_to_hide || {}
+      };
+
+      vm.csIndexOptions || (vm.csIndexOptions = {});
+      indexOptions = angular.copy(vm.csIndexOptions);
+      angular.copy({}, vm.csIndexOptions);
+      angular.merge(vm.csIndexOptions, defaultOptions, indexOptions);
+
 
       csDescriptorService.getPromises().then( function() {
         // Load resource and items when not bound (index-only mode)
@@ -59,22 +76,6 @@ app.component('csIndex', {
         //vm.loadData();
 
         vm.header = vm.resource.descriptor.name
-        var defaultOptions, indexOptions, sortField;
-        sortField = void 0;
-        defaultOptions = {
-          'selectedItem': null,
-          'sortAttribute': vm.resource.descriptor.fields[0].attribute,
-          'filterValue': "",
-          'sortReverse': false,
-          'condensedView': false,
-          'hide-actions': false,
-          'hide-attributes': vm.resource.descriptor.attributes_to_hide || {}
-        };
-
-        vm.csIndexOptions || (vm.csIndexOptions = {});
-        indexOptions = angular.copy(vm.csIndexOptions);
-        angular.copy({}, vm.csIndexOptions);
-        angular.merge(vm.csIndexOptions, defaultOptions, indexOptions);
         vm.columns = vm.resource.descriptor.fields;
 
       })
@@ -106,11 +107,14 @@ app.component('csIndex', {
     };
 
     this.attributeToHide = function(attribute) {
+
       var hiddenAttrs;
       if (this.csIndexOptions['hide-attributes']) {
         if (hiddenAttrs = this.csIndexOptions['hide-attributes'].index) {
           return hiddenAttrs.indexOf(attribute) > -1;
         }
+      } else {
+        console.log('CS-INDEX:attributeToHide called when this.csIndexOptions is undefined...')
       }
       return false;
     };
