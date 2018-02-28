@@ -20,6 +20,7 @@ app.component('csTableContainer', {
     this.i18n = csSettings.settings['i18n-engine'];
 
     this.$onChanges = function(changesObj) {
+      // console.log("cs-table-container.onChanges", changesObj);
       if (changesObj.collection && changesObj.collection.currentValue && changesObj.collection.previousValue != changesObj.collection.currentValue) {
         this.initialCollection = this.collection
         this.sortAndFilter();

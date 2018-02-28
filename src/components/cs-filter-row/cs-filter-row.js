@@ -41,6 +41,7 @@ app.component('csFilterRow', {
     };
 
     this.refreshIndex_ = function() {
+      // console.log("CS-FILTER-ROW: refreshIndex()")
       this.refreshIndex();
     };
 

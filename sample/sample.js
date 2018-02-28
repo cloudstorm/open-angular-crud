@@ -14,10 +14,10 @@ app.controller('MainCtrl', function($scope, csAlertService, csDescriptorService,
 });
 
 
-// app.controller('MainCtrl', function($scope, csAlertService, csDescriptorService, csRoute) {
-//   csDescriptorService.registerDescriptorUrl('http://web.daas.docker/api/v1/meta/descriptors/resources');
-//   csDescriptorService.registerDescriptorUrl('http://web.daas.docker/api/v1/meta/descriptors');
+// app.controller('MainCtrl', function($scope, csAlertService, csSettings, csDescriptorService, csRoute) {
+//   csDescriptorService.registerDescriptorUrl('http://web.csnodeapptemplate.docker/api/v1/descriptors');
 
 //   csAlertService.addAlert('Welcome to CloudStorm', 'info');
+//   csSettings.set('app-title', 'cs-node-app-template');
 //   csRoute.init();
 // });

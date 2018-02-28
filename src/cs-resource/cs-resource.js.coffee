@@ -57,6 +57,7 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
       ################################################################################################
 
       @$index: (params, options = {}) ->
+        # console.log("CS-RESOURCE: index()")
         index_params = angular.copy(params)
         actual_endpoint = options.endpoint || @.endpoint
         base_url = baseUrl(@)
@@ -111,6 +112,7 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
 
       @$search: (query, options = {}) ->
         if typeof query is "object"
+          # console.log("CS-RESOURCE: search()")
           return @$index(q: {query}, options)
         else
           search_params = {}
@@ -262,7 +264,7 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
       ################################################################################################
 
       $merge: (value_object) ->
-        console.log('merge -------')
+        # console.log('merge -------')
         # this = value_object, while keeping the existing attributes if they exist
         delete @meta
         angular.merge(@, _.pick(value_object, "id", "type", "attributes", "relationships", "links", "meta"))

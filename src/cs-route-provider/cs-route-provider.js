@@ -7,6 +7,7 @@ app.provider('csRoute', [
   '$stateProvider', 'csSettingsProvider', function($stateProvider, csSettingsProvider) {
 
     this.go = function(type, params, options) {
+      this.params = params;
       if (this.state) {
         return this.state.go(csSettingsProvider.settings['router-path-prefix'] + type, params, options);
       } else {
@@ -16,6 +17,10 @@ app.provider('csRoute', [
 
     this.setState = function(state) {
       return this.state = state;
+    };
+
+    this.getState = function() {
+      return this.params;
     };
 
     this.addState = function(config) {

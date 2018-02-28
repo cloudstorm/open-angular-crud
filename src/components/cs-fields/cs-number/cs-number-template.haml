@@ -6,5 +6,5 @@
 .form-control.no-cursor{ "ng-if" => "mode('show')",
                          "disabled" => "true"  }
   {{ formItem.attributes[field.attribute] }}
-.no-wrap{ "ng-if" => "mode('tableView')" }
+.no-wrap.pull-right{ "ng-if" => "mode('tableView')" }
   {{ formItem.attributes[field.attribute] }}

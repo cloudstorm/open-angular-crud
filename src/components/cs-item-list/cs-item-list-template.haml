@@ -1,10 +1,10 @@
 /.item-container{ "ng-class" => "{ 'row-container' : $ctrl.modalMode}" }
 .item-container{ "ng-class" => "$ctrl.CL.itemContainer", "ng-if" => "$ctrl.many" }
   .form-control.item{ "ng-repeat" => "item in $ctrl.itemList track by $index",
-        "ng-if" => "$ctrl.many && ($index < 3 || !$ctrl.condition.tableMode)",
+        "ng-if" => "$ctrl.many && ($index < 2 || !$ctrl.condition.tableMode)",
         "ng-click" => "$ctrl.select(item)",
         "ng-class" => "$ctrl.CL.item"}
-    {{ item.attributes[$ctrl.key] }}
+    {{ item.$display_name() }}
   .form-control.item{ "ng-if" => "$ctrl.itemList.length > 3 && $ctrl.condition.tableMode",
                   "ng-click" => "$ctrl.showItems()",
                   "ng-class" => "$ctrl.CL.item" }

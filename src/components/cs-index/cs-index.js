@@ -16,9 +16,15 @@ app.component('csIndex', {
   controller : ['$scope','ResourceService','csSettings','$uibModal','csAlertService','csDescriptorService','csRoute', function($scope, ResourceService, csSettings, $uibModal, csAlertService, csDescriptorService, csRoute){
     var vm = this;
 
-    // this.$onChanges = function(changesObj) {
-    //   console.log('cs-index.onChanges', changesObj);
-    // }
+    this.$onChanges = function(changesObj) {
+      // console.log("cs-index.onChanges", changesObj);
+      if (changesObj.items && changesObj.items.currentValue && changesObj.items.previousValue != changesObj.items.currentValue) {
+        vm.items = changesObj.items.currentValue;
+      }
+      if (changesObj.resource && changesObj.resource.currentValue && changesObj.resource.previousValue != changesObj.resource.currentValue) {
+        vm.columns = changesObj.resource.currentValue.descriptor.fields;
+      }
+    }
 
     this.$onInit = function() {
       this.csIndexOptions || (this.csIndexOptions = {});
@@ -29,6 +35,7 @@ app.component('csIndex', {
           vm.resource = ResourceService.get(vm.resourceType);
         }
         if (!vm.items) {
+          // console.log("CS-INDEX: onInit()")
           vm.resource.$index({ include: '*'}).then(function(data) { vm.items = data; });
         }
         vm.collection = vm.items;
@@ -37,6 +44,7 @@ app.component('csIndex', {
         vm.i18n = csSettings.settings['i18n-engine'];
 
         vm.loadData = function() {
+          // console.log("INDEX: loadData()")
           csDescriptorService.getPromises().then(
             (function() {
               return vm.resource.$index({ include: '*'})
@@ -47,7 +55,8 @@ app.component('csIndex', {
               }).bind(vm)
             )
         };
-        vm.loadData();
+        // I feel this is not required, as it leads to two index queries...
+        //vm.loadData();
 
         vm.header = vm.resource.descriptor.name
         var defaultOptions, indexOptions, sortField;
@@ -98,8 +107,10 @@ app.component('csIndex', {
 
     this.attributeToHide = function(attribute) {
       var hiddenAttrs;
-      if (hiddenAttrs = this.csIndexOptions['hide-attributes'].index) {
-        return hiddenAttrs.indexOf(attribute) > -1;
+      if (this.csIndexOptions['hide-attributes']) {
+        if (hiddenAttrs = this.csIndexOptions['hide-attributes'].index) {
+          return hiddenAttrs.indexOf(attribute) > -1;
+        }
       }
       return false;
     };
@@ -173,6 +184,7 @@ app.component('csIndex', {
     };
 
     this.refreshIndex = function() {
+      // console.log("CS-INDEX: refreshIndex()")
       this.unselectItem();
       this.loadData();
     };

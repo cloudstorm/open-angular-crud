@@ -38,6 +38,14 @@ app.directive "csMenu", ['ResourceService', 'csDescriptorService', 'csRoute', 'c
         csDescriptorService.getPromises().then () ->
           $scope.resources = ResourceService.getResources()
 
+      # Watch router state transitions and update selected menu item according to current state
+      $scope.$watch (->
+        csRoute.getState()
+      ), (newVal) ->
+        if (newVal && newVal.resourceType)
+          $scope.selected = newVal.resourceType
+
+
       $scope.isSelected = (type) ->
         return (type == $scope.selected)
 

@@ -25,6 +25,9 @@
 
 pre {
   background-color: $gray-lighter;
+  margin: 0;
+  padding: 6px 12px;
+  word-break: keep-all;
 }
 
 .form-control {

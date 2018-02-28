@@ -19,6 +19,7 @@ app.component("csPageRouter", {
         this.init = function () {
             switch (this.pageType) {
               case "index":
+                // console.log("CS-PAGE-ROUTER: init()")
                 this.resource_index();
                 break;
 
@@ -92,6 +93,7 @@ app.component("csPageRouter", {
             .then(
               (function(resource){
                 this.resource = resource
+                // console.log("CS-PAGE-ROUTER: resource_index()")
                 return resource.$index({include: '*'})
                 this.finished()
               }).bind(this), (function(){
