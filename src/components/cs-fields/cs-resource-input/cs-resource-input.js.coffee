@@ -79,9 +79,9 @@ app.directive "csResourceInput", [
           $scope.resource = ResourceService.get($scope.field.resource)
           $scope.model = {object: $scope.formItem.$association($scope.field)}
 
-        if formItem.type == $scope.field.resource
+        if formItem.type == $scope.field.resource && $scope.formMode != "tableView"
           event.stopPropagation() if event.stopPropagation
-          itemID = formItem.id.slice()
+          itemID = formItem.id.toString().slice()
           unless itemID == $scope.formItem.id
             refreshAndSelect(itemID)
 
@@ -119,10 +119,10 @@ app.directive "csResourceInput", [
           (items) ->
             $scope.associates = items
             if $scope.field.cardinality == 'one'
-              $scope.model.object = _.find(items,{id:itemID})
+              $scope.model.object = _.find(items,{id: parseInt(itemID)})
             else
               $scope.model.object ||= []
-              $scope.model.object.push _.find(items,{id:itemID})
+              $scope.model.object.push _.find(items,{id: parseInt(itemID) })
 
           # errorCallback
           (reason) ->
