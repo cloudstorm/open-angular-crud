@@ -366,6 +366,7 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
 
       ################################################################################################
 
+
       $display_name: () ->
         instance_name = if @.constructor.descriptor.display && @.constructor.descriptor.display.name
           @attributes[@.constructor.descriptor.display.name]
@@ -375,6 +376,20 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
         instance_name || @.constructor.descriptor.name
 
       ################################################################################################
+
+      $removeRelationship: (field) ->
+
+        #console.log("After", @relationships)
+        #console.log("field", field)
+        if angular.isArray(@relationships[field.relationship].data)
+          console.log(@relationships[field.relationship].data.length)
+          @relationships[field.relationship].data =
+            @relationships[field.relationship].data.slice(1)
+          console.log(@relationships[field.relationship].data.length)
+        else
+          @relationships[field.relationship].data = null
+        #console.log("Before", @relationships)
+        
 
     ##################################################################################################
 
