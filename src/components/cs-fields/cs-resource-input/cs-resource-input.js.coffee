@@ -10,11 +10,13 @@ app.directive "csResourceInput", [
   'csTemplateService',
   'csInputBase',
   'csSettings',
+  'csDescriptorService',
   ($rootScope,
   ResourceService,
   csTemplateService,
   csInputBase,
-  csSettings) ->
+  csSettings,
+  csDescriptorService) ->
 
     # ===== COMPILE =============================================================
 
@@ -34,6 +36,7 @@ app.directive "csResourceInput", [
     # ===== LINK ================================================================
 
     link = ($scope, element, attrs, controller) ->
+
       $scope.i18n = csSettings.settings['i18n-engine']
 
       csInputBase $scope
@@ -64,8 +67,11 @@ app.directive "csResourceInput", [
         if (newValue != oldValue)
           $scope.model.object = $scope.formItem.$association($scope.field)
 
-      $scope.selectItem = () ->
-        # console.log($scope.model)
+      $scope.selectItem = (item) ->
+        csDescriptorService.register($scope.formItem, $scope.field.relationship, item)
+
+      $scope.removeItem = (item) ->
+        csDescriptorService.deregister($scope.formItem, $scope.field.relationship, item)
 
       # ===== COMPONENT LIFECYCLE ===========================
 
@@ -75,7 +81,10 @@ app.directive "csResourceInput", [
 
       # TODO: refactor into a better pattern, perhaps involving the wizard as message broker
       $rootScope.$on 'form-submit', (event, formItem) ->
+
         if $scope.formMode == "tableView"
+
+          $scope.formItem.$removeRelationship($scope.field)
           $scope.resource = ResourceService.get($scope.field.resource)
           $scope.model = {object: $scope.formItem.$association($scope.field)}
 
