@@ -17,7 +17,7 @@ app.component('csIndex', {
     var vm = this;
 
     this.$onChanges = function(changesObj) {
-      // console.log("cs-index.onChanges", changesObj);
+
       if (changesObj.items && changesObj.items.currentValue && changesObj.items.previousValue != changesObj.items.currentValue) {
         vm.items = changesObj.items.currentValue;
       }
@@ -44,7 +44,6 @@ app.component('csIndex', {
       indexOptions = angular.copy(vm.csIndexOptions);
       angular.copy({}, vm.csIndexOptions);
       angular.merge(vm.csIndexOptions, defaultOptions, indexOptions);
-
 
       csDescriptorService.getPromises().then( function() {
         // Load resource and items when not bound (index-only mode)
