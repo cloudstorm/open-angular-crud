@@ -3,7 +3,8 @@
 app = angular.module('cloudStorm.descriptorService', [])
 
 # ===== SERVICE ===============================================================
-app.service 'csDescriptorService', [ '$q', '$http', 'ResourceService', 'csResource', 'csResourceOperation', ($q, $http, ResourceService, csResource, csResourceOperation) ->
+app.service 'csDescriptorService', [ '$q', '$http', 'ResourceService', 'csResource', 'csResourceOperation',
+($q, $http, ResourceService, csResource, csResourceOperation) ->
 
 
   ### Descriptor = [{ attributes_to_hide,
