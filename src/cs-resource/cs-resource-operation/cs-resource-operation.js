@@ -32,25 +32,95 @@ app.factory('csResourceOperation', [ function() {
   this.where = function(arr, params){
 
     var array = angular.copy(arr)
-    //Where works right now only with one field
-    console.log(array)
-    for(var i in array){
+    array.forEach((function(object){
+      var list = object[params.field]
+      list = _.where(list, params.query)
+      object[params.field] = this.select(list, params.select)
+    }).bind(this))
 
-      var object = array[i]
-      console.log(object)
-      object[params.field] = _.where(object[params.field], params.query)
-
-      // for(var arr in object[params.field]){
-      //   for(object in array){
-      //     for(var key in object){
-      //       if(!params.select.indexOf(key)){
-      //         delete object[key]
-      //       }
-      //     }
-      //   }
-      // }
-    }
     return array
+  }
+
+  this.putKeyInside = function(arr, params){
+
+    var array = angular.copy(arr)
+    array.forEach((function(element){
+      element[params.field].forEach((function(innerElement){
+        innerElement[params.newKey] = element[params.keyToPutIn]
+      }).bind(this))
+    }).bind(this))
+    return array
+  }
+
+  this.mergeArrays = function(array, key){
+
+    var arr = []
+    array.forEach(function(object){
+      arr = object[key].concat(arr)
+    })
+    return arr
+  }
+
+  this.renameKey = function(arr, newKey, oldKey){
+
+    var array = angular.copy(arr)
+    array.forEach(function(object){
+        object[newKey] = object[oldKey]
+        delete object[oldKey]
+    })
+    return array
+  }
+
+  this.objectFromArrayObject = function(array, params){
+
+    var object = {}
+    array.forEach((function(element){
+      object[params.newKey] = element[params.baseKey]
+    }).bind(this))
+    return object
+  }
+
+  this.objectFromArray = function(object, keyName){
+
+    var arr = []
+    for(key in object){
+      object[key][newKey] = key
+      arr.push(object[key])
+    }
+    return arr
+  }
+
+  this.getIndex = function(array, keys, value){
+
+    var index = -1
+    array.forEach((function(element, i){
+      if(this.getValue(element, keys) == value){
+        index = i
+        return
+      }
+    }).bind(this))
+    return index
+  }
+
+  this.getValue = function(object, keys){
+    var value = object
+    keys.forEach(function(key){
+      value = value[key]
+    })
+    return value
+  }
+
+  this.remove = function(array, key, value){
+
+    var index = -1;
+    array.forEach(function(element, i){
+      if(element[key] == value){
+        index = i;
+        break
+      }
+    })
+    if(index > -1)
+      array.slice(index, 1)
   }
 
   this.compactObject = function(object, constantKey){
@@ -79,15 +149,5 @@ app.factory('csResourceOperation', [ function() {
     return arr
   }
 
-  var renameKey = function(array, newKey, oldKey){
-
-    array.forEach(function(object){
-        object[newKey] = object[oldKey]
-        delete object[oldKey]
-    })
-    return array
-  }
-
-  console.log(this)
   return this
 }])
