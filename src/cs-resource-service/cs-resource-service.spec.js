@@ -1,15 +1,19 @@
 describe('ResourceService - TODO: rename to csResourceService?', function() {
+
   var csResourceService;
+  var csResourceOperation;
 
   beforeEach(angular.mock.module('cloudStorm.resourceService'));
+  beforeEach(angular.mock.module('cloudStorm.resourceOperation'));
   beforeEach(angular.mock.module('cloudStorm.restApi'));
 
   beforeEach(module(function($provide) {
   $provide.value("userResource", { data: 'test' });
   }));
 
-  beforeEach(inject(function (_ResourceService_) {
+  beforeEach(inject(function (_ResourceService_){ // _csResourceOperation_) {
     csResourceService = _ResourceService_;
+    //csResourceOperation = _csResourceOperation_;
   }));
 
   it('should exist', function() {
