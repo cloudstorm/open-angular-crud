@@ -76,7 +76,7 @@ app.component('csTableRow', {
     };
   }],
   bindings : {
-    item : "<",
+    item : "=",
     csIndexOptions : "=",
     columns : "<",
     columnVisible_ : "&",
