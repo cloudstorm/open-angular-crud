@@ -68,12 +68,17 @@ app.directive "csResourceInput", [
           $scope.model.object = $scope.formItem.$association($scope.field)
 
       $scope.selectItem = (item) ->
-        csDescriptorService.register($scope.formItem, $scope.field.relationship, item)
+        $scope.formItem.$registerPendingOps($scope.field.relationship, item)
 
       $scope.removeItem = (item) ->
-        csDescriptorService.deregister($scope.formItem, $scope.field.relationship, item)
+        $scope.formItem.$deregisterPendingOps($scope.field.relationship, item)
 
       # ===== COMPONENT LIFECYCLE ===========================
+
+      $rootScope.$on 'edit-assoc', (event, item) ->
+        item.forEach (toDelete) ->
+          if(toDelete.subject.id == $scope.formItem.id)
+            $scope.formItem.$removeRelationship(toDelete.relationship, toDelete.object.id)
 
       $scope.$on 'form-reset', () ->
         # Sets an empty CS Resource as model value
@@ -84,7 +89,6 @@ app.directive "csResourceInput", [
 
         if $scope.formMode == "tableView"
 
-          $scope.formItem.$removeRelationship($scope.field)
           $scope.resource = ResourceService.get($scope.field.resource)
           $scope.model = {object: $scope.formItem.$association($scope.field)}
 

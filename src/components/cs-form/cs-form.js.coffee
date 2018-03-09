@@ -4,7 +4,7 @@ app = angular.module('cloudStorm.form', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csForm", ['csSettings', (csSettings) ->
+app.directive "csForm", ['csSettings', 'csDescriptorService', '$rootScope', (csSettings, csDescriptorService, $rootScope) ->
 
   # ===== COMPILE =============================================================
 
@@ -12,6 +12,7 @@ app.directive "csForm", ['csSettings', (csSettings) ->
 
     # Only modify the DOM in compile, use (pre/post) link for others
     $templateElement.addClass "cs-form"
+
 
     # Pre-link: gets called for parent first
     pre: ($scope, element, attrs, controller) ->
@@ -91,8 +92,11 @@ app.directive "csForm", ['csSettings', (csSettings) ->
       $scope.$broadcast 'field-cancel', $scope.formItem
 
     $scope.submit = () ->
+
       api_action = null
+
       if $scope.formMode == 'edit'
+
         api_action = $scope.editableItem.$save
       else if $scope.formMode == 'create'
         api_action = $scope.editableItem.$create
@@ -100,6 +104,8 @@ app.directive "csForm", ['csSettings', (csSettings) ->
       api_action.call($scope.editableItem).then(
         # successCallback
         (item) ->
+
+          $rootScope.$broadcast 'edit-assoc', $scope.editableItem.$postDeletes()
           $scope.formItem.$assign($scope.editableItem) unless $scope.editableItem == $scope.formItem
 
           $scope.$emit 'form-submit', $scope.formItem
