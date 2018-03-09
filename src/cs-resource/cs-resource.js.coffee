@@ -4,8 +4,8 @@ app = angular.module('cloudStorm.resource', [])
 
 ####################################################################################################
 
-app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSettings', '$q',
-  (csRestApi, csDataStore, ResourceService, csSettings, $q) ->
+app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSettings', '$q', 'csResourceOperation'
+  (csRestApi, csDataStore, ResourceService, csSettings, $q, csResourceOperation) ->
 
     # Returns relative URL
     memberEndpointUrl = (resource, id) ->
@@ -27,6 +27,7 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
 
       constructor: (value_object, opts = {}) ->
         # Setup datastore based in different scenarios
+        @pendingOperations = {}
         if opts.datastore
           # If datastore is given in options, use that
           @.$datastore = opts.datastore
@@ -327,7 +328,21 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
           else
             return @.$relationship(rel.data, opts)
 
+
+      $addSelection: (field, value, opts = {}) ->
+
+        console.log("addSelection")
+        if field.cardinality is 'one'
+          if value != undefined
+            csDescriptorService.register(this, value, "add")
+        else
+          oldValue = @relationships[field.relationship].data
+          if value.length > oldValue.length
+            csDescriptorService.register(this, value.pop(), "add")
+
+
       $assign_association: (field, value, opts = {}) ->
+
         @relationships ||= {}
         if value
           if angular.isArray(value)
@@ -377,19 +392,93 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
 
       ################################################################################################
 
-      $removeRelationship: (field) ->
+      $removeRelationship: (relationship, id) ->
 
-        #console.log("After", @relationships)
-        #console.log("field", field)
-        if angular.isArray(@relationships[field.relationship].data)
-          console.log(@relationships[field.relationship].data.length)
-          @relationships[field.relationship].data =
-            @relationships[field.relationship].data.slice(1)
-          console.log(@relationships[field.relationship].data.length)
+        if angular.isArray(@relationships[relationship].data)
+          index = csResourceOperation.getIndex(@relationships[relationship].data, ["id"], id)
+          @relationships[relationship].data.splice(index, 1) if index > -1
         else
           @relationships[field.relationship].data = null
-        #console.log("Before", @relationships)
-        
+
+      $removeSingleRelationship: (relationship) ->
+
+          @relationships[relationship].data = []
+
+      $inverseSubject: (relationship) ->
+
+          sub = @relationships[relationship].data
+          if sub
+            @.$datastore.get(sub.type, sub.id)
+          else
+            null
+
+      $getDescriptor: () ->
+
+        ResourceService.getRelationships()
+
+      $registerPendingOps: (relationship, object) ->
+
+
+        @pendingOperations[relationship] = [] unless @pendingOperations[relationship]
+        @pendingOperations[relationship].push({
+          subject: @,
+          object: object
+        })
+
+      $deregisterPendingOps: (relationship, object) ->
+
+        # -------- Params -----------
+        # subject = Resource(type, id),
+        # relationship,
+        # object = Resource{ type, id}
+
+        if @pendingOperations[relationship]
+          index = csResourceOperation.getIndex(@pendingOperations[relationship], ["object", "id"], object.id)
+          # Removing element
+          @pendingOperations[relationship].splice(index, 1) if index > -1
+
+      $postDeletes: () ->
+
+          postDeletes = []
+          Object.keys(@pendingOperations).forEach ((relationship) ->
+            array = @pendingOperations[relationship]
+            for operation in array
+              # operation = {
+              #  subject = Resource(type, id),
+              #  relationship,
+              #  object = Resource{ type, id
+              # }
+              subject = operation.subject   # Resource
+              object = operation.object   # Resource
+              inverseRelationship = @.$getInverse(subject.type, object.type)
+              if inverseRelationship
+                # object.$removeSingleRelationship(inverseRelationship)
+                inverseSubject = object.$inverseSubject(inverseRelationship)
+                if inverseSubject
+                  postDeletes.push {
+                    subject : inverseSubject,
+                    relationship : relationship
+                    object : object
+                  }
+                  @inverseSubject = inverseSubject
+                  inverseSubject.$removeSingleRelationship(relationship)
+          ).bind(this)
+          # Clear pending operations
+          @pendingOperations = {}
+          postDeletes
+
+       $getInverse: (subject, object) ->
+
+          # Switch subject and object
+          inverse = _.where ResourceService.getRelationships(), {
+            subject : object,
+            object : subject,
+          }
+          if inverse.length > 0 && inverse[0].cardinality == "one"
+            return inverse[0].relationship
+          else
+            return null
+
 
     ##################################################################################################
 
