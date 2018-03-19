@@ -86,17 +86,24 @@ app.directive "csResourceInput", [
 
       # TODO: refactor into a better pattern, perhaps involving the wizard as message broker
       $rootScope.$on 'form-submit', (event, formItem) ->
+        # There are more cs-resource-input directives that might be visible on the FE:
+        #   - cs-resource-input is used on the edit and create forms
+        #   - cs-resource-input is also used in the cs-index component (through cs-table/cs-table-row)
+        # When we submit a sub-form (==? we create a sub-resource) we want to update the previous form(s) in the wizard to
+        # have the newly created resource in the respective fields, BUT we do not want to update anything in the table (yet)
 
-        if $scope.formMode == "tableView"
-
-          $scope.resource = ResourceService.get($scope.field.resource)
-          $scope.model = {object: $scope.formItem.$association($scope.field)}
-
-        if formItem.type == $scope.field.resource && $scope.formMode != "tableView"
-          event.stopPropagation() if event.stopPropagation
-          itemID = formItem.id.toString().slice()
-          unless itemID == $scope.formItem.id
-            refreshAndSelect(itemID)
+        if $scope.formMode != "tableView"
+        # TODO: in case when there are multiple fields that have the same sub-resource only fill the one that initiated the sub-form
+          if formItem.type == $scope.field.resource
+            event.stopPropagation() if event.stopPropagation
+            itemID = parseInt(formItem.id.toString().slice())
+            unless itemID == $scope.formItem.id
+              refreshAndSelect(itemID)
+        else
+          if $scope.formItem.id == parseInt(formItem.id.toString().slice())
+            console.log('TEST', $scope.field)
+            $scope.resource = ResourceService.get($scope.field.resource)
+            $scope.model = { object: $scope.formItem.$association($scope.field) }
 
       # ===== GETTERS =======================================
 
@@ -132,10 +139,10 @@ app.directive "csResourceInput", [
           (items) ->
             $scope.associates = items
             if $scope.field.cardinality == 'one'
-              $scope.model.object = _.find(items,{id: parseInt(itemID)})
+              $scope.model.object = _.find(items,{id: itemID })
             else
               $scope.model.object ||= []
-              $scope.model.object.push _.find(items,{id: parseInt(itemID) })
+              $scope.model.object.push _.find(items,{id: itemID })
 
           # errorCallback
           (reason) ->
