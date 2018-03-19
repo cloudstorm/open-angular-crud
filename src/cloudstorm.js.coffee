@@ -34,7 +34,6 @@ app = angular.module 'cloudStorm', [
   'cloudStorm.resourceService'
   'cloudStorm.restApi'
   'cloudStorm.resourceFilter'
-  'cloudStorm.resourceOperation'
   'cloudStorm.settings'
   'cloudStorm.templateService'
   'cloudStorm.templates'
