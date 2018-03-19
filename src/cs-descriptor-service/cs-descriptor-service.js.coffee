@@ -3,8 +3,8 @@
 app = angular.module('cloudStorm.descriptorService', [])
 
 # ===== SERVICE ===============================================================
-app.service 'csDescriptorService', [ '$q', '$http', 'ResourceService', 'csResource', 'csResourceOperation',
-($q, $http, ResourceService, csResource, csResourceOperation) ->
+app.service 'csDescriptorService', [ '$q', '$http', 'csResource', 'ResourceService'
+($q, $http, csResource, ResourceService) ->
 
 
   ### Descriptor = [{ attributes_to_hide,
@@ -64,7 +64,6 @@ app.service 'csDescriptorService', [ '$q', '$http', 'ResourceService', 'csResour
       typeIsArray = Array.isArray || ( value ) -> return {}.toString.call( value ) is '[object Array]'
       if typeIsArray response.data
         response.data.forEach (descriptor) => @registerDescriptor(descriptor);
-        @processDescriptors()
       else
         @registerDescriptor(response.data);
     ).catch( (response) =>
@@ -76,46 +75,19 @@ app.service 'csDescriptorService', [ '$q', '$http', 'ResourceService', 'csResour
   @registerDescriptor = (data) ->
 
     @desc.push (data)
+    console.log(data)
     class Resource extends csResource
       @endpoint = data.endpoint
       @base_url = data.base_url
       @descriptor = _.omit data, ['endpoint', 'base_url']
       @loaded = false
       @data = null
-    ResourceService.register Resource.descriptor.type, Resource
+    console.log(Resource)
+    try
+      ResourceService.register Resource.descriptor.type, Resource
+    catch ex
+      console.log("Creating Resource class fails", ex)
 
-  @processDescriptors = () ->
-
-      # 1st - Select
-      object = csResourceOperation.select(@desc, ["type", "fields"])
-      # --> [{ type, fields : { ... } }]
-
-      # 2nd - Filter and select relationships
-      object = csResourceOperation.where(object, {
-        field : "fields",
-        select : ["relationship", "cardinality", "resource"],
-        query : { type : "resource"}
-      })
-      # --> [{ type, fields : { relationship , cardinality, resource | type == "resource"} }]
-
-      # 3rd
-      object = csResourceOperation.putKeyInside(object, {
-        field : "fields"
-        keyToPutIn : "type"
-        newKey : "subject"
-      })
-      # --> [{ fields : [{"subject" : type,  relationship", cardinality, resource}] }]
-
-      # 4th
-      object = csResourceOperation.mergeArrays(object, "fields")
-      # --> [{subject, relationship, cardinality, resource}]
-
-      # 5th
-      object = csResourceOperation.renameKey(object, "object", "resource")
-      # --> [{subject, relationship, cardinality, object : resource}]
-
-      @rels = object
-      ResourceService.setRelationships(object)
 
   # For debug purposes
   window.csDescriptors = this
