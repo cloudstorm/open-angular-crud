@@ -437,6 +437,8 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
           # Removing element
           @pendingOperations[relationship].splice(index, 1) if index > -1
 
+
+      # This method return the 'triples' which has to be deleted after a form submission
       $postDeletes: () ->
 
           postDeletes = []
@@ -444,9 +446,9 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
             array = @pendingOperations[relationship]
             for operation in array
               # operation = {
-              #  subject = Resource(type, id),
+              #  subject [Resource[type, id]],
               #  relationship,
-              #  object = Resource{ type, id
+              #  object - [Resource[type, id]]
               # }
               subject = operation.subject   # Resource
               object = operation.object   # Resource
@@ -465,7 +467,14 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
           ).bind(this)
           # Clear pending operations
           @pendingOperations = {}
+          # return type:
+          # posteDeletes = {
+          #  subject [Resource[type, id]],
+          #  relationship,
+          #  object - [Resource[type, id]]
+          # }
           postDeletes
+
 
        $getInverse: (subject, object) ->
 
