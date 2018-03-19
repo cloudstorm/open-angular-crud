@@ -75,7 +75,6 @@ app.service 'csDescriptorService', [ '$q', '$http', 'csResource', 'ResourceServi
   @registerDescriptor = (data) ->
 
     @desc.push (data)
-    console.log(data)
     class Resource extends csResource
       @endpoint = data.endpoint
       @base_url = data.base_url
@@ -86,7 +85,6 @@ app.service 'csDescriptorService', [ '$q', '$http', 'csResource', 'ResourceServi
     try
       ResourceService.register Resource.descriptor.type, Resource
     catch ex
-      console.log("Creating Resource class fails", ex)
 
 
   # For debug purposes
