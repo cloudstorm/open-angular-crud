@@ -67,18 +67,8 @@ app.directive "csResourceInput", [
         if (newValue != oldValue)
           $scope.model.object = $scope.formItem.$association($scope.field)
 
-      $scope.selectItem = (item) ->
-        $scope.formItem.$registerPendingOps($scope.field.relationship, item)
-
-      $scope.removeItem = (item) ->
-        $scope.formItem.$deregisterPendingOps($scope.field.relationship, item)
 
       # ===== COMPONENT LIFECYCLE ===========================
-
-      $rootScope.$on 'edit-assoc', (event, item) ->
-        item.forEach (toDelete) ->
-          if(toDelete.subject.id == $scope.formItem.id)
-            $scope.formItem.$removeRelationship(toDelete.relationship, toDelete.object.id)
 
       $scope.$on 'form-reset', () ->
         # Sets an empty CS Resource as model value
