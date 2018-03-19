@@ -4,7 +4,7 @@ app = angular.module('cloudStorm.resourceService', [])
 
 ####################################################################################################
 
-app.factory 'ResourceService', ['$injector', 'csResourceOperation', ($injector, csResourceOperation) ->
+app.factory 'ResourceService', ['$injector', ($injector) ->
 
 
   ##################################################################################################
