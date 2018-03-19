@@ -96,8 +96,6 @@ describe('csResource', function() {
   beforeEach(angular.mock.module('cloudStorm.localizationProvider'));
   beforeEach(angular.mock.module('cloudStorm.settings'));
   beforeEach(angular.mock.module('cloudStorm.resource'));
-  beforeEach(angular.mock.module('cloudStorm.resourceOperation'));
-
 
   beforeEach(inject(function (_csResource_, _ResourceService_, _$q_, _$httpBackend_, _csDataStore_) {
     csResource = _csResource_;
