@@ -106,7 +106,6 @@ app.directive "csForm", ['csSettings', 'csDescriptorService', '$rootScope',
         # successCallback
         (item) ->
 
-          $rootScope.$broadcast 'edit-assoc', $scope.editableItem.$postDeletes()
           $scope.formItem.$assign($scope.editableItem) unless $scope.editableItem == $scope.formItem
 
           $scope.$emit 'form-submit', $scope.formItem
