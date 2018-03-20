@@ -16,6 +16,7 @@ app.component('csIndex', {
   controller : ['$scope','ResourceService','csSettings','$uibModal','csAlertService','csDescriptorService','csRoute', function($scope, ResourceService, csSettings, $uibModal, csAlertService, csDescriptorService, csRoute){
     var vm = this;
 
+    this.loading = true
     this.$onChanges = function(changesObj) {
       // console.log("cs-index.onChanges", changesObj);
       if (changesObj.items && changesObj.items.currentValue && changesObj.items.previousValue != changesObj.items.currentValue) {
@@ -27,17 +28,17 @@ app.component('csIndex', {
     }
 
     this.$onInit = function() {
-      // console.log('CS-INDEX:onInit()');
 
+      // console.log('CS-INDEX:onInit()');
       var defaultOptions, indexOptions;
       defaultOptions = {
         'selectedItem': null,
-        'sortAttribute': vm.resource.descriptor.fields[0].attribute,
+        'sortAttribute': vm.resource ? vm.resource.descriptor.fields[0].attribute : {},
         'filterValue': "",
         'sortReverse': false,
         'condensedView': false,
         'hide-actions': false,
-        'hide-attributes': vm.resource.descriptor.attributes_to_hide || {}
+        'hide-attributes': vm.resource ? vm.resource.descriptor.attributes_to_hide : {}
       };
 
       vm.csIndexOptions || (vm.csIndexOptions = {});
@@ -45,15 +46,18 @@ app.component('csIndex', {
       angular.copy({}, vm.csIndexOptions);
       angular.merge(vm.csIndexOptions, defaultOptions, indexOptions);
 
-
       csDescriptorService.getPromises().then( function() {
         // Load resource and items when not bound (index-only mode)
         if (!vm.resource) {
           vm.resource = ResourceService.get(vm.resourceType);
+          vm.csIndexOptions['hide-attributes'] = vm.resource.descriptor.attributes_to_hide || {}
+          vm.csIndexOptions['sortAttribute'] = vm.resource.descriptor.fields[0].attribute
         }
         if (!vm.items) {
-          // console.log("CS-INDEX: onInit()")
-          vm.resource.$index({ include: '*'}).then(function(data) { vm.items = data; });
+          vm.resource.$index({ include: '*'}).then(function(data) {
+            vm.items = data;
+            vm.loading = false
+          });
         }
         vm.collection = vm.items;
 
