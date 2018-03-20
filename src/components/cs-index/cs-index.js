@@ -86,8 +86,10 @@ app.component('csIndex', {
       })
     }
 
-    $scope.$on('form-submit', (function(formItem){
-      this.refreshIndex()
+    $scope.$on('form-submit', (function(formItem, info){
+      if(info.panelIndex == 0){
+        this.refreshIndex()
+      }
     }).bind(this))
 
    this.pushNewItem = function(item) {
