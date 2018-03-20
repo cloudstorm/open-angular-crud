@@ -10,13 +10,10 @@ app.provider 'csSettings', ['csLocalizationProvider', (csLocalizationProvider) -
     return [{
       name: @settings['router-path-prefix'] + 'index'
       url: '/{resourceType}'
-      component: 'csPageRouter'
+      component: 'csIndex'
       resolve:
         resourceType: ['$transition$', ($transition$) ->
           $transition$.params().resourceType
-        ]
-        pageType: ['$transition$', ($transition$) ->
-          'index'
         ]
     },{
       name: @settings['router-path-prefix'] + 'show'
