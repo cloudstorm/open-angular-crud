@@ -108,8 +108,12 @@ app.directive "csForm", ['csSettings', 'csDescriptorService', '$rootScope',
 
           $scope.formItem.$assign($scope.editableItem) unless $scope.editableItem == $scope.formItem
 
-          $scope.$emit 'form-submit', $scope.formItem
+          $scope.$emit 'form-submit', $scope.formItem, {
+              panelIndex : $scope.wizardPanelIndex,
+              attribute : $scope.subformAttribute
+          }
           $scope.$broadcast 'field-submit', $scope.formItem
+
 
           if $scope.csFormOptions['reset-on-submit']
             angular.copy($scope.formResource.$new(), $scope.formItem)
@@ -163,6 +167,8 @@ app.directive "csForm", ['csSettings', 'csDescriptorService', '$rootScope',
       formResource: '=' # The resource which the form is working with
       formResourceDescriptor: '=' # The resource which the form is working with
       formItem: '=?' # The resource item which the form is working with
+      subformAttribute : "=" # The relationship between the resources of the parent and current form
+      # It gets a value only on subforms
       formParent: '=?' # The resource item which the form is working with
       formMode: '@' # 'show' / 'edit' / 'create'
       wizardPanelIndex: '=' # Cardinality of the wizard panel in which this form is rendered
