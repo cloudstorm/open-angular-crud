@@ -1,15 +1,15 @@
 .row
-  .col-lg-12{ "ng-switch" => "$ctrl.listIsEmpty()"}
+  .col-lg-12
     %cs-filter-row{ "resource" => "$ctrl.resource",
                     "filterValue" => "$ctrl.filterValue",
                     "filter" => "$ctrl.filter(filterValue)",
                     "open-new-resource-panel" => "$ctrl.openNewResourcePanel()",
                     "refresh-index" => "$ctrl.refreshIndex()"}
-    .row{ "ng-switch-when" => "true" }
+    .row{ "ng-if" => "$ctrl.listIsEmpty()" }
       .well.well-lg
         {{$ctrl.header}} {{ $ctrl.i18n.t('index.empty') }}
 
-    .row{ "ng-switch-when" => "false" }
+    .row{ "ng-show" => "!$ctrl.listIsEmpty()" }
       %cs-table-container{"ng-if" => "!$ctrl.loading",
                           "ng-class" => "{ 'col-lg-8' : $ctrl.sidePanelIsVisible() && !$ctrl.viewIsCompressed(),
                                            'col-lg-6' : $ctrl.viewIsCompressed() }",
