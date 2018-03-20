@@ -10,7 +10,8 @@
         {{$ctrl.header}} {{ $ctrl.i18n.t('index.empty') }}
 
     .row{ "ng-switch-when" => "false" }
-      %cs-table-container{"ng-class" => "{ 'col-lg-8' : $ctrl.sidePanelIsVisible() && !$ctrl.viewIsCompressed(),
+      %cs-table-container{"ng-if" => "!$ctrl.loading",
+                          "ng-class" => "{ 'col-lg-8' : $ctrl.sidePanelIsVisible() && !$ctrl.viewIsCompressed(),
                                            'col-lg-6' : $ctrl.viewIsCompressed() }",
                           "resource" => "$ctrl.resource",
                           "collection" => "$ctrl.items",
@@ -21,7 +22,7 @@
                           "select-item_" => "$ctrl.selectItem(item)",
                           "destroy-item_" => "$ctrl.destroyItem(event, item)"}
 
-      %cs-index-sidepanel{ "ng-if" => "$ctrl.sidePanelIsVisible()",
+      %cs-index-sidepanel{ "ng-if" => "$ctrl.sidePanelIsVisible() && !$ctrl.loading",
                            "cs-index-sidepanel-options" => "$ctrl.csIndexOptions",
                            "resource-type" => "$ctrl.resourceType",
                            "item" => "$ctrl.csIndexOptions.selectedItem",
@@ -29,3 +30,4 @@
                            "ng-class" => "{ 'col-lg-4' : !$ctrl.viewIsCompressed() && $ctrl.sidePanelIsVisible(),
                                             'col-lg-6' : $ctrl.viewIsCompressed() }",
                            "panel-number-callback_" => "$ctrl.getPanelNumber(length)" }
+      %cs-loader{ "ng-if" => "$ctrl.loading"}
