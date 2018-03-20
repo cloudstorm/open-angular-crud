@@ -81,7 +81,6 @@ app.service 'csDescriptorService', [ '$q', '$http', 'csResource', 'ResourceServi
       @descriptor = _.omit data, ['endpoint', 'base_url']
       @loaded = false
       @data = null
-    console.log(Resource)
     try
       ResourceService.register Resource.descriptor.type, Resource
     catch ex
