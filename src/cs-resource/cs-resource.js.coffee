@@ -312,6 +312,7 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
         actual_datastore = opts.datastore || @.$datastore
         _.map rel, (item) -> actual_datastore.get(item.type, item.id)
 
+      # returns [Resource] or Resource
       $association: (field, opts = {}) ->
         rel = @relationships && @relationships[field.relationship]
         if rel
