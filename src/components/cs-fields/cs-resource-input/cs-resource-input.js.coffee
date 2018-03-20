@@ -10,13 +10,11 @@ app.directive "csResourceInput", [
   'csTemplateService',
   'csInputBase',
   'csSettings',
-  'csDescriptorService',
   ($rootScope,
   ResourceService,
   csTemplateService,
   csInputBase,
-  csSettings,
-  csDescriptorService) ->
+  csSettings) ->
 
     # ===== COMPILE =============================================================
 
@@ -36,13 +34,10 @@ app.directive "csResourceInput", [
     # ===== LINK ================================================================
 
     link = ($scope, element, attrs, controller) ->
-
       $scope.i18n = csSettings.settings['i18n-engine']
-
       csInputBase $scope
       $scope.csTemplateService = csTemplateService
       $scope.defaultTemplate = 'components/cs-fields/cs-resource-input/cs-resource-input-template.html'
-
       setup_associations($scope)
 
       # ===== WATCHES =======================================
@@ -79,11 +74,11 @@ app.directive "csResourceInput", [
         # There are more cs-resource-input directives that might be visible on the FE:
         #   - cs-resource-input is used on the edit and create forms
         #   - cs-resource-input is also used in the cs-index component (through cs-table/cs-table-row)
-        # When we submit a sub-form (==? we create a sub-resource) we want to update the previous form(s) in the wizard to
-        # have the newly created resource in the respective fields, BUT we do not want to update anything in the table (yet)
+        # When we submit a sub-form (==? we create a sub-resource) we want to update the previous form(s) in the wizard
+        # to have the newly created resource in the respective fields, BUT we do not want to update anything in the
+        # table (yet)
 
         if $scope.formMode != "tableView"
-        # TODO: in case when there are multiple fields that have the same sub-resource only fill the one that initiated the sub-form
           if formItem.type == $scope.field.resource && $scope.field.attribute == info.attribute
             event.stopPropagation() if event.stopPropagation
             itemID = parseInt(formItem.id.toString().slice())
@@ -91,7 +86,6 @@ app.directive "csResourceInput", [
               refreshAndSelect(itemID)
           if formItem.type == $scope.field.resource && $scope.field.attribute != info.attribute
             refreshOptions(itemID)
-
         else
           if $scope.formItem.id == parseInt(formItem.id.toString().slice())
             $scope.resource = ResourceService.get($scope.field.resource)
@@ -100,9 +94,8 @@ app.directive "csResourceInput", [
       # ===== GETTERS =======================================
 
       $scope.refresh = (value) ->
-
         ###  Refresh plays a role in the submission of the subforms, becuase the list of selectable
-        esources has to be updated. ###
+        resources has to be updated. ###
         search_options = angular.merge({datastore: $scope.formItem.$datastore}, $scope.field.resource_endpoint)
         $scope.resource.$search(value, search_options).then(
           # successCallback
@@ -130,7 +123,6 @@ app.directive "csResourceInput", [
 
 
       refreshOptions = (itemID) ->
-
         search_options = angular.merge({}, $scope.field.resource_endpoint)
         $scope.resource.$search(null, search_options).then(
           # successCallback
