@@ -4,23 +4,23 @@
                     "filterValue" => "$ctrl.filterValue",
                     "filter" => "$ctrl.filter(filterValue)",
                     "open-new-resource-panel" => "$ctrl.openNewResourcePanel()",
-                    "refresh-index" => "$ctrl.refreshIndex()"}
+                    "refresh-index" => "$ctrl.refreshIndex()" }
     .row{ "ng-switch-when" => "true" }
       .well.well-lg
         {{$ctrl.header}} {{ $ctrl.i18n.t('index.empty') }}
 
     .row{ "ng-switch-when" => "false" }
-      %cs-table-container{"ng-if" => "!$ctrl.loading",
-                          "ng-class" => "{ 'col-lg-8' : $ctrl.sidePanelIsVisible() && !$ctrl.viewIsCompressed(),
-                                           'col-lg-6' : $ctrl.viewIsCompressed() }",
-                          "resource" => "$ctrl.resource",
-                          "collection" => "$ctrl.items",
-                          "columns" => "$ctrl.columns",
-                          "cs-index-options" => "$ctrl.csIndexOptions",
-                          "column-visible_" => "$ctrl.columnVisible(column, index)",
-                          "show-item_" => "$ctrl.showItem(item)",
-                          "select-item_" => "$ctrl.selectItem(item)",
-                          "destroy-item_" => "$ctrl.destroyItem(event, item)"}
+      %cs-table-container{ "ng-if" => "!$ctrl.loading",
+                           "ng-class" => "{ 'col-lg-8' : $ctrl.sidePanelIsVisible() && !$ctrl.viewIsCompressed(),
+                                            'col-lg-6' : $ctrl.viewIsCompressed() }",
+                           "resource" => "$ctrl.resource",
+                           "collection" => "$ctrl.items",
+                           "columns" => "$ctrl.columns",
+                           "cs-index-options" => "$ctrl.csIndexOptions",
+                           "column-visible_" => "$ctrl.columnVisible(column, index)",
+                           "show-item_" => "$ctrl.showItem(item)",
+                           "select-item_" => "$ctrl.selectItem(item)",
+                           "destroy-item_" => "$ctrl.destroyItem(event, item)" }
 
       %cs-index-sidepanel{ "ng-if" => "$ctrl.sidePanelIsVisible() && !$ctrl.loading",
                            "cs-index-sidepanel-options" => "$ctrl.csIndexOptions",
