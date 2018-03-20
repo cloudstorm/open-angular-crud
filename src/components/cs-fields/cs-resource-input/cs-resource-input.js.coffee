@@ -89,6 +89,9 @@ app.directive "csResourceInput", [
             itemID = parseInt(formItem.id.toString().slice())
             unless itemID == $scope.formItem.id
               refreshAndSelect(itemID)
+          if formItem.type == $scope.field.resource && $scope.field.attribute != info.attribute
+            refreshOptions(itemID)
+
         else
           if $scope.formItem.id == parseInt(formItem.id.toString().slice())
             $scope.resource = ResourceService.get($scope.field.resource)
@@ -124,6 +127,21 @@ app.directive "csResourceInput", [
         $scope.createResources() && !$scope.formItem.relationships?[$scope.field.relationship]?.data?.id
 
       # ===== PRIVATE =======================================
+
+
+      refreshOptions = (itemID) ->
+
+        search_options = angular.merge({}, $scope.field.resource_endpoint)
+        $scope.resource.$search(null, search_options).then(
+          # successCallback
+          (items) ->
+            $scope.associates = items
+
+          (reason) ->
+            console.log reason
+          # notifyCallback
+          () ->
+        )
 
       refreshAndSelect = (itemID) ->
         search_options = angular.merge({}, $scope.field.resource_endpoint)
