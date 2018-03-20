@@ -1,5 +1,8 @@
 .row
-  .col-lg-12{ "ng-switch" => "$ctrl.listIsEmpty()"}
+  %cs-loader{ "ng-if" => "$ctrl.loading"}
+.row
+  .col-lg-12{ "ng-switch" => "$ctrl.listIsEmpty()",
+              "ng-if" => "!$ctrl.loading" }
     %cs-filter-row{ "resource" => "$ctrl.resource",
                     "filterValue" => "$ctrl.filterValue",
                     "filter" => "$ctrl.filter(filterValue)",
