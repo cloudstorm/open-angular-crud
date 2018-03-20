@@ -330,18 +330,6 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
             return @.$relationship(rel.data, opts)
 
 
-      $addSelection: (field, value, opts = {}) ->
-
-        console.log("addSelection")
-        if field.cardinality is 'one'
-          if value != undefined
-            csDescriptorService.register(this, value, "add")
-        else
-          oldValue = @relationships[field.relationship].data
-          if value.length > oldValue.length
-            csDescriptorService.register(this, value.pop(), "add")
-
-
       $assign_association: (field, value, opts = {}) ->
 
         @relationships ||= {}
@@ -393,13 +381,6 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
 
       ################################################################################################
 
-      $removeSingleRelationship: (relationship) ->
-
-          @relationships[relationship].data = []
-
-      $getDescriptor: () ->
-
-        ResourceService.getRelationships()
 
 
     ##################################################################################################
