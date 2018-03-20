@@ -16,6 +16,8 @@ app.component('csIndex', {
   controller : ['$scope','ResourceService','csSettings','$uibModal','csAlertService','csDescriptorService','csRoute', function($scope, ResourceService, csSettings, $uibModal, csAlertService, csDescriptorService, csRoute){
     var vm = this;
 
+    this.loading = false;
+
     this.$onChanges = function(changesObj) {
 
       if (changesObj.items && changesObj.items.currentValue && changesObj.items.previousValue != changesObj.items.currentValue) {
@@ -27,8 +29,8 @@ app.component('csIndex', {
     }
 
     this.$onInit = function() {
-      // console.log('CS-INDEX:onInit()');
 
+      // console.log('CS-INDEX:onInit()');
       var defaultOptions, indexOptions;
       defaultOptions = {
         'selectedItem': null,
@@ -60,25 +62,33 @@ app.component('csIndex', {
         vm.i18n = csSettings.settings['i18n-engine'];
 
         vm.loadData = function() {
-          // console.log("INDEX: loadData()")
+
+          this.loading = true
           csDescriptorService.getPromises().then(
             (function() {
               return vm.resource.$index({ include: '*'})
             }).bind(vm)).then( (function(items) {
-                return vm.items = items
+                vm.items = items
+                this.loading = false
+                $scope.$apply()
+                return
               }).bind(vm), (function(reason) {
-                return vm.items = null
+                vm.items = null
+                this.loading = false
+                return
               }).bind(vm)
             )
         };
         // I feel this is not required, as it leads to two index queries...
-        //vm.loadData();
-
+        // vm.loadData();
         vm.header = vm.resource.descriptor.name
         vm.columns = vm.resource.descriptor.fields;
-
       })
     }
+
+    $scope.$on('form-submit', (function(formItem){
+      this.refreshIndex()
+    }).bind(this))
 
    this.pushNewItem = function(item) {
       var newItem;
@@ -94,6 +104,7 @@ app.component('csIndex', {
     };
 
     this.columnVisible = function(column, index) {
+
       var length;
       length = this.columns.length;
       if (this.attributeToHide(column.attribute)) {
