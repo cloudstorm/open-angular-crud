@@ -16,8 +16,10 @@ app.component('csIndex', {
   controller : ['$scope','ResourceService','csSettings','$uibModal','csAlertService','csDescriptorService','csRoute', function($scope, ResourceService, csSettings, $uibModal, csAlertService, csDescriptorService, csRoute){
     var vm = this;
 
+    this.loading = false;
+
     this.$onChanges = function(changesObj) {
-      // console.log("cs-index.onChanges", changesObj);
+
       if (changesObj.items && changesObj.items.currentValue && changesObj.items.previousValue != changesObj.items.currentValue) {
         vm.items = changesObj.items.currentValue;
       }
@@ -26,9 +28,21 @@ app.component('csIndex', {
       }
     }
 
-    this.$onInit = function() {
-      // console.log('CS-INDEX:onInit()');
+    this.loadData = function() {
+      this.loading = true;
+      csDescriptorService.getPromises().then( function() {
+        return vm.resource.$index({ include: '*'}).then( function(items) {
+          vm.items = items;
+          vm.loading = false;
+        }).catch(function(error) {
+          // TODO: log or throw - handle this error somehow
+          vm.items = null;
+          vm.loading = false;
+        })
+      });
+    }
 
+    this.$onInit = function() {
       var defaultOptions, indexOptions;
       defaultOptions = {
         'selectedItem': null,
@@ -45,41 +59,27 @@ app.component('csIndex', {
       angular.copy({}, vm.csIndexOptions);
       angular.merge(vm.csIndexOptions, defaultOptions, indexOptions);
 
-
       csDescriptorService.getPromises().then( function() {
         // Load resource and items when not bound (index-only mode)
         if (!vm.resource) {
           vm.resource = ResourceService.get(vm.resourceType);
         }
         if (!vm.items) {
-          // console.log("CS-INDEX: onInit()")
           vm.resource.$index({ include: '*'}).then(function(data) { vm.items = data; });
         }
-        vm.collection = vm.items;
-
+        // vm.collection = vm.items;
         vm.filterValue = ""
         vm.i18n = csSettings.settings['i18n-engine'];
-
-        vm.loadData = function() {
-          // console.log("INDEX: loadData()")
-          csDescriptorService.getPromises().then(
-            (function() {
-              return vm.resource.$index({ include: '*'})
-            }).bind(vm)).then( (function(items) {
-                return vm.items = items
-              }).bind(vm), (function(reason) {
-                return vm.items = null
-              }).bind(vm)
-            )
-        };
-        // I feel this is not required, as it leads to two index queries...
-        //vm.loadData();
-
         vm.header = vm.resource.descriptor.name
         vm.columns = vm.resource.descriptor.fields;
-
       })
     }
+
+    $scope.$on('form-submit', (function(event, formItem, info){
+      if(info.panelIndex == 0){
+        this.refreshIndex()
+      }
+    }).bind(this))
 
    this.pushNewItem = function(item) {
       var newItem;
@@ -95,6 +95,7 @@ app.component('csIndex', {
     };
 
     this.columnVisible = function(column, index) {
+
       var length;
       length = this.columns.length;
       if (this.attributeToHide(column.attribute)) {

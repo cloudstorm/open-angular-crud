@@ -3,8 +3,39 @@
 app = angular.module('cloudStorm.descriptorService', [])
 
 # ===== SERVICE ===============================================================
-app.service 'csDescriptorService', [ '$q', '$http', 'ResourceService', 'csResource', ($q, $http, ResourceService, csResource) ->
+app.service 'csDescriptorService', [ '$q', '$http', 'csResource', 'ResourceService'
+($q, $http, csResource, ResourceService) ->
+
+
+  ### Descriptor = [{ attributes_to_hide,
+        base_url,
+        display : { name },
+        endpoint,
+        fields : [{
+          attribute,
+          cardinality,
+          label,
+          read_only,
+          relationship,
+          required,
+          resource,
+          type }]
+      }]
+  ###
+  @inverseSubject = null
   @descriptors = []
+  @desc = []
+  @postRemoves = []
+  # @desc = [Descriptor]
+
+  @pendingOperations = {}
+  # @pedingOperation = {
+  #  relationship :  [{
+  #      subject : Resource{ type, id},
+  #      object : Resource{type, id}
+  #   }]
+  # }
+
 
   @getDescriptors = () ->
     if @descriptors
@@ -42,13 +73,18 @@ app.service 'csDescriptorService', [ '$q', '$http', 'ResourceService', 'csResour
     @descriptors.push descriptorPromise
 
   @registerDescriptor = (data) ->
+
+    @desc.push (data)
     class Resource extends csResource
       @endpoint = data.endpoint
       @base_url = data.base_url
       @descriptor = _.omit data, ['endpoint', 'base_url']
       @loaded = false
       @data = null
-    ResourceService.register Resource.descriptor.type, Resource
+    try
+      ResourceService.register Resource.descriptor.type, Resource
+    catch ex
+
 
   # For debug purposes
   window.csDescriptors = this
