@@ -10,7 +10,7 @@
         {{$ctrl.header}} {{ $ctrl.i18n.t('index.empty') }}
 
     .row{ "ng-show" => "!$ctrl.listIsEmpty()" }
-      %cs-table-container{"ng-if" => "!$ctrl.loading",
+      %cs-table-container{ "ng-if" => "!$ctrl.loading",
                           "ng-class" => "{ 'col-lg-8' : $ctrl.sidePanelIsVisible() && !$ctrl.viewIsCompressed(),
                                            'col-lg-6' : $ctrl.viewIsCompressed() }",
                           "resource" => "$ctrl.resource",
