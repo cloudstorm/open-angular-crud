@@ -28,9 +28,21 @@ app.component('csIndex', {
       }
     }
 
-    this.$onInit = function() {
+    this.loadData = function() {
+      this.loading = true;
+      csDescriptorService.getPromises().then( function() {
+        return vm.resource.$index({ include: '*'}).then( function(items) {
+          vm.items = items;
+          vm.loading = false;
+        }).catch(function(error) {
+          // TODO: log or throw - handle this error somehow
+          vm.items = null;
+          vm.loading = false;
+        })
+      });
+    }
 
-      // console.log('CS-INDEX:onInit()');
+    this.$onInit = function() {
       var defaultOptions, indexOptions;
       defaultOptions = {
         'selectedItem': null,
@@ -53,34 +65,11 @@ app.component('csIndex', {
           vm.resource = ResourceService.get(vm.resourceType);
         }
         if (!vm.items) {
-          // console.log("CS-INDEX: onInit()")
           vm.resource.$index({ include: '*'}).then(function(data) { vm.items = data; });
         }
-        vm.collection = vm.items;
-
+        // vm.collection = vm.items;
         vm.filterValue = ""
         vm.i18n = csSettings.settings['i18n-engine'];
-
-        vm.loadData = function() {
-
-          this.loading = true
-          csDescriptorService.getPromises().then(
-            (function() {
-              return vm.resource.$index({ include: '*'})
-            }).bind(vm)).then( (function(items) {
-                vm.items = items
-                this.loading = false
-                $scope.$apply()
-                return
-              }).bind(vm), (function(reason) {
-                vm.items = null
-                this.loading = false
-                return
-              }).bind(vm)
-            )
-        };
-        // I feel this is not required, as it leads to two index queries...
-        // vm.loadData();
         vm.header = vm.resource.descriptor.name
         vm.columns = vm.resource.descriptor.fields;
       })
