@@ -4,7 +4,7 @@ app = angular.module('cloudStorm.wizard', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', ($rootScope, ResourceService, $document) ->
+app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDescriptorService', ($rootScope, ResourceService, $document, csDescriptorService) ->
 
 
   # ===== COMPILE =============================================================
@@ -17,7 +17,7 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', ($rootS
     # Pre-link: gets called for parent first
     pre: (scope, element, attrs, controller) ->
       return
-    
+
     # Post-link: gets called for children recursively after post() traversed the DOM tree
     post: link
 
@@ -25,22 +25,95 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', ($rootS
   # ===== LINK ================================================================
 
   link = ($scope, element, attrs, controller) ->
-    
-    wizardMaxDepth = $scope.csWizardOptions['max-depth'] || 5 # NB! duplicated in CSS
 
-    resource_type = $scope.csWizardOptions['resource-type']
-    panelDescriptor = { 
-      resource: angular.copy(ResourceService.get(resource_type)) 
-      item: $scope.csWizardOptions['form-item']
-      formMode: $scope.csWizardOptions['form-mode']
-      parent: null
-    }
+    $scope.loading = true
+    $scope.errors = []
 
-    if $scope.csWizardOptions['resource-overrides'] && (override = $scope.csWizardOptions['resource-overrides'][resource_type])
-      if override.directive?
-        panelDescriptor.directive = override.directive
+    $scope.setOptions = (resource, item, formMode, wizardMaxDepth, parent) ->
 
-    $scope.panelStack = [panelDescriptor]
+      panelDescriptor = {
+        resource : resource
+        item : item
+        formMode : formMode
+        wizardMaxDepth : wizardMaxDepth
+        parent : parent
+        directive : directive
+      }
+      $scope.panelStack = [panelDescriptor]
+      $scope.finish()
+
+
+    $scope.finish = (error)->
+
+      $scope.loading = false
+      $scope.errors.push(error) if error
+      # Interesting
+      # Without this $scope.$apply the form is loaded really slowly
+      # or not at all.
+      $scope.$apply()
+      throw new Error(error) if error
+
+    if $scope.csWizardOptions
+      resource_type = $scope.csWizardOptions['resource-type']
+      #If the csWizardOptions arrives then descriptors are surely loaded
+      #so there is no need for the csDescriptorService.getPromises().then
+      resource = angular.copy(ResourceService.get(resource_type))
+      item = $scope.csWizardOptions['form-item']
+      formMode = $scope.formMode || $scope.csWizardOptions['form-mode']
+      parent =  null
+      wizardMaxDepth = $scope.csWizardOptions['max-depth'] || 5
+
+      if $scope.csWizardOptions['resource-overrides'] && (override = $scope.csWizardOptions['resource-overrides'][resource_type])
+        if override.directive?
+          directive = override.directive
+
+      $scope.setOptions(resource, item, formMode, wizardMaxDepth, parent, directive)
+
+    else
+
+      $scope.csWizardOptions = {}
+      # TODO Check if all the parameters arrived
+      # { resourceType, id, pageType}
+      resource_type = $scope.resourceType
+      formMode = $scope.pageType 
+      $scope.csWizardOptions['form-mode'] = formMode
+      wizardMaxDepth = 5
+      csDescriptorService.getPromises()
+      .then(()->
+        return ResourceService.get($scope.resourceType)
+      ).catch((error) ->
+        errorMsg = "\"" + $scope.resourceType + "\" is not a registered resource"
+        $scope.finish(errorMsg)
+      ).then((_resource_) ->
+          resource = angular.copy(_resource_)
+          # Getting the resourc data
+          resource.$get($scope.itemId, {include: '*'})
+      ).catch((reason) ->
+          # TODO process the reason
+          errorMsg = "There is no " + resource.descriptor.name + " with the id: " + $scope.itemId
+          $scope.finish(errorMsg)
+      ).then((_item_)->
+          item = _item_
+      ).then( ()->
+        #Setting events
+        wizardCanceled = (() ->
+          csRoute.go("index", {resourceType : resource.descriptor.type})
+        ).bind(resource)
+
+        wizardSubmitted =  (()->
+          switch(formMode)
+            when "create" then csAlertService.success('new_resource_created')
+            when "edit" then csAlertService.success("changes_saved")
+          csRoute.go("index", {resourceType : resource.descriptor.type})
+        ).bind(formMode, resource)
+
+        $scope.csWizardOptions.events = {
+          'wizard-canceled' : wizardCanceled
+          'wizard-submitted' : wizardSubmitted
+        }
+        $scope.setOptions(resource, item, formMode, wizardMaxDepth)
+    )
+
     if $scope.panelNumberCallback
       $scope.panelNumberCallback($scope.panelStack.length)
 
@@ -51,8 +124,9 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', ($rootS
         $scope.panelStack[0].item = $scope.csWizardOptions['form-item']
 
     $scope.$watchCollection 'panelStack', (newPanelStack, oldPanelStack) ->
-      attrs.$set 'numberOfPanels', newPanelStack.length
-      $scope.numberOfPanels = newPanelStack.length
+      if newPanelStack
+        attrs.$set 'numberOfPanels', newPanelStack.length
+        $scope.numberOfPanels = newPanelStack.length
 
     # ===== LIFECYCLE EVENTS ==============================
 
@@ -62,18 +136,18 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', ($rootS
     $scope.$on 'form-cancel', (event, resource, attribute) ->
       popPanel($scope)
       notify_listeners($scope, 'wizard-canceled', resource) if $scope.panelStack.length == 0
-    
+
     $scope.$on 'wizard-cancel', (event, resource, attribute) ->
       popAllPanels($scope)
       notify_listeners($scope, 'wizard-canceled', resource) if $scope.panelStack.length == 0
 
     $scope.$on 'form-submit', (event, resource, attribute) ->
       if $scope.panelStack.length == 1
-        notify_listeners($scope, 'wizard-submited', resource) 
+        notify_listeners($scope, 'wizard-submited', resource)
         popPanel($scope) unless $scope.csWizardOptions['keep-first']
       else
         popPanel($scope)
-      
+
     $scope.$on 'form-error', (event, resource, attribute) ->
       # TODO: 422 Unprocessable entity is handeled by displaying validation errors
       # alert should only be shown for exceptional errors. Need better mechanism for that.
@@ -82,14 +156,14 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', ($rootS
         $scope.$emit 'wizard-error', resource.data
         if $scope.csWizardOptions.events['wizard-error'] && $scope.panelStack.length == 1
           $scope.csWizardOptions.events['wizard-error'](resource)
-        
+
     $scope.$on 'transitioned', (event, child, parent) ->
-      if child && parent 
+      if child && parent
         if $scope.csWizardOptions.transitions
           if transitions = ($scope.csWizardOptions.transitions[parent.type] && $scope.csWizardOptions.transitions[parent.type][child.type])
             for transition in transitions
               transition(child, parent)
-            
+
     keyPressed = (keyEvent) ->
       # Cancel form on escape
       if keyEvent.keyCode == 27
@@ -105,11 +179,11 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', ($rootS
       $document.off 'keydown', keyPressed
 
     # ===== GETTERS =======================================
-        
+
     $scope.shouldShowNewButton = () ->
       return false if $scope.panelStack.length >= wizardMaxDepth
       true
-    
+
     # ===== SETTERS =======================================
 
     $scope.panelHover = (hoveredIndex) ->
@@ -120,7 +194,7 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', ($rootS
           panel.hoverOrder = 1
         else
           panel.hoverOrder = 0
-    
+
     $scope.pushPanel = (resource_type, attribute, parent) ->
       panelIndex = $scope.panelStack.length - 1
 
@@ -131,8 +205,8 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', ($rootS
 
       activeField = _.find($scope.panelStack[panelIndex].resource.descriptor.fields, (o) -> o.attribute == attribute)
       activeField.inactive = false if activeField
-      
-      panelDescriptor = 
+
+      panelDescriptor =
         resource: angular.copy(ResourceService.get(resource_type))
         parent: parent
         formMode: 'create'
@@ -142,11 +216,11 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', ($rootS
           panelDescriptor.directive = override.directive
 
       $scope.panelStack.push panelDescriptor
-      
+
       # Hack to force induce mouse move event handling on creation
       # (otherwise the new div is created, you move mouse and there's a glitch)
       $scope.panelHover(panelIndex+1)
-      
+
       if $scope.panelNumberCallback
         $scope.panelNumberCallback($scope.panelStack.length)
 
@@ -156,7 +230,7 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', ($rootS
 
     $scope.resource_descriptor = (panel) ->
       if overriden_resource_descriptors[panel.resource.descriptor.type]
-        return overriden_resource_descriptors[panel.resource.descriptor.type] 
+        return overriden_resource_descriptors[panel.resource.descriptor.type]
       else
         descriptor = angular.copy(panel.resource.descriptor)
         overriden_resource_descriptors[panel.resource.descriptor.type] = descriptor
@@ -170,20 +244,20 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', ($rootS
 
 
   # ===== PRIVATE =============================================================
-  
+
   popPanel = ($scope) ->
     $scope.panelStack.pop()
 
     panelIndex = $scope.panelStack.length - 1
 
     if $scope.panelStack[panelIndex]
-      # TODO: 'inactive' should probably be kept elsewhere 
+      # TODO: 'inactive' should probably be kept elsewhere
       # rather than in the descriptor
       _.forEach $scope.panelStack[panelIndex].resource.descriptor.fields, (value) ->
         value.inactive = false
 
     $scope.panelHover(panelIndex + 1)
-    
+
     if $scope.panelNumberCallback
       $scope.panelNumberCallback($scope.panelStack.length)
 
@@ -200,7 +274,7 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', ($rootS
       if $scope.csWizardOptions.events[event]
         # Call the callback if it's set in the wizard options
         $scope.csWizardOptions.events[event](resource)
-    
+
     # If wizard has done it's job (no panels are open anymore) notify about finish as well
     if $scope.panelStack.length == 0
       $scope.$emit 'wizard-finished'
@@ -211,13 +285,16 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', ($rootS
 
 
   # ===== CONFIGURE ===========================================================
-  
+
   return {
     restrict: 'A'
     templateUrl: 'components/cs-wizard/cs-wizard-template.html'
     scope:
-      csWizardOptions: '='
+      csWizardOptions: '=?'
       panelNumberCallback: '='
+      pageType: "="
+      itemId: "="
+      resourceType: "="
     compile: compile
   }
 
@@ -233,7 +310,7 @@ app.directive "csWizardPanel", ['$rootScope', 'ResourceService', '$compile', ($r
       $scope.csWizardOptions['form-class']
 
     # ===== COMPILE DOM WITH APPROPRIATE DIRECTIVE ========
-    
+
     if $scope.panel.directive
       innerElement = angular.element(element[0])
       inputTemplate = """
@@ -247,9 +324,9 @@ app.directive "csWizardPanel", ['$rootScope', 'ResourceService', '$compile', ($r
           form-resource="panel.resource"
           form-resource-descriptor="resource_descriptor(panel)"
           role="form"
-          ng-class='formClass()' 
+          ng-class='formClass()'
         >
-      """    
+      """
       innerElement.html($compile(inputTemplate)($scope));
 
   return {
@@ -258,4 +335,3 @@ app.directive "csWizardPanel", ['$rootScope', 'ResourceService', '$compile', ($r
     link: link
   }
 ]
-
