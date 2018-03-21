@@ -10,6 +10,9 @@ alias j='grunt concat:compile_js'
 #CoffeScript #JavaScript
 alias c='grunt coffee concat:compile_js'
 
+#TypeScript
+alias ts='grunt ts'
+
 #Sample App
 alias sa='grunt copy:sample_app'
 
