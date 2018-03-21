@@ -4,6 +4,7 @@ app = angular.module 'cloudStorm', [
   'cloudStorm.field'
   'cloudStorm.form'
   'cloudStorm.wizard'
+  'cloudStorm.wizardComponent'
   'cloudStorm.itemListContainer'
   'cloudStorm.checkbox'
   'cloudStorm.menu'
