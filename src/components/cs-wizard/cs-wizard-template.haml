@@ -1,6 +1,6 @@
 %cs-error{"errors" => "errors"}
 %cs-loader{ "enabled" => "loading"}
-.form-panel.animation{ "ng-if" => "!loading",
+.form-panel.animation{ "ng-show" => "!loading",
                        "ng-repeat" => "panel in panelStack track by $index",
                        "ng-init" => "panelIndex = $index",
                        "ng-class" => "{'active' : $index==panelStack.length-1,

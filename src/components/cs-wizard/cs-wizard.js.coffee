@@ -42,16 +42,16 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDesc
       $scope.panelStack = [panelDescriptor]
       $scope.finish()
 
-
     $scope.finish = (error)->
 
-      $scope.loading = false
-      $scope.errors.push(error) if error
       # Interesting
       # Without this $scope.$apply the form is loaded really slowly
       # or not at all.
-      $scope.$apply()
-      throw new Error(error) if error
+      $scope.$apply( ()->
+        $scope.loading = false
+        $scope.errors.push(error) if error
+        throw new Error(error) if error
+      )
 
     if $scope.csWizardOptions
       resource_type = $scope.csWizardOptions['resource-type']
@@ -76,6 +76,8 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDesc
       # { resourceType, id, pageType}
       resource_type = $scope.resourceType
       formMode = $scope.pageType 
+      if formMode != 'show' && formMode != 'edit'
+        $scope.finish("'" + formMode + "' is not a valid page type!")
       $scope.csWizardOptions['form-mode'] = formMode
       wizardMaxDepth = 5
       csDescriptorService.getPromises()
