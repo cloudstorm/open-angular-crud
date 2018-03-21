@@ -18,12 +18,12 @@ app.provider 'csSettings', ['csLocalizationProvider', (csLocalizationProvider) -
     },{
       name: @settings['router-path-prefix'] + 'show'
       url: '/{resourceType}/{id}'
-      component: 'csPageRouter'
+      component: 'csWizardComponent'
       resolve:
         resourceType: ['$transition$', ($transition$) ->
           $transition$.params().resourceType
         ]
-        id: ['$transition$', ($transition$) ->
+        itemId: ['$transition$', ($transition$) ->
           $transition$.params().id
         ]
         pageType: ['$transition$', ($transition$) ->
@@ -32,19 +32,16 @@ app.provider 'csSettings', ['csLocalizationProvider', (csLocalizationProvider) -
     },{
       name: @settings['router-path-prefix'] + 'cmd'
       url: '/{resourceType}/{id}/{cmd}'
-      component: 'csPageRouter'
+      component: 'csWizardComponent'
       resolve:
         resourceType: ['$transition$', ($transition$) ->
           $transition$.params().resourceType
         ]
-        id: ['$transition$', ($transition$) ->
+        itemId: ['$transition$', ($transition$) ->
           $transition$.params().id
         ]
-        cmd: ['$transition$', ($transition$) ->
-          $transition$.params().cmd
-        ]
         pageType: ['$transition$', ($transition$) ->
-          'cmd'
+          $transition$.params().cmd
         ]
     }]
 
