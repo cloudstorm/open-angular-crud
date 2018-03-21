@@ -1,4 +1,7 @@
-.form-panel.animation{ "ng-repeat" => "panel in panelStack track by $index",
+%cs-error{"errors" => "errors"}
+%cs-loader{ "enabled" => "loading"}
+.form-panel.animation{ "ng-if" => "!loading",
+                       "ng-repeat" => "panel in panelStack track by $index",
                        "ng-init" => "panelIndex = $index",
                        "ng-class" => "{'active' : $index==panelStack.length-1,
                         'pre-hover' : panel.hoverOrder < 0,
