@@ -1,5 +1,5 @@
 .row
-  %cs-loader{ "ng-if" => "$ctrl.loading"}
+  %cs-loader{ "enabled" => "$ctrl.loading"}
 .row
   .col-lg-12{ "ng-switch" => "$ctrl.listIsEmpty()",
               "ng-if" => "!$ctrl.loading" }
