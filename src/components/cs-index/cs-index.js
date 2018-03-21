@@ -29,7 +29,6 @@ app.component('csIndex', {
 
     this.$onInit = function() {
 
-      // console.log('CS-INDEX:onInit()');
       var defaultOptions, indexOptions;
       defaultOptions = {
         'selectedItem': null,
@@ -59,6 +58,7 @@ app.component('csIndex', {
             vm.loading = false
           });
         }
+
         vm.collection = vm.items;
 
         vm.filterValue = ""
@@ -71,6 +71,7 @@ app.component('csIndex', {
               return vm.resource.$index({ include: '*'})
             }).bind(vm)).then( (function(items) {
                 return vm.items = items
+                $scope.$apply()
               }).bind(vm), (function(reason) {
                 return vm.items = null
               }).bind(vm)
