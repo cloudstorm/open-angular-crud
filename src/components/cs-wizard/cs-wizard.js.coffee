@@ -4,7 +4,7 @@ app = angular.module('cloudStorm.wizard', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDescriptorService', ($rootScope, ResourceService, $document, csDescriptorService) ->
+app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDescriptorService', 'csLog', ($rootScope, ResourceService, $document, csDescriptorService, csLog) ->
 
 
   # ===== COMPILE =============================================================
@@ -26,6 +26,10 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDesc
 
   link = ($scope, element, attrs, controller) ->
 
+
+    #Setting csLog
+    csLog.set($scope, "csWizard", true)
+
     $scope.loading = true
     $scope.errors = []
 
@@ -44,16 +48,22 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDesc
 
     $scope.finish = (error)->
 
+      #console.log("Watchers")
+      #console.log($scope.$$watchers)
       # Interesting
       # Without this $scope.$apply the form is loaded really slowly
       # or not at all.
-      $scope.$apply( ()->
-        $scope.loading = false
-        $scope.errors.push(error) if error
-        throw new Error(error) if error
-      )
+      #$scope.$apply( ()->
+      $scope.log("finish")
+      $scope.loading = false
+      $scope.errors.push(error) if error
+      throw new Error(error) if error
+      #)
 
     if $scope.csWizardOptions
+
+      $scope.log("wizardOptions branch")
+
       resource_type = $scope.csWizardOptions['resource-type']
       #If the csWizardOptions arrives then descriptors are surely loaded
       #so there is no need for the csDescriptorService.getPromises().then
@@ -71,6 +81,7 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDesc
 
     else
 
+      $scope.log("singlePage branch")
       $scope.csWizardOptions = {}
       # TODO Check if all the parameters arrived
       # { resourceType, id, pageType}
