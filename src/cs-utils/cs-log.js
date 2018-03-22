@@ -5,15 +5,28 @@ app.factory('csLog', [
 
   function(){
 
+    var diff, now;
     var csLog = {
 
-      //Initially the log is disabled
-      set : function(scope, componentName, enabled){
+      diff : function(){
+        //Returns the difference in second to the last log in the following format
+        //i.e [0.352 s]
+        var now = new Date().getTime()
+        if(csLog.last){
+          diff = (now - csLog.last)/1000
+        } else {
+          diff = 0
+        }
+        csLog.last = now
+        return "[" + diff + " s]"
+      },
 
+      set : function(scope, componentName, enabled){
+          //Initially the log is disabled
           scope.logEnabled = false || enabled
           scope.log = function(msg){
             if(scope.logEnabled){
-              console.log(componentName, msg)
+              console.log(csLog.diff(),componentName, msg)
             }
           }
       },

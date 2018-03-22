@@ -315,7 +315,7 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDesc
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csWizardPanel", ['$rootScope', 'ResourceService', '$compile', ($rootScope, ResourceService, $compile) ->
+app.directive "csWizardPanel", ['$rootScope', 'ResourceService', '$compile', 'csLog', ($rootScope, ResourceService, $compile, csLog) ->
 
   link = ($scope, element, attrs, controller) ->
 
@@ -324,7 +324,12 @@ app.directive "csWizardPanel", ['$rootScope', 'ResourceService', '$compile', ($r
 
     # ===== COMPILE DOM WITH APPROPRIATE DIRECTIVE ========
 
+    csLog.set($scope, "csWizardPanel", true)
+    $scope.log("Start")
+
+
     if $scope.panel.directive
+      $scope.log("Directive render")
       innerElement = angular.element(element[0])
       inputTemplate = """
         <#{$scope.panel.directive}
