@@ -13,13 +13,11 @@ app.component('csIndex', {
   },
 
   templateUrl : 'components/cs-index/cs-index-template.html',
-  controller : ['$scope','ResourceService','csSettings','$uibModal','csAlertService','csDescriptorService','csRoute', function($scope, ResourceService, csSettings, $uibModal, csAlertService, csDescriptorService, csRoute){
+  controller : ['$scope', '$document', '$timeout', 'ResourceService','csSettings','$uibModal','csAlertService','csDescriptorService','csRoute', function($scope, $document, $timeout, ResourceService, csSettings, $uibModal, csAlertService, csDescriptorService, csRoute){
     var vm = this;
-
     this.loading = false;
 
     this.$onChanges = function(changesObj) {
-
       if (changesObj.items && changesObj.items.currentValue && changesObj.items.previousValue != changesObj.items.currentValue) {
         vm.items = changesObj.items.currentValue;
       }
@@ -46,12 +44,12 @@ app.component('csIndex', {
       var defaultOptions, indexOptions;
       defaultOptions = {
         'selectedItem': null,
-        'sortAttribute': vm.resource.descriptor.fields[0].attribute,
+        'sortAttribute': vm.resource ? vm.resource.descriptor.fields[0].attribute : '',
         'filterValue': "",
         'sortReverse': false,
         'condensedView': false,
         'hide-actions': false,
-        'hide-attributes': vm.resource.descriptor.attributes_to_hide || {}
+        'hide-attributes': vm.resource ? vm.resource.descriptor.attributes_to_hide || {} : {}
       };
 
       vm.csIndexOptions || (vm.csIndexOptions = {});
@@ -65,9 +63,9 @@ app.component('csIndex', {
           vm.resource = ResourceService.get(vm.resourceType);
         }
         if (!vm.items) {
-          vm.resource.$index({ include: '*'}).then(function(data) { vm.items = data; });
+          // console.log("CS-INDEX: onInit()")
+          vm.loadData();
         }
-        // vm.collection = vm.items;
         vm.filterValue = ""
         vm.i18n = csSettings.settings['i18n-engine'];
         vm.header = vm.resource.descriptor.name
@@ -108,7 +106,6 @@ app.component('csIndex', {
     };
 
     this.attributeToHide = function(attribute) {
-
       var hiddenAttrs;
       if (this.csIndexOptions['hide-attributes']) {
         if (hiddenAttrs = this.csIndexOptions['hide-attributes'].index) {
@@ -189,7 +186,6 @@ app.component('csIndex', {
     };
 
     this.refreshIndex = function() {
-      // console.log("CS-INDEX: refreshIndex()")
       this.unselectItem();
       this.loadData();
     };

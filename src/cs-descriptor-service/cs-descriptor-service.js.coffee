@@ -5,37 +5,7 @@ app = angular.module('cloudStorm.descriptorService', [])
 # ===== SERVICE ===============================================================
 app.service 'csDescriptorService', [ '$q', '$http', 'csResource', 'ResourceService'
 ($q, $http, csResource, ResourceService) ->
-
-
-  ### Descriptor = [{ attributes_to_hide,
-        base_url,
-        display : { name },
-        endpoint,
-        fields : [{
-          attribute,
-          cardinality,
-          label,
-          read_only,
-          relationship,
-          required,
-          resource,
-          type }]
-      }]
-  ###
-  @inverseSubject = null
   @descriptors = []
-  @desc = []
-  @postRemoves = []
-  # @desc = [Descriptor]
-
-  @pendingOperations = {}
-  # @pedingOperation = {
-  #  relationship :  [{
-  #      subject : Resource{ type, id},
-  #      object : Resource{type, id}
-  #   }]
-  # }
-
 
   @getDescriptors = () ->
     if @descriptors
@@ -67,14 +37,12 @@ app.service 'csDescriptorService', [ '$q', '$http', 'csResource', 'ResourceServi
       else
         @registerDescriptor(response.data);
     ).catch( (response) =>
-      console.log("CS-002: Error while receiving descriptor from '#{descriptorUrl}'")
+      console.log("CS-002: Error while receiving descriptor from '#{descriptorUrl}', error:", response)
     );
 
     @descriptors.push descriptorPromise
 
   @registerDescriptor = (data) ->
-
-    @desc.push (data)
     class Resource extends csResource
       @endpoint = data.endpoint
       @base_url = data.base_url

@@ -21,7 +21,7 @@ app.factory 'ResourceService', ['$injector', ($injector) ->
 
   resources    = {}
   lookup_table = {}
-  relationships = {}
+
   ##################################################################################################
 
   class ResourceService
@@ -34,12 +34,6 @@ app.factory 'ResourceService', ['$injector', ($injector) ->
 
     register_dynamic_name = (name, service_name) ->
       lookup_table[name] = service_name
-
-    setRelationships : (rels) ->
-      relationships = rels
-
-    getRelationships: () ->
-      return relationships
 
     get: (name) ->
       resource = resources[name]
@@ -58,7 +52,6 @@ app.factory 'ResourceService', ['$injector', ($injector) ->
                 "\tYou manually set 'resourceType' to something that is not registered as a resource.")
 
       return resource
-
 
   ##################################################################################################
 
