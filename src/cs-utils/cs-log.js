@@ -10,7 +10,7 @@ app.factory('csLog', [
       //Initially the log is disabled
       set : function(scope, componentName, enabled){
 
-          scope.logEnabled = false || enable
+          scope.logEnabled = false || enabled
           scope.log = function(msg){
             if(scope.logEnabled){
               console.log(componentName, msg)
@@ -20,7 +20,7 @@ app.factory('csLog', [
 
       enable : function(scope){
         scope.logEnabled = true
-      }
+      },
 
       disable : function(scope){
         scope.logEnabled = false
