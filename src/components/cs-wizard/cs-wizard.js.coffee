@@ -26,15 +26,18 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDesc
 
   link = ($scope, element, attrs, controller) ->
 
+    ValidationError = () ->
+    ValidationError.prototype = Error.prototype;
 
     #Setting csLog
-    csLog.set($scope, "csWizard", true)
+    csLog.set($scope, "csWizard")
 
     $scope.loading = true
     $scope.errors = []
 
     $scope.setOptions = (resource, item, formMode, wizardMaxDepth, parent) ->
 
+      $scope.log("setOptions")
       panelDescriptor = {
         resource : resource
         item : item
@@ -44,21 +47,14 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDesc
         directive : directive
       }
       $scope.panelStack = [panelDescriptor]
-      $scope.finish()
+
 
     $scope.finish = (error)->
 
-      #console.log("Watchers")
-      #console.log($scope.$$watchers)
-      # Interesting
-      # Without this $scope.$apply the form is loaded really slowly
-      # or not at all.
-      #$scope.$apply( ()->
       $scope.log("finish")
       $scope.loading = false
-      $scope.errors.push(error) if error
+      $scope.errors = [error] if error
       throw new Error(error) if error
-      #)
 
     if $scope.csWizardOptions
 
@@ -78,53 +74,60 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDesc
           directive = override.directive
 
       $scope.setOptions(resource, item, formMode, wizardMaxDepth, parent, directive)
+      $scope.finish()
 
     else
 
       $scope.log("singlePage branch")
       $scope.csWizardOptions = {}
       # TODO Check if all the parameters arrived
-      # { resourceType, id, pageType}
-      resource_type = $scope.resourceType
+      # { resourceType, itemId, pageType}
       formMode = $scope.pageType 
       if formMode != 'show' && formMode != 'edit'
-        $scope.finish("'" + formMode + "' is not a valid page type!")
+        $scope.finish("'" + formMode + "' is not a valid page type!")#
+
+      resource_type = $scope.resourceType
       $scope.csWizardOptions['form-mode'] = formMode
       wizardMaxDepth = 5
       csDescriptorService.getPromises()
       .then(()->
-        return ResourceService.get($scope.resourceType)
-      ).catch((error) ->
-        errorMsg = "\"" + $scope.resourceType + "\" is not a registered resource"
-        $scope.finish(errorMsg)
-      ).then((_resource_) ->
-          resource = angular.copy(_resource_)
-          # Getting the resourc data
-          resource.$get($scope.itemId, {include: '*'})
-      ).catch((reason) ->
-          # TODO process the reason
-          errorMsg = "There is no " + resource.descriptor.name + " with the id: " + $scope.itemId
-          $scope.finish(errorMsg)
-      ).then((_item_)->
+        try
+          _resource_ = ResourceService.get($scope.resourceType)
+        catch error
+          errorMsg = "'" + $scope.resourceType + "' is not a registered resource."
+          $scope.finish(error)
+
+        resource = angular.copy(_resource_)
+        # Getting the resource data
+        resource.$get($scope.itemId, {include: '*'})
+        .then((_item_)->
+
           item = _item_
-      ).then( ()->
-        #Setting events
-        wizardCanceled = (() ->
-          csRoute.go("index", {resourceType : resource.descriptor.type})
-        ).bind(resource)
+          #Setting events
+          wizardCanceled = (() ->
+            csRoute.go("index", {resourceType : resource.descriptor.type})
+          ).bind(resource)
 
-        wizardSubmitted =  (()->
-          switch(formMode)
-            when "create" then csAlertService.success('new_resource_created')
-            when "edit" then csAlertService.success("changes_saved")
-          csRoute.go("index", {resourceType : resource.descriptor.type})
-        ).bind(formMode, resource)
+          wizardSubmitted =  (()->
+            switch(formMode)
+              when "create" then csAlertService.success('new_resource_created')
+              when "edit" then csAlertService.success("changes_saved")
+            csRoute.go("index", {resourceType : resource.descriptor.type})
+          ).bind(formMode, resource)
 
-        $scope.csWizardOptions.events = {
-          'wizard-canceled' : wizardCanceled
-          'wizard-submitted' : wizardSubmitted
-        }
-        $scope.setOptions(resource, item, formMode, wizardMaxDepth)
+          $scope.csWizardOptions.events = {
+            'wizard-canceled' : wizardCanceled
+            'wizard-submitted' : wizardSubmitted
+          }
+          $scope.setOptions(resource, item, formMode, wizardMaxDepth)
+          $scope.finish()
+
+        ).catch((reason) ->
+            # TODO process the reason
+            errorMsg = "There is no " + resource.descriptor.name + " with the id: " + $scope.itemId
+            $scope.finish(errorMsg)
+        )
+
     )
 
     if $scope.panelNumberCallback
@@ -137,9 +140,12 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDesc
         $scope.panelStack[0].item = $scope.csWizardOptions['form-item']
 
     $scope.$watchCollection 'panelStack', (newPanelStack, oldPanelStack) ->
+
       if newPanelStack
         attrs.$set 'numberOfPanels', newPanelStack.length
         $scope.numberOfPanels = newPanelStack.length
+      else
+        $scope.log("NotPanelStack")
 
     # ===== LIFECYCLE EVENTS ==============================
 
@@ -242,6 +248,7 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDesc
     overriden_resource_descriptors = {}
 
     $scope.resource_descriptor = (panel) ->
+
       if overriden_resource_descriptors[panel.resource.descriptor.type]
         return overriden_resource_descriptors[panel.resource.descriptor.type]
       else
