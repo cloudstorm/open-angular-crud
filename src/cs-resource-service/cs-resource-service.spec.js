@@ -1,4 +1,5 @@
 describe('ResourceService - TODO: rename to csResourceService?', function() {
+
   var csResourceService;
 
   beforeEach(angular.mock.module('cloudStorm.resourceService'));
@@ -8,7 +9,7 @@ describe('ResourceService - TODO: rename to csResourceService?', function() {
   $provide.value("userResource", { data: 'test' });
   }));
 
-  beforeEach(inject(function (_ResourceService_) {
+  beforeEach(inject(function (_ResourceService_){
     csResourceService = _ResourceService_;
   }));
 

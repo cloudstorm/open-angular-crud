@@ -13,6 +13,7 @@ app.directive "csForm", ['csSettings', 'csLog', (csSettings, csLog) ->
     # Only modify the DOM in compile, use (pre/post) link for others
     $templateElement.addClass "cs-form"
 
+
     # Pre-link: gets called for parent first
     pre: ($scope, element, attrs, controller) ->
 
@@ -96,8 +97,11 @@ app.directive "csForm", ['csSettings', 'csLog', (csSettings, csLog) ->
       $scope.$broadcast 'field-cancel', $scope.formItem
 
     $scope.submit = () ->
+
       api_action = null
+
       if $scope.formMode == 'edit'
+
         api_action = $scope.editableItem.$save
       else if $scope.formMode == 'create'
         api_action = $scope.editableItem.$create
@@ -109,8 +113,12 @@ app.directive "csForm", ['csSettings', 'csLog', (csSettings, csLog) ->
 
           $scope.formItem.$assign($scope.editableItem) unless $scope.editableItem == $scope.formItem
 
-          $scope.$emit 'form-submit', $scope.formItem
+          $scope.$emit 'form-submit', $scope.formItem, {
+              panelIndex : $scope.wizardPanelIndex,
+              attribute : $scope.subformAttribute
+          }
           $scope.$broadcast 'field-submit', $scope.formItem
+
 
           if $scope.csFormOptions['reset-on-submit']
             angular.copy($scope.formResource.$new(), $scope.formItem)
@@ -164,6 +172,8 @@ app.directive "csForm", ['csSettings', 'csLog', (csSettings, csLog) ->
       formResource: '=' # The resource which the form is working with
       formResourceDescriptor: '=' # The resource which the form is working with
       formItem: '=?' # The resource item which the form is working with
+      subformAttribute : "=" # The relationship between the resources of the parent and current form
+      # It gets a value only on subforms
       formParent: '=?' # The resource item which the form is working with
       formMode: '@' # 'show' / 'edit' / 'create'
       wizardPanelIndex: '=' # Cardinality of the wizard panel in which this form is rendered

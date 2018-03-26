@@ -16,7 +16,6 @@ app = angular.module 'cloudStorm', [
   'cloudStorm.enum'
   'cloudStorm.field'
   'cloudStorm.filterRow'
-  'cloudStorm.form'
   'cloudStorm.index'
   'cloudStorm.index.sidePanel'
   'cloudStorm.itemList'

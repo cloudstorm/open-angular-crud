@@ -35,11 +35,9 @@ app.directive "csResourceInput", [
 
     link = ($scope, element, attrs, controller) ->
       $scope.i18n = csSettings.settings['i18n-engine']
-
       csInputBase $scope
       $scope.csTemplateService = csTemplateService
       $scope.defaultTemplate = 'components/cs-fields/cs-resource-input/cs-resource-input-template.html'
-
       setup_associations($scope)
 
       # ===== WATCHES =======================================
@@ -64,8 +62,6 @@ app.directive "csResourceInput", [
         if (newValue != oldValue)
           $scope.model.object = $scope.formItem.$association($scope.field)
 
-      $scope.selectItem = () ->
-        # console.log($scope.model)
 
       # ===== COMPONENT LIFECYCLE ===========================
 
@@ -74,24 +70,37 @@ app.directive "csResourceInput", [
         $scope.model = {object: $scope.formItem.$association($scope.field)}
 
       # TODO: refactor into a better pattern, perhaps involving the wizard as message broker
-      $rootScope.$on 'form-submit', (event, formItem) ->
-        if $scope.formMode == "tableView"
-          $scope.resource = ResourceService.get($scope.field.resource)
-          $scope.model = {object: $scope.formItem.$association($scope.field)}
+      $rootScope.$on 'form-submit', (event, formItem, info) ->
+        # There are more cs-resource-input directives that might be visible on the FE:
+        #   - cs-resource-input is used on the edit and create forms
+        #   - cs-resource-input is also used in the cs-index component (through cs-table/cs-table-row)
+        # When we submit a sub-form (==? we create a sub-resource) we want to update the previous form(s) in the wizard
+        # to have the newly created resource in the respective fields, BUT we do not want to update anything in the
+        # table (yet)
 
-        if formItem.type == $scope.field.resource
-          event.stopPropagation() if event.stopPropagation
-          itemID = formItem.id.slice()
-          unless itemID == $scope.formItem.id
-            refreshAndSelect(itemID)
+        if $scope.formMode != "tableView"
+          if formItem.type == $scope.field.resource && $scope.field.attribute == info.attribute
+            event.stopPropagation() if event.stopPropagation
+            itemID = parseInt(formItem.id.toString().slice())
+            unless itemID == $scope.formItem.id
+              refreshAndSelect(itemID)
+          if formItem.type == $scope.field.resource && $scope.field.attribute != info.attribute
+            refreshOptions(itemID)
+        else
+          if $scope.formItem.id == parseInt(formItem.id.toString().slice())
+            $scope.resource = ResourceService.get($scope.field.resource)
+            $scope.model = { object: $scope.formItem.$association($scope.field) }
 
       # ===== GETTERS =======================================
 
       $scope.refresh = (value) ->
+        ###  Refresh plays a role in the submission of the subforms, becuase the list of selectable
+        resources has to be updated. ###
         search_options = angular.merge({datastore: $scope.formItem.$datastore}, $scope.field.resource_endpoint)
         $scope.resource.$search(value, search_options).then(
           # successCallback
           (items) ->
+            # Setting the variable for the selection list
             $scope.associates = items
             if relationships = $scope.formItem.relationships?[$scope.field.relationship]
               $scope.model.object = $scope.formItem.$association($scope.field)
@@ -112,6 +121,20 @@ app.directive "csResourceInput", [
 
       # ===== PRIVATE =======================================
 
+
+      refreshOptions = (itemID) ->
+        search_options = angular.merge({}, $scope.field.resource_endpoint)
+        $scope.resource.$search(null, search_options).then(
+          # successCallback
+          (items) ->
+            $scope.associates = items
+
+          (reason) ->
+            console.log reason
+          # notifyCallback
+          () ->
+        )
+
       refreshAndSelect = (itemID) ->
         search_options = angular.merge({}, $scope.field.resource_endpoint)
         $scope.resource.$search(null, search_options).then(
@@ -119,10 +142,10 @@ app.directive "csResourceInput", [
           (items) ->
             $scope.associates = items
             if $scope.field.cardinality == 'one'
-              $scope.model.object = _.find(items,{id:itemID})
+              $scope.model.object = _.find(items,{id: itemID })
             else
               $scope.model.object ||= []
-              $scope.model.object.push _.find(items,{id:itemID})
+              $scope.model.object.push _.find(items,{id: itemID })
 
           # errorCallback
           (reason) ->
@@ -135,8 +158,8 @@ app.directive "csResourceInput", [
     setup_associations = ($scope) ->
       $scope.resource = ResourceService.get($scope.field.resource)
       $scope.model = {object: $scope.formItem.$association($scope.field)}
-
-      if $scope.associates
+      # If we are in table the associates variable does not play a role.
+      if $scope.associates && $scope.formMode != "tableView"
         $scope.associates = []
         $scope.refresh()
       else

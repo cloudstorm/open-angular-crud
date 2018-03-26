@@ -13,12 +13,12 @@ app.component('csIndex', {
   },
 
   templateUrl : 'components/cs-index/cs-index-template.html',
-  controller : ['$scope','ResourceService','csSettings','$uibModal','csAlertService','csDescriptorService','csRoute', function($scope, ResourceService, csSettings, $uibModal, csAlertService, csDescriptorService, csRoute){
+  controller : ['$scope', '$document', '$timeout', 'ResourceService','csSettings','$uibModal','csAlertService','csDescriptorService','csRoute', function($scope, $document, $timeout, ResourceService, csSettings, $uibModal, csAlertService, csDescriptorService, csRoute){
     var vm = this;
+    this.loading = false;
 
     this.loading = true
     this.$onChanges = function(changesObj) {
-      // console.log("cs-index.onChanges", changesObj);
       if (changesObj.items && changesObj.items.currentValue && changesObj.items.previousValue != changesObj.items.currentValue) {
         vm.items = changesObj.items.currentValue;
       }
@@ -27,17 +27,30 @@ app.component('csIndex', {
       }
     }
 
-    this.$onInit = function() {
+    this.loadData = function() {
+      this.loading = true;
+      csDescriptorService.getPromises().then( function() {
+        return vm.resource.$index({ include: '*'}).then( function(items) {
+          vm.items = items;
+          vm.loading = false;
+        }).catch(function(error) {
+          // TODO: log or throw - handle this error somehow
+          vm.items = null;
+          vm.loading = false;
+        })
+      });
+    }
 
+    this.$onInit = function() {
       var defaultOptions, indexOptions;
       defaultOptions = {
         'selectedItem': null,
-        'sortAttribute': vm.resource ? vm.resource.descriptor.fields[0].attribute : {},
+        'sortAttribute': vm.resource ? vm.resource.descriptor.fields[0].attribute : '',
         'filterValue': "",
         'sortReverse': false,
         'condensedView': false,
         'hide-actions': false,
-        'hide-attributes': vm.resource ? vm.resource.descriptor.attributes_to_hide : {}
+        'hide-attributes': vm.resource ? vm.resource.descriptor.attributes_to_hide || {} : {}
       };
 
       vm.csIndexOptions || (vm.csIndexOptions = {});
@@ -53,39 +66,21 @@ app.component('csIndex', {
           vm.csIndexOptions['sortAttribute'] = vm.resource.descriptor.fields[0].attribute
         }
         if (!vm.items) {
-          vm.resource.$index({ include: '*'}).then(function(data) {
-            vm.items = data;
-            vm.loading = false
-          });
+          // console.log("CS-INDEX: onInit()")
+          vm.loadData();
         }
-
-        vm.collection = vm.items;
-
         vm.filterValue = ""
         vm.i18n = csSettings.settings['i18n-engine'];
-
-        vm.loadData = function() {
-          // console.log("INDEX: loadData()")
-          csDescriptorService.getPromises().then(
-            (function() {
-              return vm.resource.$index({ include: '*'})
-            }).bind(vm)).then( (function(items) {
-                //$scope.$apply( function(){
-                vm.items = items
-                //})<
-              }).bind(vm), (function(reason) {
-                return vm.items = null
-              }).bind(vm)
-            )
-        };
-        // I feel this is not required, as it leads to two index queries...
-        //vm.loadData();
-
         vm.header = vm.resource.descriptor.name
         vm.columns = vm.resource.descriptor.fields;
-
       })
     }
+
+    $scope.$on('form-submit', (function(event, formItem, info){
+      if(info.panelIndex == 0){
+        this.refreshIndex()
+      }
+    }).bind(this))
 
    this.pushNewItem = function(item) {
       var newItem;
@@ -101,6 +96,7 @@ app.component('csIndex', {
     };
 
     this.columnVisible = function(column, index) {
+
       var length;
       length = this.columns.length;
       if (this.attributeToHide(column.attribute)) {
@@ -113,7 +109,6 @@ app.component('csIndex', {
     };
 
     this.attributeToHide = function(attribute) {
-
       var hiddenAttrs;
       if (this.csIndexOptions['hide-attributes']) {
         if (hiddenAttrs = this.csIndexOptions['hide-attributes'].index) {
@@ -194,7 +189,6 @@ app.component('csIndex', {
     };
 
     this.refreshIndex = function() {
-      // console.log("CS-INDEX: refreshIndex()")
       this.unselectItem();
       this.loadData();
     };

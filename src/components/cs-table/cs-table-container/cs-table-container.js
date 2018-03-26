@@ -88,7 +88,7 @@ app.component('csTableContainer', {
   } ],
   bindings : {
     resource : "<",
-    collection : "<",
+    collection : "=",
     csIndexOptions : "=",
     columns : "<",
     columnVisible_ : "&",

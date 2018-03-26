@@ -151,6 +151,7 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDesc
     # ===== LIFECYCLE EVENTS ==============================
 
     $scope.$on 'create-resource', (event, resource, attribute, parent) ->
+      console.log("attribute", attribute)
       $scope.pushPanel resource, attribute, parent
 
     $scope.$on 'form-cancel', (event, resource, attribute) ->
@@ -165,7 +166,6 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDesc
 
       $scope.log("form-submit-event")
       if $scope.panelStack.length == 1
-        $scope.log("form-submit-event")
         notify_listeners($scope, 'wizard-submited', resource)
         popPanel($scope) unless $scope.csWizardOptions['keep-first']
       else
@@ -233,6 +233,7 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDesc
         resource: angular.copy(ResourceService.get(resource_type))
         parent: parent
         formMode: 'create'
+        attribute : attribute
 
       if $scope.csWizardOptions['resource-overrides'] && (override = $scope.csWizardOptions['resource-overrides'][resource_type])
         if override.directive?

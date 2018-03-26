@@ -4,7 +4,7 @@ app = angular.module('cloudStorm.resource', [])
 
 ####################################################################################################
 
-app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSettings', '$q',
+app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSettings', '$q'
   (csRestApi, csDataStore, ResourceService, csSettings, $q) ->
 
     # Returns relative URL
@@ -27,6 +27,7 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
 
       constructor: (value_object, opts = {}) ->
         # Setup datastore based in different scenarios
+        @pendingOperations = {}
         if opts.datastore
           # If datastore is given in options, use that
           @.$datastore = opts.datastore
@@ -311,6 +312,7 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
         actual_datastore = opts.datastore || @.$datastore
         _.map rel, (item) -> actual_datastore.get(item.type, item.id)
 
+      # returns [Resource] or Resource
       $association: (field, opts = {}) ->
         rel = @relationships && @relationships[field.relationship]
         if rel
@@ -327,7 +329,9 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
           else
             return @.$relationship(rel.data, opts)
 
+
       $assign_association: (field, value, opts = {}) ->
+
         @relationships ||= {}
         if value
           if angular.isArray(value)
@@ -366,6 +370,7 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
 
       ################################################################################################
 
+
       $display_name: () ->
         instance_name = if @.constructor.descriptor.display && @.constructor.descriptor.display.name
           @attributes[@.constructor.descriptor.display.name]
@@ -375,6 +380,8 @@ app.factory 'csResource', [ 'csRestApi', 'csDataStore', 'ResourceService', 'csSe
         instance_name || @.constructor.descriptor.name
 
       ################################################################################################
+
+
 
     ##################################################################################################
 
