@@ -1,5 +1,5 @@
 %cs-loader{ "enabled" => "$ctrl.pageLoading" }
-.row{ "ng-if" => "!$ctrl.pageLoading"}
+.row{ "ng-if" => "!$ctrl.pageLoading" }
   .col-lg-12
     %cs-filter-row{ "resource" => "$ctrl.resource",
                     "filterValue" => "$ctrl.filterValue",
@@ -21,7 +21,7 @@
                           "column-visible_" => "$ctrl.columnVisible(column, index)",
                           "show-item_" => "$ctrl.showItem(item)",
                           "select-item_" => "$ctrl.selectItem(item)",
-                          "destroy-item_" => "$ctrl.destroyItem(event, item)"}
+                          "destroy-item_" => "$ctrl.destroyItem(event, item)" }
 
       %cs-index-sidepanel{ "ng-if" => "$ctrl.sidePanelIsVisible() && !$ctrl.loading",
                            "cs-index-sidepanel-options" => "$ctrl.csIndexOptions",
