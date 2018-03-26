@@ -4,7 +4,7 @@ app = angular.module('cloudStorm.wizard', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDescriptorService', 'csLog', ($rootScope, ResourceService, $document, csDescriptorService, csLog) ->
+app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDescriptorService', 'csLog', 'csAlertService', 'csRoute', ($rootScope, ResourceService, $document, csDescriptorService, csLog, csAlertService, csRoute) ->
 
 
   # ===== COMPILE =============================================================
@@ -31,6 +31,7 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDesc
 
     #Setting csLog
     csLog.set($scope, "csWizard")
+    #csLog.enable($scope)
 
     $scope.loading = true
     $scope.errors = []
@@ -117,7 +118,7 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDesc
 
           $scope.csWizardOptions.events = {
             'wizard-canceled' : wizardCanceled
-            'wizard-submitted' : wizardSubmitted
+            'wizard-submited' : wizardSubmitted
           }
           $scope.setOptions(resource, item, formMode, wizardMaxDepth)
           $scope.finish()
@@ -161,7 +162,10 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDesc
       notify_listeners($scope, 'wizard-canceled', resource) if $scope.panelStack.length == 0
 
     $scope.$on 'form-submit', (event, resource, attribute) ->
+
+      $scope.log("form-submit-event")
       if $scope.panelStack.length == 1
+        $scope.log("form-submit-event")
         notify_listeners($scope, 'wizard-submited', resource)
         popPanel($scope) unless $scope.csWizardOptions['keep-first']
       else
@@ -290,6 +294,7 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDesc
 
     # Notify with emiting the event and calling the callback if set for the event
     $scope.$emit event
+    $scope.log("notify_listeners")
     if $scope.csWizardOptions && $scope.csWizardOptions.events
       if $scope.csWizardOptions.events[event]
         # Call the callback if it's set in the wizard options
@@ -331,9 +336,10 @@ app.directive "csWizardPanel", ['$rootScope', 'ResourceService', '$compile', 'cs
 
     # ===== COMPILE DOM WITH APPROPRIATE DIRECTIVE ========
 
-    csLog.set($scope, "csWizardPanel", true)
-    $scope.log("Start")
+    csLog.set($scope, "csWizardPanel")
+    #csLog.enable($scope)
 
+    $scope.log("Start")
 
     if $scope.panel.directive
       $scope.log("Directive render")
