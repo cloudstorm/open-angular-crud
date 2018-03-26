@@ -70,8 +70,9 @@ app.component('csIndex', {
             (function() {
               return vm.resource.$index({ include: '*'})
             }).bind(vm)).then( (function(items) {
-                return vm.items = items
-                $scope.$apply()
+                //$scope.$apply( function(){
+                vm.items = items
+                //})<
               }).bind(vm), (function(reason) {
                 return vm.items = null
               }).bind(vm)
