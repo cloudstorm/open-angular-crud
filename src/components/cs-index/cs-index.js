@@ -14,10 +14,12 @@ app.component('csIndex', {
 
   templateUrl : 'components/cs-index/cs-index-template.html',
   controller : ['$scope', '$document', '$timeout', 'ResourceService','csSettings','$uibModal','csAlertService','csDescriptorService','csRoute', function($scope, $document, $timeout, ResourceService, csSettings, $uibModal, csAlertService, csDescriptorService, csRoute){
-    var vm = this;
-    this.loading = false;
 
-    this.loading = true
+    var vm = this;
+
+    this.pageLoading = true
+    this.tableLoading = false
+
     this.$onChanges = function(changesObj) {
       if (changesObj.items && changesObj.items.currentValue && changesObj.items.previousValue != changesObj.items.currentValue) {
         vm.items = changesObj.items.currentValue;
@@ -28,17 +30,22 @@ app.component('csIndex', {
     }
 
     this.loadData = function() {
-      this.loading = true;
+      if(!this.pageLoading) this.tableLoading = true;
       csDescriptorService.getPromises().then( function() {
         return vm.resource.$index({ include: '*'}).then( function(items) {
           vm.items = items;
-          vm.loading = false;
+          vm.loaded()
         }).catch(function(error) {
           // TODO: log or throw - handle this error somehow
           vm.items = null;
-          vm.loading = false;
+          vm.loaded()
         })
       });
+    }
+
+    this.loaded = function(){
+      vm.pageLoading = false;
+      vm.tableLoading = false
     }
 
     this.$onInit = function() {

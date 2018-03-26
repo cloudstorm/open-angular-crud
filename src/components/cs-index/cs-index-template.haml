@@ -1,16 +1,17 @@
-.row
+%cs-loader{ "enabled" => "$ctrl.pageLoading" }
+.row{ "ng-if" => "!$ctrl.pageLoading"}
   .col-lg-12
     %cs-filter-row{ "resource" => "$ctrl.resource",
                     "filterValue" => "$ctrl.filterValue",
                     "filter" => "$ctrl.filter(filterValue)",
                     "open-new-resource-panel" => "$ctrl.openNewResourcePanel()",
                     "refresh-index" => "$ctrl.refreshIndex()"}
-    .row{ "ng-if" => "$ctrl.listIsEmpty()" }
-      .well.well-lg
+    .row{ "ng-show" => "$ctrl.tableLoading" }
+      %cs-loader{ "enabled" => "true" }
+    .row{ "ng-show" => "!$ctrl.tableLoading" }
+      .well.well-lg{ "ng-show" => "$ctrl.listIsEmpty()" }
         {{$ctrl.header}} {{ $ctrl.i18n.t('index.empty') }}
-
-    .row{ "ng-show" => "!$ctrl.listIsEmpty()" }
-      %cs-table-container{ "ng-if" => "!$ctrl.loading",
+      %cs-table-container{ "ng-show" => "!$ctrl.listIsEmpty()",
                           "ng-class" => "{ 'col-lg-8' : $ctrl.sidePanelIsVisible() && !$ctrl.viewIsCompressed(),
                                            'col-lg-6' : $ctrl.viewIsCompressed() }",
                           "resource" => "$ctrl.resource",
@@ -30,4 +31,3 @@
                            "ng-class" => "{ 'col-lg-4' : !$ctrl.viewIsCompressed() && $ctrl.sidePanelIsVisible(),
                                             'col-lg-6' : $ctrl.viewIsCompressed() }",
                            "panel-number-callback_" => "$ctrl.getPanelNumber(length)" }
-      %cs-loader{ "ng-if" => "$ctrl.loading"}
