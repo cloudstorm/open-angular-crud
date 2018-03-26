@@ -4,7 +4,9 @@ app = angular.module('cloudStorm.wizard', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDescriptorService', 'csLog', 'csAlertService', 'csRoute', ($rootScope, ResourceService, $document, csDescriptorService, csLog, csAlertService, csRoute) ->
+app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDescriptorService', 'csLog',
+'csAlertService', 'csRoute',
+($rootScope, ResourceService, $document, csDescriptorService, csLog, csAlertService, csRoute) ->
 
 
   # ===== COMPILE =============================================================
@@ -325,7 +327,8 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDesc
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csWizardPanel", ['$rootScope', 'ResourceService', '$compile', 'csLog', ($rootScope, ResourceService, $compile, csLog) ->
+app.directive "csWizardPanel", ['$rootScope', 'ResourceService', '$compile', 'csLog',
+($rootScope, ResourceService, $compile, csLog) ->
 
   link = ($scope, element, attrs, controller) ->
 
