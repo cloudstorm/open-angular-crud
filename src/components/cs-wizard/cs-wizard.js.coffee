@@ -26,9 +26,6 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDesc
 
   link = ($scope, element, attrs, controller) ->
 
-    ValidationError = () ->
-    ValidationError.prototype = Error.prototype;
-
     #Setting csLog
     csLog.set($scope, "csWizard")
     #csLog.enable($scope)
