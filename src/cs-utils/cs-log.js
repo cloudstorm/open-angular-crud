@@ -18,7 +18,7 @@ app.factory('csLog', [
           diff = 0
         }
         csLog.last = now
-        return "[" + diff + " s]"
+        return diff + " (sec)"
       },
 
       set : function(scope, componentName, enabled){
@@ -26,7 +26,7 @@ app.factory('csLog', [
           scope.logEnabled = false || enabled
           scope.log = function(msg){
             if(scope.logEnabled){
-              console.log(csLog.diff(),componentName, msg)
+              console.log(csLog.diff()+ " | " + componentName + " - " , msg)
             }
           }
       },
