@@ -11,10 +11,6 @@ describe('csDescriptorService', function(){
   beforeEach(angular.mock.module('cloudStorm.settings'));
   beforeEach(angular.mock.module('cloudStorm.descriptorService'))
 
-  // beforeEach(inject(function($injector) {
-  //     $q = $injector.get('$q');
-  //     $http = $injector.get('$http');
-  // }));
 
   var civilization = {
     "name": "civilization",
@@ -31,21 +27,32 @@ describe('csDescriptorService', function(){
       "paranoid": true
     }
   }
+  // beforeEach(inject(function (_ResourceService_) {
+  //   csResourceService = _ResourceService_;
+  // }));
+  //
+  // it('should exist', function() {
+  //   expect(csResourceService).toBeDefined();
+  // });
 
 
-  beforeEach(inject(function(_csDescriptorService_){
+  beforeEach(inject(function(_csDescriptorService_, _ResourceService_){
     //console.log(_csDescriptorService_)
-    //csResourceService = _csResourceService_
+    csResourceService = _ResourceService_
     csDescriptorService = _csDescriptorService_
   }))
 
-  it('resourceService exists', function(){
+  // beforeEach(inject(function(){
+  //   //console.log(_csDescriptorService_)
+  //   csResourceService = _csResourceService_
+  // }))
+
+  it('csDescriptorService exists', function(){
     expect(csDescriptorService).toBeDefined();
   })
 
-  // it('csDescriptorService exists', function(){
-  //   expect(csResourceService).toBeDefined();
-  // })
-
+  it('resourceService exists', function(){
+    expect(csResourceService).toBeDefined();
+  })
 
 })
