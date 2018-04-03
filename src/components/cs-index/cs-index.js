@@ -13,7 +13,7 @@ app.component('csIndex', {
   },
 
   templateUrl : 'components/cs-index/cs-index-template.html',
-  controller : ['$scope','ResourceService','csSettings','$uibModal','csAlertService','csDescriptorService','csRoute', function($scope, ResourceService, csSettings, $uibModal, csAlertService, csDescriptorService, csRoute){
+  controller : ['$scope','ResourceService','csSettings','$uibModal','csAlertService','csDescriptorService', function($scope, ResourceService, csSettings, $uibModal, csAlertService, csDescriptorService){
     var vm = this;
 
     this.$onChanges = function(changesObj) {

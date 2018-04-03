@@ -11,22 +11,13 @@ describe('csDescriptorService', function(){
   beforeEach(angular.mock.module('cloudStorm.settings'));
   beforeEach(angular.mock.module('cloudStorm.descriptorService'))
 
+  var civilizationRaw = "{\"name\":\"Civilization\",\"type\":\"civilizations\",\"hint\":\"list\",\"base_url\":\"http://web.csnodeapptemplate.docker\",\"endpoint\":\"api/v1/civilizations\",\"fields\":[{\"attribute\":\"id\",\"cardinality\":\"one\",\"label\":\"Identifier\",\"read_only\":true,\"required\":false,\"type\":\"integer\"},{\"attribute\":\"name\",\"cardinality\":\"one\",\"label\":\"Name\",\"read_only\":false,\"required\":true,\"type\":\"string\"},{\"attribute\":\"kardashev_scale\",\"cardinality\":\"one\",\"label\":\"Kardashev Scale\",\"read_only\":false,\"required\":false,\"type\":\"string\"},{\"attribute\":\"data\",\"cardinality\":\"one\",\"label\":\"Data\",\"read_only\":false,\"required\":false,\"type\":\"code\"},{\"attribute\":\"planets\",\"cardinality\":\"many\",\"label\":\"Planets\",\"read_only\":false,\"required\":false,\"relationship\":\"planets\",\"resource\":\"planets\",\"type\":\"resource\"},{\"attribute\":\"home_planet_id\",\"cardinality\":\"one\",\"label\":\"Home Planet\",\"read_only\":false,\"required\":false,\"relationship\":\"home_planet\",\"resource\":\"planets\",\"type\":\"resource\"},{\"attribute\":\"created_at\",\"cardinality\":\"one\",\"label\":\"Created at\",\"read_only\":false,\"required\":false,\"type\":\"datetime\"},{\"attribute\":\"updated_at\",\"cardinality\":\"one\",\"label\":\"Updated at\",\"read_only\":false,\"required\":false,\"type\":\"datetime\"},{\"attribute\":\"deleted_at\",\"cardinality\":\"one\",\"label\":\"Deleted at\",\"read_only\":false,\"required\":false,\"type\":\"datetime\"}],\"attributes_to_hide\":{\"create\":[\"id\",\"created_at\",\"updated_at\",\"deleted_at\"],\"edit\":[\"id\",\"created_at\",\"updated_at\",\"deleted_at\"],\"index\":[\"deleted_at\"],\"show\":[]},\"display\":{\"name\":\"name\"}}";
 
-  var civilization = {
-    "name": "civilization",
-    "attributes": [
-      { "name": "name", "type": "string", "required": true },
-      { "name": "kardashev_scale", "type": "string" },
-      { "name": "data", "type": "jsonb" }
-    ],
-    "relationships": [
-      { "name": "planets", "type": "has_many", "target": "planet", "foreign_key": "civilization_id" },
-      { "name": "home_planet", "type": "belongs_to", "target": "planet", "foreign_key": "home_planet_id" }
-    ],
-    "options": {
-      "paranoid": true
-    }
-  }
+  var civilization = JSON.parse(civilizationRaw)
+
+  console.log("Civilization I")
+  console.log(JSON.stringify(civilization))
+
   // beforeEach(inject(function (_ResourceService_) {
   //   csResourceService = _ResourceService_;
   // }));
@@ -53,6 +44,11 @@ describe('csDescriptorService', function(){
 
   it('resourceService exists', function(){
     expect(csResourceService).toBeDefined();
+  })
+
+  it('registerTestDescriptor', function(){
+    var civResource = csDescriptorService.registerDescriptor(civilization)
+    expect(csResourceService.get("civilizations").descriptor.type).toEqual(civilization.type)
   })
 
 })
