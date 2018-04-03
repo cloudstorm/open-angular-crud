@@ -1,5 +1,5 @@
 /**
- * cloudstorm - v0.0.22 - 2018-02-14
+ * cloudstorm - v0.0.22 - 2018-04-03
  * https://github.com/cloudstorm/cloudstorm#readme
  *
  * Copyright (c) 2018 Virtual Solutions Ltd <info@cloudstorm.io>
@@ -581,7 +581,7 @@ app.directive("csResourceInput", [
       };
     };
     link = function($scope, element, attrs, controller) {
-      var refreshAndSelect;
+      var refreshAndSelect, refreshOptions;
       $scope.i18n = csSettings.settings['i18n-engine'];
       csInputBase($scope);
       $scope.csTemplateService = csTemplateService;
@@ -612,31 +612,40 @@ app.directive("csResourceInput", [
           return $scope.model.object = $scope.formItem.$association($scope.field);
         }
       });
-      $scope.selectItem = function() {};
       $scope.$on('form-reset', function() {
         return $scope.model = {
           object: $scope.formItem.$association($scope.field)
         };
       });
-      $rootScope.$on('form-submit', function(event, formItem) {
+      $rootScope.$on('form-submit', function(event, formItem, info) {
         var itemID;
-        if ($scope.formMode === "tableView") {
-          $scope.resource = ResourceService.get($scope.field.resource);
-          $scope.model = {
-            object: $scope.formItem.$association($scope.field)
-          };
-        }
-        if (formItem.type === $scope.field.resource) {
-          if (event.stopPropagation) {
-            event.stopPropagation();
+        if ($scope.formMode !== "tableView") {
+          if (formItem.type === $scope.field.resource && $scope.field.attribute === info.attribute) {
+            if (event.stopPropagation) {
+              event.stopPropagation();
+            }
+            itemID = parseInt(formItem.id.toString().slice());
+            if (itemID !== $scope.formItem.id) {
+              refreshAndSelect(itemID);
+            }
           }
-          itemID = formItem.id.slice();
-          if (itemID !== $scope.formItem.id) {
-            return refreshAndSelect(itemID);
+          if (formItem.type === $scope.field.resource && $scope.field.attribute !== info.attribute) {
+            return refreshOptions(itemID);
+          }
+        } else {
+          if ($scope.formItem.id === parseInt(formItem.id.toString().slice())) {
+            $scope.resource = ResourceService.get($scope.field.resource);
+            return $scope.model = {
+              object: $scope.formItem.$association($scope.field)
+            };
           }
         }
       });
       $scope.refresh = function(value) {
+
+        /*  Refresh plays a role in the submission of the subforms, becuase the list of selectable
+        resources has to be updated.
+         */
         var search_options;
         search_options = angular.merge({
           datastore: $scope.formItem.$datastore
@@ -657,6 +666,15 @@ app.directive("csResourceInput", [
       $scope.canCreateResources = function() {
         var ref, ref1, ref2;
         return $scope.createResources() && !((ref = $scope.formItem.relationships) != null ? (ref1 = ref[$scope.field.relationship]) != null ? (ref2 = ref1.data) != null ? ref2.id : void 0 : void 0 : void 0);
+      };
+      refreshOptions = function(itemID) {
+        var search_options;
+        search_options = angular.merge({}, $scope.field.resource_endpoint);
+        return $scope.resource.$search(null, search_options).then(function(items) {
+          return $scope.associates = items;
+        }, function(reason) {
+          return console.log(reason);
+        }, function() {});
       };
       refreshAndSelect = function(itemID) {
         var search_options;
@@ -684,7 +702,7 @@ app.directive("csResourceInput", [
       $scope.model = {
         object: $scope.formItem.$association($scope.field)
       };
-      if ($scope.associates) {
+      if ($scope.associates && $scope.formMode !== "tableView") {
         $scope.associates = [];
         return $scope.refresh();
       } else {
@@ -824,7 +842,7 @@ var app;
 app = angular.module('cloudStorm.form', []);
 
 app.directive("csForm", [
-  'csSettings', function(csSettings) {
+  'csSettings', 'csLog', function(csSettings, csLog) {
     var compile, link;
     compile = function($templateElement, $templateAttributes) {
       $templateElement.addClass("cs-form");
@@ -835,8 +853,10 @@ app.directive("csForm", [
     };
     link = function($scope, element, attrs, controller) {
       var attributeToHide, elem, scrollTrigger;
+      csLog.set($scope, "csForm");
       $scope.i18n = csSettings.settings['i18n-engine'];
       $scope.fields = $scope.formResourceDescriptor.fields;
+      $scope.log("Start");
       if ($scope.formMode === 'create') {
         if ($scope.formItem) {
           $scope.formItem = $scope.formResource.$new({
@@ -909,7 +929,10 @@ app.directive("csForm", [
           if ($scope.editableItem !== $scope.formItem) {
             $scope.formItem.$assign($scope.editableItem);
           }
-          $scope.$emit('form-submit', $scope.formItem);
+          $scope.$emit('form-submit', $scope.formItem, {
+            panelIndex: $scope.wizardPanelIndex,
+            attribute: $scope.subformAttribute
+          });
           $scope.$broadcast('field-submit', $scope.formItem);
           if ($scope.csFormOptions['reset-on-submit']) {
             angular.copy($scope.formResource.$new(), $scope.formItem);
@@ -946,6 +969,7 @@ app.directive("csForm", [
         formResource: '=',
         formResourceDescriptor: '=',
         formItem: '=?',
+        subformAttribute: "=",
         formParent: '=?',
         formMode: '@',
         wizardPanelIndex: '=',
@@ -1087,6 +1111,13 @@ app.directive("csMenu", [
             return $scope.resources = ResourceService.getResources();
           });
         });
+        $scope.$watch((function() {
+          return csRoute.getState();
+        }), function(newVal) {
+          if (newVal && newVal.resourceType) {
+            return $scope.selected = newVal.resourceType;
+          }
+        });
         $scope.isSelected = function(type) {
           return type === $scope.selected;
         };
@@ -1112,7 +1143,7 @@ var app;
 app = angular.module('cloudStorm.wizard', []);
 
 app.directive("csWizard", [
-  '$rootScope', 'ResourceService', '$document', function($rootScope, ResourceService, $document) {
+  '$rootScope', 'ResourceService', '$document', 'csDescriptorService', 'csLog', 'csAlertService', 'csRoute', function($rootScope, ResourceService, $document, csDescriptorService, csLog, csAlertService, csRoute) {
     var compile, link, notify_listeners, popAllPanels, popPanel;
     compile = function($templateElement, $templateAttributes) {
       $templateElement.addClass("cs-wizard");
@@ -1122,21 +1153,102 @@ app.directive("csWizard", [
       };
     };
     link = function($scope, element, attrs, controller) {
-      var keyPressed, override, overriden_resource_descriptors, panelDescriptor, resource_type, wizardMaxDepth;
-      wizardMaxDepth = $scope.csWizardOptions['max-depth'] || 5;
-      resource_type = $scope.csWizardOptions['resource-type'];
-      panelDescriptor = {
-        resource: angular.copy(ResourceService.get(resource_type)),
-        item: $scope.csWizardOptions['form-item'],
-        formMode: $scope.csWizardOptions['form-mode'],
-        parent: null
+      var directive, formMode, item, keyPressed, override, overriden_resource_descriptors, parent, resource, resource_type, wizardMaxDepth;
+      csLog.set($scope, "csWizard");
+      $scope.loading = true;
+      $scope.errors = [];
+      $scope.setOptions = function(resource, item, formMode, wizardMaxDepth, parent) {
+        var panelDescriptor;
+        $scope.log("setOptions");
+        panelDescriptor = {
+          resource: resource,
+          item: item,
+          formMode: formMode,
+          wizardMaxDepth: wizardMaxDepth,
+          parent: parent,
+          directive: directive
+        };
+        return $scope.panelStack = [panelDescriptor];
       };
-      if ($scope.csWizardOptions['resource-overrides'] && (override = $scope.csWizardOptions['resource-overrides'][resource_type])) {
-        if (override.directive != null) {
-          panelDescriptor.directive = override.directive;
+      $scope.finish = function(error) {
+        $scope.log("finish");
+        $scope.loading = false;
+        if (error) {
+          $scope.errors = [error];
         }
+        if (error) {
+          throw new Error(error);
+        }
+      };
+      if ($scope.csWizardOptions) {
+        $scope.log("wizardOptions branch");
+        resource_type = $scope.csWizardOptions['resource-type'];
+        resource = angular.copy(ResourceService.get(resource_type));
+        item = $scope.csWizardOptions['form-item'];
+        formMode = $scope.formMode || $scope.csWizardOptions['form-mode'];
+        parent = null;
+        wizardMaxDepth = $scope.csWizardOptions['max-depth'] || 5;
+        if ($scope.csWizardOptions['resource-overrides'] && (override = $scope.csWizardOptions['resource-overrides'][resource_type])) {
+          if (override.directive != null) {
+            directive = override.directive;
+          }
+        }
+        $scope.setOptions(resource, item, formMode, wizardMaxDepth, parent, directive);
+        $scope.finish();
+      } else {
+        $scope.log("singlePage branch");
+        $scope.csWizardOptions = {};
+        formMode = $scope.pageType;
+        if (formMode !== 'show' && formMode !== 'edit') {
+          $scope.finish("'" + formMode + "' is not a valid page type!");
+        }
+        resource_type = $scope.resourceType;
+        $scope.csWizardOptions['form-mode'] = formMode;
+        wizardMaxDepth = 5;
+        csDescriptorService.getPromises().then(function() {
+          var _resource_, error, error1, errorMsg;
+          try {
+            _resource_ = ResourceService.get($scope.resourceType);
+          } catch (error1) {
+            error = error1;
+            errorMsg = "'" + $scope.resourceType + "' is not a registered resource.";
+            $scope.finish(error);
+          }
+          resource = angular.copy(_resource_);
+          return resource.$get($scope.itemId, {
+            include: '*'
+          }).then(function(_item_) {
+            var wizardCanceled, wizardSubmitted;
+            item = _item_;
+            wizardCanceled = (function() {
+              return csRoute.go("index", {
+                resourceType: resource.descriptor.type
+              });
+            }).bind(resource);
+            wizardSubmitted = (function() {
+              switch (formMode) {
+                case "create":
+                  csAlertService.success('new_resource_created');
+                  break;
+                case "edit":
+                  csAlertService.success("changes_saved");
+              }
+              return csRoute.go("index", {
+                resourceType: resource.descriptor.type
+              });
+            }).bind(formMode, resource);
+            $scope.csWizardOptions.events = {
+              'wizard-canceled': wizardCanceled,
+              'wizard-submited': wizardSubmitted
+            };
+            $scope.setOptions(resource, item, formMode, wizardMaxDepth);
+            return $scope.finish();
+          })["catch"](function(reason) {
+            errorMsg = "There is no " + resource.descriptor.name + " with the id: " + $scope.itemId;
+            return $scope.finish(errorMsg);
+          });
+        });
       }
-      $scope.panelStack = [panelDescriptor];
       if ($scope.panelNumberCallback) {
         $scope.panelNumberCallback($scope.panelStack.length);
       }
@@ -1146,10 +1258,15 @@ app.directive("csWizard", [
         }
       });
       $scope.$watchCollection('panelStack', function(newPanelStack, oldPanelStack) {
-        attrs.$set('numberOfPanels', newPanelStack.length);
-        return $scope.numberOfPanels = newPanelStack.length;
+        if (newPanelStack) {
+          attrs.$set('numberOfPanels', newPanelStack.length);
+          return $scope.numberOfPanels = newPanelStack.length;
+        } else {
+          return $scope.log("NotPanelStack");
+        }
       });
       $scope.$on('create-resource', function(event, resource, attribute, parent) {
+        console.log("attribute", attribute);
         return $scope.pushPanel(resource, attribute, parent);
       });
       $scope.$on('form-cancel', function(event, resource, attribute) {
@@ -1165,6 +1282,7 @@ app.directive("csWizard", [
         }
       });
       $scope.$on('form-submit', function(event, resource, attribute) {
+        $scope.log("form-submit-event");
         if ($scope.panelStack.length === 1) {
           notify_listeners($scope, 'wizard-submited', resource);
           if (!$scope.csWizardOptions['keep-first']) {
@@ -1228,7 +1346,7 @@ app.directive("csWizard", [
         });
       };
       $scope.pushPanel = function(resource_type, attribute, parent) {
-        var activeField, panelIndex;
+        var activeField, panelDescriptor, panelIndex;
         panelIndex = $scope.panelStack.length - 1;
         _.forEach($scope.panelStack[panelIndex].resource.descriptor.fields, function(value) {
           return value.inactive = true;
@@ -1242,7 +1360,8 @@ app.directive("csWizard", [
         panelDescriptor = {
           resource: angular.copy(ResourceService.get(resource_type)),
           parent: parent,
-          formMode: 'create'
+          formMode: 'create',
+          attribute: attribute
         };
         if ($scope.csWizardOptions['resource-overrides'] && (override = $scope.csWizardOptions['resource-overrides'][resource_type])) {
           if (override.directive != null) {
@@ -1302,6 +1421,7 @@ app.directive("csWizard", [
     };
     notify_listeners = function($scope, event, resource) {
       $scope.$emit(event);
+      $scope.log("notify_listeners");
       if ($scope.csWizardOptions && $scope.csWizardOptions.events) {
         if ($scope.csWizardOptions.events[event]) {
           $scope.csWizardOptions.events[event](resource);
@@ -1320,8 +1440,11 @@ app.directive("csWizard", [
       restrict: 'A',
       templateUrl: 'components/cs-wizard/cs-wizard-template.html',
       scope: {
-        csWizardOptions: '=',
-        panelNumberCallback: '='
+        csWizardOptions: '=?',
+        panelNumberCallback: '=',
+        pageType: "=",
+        itemId: "=",
+        resourceType: "="
       },
       compile: compile
     };
@@ -1329,16 +1452,19 @@ app.directive("csWizard", [
 ]);
 
 app.directive("csWizardPanel", [
-  '$rootScope', 'ResourceService', '$compile', function($rootScope, ResourceService, $compile) {
+  '$rootScope', 'ResourceService', '$compile', 'csLog', function($rootScope, ResourceService, $compile, csLog) {
     var link;
     link = function($scope, element, attrs, controller) {
       var innerElement, inputTemplate;
       $scope.formClass = function() {
         return $scope.csWizardOptions['form-class'];
       };
+      csLog.set($scope, "csWizardPanel");
+      $scope.log("Start");
       if ($scope.panel.directive) {
+        $scope.log("Directive render");
         innerElement = angular.element(element[0]);
-        inputTemplate = "<" + $scope.panel.directive + "\n  autocomplete=\"off\"\n  create-resources=\"shouldShowNewButton()\"\n  cs-form-options=\"csWizardOptions\"\n  form-item=\"panel.item\"\n  form-parent=\"panel.parent\"\n  form-mode=\"{{csWizardOptions['form-mode']}}\"\n  form-resource=\"panel.resource\"\n  form-resource-descriptor=\"resource_descriptor(panel)\"\n  role=\"form\"\n  ng-class='formClass()' \n>";
+        inputTemplate = "<" + $scope.panel.directive + "\n  autocomplete=\"off\"\n  create-resources=\"shouldShowNewButton()\"\n  cs-form-options=\"csWizardOptions\"\n  form-item=\"panel.item\"\n  form-parent=\"panel.parent\"\n  form-mode=\"{{csWizardOptions['form-mode']}}\"\n  form-resource=\"panel.resource\"\n  form-resource-descriptor=\"resource_descriptor(panel)\"\n  role=\"form\"\n  ng-class='formClass()'\n>";
         return innerElement.html($compile(inputTemplate)($scope));
       }
     };
@@ -1539,7 +1665,7 @@ var app,
 app = angular.module('cloudStorm.descriptorService', []);
 
 app.service('csDescriptorService', [
-  '$q', '$http', 'ResourceService', 'csResource', function($q, $http, ResourceService, csResource) {
+  '$q', '$http', 'csResource', 'ResourceService', function($q, $http, csResource, ResourceService) {
     this.descriptors = [];
     this.getDescriptors = function() {
       if (this.descriptors) {
@@ -1585,13 +1711,13 @@ app.service('csDescriptorService', [
         };
       })(this))["catch"]((function(_this) {
         return function(response) {
-          return console.log("CS-002: Error while receiving descriptor from '" + descriptorUrl + "'");
+          return console.log("CS-002: Error while receiving descriptor from '" + descriptorUrl + "', error:", response);
         };
       })(this));
       return this.descriptors.push(descriptorPromise);
     };
     this.registerDescriptor = function(data) {
-      var Resource;
+      var Resource, error, ex;
       Resource = (function(superClass) {
         extend(Resource, superClass);
 
@@ -1612,7 +1738,11 @@ app.service('csDescriptorService', [
         return Resource;
 
       })(csResource);
-      return ResourceService.register(Resource.descriptor.type, Resource);
+      try {
+        return ResourceService.register(Resource.descriptor.type, Resource);
+      } catch (error) {
+        ex = error;
+      }
     };
     return window.csDescriptors = this;
   }
@@ -1754,6 +1884,7 @@ app.factory('csResource', [
         if (opts == null) {
           opts = {};
         }
+        this.pendingOperations = {};
         if (opts.datastore) {
           this.$datastore = opts.datastore;
         } else if (opts.datastore_parent) {
@@ -2074,7 +2205,6 @@ app.factory('csResource', [
 
       Resource.prototype.$merge = function(value_object) {
         var assoc, item, j, len, name, ref, ref1, rel;
-        console.log('merge -------');
         delete this.meta;
         angular.merge(this, _.pick(value_object, "id", "type", "attributes", "relationships", "links", "meta"));
         if (value_object.$datastore) {
@@ -2439,30 +2569,25 @@ app.provider('csSettings', [
           {
             name: _this.settings['router-path-prefix'] + 'index',
             url: '/{resourceType}',
-            component: 'csPageRouter',
+            component: 'csIndex',
             resolve: {
               resourceType: [
                 '$transition$', function($transition$) {
                   return $transition$.params().resourceType;
-                }
-              ],
-              pageType: [
-                '$transition$', function($transition$) {
-                  return 'index';
                 }
               ]
             }
           }, {
             name: _this.settings['router-path-prefix'] + 'show',
             url: '/{resourceType}/{id}',
-            component: 'csPageRouter',
+            component: 'csWizardComponent',
             resolve: {
               resourceType: [
                 '$transition$', function($transition$) {
                   return $transition$.params().resourceType;
                 }
               ],
-              id: [
+              itemId: [
                 '$transition$', function($transition$) {
                   return $transition$.params().id;
                 }
@@ -2476,26 +2601,21 @@ app.provider('csSettings', [
           }, {
             name: _this.settings['router-path-prefix'] + 'cmd',
             url: '/{resourceType}/{id}/{cmd}',
-            component: 'csPageRouter',
+            component: 'csWizardComponent',
             resolve: {
               resourceType: [
                 '$transition$', function($transition$) {
                   return $transition$.params().resourceType;
                 }
               ],
-              id: [
+              itemId: [
                 '$transition$', function($transition$) {
                   return $transition$.params().id;
                 }
               ],
-              cmd: [
-                '$transition$', function($transition$) {
-                  return $transition$.params().cmd;
-                }
-              ],
               pageType: [
                 '$transition$', function($transition$) {
-                  return 'cmd';
+                  return $transition$.params().cmd;
                 }
               ]
             }
@@ -2564,6 +2684,7 @@ app.component("csLoader", {
     bindings: {
         color: '<',
         radius: '<',
+        enabled: "<",
     },
     templateUrl: 'cs-utils/cs-loader/cs-loader-template.html',
     controller: ['csInputBase', function (csInputBase) {
@@ -2572,7 +2693,7 @@ app.component("csLoader", {
 });
 var app;
 
-app = angular.module('cloudStorm', ['cloudStorm.alertService', 'cloudStorm.alert', 'cloudStorm.field', 'cloudStorm.form', 'cloudStorm.wizard', 'cloudStorm.itemListContainer', 'cloudStorm.checkbox', 'cloudStorm.menu', 'cloudStorm.date', 'cloudStorm.time', 'cloudStorm.datetime', 'cloudStorm.code', 'cloudStorm.fullCode', 'cloudStorm.enum', 'cloudStorm.field', 'cloudStorm.filterRow', 'cloudStorm.form', 'cloudStorm.index', 'cloudStorm.index.sidePanel', 'cloudStorm.itemList', 'cloudStorm.main', 'cloudStorm.menu', 'cloudStorm.number', 'cloudStorm.resourceInput', 'cloudStorm.textfield', 'cloudStorm.tableHeader', 'cloudStorm.tableRow', 'cloudStorm.tableContainer', 'cloudStorm.inputBase', 'cloudStorm.dataStore', 'cloudStorm.localizationProvider', 'cloudStorm.resource', 'cloudStorm.resourceService', 'cloudStorm.restApi', 'cloudStorm.resourceFilter', 'cloudStorm.settings', 'cloudStorm.templateService', 'cloudStorm.templates', 'cloudStorm.descriptorService', 'ui.router', 'cloudStorm.routeProvider', 'ui.bootstrap', 'cloudStorm.loader', 'cloudStorm.error', 'cloudStorm.uiPageRouter']);
+app = angular.module('cloudStorm', ['cloudStorm.alertService', 'cloudStorm.alert', 'cloudStorm.field', 'cloudStorm.form', 'cloudStorm.wizard', 'cloudStorm.wizardComponent', 'cloudStorm.itemListContainer', 'cloudStorm.checkbox', 'cloudStorm.menu', 'cloudStorm.date', 'cloudStorm.time', 'cloudStorm.datetime', 'cloudStorm.code', 'cloudStorm.fullCode', 'cloudStorm.enum', 'cloudStorm.field', 'cloudStorm.filterRow', 'cloudStorm.index', 'cloudStorm.index.sidePanel', 'cloudStorm.itemList', 'cloudStorm.main', 'cloudStorm.menu', 'cloudStorm.number', 'cloudStorm.resourceInput', 'cloudStorm.textfield', 'cloudStorm.tableHeader', 'cloudStorm.tableRow', 'cloudStorm.tableContainer', 'cloudStorm.inputBase', 'cloudStorm.dataStore', 'cloudStorm.localizationProvider', 'cloudStorm.resource', 'cloudStorm.resourceService', 'cloudStorm.restApi', 'cloudStorm.resourceFilter', 'cloudStorm.settings', 'cloudStorm.templateService', 'cloudStorm.templates', 'cloudStorm.descriptorService', 'cloudStorm.log', 'ui.router', 'cloudStorm.routeProvider', 'ui.bootstrap', 'cloudStorm.loader', 'cloudStorm.error']);
 
 'use strict'
 
@@ -2755,6 +2876,7 @@ app.component('csFilterRow', {
     };
 
     this.refreshIndex_ = function() {
+      // console.log("CS-FILTER-ROW: refreshIndex()")
       this.refreshIndex();
     };
 
@@ -2783,63 +2905,81 @@ app.component('csIndex', {
   },
 
   templateUrl : 'components/cs-index/cs-index-template.html',
-  controller : ['$scope','ResourceService','csSettings','$uibModal','csAlertService','csDescriptorService','csRoute', function($scope, ResourceService, csSettings, $uibModal, csAlertService, csDescriptorService, csRoute){
+  controller : ['$scope', '$document', '$timeout', 'ResourceService','csSettings','$uibModal','csAlertService','csDescriptorService','csRoute', function($scope, $document, $timeout, ResourceService, csSettings, $uibModal, csAlertService, csDescriptorService, csRoute){
+
     var vm = this;
 
-    // this.$onChanges = function(changesObj) {
-    //   console.log('cs-index.onChanges', changesObj);
-    // }
+    this.pageLoading = true
+    this.tableLoading = false
+
+    this.$onChanges = function(changesObj) {
+      if (changesObj.items && changesObj.items.currentValue && changesObj.items.previousValue != changesObj.items.currentValue) {
+        vm.items = changesObj.items.currentValue;
+      }
+      if (changesObj.resource && changesObj.resource.currentValue && changesObj.resource.previousValue != changesObj.resource.currentValue) {
+        vm.columns = changesObj.resource.currentValue.descriptor.fields;
+      }
+    }
+
+    this.loadData = function() {
+      if(!this.pageLoading) this.tableLoading = true;
+      csDescriptorService.getPromises().then( function() {
+        return vm.resource.$index({ include: '*'}).then( function(items) {
+          vm.items = items;
+          vm.loaded()
+        }).catch(function(error) {
+          // TODO: log or throw - handle this error somehow
+          vm.items = null;
+          vm.loaded()
+        })
+      });
+    }
+
+    this.loaded = function(){
+      vm.pageLoading = false;
+      vm.tableLoading = false
+    }
 
     this.$onInit = function() {
-      this.csIndexOptions || (this.csIndexOptions = {});
+      var defaultOptions, indexOptions;
+      defaultOptions = {
+        'selectedItem': null,
+        'sortAttribute': vm.resource ? vm.resource.descriptor.fields[0].attribute : '',
+        'filterValue': "",
+        'sortReverse': false,
+        'condensedView': false,
+        'hide-actions': false,
+        'hide-attributes': vm.resource ? vm.resource.descriptor.attributes_to_hide || {} : {}
+      };
+
+      vm.csIndexOptions || (vm.csIndexOptions = {});
+      indexOptions = angular.copy(vm.csIndexOptions);
+      angular.copy({}, vm.csIndexOptions);
+      angular.merge(vm.csIndexOptions, defaultOptions, indexOptions);
 
       csDescriptorService.getPromises().then( function() {
         // Load resource and items when not bound (index-only mode)
         if (!vm.resource) {
           vm.resource = ResourceService.get(vm.resourceType);
+          vm.csIndexOptions['hide-attributes'] = vm.resource.descriptor.attributes_to_hide || {}
+          vm.csIndexOptions['sortAttribute'] = vm.resource.descriptor.fields[0].attribute
         }
         if (!vm.items) {
-          vm.resource.$index({ include: '*'}).then(function(data) { vm.items = data; });
+          // console.log("CS-INDEX: onInit()")
+          vm.loadData();
         }
-        vm.collection = vm.items;
-
         vm.filterValue = ""
         vm.i18n = csSettings.settings['i18n-engine'];
-
-        vm.loadData = function() {
-          csDescriptorService.getPromises().then(
-            (function() {
-              return vm.resource.$index({ include: '*'})
-            }).bind(vm)).then( (function(items) {
-                return vm.items = items
-              }).bind(vm), (function(reason) {
-                return vm.items = null
-              }).bind(vm)
-            )
-        };
-        vm.loadData();
-
         vm.header = vm.resource.descriptor.name
-        var defaultOptions, indexOptions, sortField;
-        sortField = void 0;
-        defaultOptions = {
-          'selectedItem': null,
-          'sortAttribute': vm.resource.descriptor.fields[0].attribute,
-          'filterValue': "",
-          'sortReverse': false,
-          'condensedView': false,
-          'hide-actions': false,
-          'hide-attributes': vm.resource.descriptor.attributes_to_hide || {}
-        };
-
-        vm.csIndexOptions || (vm.csIndexOptions = {});
-        indexOptions = angular.copy(vm.csIndexOptions);
-        angular.copy({}, vm.csIndexOptions);
-        angular.merge(vm.csIndexOptions, defaultOptions, indexOptions);
         vm.columns = vm.resource.descriptor.fields;
-
       })
     }
+
+    $scope.$on('form-submit', (function(event, formItem, info){
+      if(info.panelIndex == 0){
+        this.refreshIndex()
+      }
+    }).bind(this))
 
    this.pushNewItem = function(item) {
       var newItem;
@@ -2855,6 +2995,7 @@ app.component('csIndex', {
     };
 
     this.columnVisible = function(column, index) {
+
       var length;
       length = this.columns.length;
       if (this.attributeToHide(column.attribute)) {
@@ -2868,8 +3009,12 @@ app.component('csIndex', {
 
     this.attributeToHide = function(attribute) {
       var hiddenAttrs;
-      if (hiddenAttrs = this.csIndexOptions['hide-attributes'].index) {
-        return hiddenAttrs.indexOf(attribute) > -1;
+      if (this.csIndexOptions['hide-attributes']) {
+        if (hiddenAttrs = this.csIndexOptions['hide-attributes'].index) {
+          return hiddenAttrs.indexOf(attribute) > -1;
+        }
+      } else {
+        console.log('CS-INDEX:attributeToHide called when this.csIndexOptions is undefined...')
       }
       return false;
     };
@@ -3193,6 +3338,7 @@ app.component('csTableContainer', {
     this.i18n = csSettings.settings['i18n-engine'];
 
     this.$onChanges = function(changesObj) {
+      // console.log("cs-table-container.onChanges", changesObj);
       if (changesObj.collection && changesObj.collection.currentValue && changesObj.collection.previousValue != changesObj.collection.currentValue) {
         this.initialCollection = this.collection
         this.sortAndFilter();
@@ -3260,7 +3406,7 @@ app.component('csTableContainer', {
   } ],
   bindings : {
     resource : "<",
-    collection : "<",
+    collection : "=",
     csIndexOptions : "=",
     columns : "<",
     columnVisible_ : "&",
@@ -3410,7 +3556,7 @@ app.component('csTableRow', {
     };
   }],
   bindings : {
-    item : "<",
+    item : "=",
     csIndexOptions : "=",
     columns : "<",
     columnVisible_ : "&",
@@ -3418,6 +3564,23 @@ app.component('csTableRow', {
     selectItem_ : "&",
     destroyItem_ : "&",
   },
+})
+
+var app
+
+app = angular.module("cloudStorm.wizardComponent", [])
+
+app.component("csWizardComponent", {
+
+    bindings : {
+        resourceType : "<",
+        itemId : "<",
+        pageType : "<",
+    },
+    templateUrl : "components/cs-wizard/cs-wizard-component/cs-wizard-component-template.html",
+    controller : [ function(){
+        this.loading = true
+    }]
 })
 
 'use strict'
@@ -3521,6 +3684,7 @@ app.provider('csRoute', [
   '$stateProvider', 'csSettingsProvider', function($stateProvider, csSettingsProvider) {
 
     this.go = function(type, params, options) {
+      this.params = params;
       if (this.state) {
         return this.state.go(csSettingsProvider.settings['router-path-prefix'] + type, params, options);
       } else {
@@ -3530,6 +3694,10 @@ app.provider('csRoute', [
 
     this.setState = function(state) {
       return this.state = state;
+    };
+
+    this.getState = function() {
+      return this.params;
     };
 
     this.addState = function(config) {
@@ -3555,259 +3723,6 @@ app.provider('csRoute', [
 
 var app
 
-app = angular.module("cloudStorm.uiPageRouter", [])
-
-app.component("csPageRouter", {
-
-    bindings : {
-        resourceType : "<",
-        id : "<",
-        cmd : "<",
-        pageType : "<",
-    },
-    templateUrl : "cs-route-provider/router-component/cs-page-router-template.html",
-    controller : [ '$scope','csRoute','ResourceService','csDescriptorService','csAlertService', function($scope, csRoute, ResourceService, csDescriptorService, csAlertService){
-        this.loading = true
-        this.errors = []
-        this.validCommands = ["edit","show"]
-        //getDataLoaderObject(this, descriptor)["index"].call()
-        this.init = function () {
-            switch (this.pageType) {
-              case "index":
-                this.resource_index();
-                break;
-
-              case "cmd":
-                if(this.validCommands.indexOf(this.cmd) == -1){
-                  this.errors.push("\"" + this.cmd + "\" is not a valid command");
-                }
-                this.pageType = this.cmd
-                this.resource_id();
-                break;
-
-              case "show":
-                if(this.id == "new"){
-                  this.pageType = "create"
-                  this.resource();
-                } else {
-                  this.resource_id();
-                }
-                break;
-
-              default:
-                this.errors.push("This is not a valid URL");
-                this.finished()
-                break;
-            }
-        }
-
-        this.resource = function(){
-
-          csDescriptorService.getPromises().then(
-            (function(){
-              return ResourceService.get(this.resourceType)
-            }).bind(this)).then(
-              (function(resource){
-                this.resource = resource
-                this.finished()
-              }).bind(this), (function(){
-                this.errors.push("\"" + this.resourceType + "\" is not a resource")
-                this.finished()
-              }).bind(this)
-            )
-        }
-
-        this.resource_id = function(){
-
-          csDescriptorService.getPromises().then(
-            (function(){
-              return ResourceService.get(this.resourceType)
-            }).bind(this)).then(
-              (function(resource){
-                this.resource = resource
-                return resource.$get(this.id, {include: '*'})
-              }).bind(this), (function(){
-                this.errors.push("\"" + this.resourceType + "\" is not a resource")
-              }).bind(this)
-            ).then((function(item){
-                this.item = item
-                this.finished()
-            }).bind(this), (function(){
-              this.errors.push("There is no " + this.resource.descriptor.name + " with the id: " + this.id)
-              this.finished()
-            }).bind(this))
-        }
-
-        this.resource_index = function(){
-
-          csDescriptorService.getPromises()
-            .then((function(){
-              return ResourceService.get(this.resourceType)
-            }).bind(this))
-            .then(
-              (function(resource){
-                this.resource = resource
-                return resource.$index({include: '*'})
-                this.finished()
-              }).bind(this), (function(){
-                this.errors.push("\"" + this.resourceType +
-                  "\" is not a resource")
-              }).bind(this))
-            .then((function(items){
-                  this.items = items
-                  this.finished()
-              }).bind(this)
-            )
-        }
-
-        this.finished = function(){
-
-          this.wizardOptions = {
-            "resource-type" : this.resourceType,
-            "form-item": this.item || {},
-            "form-mode": this.pageType,
-            "reset-on-submit": true,
-            "events": {
-              'wizard-canceled': (function(resource){
-                  csRoute.go("index", {resourceType : this.resourceType})
-                }).bind(this),
-              'wizard-submited': (function(resource){
-                  //$scope.wizardOptions['keep-first']
-                  switch(this.pageType){
-                    case "create":
-                      csAlertService.success('new_resource_created')
-                      break;
-                    case "edit":
-                      csAlertService.success("changes_saved")
-                      break;
-                  }
-
-                  if(this.wizardOptions['keep-first']){
-                    csRoute.go("show", {resourceType : this.resourceType, id : "new"})
-                  } else {
-                    csRoute.go("index", {resourceType : this.resourceType})
-                  }
-              }).bind(this)
-            }
-          }
-          this.loading = false
-          // TODO: double-check wheter this could be avoided
-          $scope.$apply()
-        }
-
-        var vm = this;
-        this.$onInit = function () {
-          vm.init();
-        }
-    }]
-})
-
-/*
-//For later
-var functionStack = {
-
-    descriptor : {
-      call : {
-        type : "direct",
-        fcn : (csDescriptorService.getPromises).bind(csDescriptorService),
-      }, params : [],
-      success : function(){},
-      fail : function(){},
-    },
-    resource : {
-      call :  {
-        type : "direct",
-        fcn : (ResourceService.get).bind(ResourceService)
-      },
-      params : [{
-        type : "scopeField",
-        key : "resourceType"
-      }],
-      success : function(data){
-        this.resource = data
-      },
-      fail : function(){
-        this.errors.push("\"" + this.resourceType + "\" is not a resource")
-      }
-    },
-    item : {
-      call : {
-        type : "scopeField",
-        keys : ["resource", "get"],
-      },  //data.$get(this.id, {include: '*'})
-      params : [{
-        type : "scopeField", key : "id",
-      }, {
-        type : "constant", value :  {include: '*'},
-      }],
-      success : function(data){
-          this.item = data
-      },
-      fail : function(){
-        this.errors.push("There is no " + this.resource.descriptor.name + "with the id: " + this.id)
-      }
-    }
-}
-
-var cases = {
-  index : ["descriptor", "resource"],
-  new : ["descriptor", "resource"],
-  profile : ["descriptor", "resource", "item"],
-  edit : ["descriptor", "resource", "item"],
-}
-
-this.execute = function(patternType){
-
-  var calls = []
-  cases[patternType].forEach(function(call){
-    calls.push(functionStack[call])
-  })
-  var promises = []
-  calls.forEach((function(call){
-    var params = getParams(this, call.params)
-    var func = getFunction(this, call.call)
-    promises.push(this.call(params, func).then((call.success).bind(this), (call.fail).bind(this)))
-  }).bind(this))
-  Promise.all(promises)()
-}
-
-var getParams = function(scope, desc){
-  var params = []
-  desc.forEach(function(param){
-    switch(param.type){
-      case "scopeField" : params.push(scope[param.key]); break;
-      case "constant" : params.push(param.value); break;
-    }
-  })
-  return params
-}
-
-var getFunction = function(scope, desc){
-    switch(desc.type){
-        case "scopeField" :
-          var object = scope
-          desc.keys.forEach(function(key){
-            object = object[key]
-          });
-          return object
-        case "direct" : return desc.fcn;
-    }
-}
-
-this.call = function(params, func){
-  switch(params.length){
-    case 0 : return func();
-    case 1 : return func(params[0]);
-    case 2 : return func(params[0], params[1]);
-    case 3 : return func(params[0], params[1], params[2]);
-  }
-}
-*/
-
-//this.execute("profile").bind(this)
-
-var app
-
 app = angular.module("cloudStorm.error", [])
 
 app.component("csError", {
@@ -3816,515 +3731,586 @@ app.component("csError", {
     errors : "<",
   },
   templateUrl : "cs-utils/cs-error-template/cs-error-template.html",
+  controller : ['$element', function($element){
+    $element.addClass('cs-error');
+  }]
 })
 
-angular.module('cloudStorm.templates', ['components/containers/cs-item-list-container/cs-item-list-container-template.html', 'components/cs-alert/cs-alert-template.html', 'components/cs-field/cs-field-template.html', 'components/cs-fields/cs-checkbox/cs-checkbox-template.html', 'components/cs-fields/cs-code/cs-code-template.html', 'components/cs-fields/cs-code/cs-full-code/cs-full-code-template.html', 'components/cs-fields/cs-date/cs-date-template.html', 'components/cs-fields/cs-datetime/cs-datetime-template.html', 'components/cs-fields/cs-enum/cs-enum-template.html', 'components/cs-fields/cs-number/cs-number-template.html', 'components/cs-fields/cs-resource-input/cs-resource-input-template.html', 'components/cs-fields/cs-textfield/cs-textfield-template.html', 'components/cs-fields/cs-time/cs-time-template.html', 'components/cs-filter-row/cs-filter-row-template.html', 'components/cs-form/cs-form-template.html', 'components/cs-index/cs-index-sidepanel/cs-index-sidepanel-template.html', 'components/cs-index/cs-index-template.html', 'components/cs-item-list/cs-item-list-template.html', 'components/cs-main/cs-main-template.html', 'components/cs-menu/cs-menu-template.html', 'components/cs-table/cs-table-container/cs-table-container-template.html', 'components/cs-table/cs-table-header/cs-table-header-template.html', 'components/cs-table/cs-table-row/cs-table-row-template.html', 'components/cs-wizard/cs-wizard-panel-template.html', 'components/cs-wizard/cs-wizard-template.html', 'cs-route-provider/router-component/cs-page-router-template.html', 'cs-utils/cs-error-template/cs-error-template.html', 'cs-utils/cs-loader/cs-loader-template.html']);
 
-angular.module("components/containers/cs-item-list-container/cs-item-list-container-template.html", []).run(["$templateCache", function($templateCache) {
+var app = angular.module('cloudStorm.log', [])
+
+app.factory('csLog', [
+
+  function(){
+
+    var diff, now;
+    var csLog = {
+
+      diff : function(){
+        //Returns the difference in second to the last log in the following format
+        var now = new Date().getTime()
+        if(csLog.last){
+          diff = (now - csLog.last)/1000
+        } else {
+          diff = 0
+        }
+        csLog.last = now
+        return diff + " (sec)"
+      },
+
+      set : function(scope, componentName, enabled){
+          //Initially the log is disabled
+          scope.logEnabled = false || enabled
+          scope.log = function(msg){
+            if(scope.logEnabled){
+              //Format i.e.:
+              //0,342 (sec) | cs-form - Started
+              console.log(csLog.diff()+ " | " + componentName + " - " , msg)
+            }
+          }
+      },
+
+      enable : function(scope){
+        scope.logEnabled = true
+      },
+
+      disable : function(scope){
+        scope.logEnabled = false
+      }
+
+    }
+    return csLog
+  }
+])
+
+angular.module('cloudStorm.templates', ['components/containers/cs-item-list-container/cs-item-list-container-template.html', 'components/cs-alert/cs-alert-template.html', 'components/cs-field/cs-field-template.html', 'components/cs-fields/cs-checkbox/cs-checkbox-template.html', 'components/cs-fields/cs-code/cs-code-template.html', 'components/cs-fields/cs-code/cs-full-code/cs-full-code-template.html', 'components/cs-fields/cs-date/cs-date-template.html', 'components/cs-fields/cs-datetime/cs-datetime-template.html', 'components/cs-fields/cs-enum/cs-enum-template.html', 'components/cs-fields/cs-number/cs-number-template.html', 'components/cs-fields/cs-resource-input/cs-resource-input-template.html', 'components/cs-fields/cs-textfield/cs-textfield-template.html', 'components/cs-fields/cs-time/cs-time-template.html', 'components/cs-filter-row/cs-filter-row-template.html', 'components/cs-form/cs-form-template.html', 'components/cs-index/cs-index-sidepanel/cs-index-sidepanel-template.html', 'components/cs-index/cs-index-template.html', 'components/cs-item-list/cs-item-list-template.html', 'components/cs-main/cs-main-template.html', 'components/cs-menu/cs-menu-template.html', 'components/cs-table/cs-table-container/cs-table-container-template.html', 'components/cs-table/cs-table-header/cs-table-header-template.html', 'components/cs-table/cs-table-row/cs-table-row-template.html', 'components/cs-wizard/cs-wizard-component/cs-wizard-component-template.html', 'components/cs-wizard/cs-wizard-panel-template.html', 'components/cs-wizard/cs-wizard-template.html', 'cs-route-provider/router-component/cs-page-router-template.html', 'cs-utils/cs-error-template/cs-error-template.html', 'cs-utils/cs-loader/cs-loader-template.html']);
+
+angular.module("components/containers/cs-item-list-container/cs-item-list-container-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/containers/cs-item-list-container/cs-item-list-container-template.html",
     "<div class='modal-header'>\n" +
-    "  <button class='close' ng-click='$ctrl.close()'>\n" +
-    "    &times\n" +
-    "  </button>\n" +
-    "  <h4 class='modal-title'>\n" +
-    "    {{ $ctrl.UI.fieldName }}\n" +
-    "  </h4>\n" +
+    "<button class='close' ng-click='$ctrl.close()'>\n" +
+    "&times\n" +
+    "</button>\n" +
+    "<h4 class='modal-title'>\n" +
+    "{{ $ctrl.UI.fieldName }}\n" +
+    "</h4>\n" +
     "</div>\n" +
     "<cs-item-list c-mode='$ctrl.cMode' field='$ctrl.field' item-list='$ctrl.itemList' item='$ctrl.item' key='$ctrl.key' many='$ctrl.many'></cs-item-list>\n" +
     "");
 }]);
 
-angular.module("components/cs-alert/cs-alert-template.html", []).run(["$templateCache", function($templateCache) {
+angular.module("components/cs-alert/cs-alert-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-alert/cs-alert-template.html",
-    "<div close='csAlertService.dismissAlert(alert.id)' dismiss-on-timeout='{{csAlertService.timeoutForAlert(alert)}}' ng-class=\"'alert alert-dismissible alert-' + (alert.type || 'warning')\" ng-click='csAlertService.dismissAlert(alert.id)' ng-repeat='alert in csAlertService.getAlerts()' uib-alert=''>\n" +
-    "  {{alert.message}}\n" +
+    "<div close='csAlertService.dismissAlert(alert.id)' dismiss-on-timeout='{{csAlertService.timeoutForAlert(alert)}}' ng-class='&#39;alert alert-dismissible alert-&#39; + (alert.type || &#39;warning&#39;)' ng-click='csAlertService.dismissAlert(alert.id)' ng-repeat='alert in csAlertService.getAlerts()' uib-alert=''>\n" +
+    "{{alert.message}}\n" +
     "</div>\n" +
     "");
 }]);
 
-angular.module("components/cs-field/cs-field-template.html", []).run(["$templateCache", function($templateCache) {
+angular.module("components/cs-field/cs-field-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-field/cs-field-template.html",
     "<!-- CloudStorm Form Field component -->\n" +
     "<!-- Renders different kind of inputs for different types of items -->\n" +
     "<div class='cs-field-inner' ng-class='CL.containerStyle'>\n" +
-    "  <div ng-class='CL.container'>\n" +
-    "    <div class='inline label-container' ng-class='CL.label'>\n" +
-    "      <label class='control-label'>{{field.label}}</label>\n" +
-    "      <span class='req-star' ng-class='CL.required' ng-if='field.required'>*</span>\n" +
-    "    </div>\n" +
-    "    <div ng-class='CL.value'>\n" +
-    "      <div class='cs-input-wrapper'></div>\n" +
-    "    </div>\n" +
-    "    <span class='help-block' ng-if='field.errors.length &gt; 0'>\n" +
-    "      {{ getError(field) }}\n" +
-    "    </span>\n" +
-    "    <span class='help-block' ng-if='(!(field.errors.length &gt; 0) &amp;&amp; (getHint(field)))'>\n" +
-    "      {{ getHint(field) }}\n" +
-    "    </span>\n" +
-    "    <div class='cover'></div>\n" +
-    "  </div>\n" +
+    "<div ng-class='CL.container'>\n" +
+    "<div class='inline label-container' ng-class='CL.label'>\n" +
+    "<label class='control-label'>{{field.label}}</label>\n" +
+    "<span class='req-star' ng-class='CL.required' ng-if='field.required'>*</span>\n" +
+    "</div>\n" +
+    "<div ng-class='CL.value'>\n" +
+    "<div class='cs-input-wrapper'></div>\n" +
+    "</div>\n" +
+    "<span class='help-block' ng-if='field.errors.length &gt; 0'>\n" +
+    "{{ getError(field) }}\n" +
+    "</span>\n" +
+    "<span class='help-block' ng-if='(!(field.errors.length &gt; 0) &amp;&amp; (getHint(field)))'>\n" +
+    "{{ getHint(field) }}\n" +
+    "</span>\n" +
+    "<div class='cover'></div>\n" +
+    "</div>\n" +
     "</div>\n" +
     "");
 }]);
 
-angular.module("components/cs-fields/cs-checkbox/cs-checkbox-template.html", []).run(["$templateCache", function($templateCache) {
+angular.module("components/cs-fields/cs-checkbox/cs-checkbox-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-fields/cs-checkbox/cs-checkbox-template.html",
     "<!-- Only valid for cardinality:one -->\n" +
-    "<input class='form-control' ng-disabled='fieldDisabled()' ng-if=\"mode('create') || mode('edit')\" ng-model='formItem.attributes[field.attribute]' type='checkbox'>\n" +
-    "<div class='show-view' ng-if=\"mode('show') || mode('tableView')\">\n" +
-    "  <div ng-if='formItem.attributes[field.attribute]'>\n" +
-    "    {{ i18n.t('checkbox.checked') }}\n" +
-    "  </div>\n" +
-    "  <div ng-if='!formItem.attributes[field.attribute]'>\n" +
-    "    {{ i18n.t('checkbox.unchecked') }}\n" +
-    "  </div>\n" +
+    "<input class='form-control' ng-disabled='fieldDisabled()' ng-if='mode(&#39;create&#39;) || mode(&#39;edit&#39;)' ng-model='formItem.attributes[field.attribute]' type='checkbox'>\n" +
+    "<div class='show-view' ng-if='mode(&#39;show&#39;) || mode(&#39;tableView&#39;)'>\n" +
+    "<div ng-if='formItem.attributes[field.attribute]'>\n" +
+    "{{ i18n.t('checkbox.checked') }}\n" +
+    "</div>\n" +
+    "<div ng-if='!formItem.attributes[field.attribute]'>\n" +
+    "{{ i18n.t('checkbox.unchecked') }}\n" +
+    "</div>\n" +
     "</div>\n" +
     "");
 }]);
 
-angular.module("components/cs-fields/cs-code/cs-code-template.html", []).run(["$templateCache", function($templateCache) {
+angular.module("components/cs-fields/cs-code/cs-code-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-fields/cs-code/cs-code-template.html",
-    "<div ng-if=\"mode('create') || mode('edit')\">\n" +
-    "  <textarea class='form-control' ng-disabled='fieldDisabled()' ng-keyup='keyPressed($event)' ng-model='formItem.attributes[field.attribute]' ng-required='fieldRequired()' rows='3'></textarea>\n" +
+    "<div ng-if='mode(&#39;create&#39;) || mode(&#39;edit&#39;)'>\n" +
+    "<textarea class='form-control' ng-disabled='fieldDisabled()' ng-keyup='keyPressed($event)' ng-model='formItem.attributes[field.attribute]' ng-required='fieldRequired()' rows='3'></textarea>\n" +
     "</div>\n" +
-    "<pre ng-if=\"mode('show')\" ng-model='formItem.attributes[field.attribute]'><code>{{ formatted_code }}</code></pre>\n" +
-    "<pre ng-if=\"mode('tableView') &amp;&amp; !trimmed\" ng-model='formItem.attributes[field.attribute]'><code>{{ formatted_code_short }}</code></pre>\n" +
-    "<pre class='pointer-cursor' ng-click='showFullCode()' ng-if=\"mode('tableView') &amp;&amp; trimmed\" ng-model='formItem.attributes[field.attribute]'><code>{{ formatted_code_short }}</code></pre>\n" +
+    "<pre ng-if='mode(&#39;show&#39;)' ng-model='formItem.attributes[field.attribute]'><code>{{ formatted_code }}</code></pre>\n" +
+    "<pre ng-if='mode(&#39;tableView&#39;) &amp;&amp; !trimmed' ng-model='formItem.attributes[field.attribute]'><code>{{ formatted_code_short }}</code></pre>\n" +
+    "<pre class='pointer-cursor' ng-click='showFullCode()' ng-if='mode(&#39;tableView&#39;) &amp;&amp; trimmed' ng-model='formItem.attributes[field.attribute]'><code>{{ formatted_code_short }}</code></pre>\n" +
     "<!-- %div{ \"ng-if\" => \"mode('tableView')\" } -->\n" +
     "<!-- {{ formItem.attributes[field.attribute] }} -->\n" +
     "");
 }]);
 
-angular.module("components/cs-fields/cs-code/cs-full-code/cs-full-code-template.html", []).run(["$templateCache", function($templateCache) {
+angular.module("components/cs-fields/cs-code/cs-full-code/cs-full-code-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-fields/cs-code/cs-full-code/cs-full-code-template.html",
     "<div class='modal-header'>\n" +
-    "  <button class='close' ng-click='$ctrl.close()'>\n" +
-    "    &times\n" +
-    "  </button>\n" +
-    "  <h4 class='modal-title'>\n" +
-    "    {{ $ctrl.UI.title }}\n" +
-    "  </h4>\n" +
+    "<button class='close' ng-click='$ctrl.close()'>\n" +
+    "&times\n" +
+    "</button>\n" +
+    "<h4 class='modal-title'>\n" +
+    "{{ $ctrl.UI.title }}\n" +
+    "</h4>\n" +
     "</div>\n" +
     "<div class='modal-body'>\n" +
-    "  <pre><code>{{ $ctrl.UI.content }}</code></pre>\n" +
+    "<pre><code>{{ $ctrl.UI.content }}</code></pre>\n" +
     "</div>\n" +
     "");
 }]);
 
-angular.module("components/cs-fields/cs-date/cs-date-template.html", []).run(["$templateCache", function($templateCache) {
+angular.module("components/cs-fields/cs-date/cs-date-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-fields/cs-date/cs-date-template.html",
-    "<input autocomplete='off' class='form-control' clear-text=\"{{ i18n.t('buttons.clear') }}\" close-text=\"{{ i18n.t('buttons.close') }}\" current-text=\"{{ i18n.t('today') }}\" datepicker-append-to-body='true' datepicker-options='{startingDay: 1, showWeeks: false}' is-open='dt.open' ng-click='dt.open = true' ng-disabled='fieldDisabled()' ng-if=\"mode('edit') || mode('create')\" ng-model-options='getModelOptions()' ng-model='formItem.attributes[field.attribute]' ng-required='fieldRequired()' type='text' uib-datepicker-popup=''>\n" +
-    "<div class='form-control no-cursor' disabled='true' ng-if=\"mode('show')\">\n" +
-    "  {{ input_date }}\n" +
+    "<input autocomplete='off' class='form-control' clear-text='{{ i18n.t(&#39;buttons.clear&#39;) }}' close-text='{{ i18n.t(&#39;buttons.close&#39;) }}' current-text='{{ i18n.t(&#39;today&#39;) }}' datepicker-append-to-body='true' datepicker-options='{startingDay: 1, showWeeks: false}' is-open='dt.open' ng-click='dt.open = true' ng-disabled='fieldDisabled()' ng-if='mode(&#39;edit&#39;) || mode(&#39;create&#39;)' ng-model-options='getModelOptions()' ng-model='formItem.attributes[field.attribute]' ng-required='fieldRequired()' type='text' uib-datepicker-popup=''>\n" +
+    "<div class='form-control no-cursor' disabled='true' ng-if='mode(&#39;show&#39;)'>\n" +
+    "{{ input_date }}\n" +
     "</div>\n" +
-    "<div class='no-wrap' ng-if=\"mode('tableView')\">\n" +
-    "  {{ input_date }}\n" +
+    "<div class='no-wrap' ng-if='mode(&#39;tableView&#39;)'>\n" +
+    "{{ input_date }}\n" +
     "</div>\n" +
     "");
 }]);
 
-angular.module("components/cs-fields/cs-datetime/cs-datetime-template.html", []).run(["$templateCache", function($templateCache) {
+angular.module("components/cs-fields/cs-datetime/cs-datetime-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-fields/cs-datetime/cs-datetime-template.html",
-    "<div class='container-flex' ng-if=\"mode('edit') || mode('create')\">\n" +
-    "  <input autocomplete='off' class='form-control first' clear-text=\"{{ i18n.t('buttons.clear') }}\" close-text=\"{{ i18n.t('buttons.close') }}\" current-text=\"{{ i18n.t('today') }}\" datepicker-append-to-body='true' datepicker-options='{startingDay: 1, showWeeks: false}' is-open='dt.open' ng-click='dt.open = true' ng-disabled='fieldDisabled()' ng-model-options='getModelOptions()' ng-model='formItem.attributes[field.attribute]' ng-required='fieldRequired()' type='text' uib-datepicker-popup=''>\n" +
-    "  <div ng-disabled='fieldDisabled()' ng-model-options='getModelOptions()' ng-model='formItem.attributes[field.attribute]' ng-required='fieldRequired()' show-spinners='false' uib-timepicker=''></div>\n" +
+    "<div class='container-flex' ng-if='mode(&#39;edit&#39;) || mode(&#39;create&#39;)'>\n" +
+    "<input autocomplete='off' class='form-control first' clear-text='{{ i18n.t(&#39;buttons.clear&#39;) }}' close-text='{{ i18n.t(&#39;buttons.close&#39;) }}' current-text='{{ i18n.t(&#39;today&#39;) }}' datepicker-append-to-body='true' datepicker-options='{startingDay: 1, showWeeks: false}' is-open='dt.open' ng-click='dt.open = true' ng-disabled='fieldDisabled()' ng-model-options='getModelOptions()' ng-model='formItem.attributes[field.attribute]' ng-required='fieldRequired()' type='text' uib-datepicker-popup=''>\n" +
+    "<div ng-disabled='fieldDisabled()' ng-model-options='getModelOptions()' ng-model='formItem.attributes[field.attribute]' ng-required='fieldRequired()' show-spinners='false' uib-timepicker=''></div>\n" +
     "</div>\n" +
-    "<div class='form-control no-cursor' disabled='true' ng-if=\"mode('show')\">\n" +
-    "  {{ input_date }}\n" +
+    "<div class='form-control no-cursor' disabled='true' ng-if='mode(&#39;show&#39;)'>\n" +
+    "{{ input_date }}\n" +
     "</div>\n" +
-    "<div class='no-wrap' ng-if=\"mode('tableView')\">\n" +
-    "  {{ input_date }}\n" +
+    "<div class='no-wrap' ng-if='mode(&#39;tableView&#39;)'>\n" +
+    "{{ input_date }}\n" +
     "</div>\n" +
     "");
 }]);
 
-angular.module("components/cs-fields/cs-enum/cs-enum-template.html", []).run(["$templateCache", function($templateCache) {
+angular.module("components/cs-fields/cs-enum/cs-enum-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-fields/cs-enum/cs-enum-template.html",
-    "<ui-select close-on-select='true' ng-disabled='fieldDisabled()' ng-if=\"field.cardinality == 'one'\" ng-model='formItem.attributes[field.attribute]' ng-required='fieldRequired()'>\n" +
-    "  <ui-select-match>\n" +
-    "    <span>\n" +
-    "      {{$select.selected.name}}\n" +
-    "    </span>\n" +
-    "  </ui-select-match>\n" +
-    "  <ui-select-choices repeat='item.value as item in (field.enum | filter:$select.search) track by $index'>\n" +
-    "    <span>\n" +
-    "      {{item.name}}\n" +
-    "    </span>\n" +
-    "  </ui-select-choices>\n" +
+    "<ui-select close-on-select='true' ng-disabled='fieldDisabled()' ng-if='field.cardinality == &#39;one&#39;' ng-model='formItem.attributes[field.attribute]' ng-required='fieldRequired()'>\n" +
+    "<ui-select-match>\n" +
+    "<span>\n" +
+    "{{$select.selected.name}}\n" +
+    "</span>\n" +
+    "</ui-select-match>\n" +
+    "<ui-select-choices repeat='item.value as item in (field.enum | filter:$select.search) track by $index'>\n" +
+    "<span>\n" +
+    "{{item.name}}\n" +
+    "</span>\n" +
+    "</ui-select-choices>\n" +
     "</ui-select>\n" +
-    "<ui-select multiple='' ng-disabled='fieldDisabled()' ng-if=\"field.cardinality == 'many'\" ng-model='formItem.attributes[field.attribute]' ng-required='fieldRequired()'>\n" +
-    "  <ui-select-match>\n" +
-    "    <span>\n" +
-    "      {{$item.name}}\n" +
-    "    </span>\n" +
-    "  </ui-select-match>\n" +
-    "  <ui-select-choices repeat='item.value as item in (field.enum | filter:$select.search) track by $index'>\n" +
-    "    <span>\n" +
-    "      {{item.name}}\n" +
-    "    </span>\n" +
-    "  </ui-select-choices>\n" +
+    "<ui-select multiple='' ng-disabled='fieldDisabled()' ng-if='field.cardinality == &#39;many&#39;' ng-model='formItem.attributes[field.attribute]' ng-required='fieldRequired()'>\n" +
+    "<ui-select-match>\n" +
+    "<span>\n" +
+    "{{$item.name}}\n" +
+    "</span>\n" +
+    "</ui-select-match>\n" +
+    "<ui-select-choices repeat='item.value as item in (field.enum | filter:$select.search) track by $index'>\n" +
+    "<span>\n" +
+    "{{item.name}}\n" +
+    "</span>\n" +
+    "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "");
 }]);
 
-angular.module("components/cs-fields/cs-number/cs-number-template.html", []).run(["$templateCache", function($templateCache) {
+angular.module("components/cs-fields/cs-number/cs-number-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-fields/cs-number/cs-number-template.html",
-    "<input class='form-control' ng-disabled='fieldDisabled()' ng-if=\"mode('create') || mode('edit')\" ng-model='formItem.attributes[field.attribute]' ng-required='fieldRequired()' type='number'>\n" +
-    "<div class='form-control no-cursor' disabled='true' ng-if=\"mode('show')\">\n" +
-    "  {{ formItem.attributes[field.attribute] }}\n" +
+    "<input class='form-control' ng-disabled='fieldDisabled()' ng-if='mode(&#39;create&#39;) || mode(&#39;edit&#39;)' ng-model='formItem.attributes[field.attribute]' ng-required='fieldRequired()' type='number'>\n" +
+    "<div class='form-control no-cursor' disabled='true' ng-if='mode(&#39;show&#39;)'>\n" +
+    "{{ formItem.attributes[field.attribute] }}\n" +
     "</div>\n" +
-    "<div class='no-wrap' ng-if=\"mode('tableView')\">\n" +
-    "  {{ formItem.attributes[field.attribute] }}\n" +
+    "<div class='no-wrap pull-right' ng-if='mode(&#39;tableView&#39;)'>\n" +
+    "{{ formItem.attributes[field.attribute] }}\n" +
     "</div>\n" +
     "");
 }]);
 
-angular.module("components/cs-fields/cs-resource-input/cs-resource-input-template.html", []).run(["$templateCache", function($templateCache) {
+angular.module("components/cs-fields/cs-resource-input/cs-resource-input-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-fields/cs-resource-input/cs-resource-input-template.html",
-    "<div class='input-group cs-resource-input-group' ng-if=\"field.cardinality == 'one' &amp;&amp; (mode('create') || mode('edit'))\">\n" +
-    "  <ui-select append-to-body='true' close-on-select='true' ng-disabled='fieldDisabled()' ng-model='model.object' ng-required='fieldRequired()'>\n" +
-    "    <ui-select-match allow-clear>\n" +
-    "      <span>\n" +
-    "        {{$select.selected.$display_name()}}\n" +
-    "      </span>\n" +
-    "    </ui-select-match>\n" +
-    "    <ui-select-choices refresh-delay='200' refresh='refresh($select.search)' repeat='item in associates track by $index'>\n" +
-    "      <span>\n" +
-    "        {{item.$display_name()}}\n" +
-    "      </span>\n" +
-    "    </ui-select-choices>\n" +
-    "  </ui-select>\n" +
-    "  <span class='input-group-btn' ng-if='canCreateResources() || createDisabled()'>\n" +
-    "    <button class='btn btn-default' ng-click='pushPanel()' ng-disabled='fieldDisabled()' type='button'>{{ i18n.t('buttons.new') }}</button>\n" +
-    "  </span>\n" +
+    "<div class='input-group cs-resource-input-group' ng-if='field.cardinality == &#39;one&#39; &amp;&amp; (mode(&#39;create&#39;) || mode(&#39;edit&#39;))'>\n" +
+    "<ui-select append-to-body='true' close-on-select='true' ng-disabled='fieldDisabled()' ng-model='model.object' ng-required='fieldRequired()'>\n" +
+    "<ui-select-match allow-clear>\n" +
+    "<span>\n" +
+    "{{$select.selected.$display_name()}}\n" +
+    "</span>\n" +
+    "</ui-select-match>\n" +
+    "<ui-select-choices refresh-delay='200' refresh='refresh($select.search)' repeat='item in associates track by $index'>\n" +
+    "<span>\n" +
+    "{{item.$display_name()}}\n" +
+    "</span>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "<span class='input-group-btn' ng-if='canCreateResources() || createDisabled()'>\n" +
+    "<button class='btn btn-default' ng-click='pushPanel()' ng-disabled='fieldDisabled()' type='button'>{{ i18n.t('buttons.new') }}</button>\n" +
+    "</span>\n" +
     "</div>\n" +
-    "<cs-item-list c-mode='formMode' field='field' item-list='model.object' key='resource.descriptor.fields[0].attribute' many=\"field.cardinality == 'many'\" ng-if=\"(mode('show') || mode('tableView'))\" optins='options'></cs-item-list>\n" +
-    "<div class='input-group cs-resource-input-group' ng-if=\"(mode('create') || mode('edit')) &amp;&amp; field.cardinality == 'many'\">\n" +
-    "  <ui-select append-to-body='true' close-on-select='true' enable='false' multiple ng-disabled='fieldDisabled()' ng-model='model.object' ng-required='fieldRequired()' on-select='selectItem()' ui-select-override=''>\n" +
-    "    <ui-select-match ui-lock-choice=\"mode('show')\">\n" +
-    "      <span>\n" +
-    "        {{$item.$display_name()}}\n" +
-    "      </span>\n" +
-    "    </ui-select-match>\n" +
-    "    <ui-select-choices refresh-delay='200' refresh='refresh($select.search)' repeat='item in associates track by $index'>\n" +
-    "      <span>\n" +
-    "        {{item.$display_name()}}\n" +
-    "      </span>\n" +
-    "    </ui-select-choices>\n" +
-    "  </ui-select>\n" +
-    "  <span class='input-group-btn' ng-if=\"createResources() &amp;&amp; !createDisabled() &amp;&amp; (mode('create') || mode('edit'))\">\n" +
-    "    <button class='btn btn-default' ng-click='pushPanel()' ng-disabled='fieldDisabled()' type='button'>{{ i18n.t('buttons.new') }}</button>\n" +
-    "  </span>\n" +
+    "<cs-item-list c-mode='formMode' field='field' item-list='model.object' many='field.cardinality == &#39;many&#39;' ng-if='(mode(&#39;show&#39;) || mode(&#39;tableView&#39;))' options='options'></cs-item-list>\n" +
+    "<div class='input-group cs-resource-input-group' ng-if='(mode(&#39;create&#39;) || mode(&#39;edit&#39;)) &amp;&amp; field.cardinality == &#39;many&#39;'>\n" +
+    "<ui-select append-to-body='true' close-on-select='true' enable='false' multiple ng-disabled='fieldDisabled()' ng-model='model.object' ng-required='fieldRequired()' ui-select-override=''>\n" +
+    "<ui-select-match ui-lock-choice='mode(&#39;show&#39;)'>\n" +
+    "<span>\n" +
+    "{{$item.$display_name()}}\n" +
+    "</span>\n" +
+    "</ui-select-match>\n" +
+    "<ui-select-choices refresh-delay='200' refresh='refresh($select.search)' repeat='item in associates track by $index'>\n" +
+    "<span>\n" +
+    "{{item.$display_name()}}\n" +
+    "</span>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "<span class='input-group-btn' ng-if='createResources() &amp;&amp; !createDisabled() &amp;&amp; (mode(&#39;create&#39;) || mode(&#39;edit&#39;))'>\n" +
+    "<button class='btn btn-default' ng-click='pushPanel()' ng-disabled='fieldDisabled()' type='button'>{{ i18n.t('buttons.new') }}</button>\n" +
+    "</span>\n" +
     "</div>\n" +
     "<div class='cover'></div>\n" +
     "");
 }]);
 
-angular.module("components/cs-fields/cs-textfield/cs-textfield-template.html", []).run(["$templateCache", function($templateCache) {
+angular.module("components/cs-fields/cs-textfield/cs-textfield-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-fields/cs-textfield/cs-textfield-template.html",
     "<!-- ng-if creates an isolate scope so all data is available through $parent -->\n" +
     "<!-- %ui-select-choices is only here to disable typeahed dropdown as there should be not typeahed in this controller -->\n" +
-    "<div ng-if=\"mode('create') || mode('edit')\">\n" +
-    "  <input class='form-control' ng-disabled='fieldDisabled()' ng-if=\"field.cardinality == 'one'\" ng-keyup='keyPressed($event)' ng-model='$parent.formItem.attributes[$parent.field.attribute]' ng-required='fieldRequired()' type='text'>\n" +
-    "  <ui-select multiple='' ng-disabled='fieldDisabled()' ng-if=\"field.cardinality == 'many'\" ng-model='$parent.formItem.attributes[$parent.field.attribute]' ng-required='fieldRequired()' tagging-label='newTag' tagging=''>\n" +
-    "    <ui-select-match>\n" +
-    "      <span>\n" +
-    "        {{ $item }}\n" +
-    "      </span>\n" +
-    "    </ui-select-match>\n" +
-    "    <ui-select-choices repeat='item in []'></ui-select-choices>\n" +
-    "  </ui-select>\n" +
+    "<div ng-if='mode(&#39;create&#39;) || mode(&#39;edit&#39;)'>\n" +
+    "<input class='form-control' ng-disabled='fieldDisabled()' ng-if='field.cardinality == &#39;one&#39;' ng-keyup='keyPressed($event)' ng-model='$parent.formItem.attributes[$parent.field.attribute]' ng-required='fieldRequired()' type='text'>\n" +
+    "<ui-select multiple='' ng-disabled='fieldDisabled()' ng-if='field.cardinality == &#39;many&#39;' ng-model='$parent.formItem.attributes[$parent.field.attribute]' ng-required='fieldRequired()' tagging-label='newTag' tagging=''>\n" +
+    "<ui-select-match>\n" +
+    "<span>\n" +
+    "{{ $item }}\n" +
+    "</span>\n" +
+    "</ui-select-match>\n" +
+    "<ui-select-choices repeat='item in []'></ui-select-choices>\n" +
+    "</ui-select>\n" +
     "</div>\n" +
-    "<div class='form-control no-cursor' disabled ng-if=\"mode('show')\" ng-model='$parent.formItem.attributes[$parent.field.attribute]'>\n" +
-    "  {{ formItem.attributes[field.attribute] }}\n" +
+    "<div class='form-control no-cursor' disabled ng-if='mode(&#39;show&#39;)' ng-model='$parent.formItem.attributes[$parent.field.attribute]'>\n" +
+    "{{ formItem.attributes[field.attribute] }}\n" +
     "</div>\n" +
-    "<div ng-if=\"mode('tableView')\">\n" +
-    "  {{ formItem.attributes[field.attribute] }}\n" +
+    "<div ng-if='mode(&#39;tableView&#39;)'>\n" +
+    "{{ formItem.attributes[field.attribute] }}\n" +
     "</div>\n" +
     "");
 }]);
 
-angular.module("components/cs-fields/cs-time/cs-time-template.html", []).run(["$templateCache", function($templateCache) {
+angular.module("components/cs-fields/cs-time/cs-time-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-fields/cs-time/cs-time-template.html",
     "<div ng-disabled='fieldDisabled()' ng-model-options='getModelOptions()' ng-model='formItem.attributes[field.attribute]' ng-required='fieldRequired()' show-spinners='false' uib-timepicker=''></div>\n" +
     "");
 }]);
 
-angular.module("components/cs-filter-row/cs-filter-row-template.html", []).run(["$templateCache", function($templateCache) {
+angular.module("components/cs-filter-row/cs-filter-row-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-filter-row/cs-filter-row-template.html",
     "<div class='row page-header'>\n" +
-    "  <h1>\n" +
-    "    {{ $ctrl.header }}\n" +
-    "    <small ng-bind='$ctrl.subHeader'></small>\n" +
-    "    <div class='header-actions pull-right'>\n" +
-    "      <div class='input-group-wrap'>\n" +
-    "        <div class='input-group'>\n" +
-    "          <div class='input-group-addon'>\n" +
-    "            <span class='glyphicon glyphicon-search'></span>\n" +
-    "          </div>\n" +
-    "          <input class='form-control cs-index-filter' ng-change='$ctrl.changeInFilter()' ng-model='$ctrl.filterValue' placeholder=\"{{$ctrl.i18n.t('filter_for_anything') }}\" type='text'>\n" +
-    "        </div>\n" +
-    "      </div>\n" +
-    "      <button class='btn btn-default' ng-click='$ctrl.refreshIndex_()' type='button'>\n" +
-    "        <span class='glyphicon glyphicon-refresh'></span>\n" +
-    "      </button>\n" +
-    "      <button class='btn btn-primary create-button' ng-click='$ctrl.openNewResourcePanel_()' ng-disabled='$ctrl.createDisabled' type='button'>\n" +
-    "        {{ $ctrl.i18n.t('buttons.new') }}\n" +
-    "      </button>\n" +
-    "    </div>\n" +
-    "  </h1>\n" +
+    "<h1>\n" +
+    "{{ $ctrl.header }}\n" +
+    "<small ng-bind='$ctrl.subHeader'></small>\n" +
+    "<div class='header-actions pull-right'>\n" +
+    "<div class='input-group-wrap'>\n" +
+    "<div class='input-group'>\n" +
+    "<div class='input-group-addon'>\n" +
+    "<span class='glyphicon glyphicon-search'></span>\n" +
+    "</div>\n" +
+    "<input class='form-control cs-index-filter' ng-change='$ctrl.changeInFilter()' ng-model='$ctrl.filterValue' placeholder='{{$ctrl.i18n.t(&#39;filter_for_anything&#39;) }}' type='text'>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<button class='btn btn-default' ng-click='$ctrl.refreshIndex_()' type='button'>\n" +
+    "<span class='glyphicon glyphicon-refresh'></span>\n" +
+    "</button>\n" +
+    "<button class='btn btn-primary create-button' ng-click='$ctrl.openNewResourcePanel_()' ng-disabled='$ctrl.createDisabled' type='button'>\n" +
+    "{{ $ctrl.i18n.t('buttons.new') }}\n" +
+    "</button>\n" +
+    "</div>\n" +
+    "</h1>\n" +
     "</div>\n" +
     "");
 }]);
 
-angular.module("components/cs-form/cs-form-template.html", []).run(["$templateCache", function($templateCache) {
+angular.module("components/cs-form/cs-form-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-form/cs-form-template.html",
     "<!-- CloudStorm Form component -->\n" +
     "<!-- Can be used on its own or be generated by a CSWizard -->\n" +
     "<!-- Iterates over the fields of a form and renders CSField components for each field -->\n" +
-    "<div class='form-header' ng-switch=\"csFormOptions['form-mode']\">\n" +
-    "  <h3 ng-switch-when='create'>\n" +
-    "    {{i18n.t('new')}} {{formResource.descriptor.name}}\n" +
-    "  </h3>\n" +
-    "  <span ng-switch-when='edit'>\n" +
-    "    <h4 class='divided'>\n" +
-    "      {{editableItem.$display_name()}}\n" +
-    "    </h4>\n" +
-    "  </span>\n" +
-    "  <span ng-switch-when='show'>\n" +
-    "    <h4 class='divided'>\n" +
-    "      {{editableItem.$display_name()}}\n" +
-    "    </h4>\n" +
-    "  </span>\n" +
+    "<div class='form-header' ng-switch='csFormOptions[&#39;form-mode&#39;]'>\n" +
+    "<h3 ng-switch-when='create'>\n" +
+    "{{i18n.t('new')}} {{formResource.descriptor.name}}\n" +
+    "</h3>\n" +
+    "<span ng-switch-when='edit'>\n" +
+    "<h4 class='divided'>\n" +
+    "{{editableItem.$display_name()}}\n" +
+    "</h4>\n" +
+    "</span>\n" +
+    "<span ng-switch-when='show'>\n" +
+    "<h4 class='divided'>\n" +
+    "{{editableItem.$display_name()}}\n" +
+    "</h4>\n" +
+    "</span>\n" +
     "</div>\n" +
     "<form name='csForm' ng-transclude='fields' novalidate=''>\n" +
-    "  <cs-field class='form-group field' create-resources='createResources()' cs-field-options='csFormOptions' descriptor=\"childDescriptors['csField']\" field='field' form-item='editableItem' form-mode='formMode' ng-if='isFieldVisible(field.attribute)' ng-repeat='field in fields track by $index'></cs-field>\n" +
+    "<cs-field class='form-group field' create-resources='createResources()' cs-field-options='csFormOptions' descriptor='childDescriptors[&#39;csField&#39;]' field='field' form-item='editableItem' form-mode='formMode' ng-if='isFieldVisible(field.attribute)' ng-repeat='field in fields track by $index'></cs-field>\n" +
     "</form>\n" +
-    "<div class='form-group form-actions' ng-if=\"formMode != 'show'\" ng-transclude='actions'>\n" +
-    "  <div class='actions-inner'>\n" +
-    "    <div class='btn-tooltip-wrapper' tooltip-enable='csForm.$invalid' tooltip-placement='right' tooltip-trigger='mouseenter' uib-tooltip=\"{{i18n.t('validation_text')}}\">\n" +
-    "      <button class='btn btn-success' ng-class=\"{'disabled': csForm.$invalid}\" ng-click='submit()' type='button'>\n" +
-    "        {{ i18n.t('buttons.submit') }}\n" +
-    "      </button>\n" +
-    "    </div>\n" +
-    "    <button class='btn btn-link' ng-click='cancel()' ng-switch=\"csFormOptions['form-mode']\" type='button'>\n" +
-    "      <span ng-switch-when='create'>\n" +
-    "        {{ i18n.t('buttons.close') }}\n" +
-    "      </span>\n" +
-    "      <span ng-switch-default=''>\n" +
-    "        {{ i18n.t('buttons.cancel') }}\n" +
-    "      </span>\n" +
-    "    </button>\n" +
-    "    <span class='help-block' ng-if='field.errors.length &gt; 0'></span>\n" +
-    "    <div class='checkbox create-another' ng-if=\"formMode == 'create' &amp;&amp; wizardPanelIndex == 0\">\n" +
-    "      <label>\n" +
-    "        <input ng-model=\"csFormOptions['keep-first']\" type='checkbox'>\n" +
-    "          {{ i18n.t('create_another') }}\n" +
-    "        </input>\n" +
-    "      </label>\n" +
-    "    </div>\n" +
-    "  </div>\n" +
+    "<div class='form-group form-actions' ng-if='formMode != &#39;show&#39;' ng-transclude='actions'>\n" +
+    "<div class='actions-inner'>\n" +
+    "<div class='btn-tooltip-wrapper' tooltip-enable='csForm.$invalid' tooltip-placement='right' tooltip-trigger='mouseenter' uib-tooltip='{{i18n.t(&#39;validation_text&#39;)}}'>\n" +
+    "<button class='btn btn-success' ng-class='{&#39;disabled&#39;: csForm.$invalid}' ng-click='submit()' type='button'>\n" +
+    "{{ i18n.t('buttons.submit') }}\n" +
+    "</button>\n" +
+    "</div>\n" +
+    "<button class='btn btn-link' ng-click='cancel()' ng-switch='csFormOptions[&#39;form-mode&#39;]' type='button'>\n" +
+    "<span ng-switch-when='create'>\n" +
+    "{{ i18n.t('buttons.close') }}\n" +
+    "</span>\n" +
+    "<span ng-switch-default=''>\n" +
+    "{{ i18n.t('buttons.cancel') }}\n" +
+    "</span>\n" +
+    "</button>\n" +
+    "<span class='help-block' ng-if='field.errors.length &gt; 0'></span>\n" +
+    "<div class='checkbox create-another' ng-if='formMode == &#39;create&#39; &amp;&amp; wizardPanelIndex == 0'>\n" +
+    "<label>\n" +
+    "<input ng-model='csFormOptions[&#39;keep-first&#39;]' type='checkbox'>\n" +
+    "{{ i18n.t('create_another') }}\n" +
+    "</input>\n" +
+    "</label>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "</div>\n" +
     "");
 }]);
 
-angular.module("components/cs-index/cs-index-sidepanel/cs-index-sidepanel-template.html", []).run(["$templateCache", function($templateCache) {
+angular.module("components/cs-index/cs-index-sidepanel/cs-index-sidepanel-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-index/cs-index-sidepanel/cs-index-sidepanel-template.html",
     "<div class='panel-close'>\n" +
-    "  <span ng-click='closePanel()'>&#10006;</span>\n" +
+    "<span ng-click='closePanel()'>&#10006;</span>\n" +
     "</div>\n" +
     "<div cs-wizard-options='editWizardOptions' cs-wizard='' ng-if='editWizardOptions' panel-number-callback='panelNumberCallback'></div>\n" +
     "");
 }]);
 
-angular.module("components/cs-index/cs-index-template.html", []).run(["$templateCache", function($templateCache) {
+angular.module("components/cs-index/cs-index-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-index/cs-index-template.html",
-    "<div class='row'>\n" +
-    "  <div class='col-lg-12' ng-switch='$ctrl.listIsEmpty()'>\n" +
-    "    <cs-filter-row filter='$ctrl.filter(filterValue)' filterValue='$ctrl.filterValue' open-new-resource-panel='$ctrl.openNewResourcePanel()' refresh-index='$ctrl.refreshIndex()' resource='$ctrl.resource'></cs-filter-row>\n" +
-    "    <div class='row' ng-switch-when='true'>\n" +
-    "      <div class='well well-lg'>\n" +
-    "        {{$ctrl.header}} {{ $ctrl.i18n.t('index.empty') }}\n" +
-    "      </div>\n" +
-    "    </div>\n" +
-    "    <div class='row' ng-switch-when='false'>\n" +
-    "      <cs-table-container collection='$ctrl.items' column-visible_='$ctrl.columnVisible(column, index)' columns='$ctrl.columns' cs-index-options='$ctrl.csIndexOptions' destroy-item_='$ctrl.destroyItem(event, item)' ng-class=\"{ 'col-lg-8' : $ctrl.sidePanelIsVisible() &amp;&amp; !$ctrl.viewIsCompressed(),&#x000A;'col-lg-6' : $ctrl.viewIsCompressed() }\" resource='$ctrl.resource' select-item_='$ctrl.selectItem(item)' show-item_='$ctrl.showItem(item)'></cs-table-container>\n" +
-    "      <cs-index-sidepanel cs-index-sidepanel-options='$ctrl.csIndexOptions' item='$ctrl.csIndexOptions.selectedItem' ng-class=\"{ 'col-lg-4' : !$ctrl.viewIsCompressed() &amp;&amp; $ctrl.sidePanelIsVisible(),&#x000A;'col-lg-6' : $ctrl.viewIsCompressed() }\" ng-if='$ctrl.sidePanelIsVisible()' panel-number-callback_='$ctrl.getPanelNumber(length)' resource-type='$ctrl.resourceType' unselect-item='$ctrl.unselectItem()'></cs-index-sidepanel>\n" +
-    "    </div>\n" +
-    "  </div>\n" +
+    "<cs-loader enabled='$ctrl.pageLoading'></cs-loader>\n" +
+    "<div class='row' ng-if='!$ctrl.pageLoading'>\n" +
+    "<div class='col-lg-12'>\n" +
+    "<cs-filter-row filter='$ctrl.filter(filterValue)' filterValue='$ctrl.filterValue' open-new-resource-panel='$ctrl.openNewResourcePanel()' refresh-index='$ctrl.refreshIndex()' resource='$ctrl.resource'></cs-filter-row>\n" +
+    "<div class='row' ng-show='$ctrl.tableLoading'>\n" +
+    "<cs-loader enabled='true'></cs-loader>\n" +
+    "</div>\n" +
+    "<div class='row' ng-show='!$ctrl.tableLoading'>\n" +
+    "<div class='well well-lg' ng-show='$ctrl.listIsEmpty()'>\n" +
+    "{{$ctrl.header}} {{ $ctrl.i18n.t('index.empty') }}\n" +
+    "</div>\n" +
+    "<cs-table-container collection='$ctrl.items' column-visible_='$ctrl.columnVisible(column, index)' columns='$ctrl.columns' cs-index-options='$ctrl.csIndexOptions' destroy-item_='$ctrl.destroyItem(event, item)' ng-class='{ &#39;col-lg-8&#39; : $ctrl.sidePanelIsVisible() &amp;&amp; !$ctrl.viewIsCompressed(),\n" +
+    "&#39;col-lg-6&#39; : $ctrl.viewIsCompressed() }' ng-show='!$ctrl.listIsEmpty()' resource='$ctrl.resource' select-item_='$ctrl.selectItem(item)' show-item_='$ctrl.showItem(item)'></cs-table-container>\n" +
+    "<cs-index-sidepanel cs-index-sidepanel-options='$ctrl.csIndexOptions' item='$ctrl.csIndexOptions.selectedItem' ng-class='{ &#39;col-lg-4&#39; : !$ctrl.viewIsCompressed() &amp;&amp; $ctrl.sidePanelIsVisible(),\n" +
+    "&#39;col-lg-6&#39; : $ctrl.viewIsCompressed() }' ng-if='$ctrl.sidePanelIsVisible() &amp;&amp; !$ctrl.loading' panel-number-callback_='$ctrl.getPanelNumber(length)' resource-type='$ctrl.resourceType' unselect-item='$ctrl.unselectItem()'></cs-index-sidepanel>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "</div>\n" +
     "");
 }]);
 
-angular.module("components/cs-item-list/cs-item-list-template.html", []).run(["$templateCache", function($templateCache) {
+angular.module("components/cs-item-list/cs-item-list-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-item-list/cs-item-list-template.html",
     "<!-- .item-container{ \"ng-class\" => \"{ 'row-container' : $ctrl.modalMode}\" } -->\n" +
     "<div class='item-container' ng-class='$ctrl.CL.itemContainer' ng-if='$ctrl.many'>\n" +
-    "  <div class='form-control item' ng-class='$ctrl.CL.item' ng-click='$ctrl.select(item)' ng-if='$ctrl.many &amp;&amp; ($index &lt; 3 || !$ctrl.condition.tableMode)' ng-repeat='item in $ctrl.itemList track by $index'>\n" +
-    "    {{ item.attributes[$ctrl.key] }}\n" +
-    "  </div>\n" +
-    "  <div class='form-control item' ng-class='$ctrl.CL.item' ng-click='$ctrl.showItems()' ng-if='$ctrl.itemList.length &gt; 3 &amp;&amp; $ctrl.condition.tableMode'>\n" +
-    "    {{$ctrl.UI.clickText}}\n" +
-    "  </div>\n" +
-    "  <div class='no-item' ng-if='$ctrl.condition.noItem'>\n" +
-    "    {{$ctrl.UI.noItem}}\n" +
-    "  </div>\n" +
+    "<div class='form-control item' ng-class='$ctrl.CL.item' ng-click='$ctrl.select(item)' ng-if='$ctrl.many &amp;&amp; (( ($index &lt; 2) || (($index &lt; 3) &amp;&amp; ($ctrl.itemList.length &lt; 4)) ) || !$ctrl.condition.tableMode )' ng-repeat='item in $ctrl.itemList track by $index'>\n" +
+    "{{ item.$display_name() }}\n" +
+    "</div>\n" +
+    "<div class='form-control item' ng-class='$ctrl.CL.item' ng-click='$ctrl.showItems()' ng-if='$ctrl.itemList.length &gt; 3 &amp;&amp; $ctrl.condition.tableMode'>\n" +
+    "{{$ctrl.UI.clickText}}\n" +
+    "</div>\n" +
+    "<div class='no-item' ng-if='$ctrl.condition.noItem'>\n" +
+    "{{$ctrl.UI.noItem}}\n" +
+    "</div>\n" +
     "</div>\n" +
     "<!-- single item -->\n" +
     "<div class='form-control item' ng-click='$ctrl.selectSingle()' ng-if='!$ctrl.many &amp;&amp; !$ctrl.condition.noItem'>\n" +
-    "  {{ $ctrl.itemList.$display_name() }}\n" +
+    "{{ $ctrl.itemList.$display_name() }}\n" +
     "</div>\n" +
     "<div class='no-item' ng-if='!$ctrl.many &amp;&amp; $ctrl.condition.noItem'>\n" +
-    "  {{$ctrl.UI.noItem}}\n" +
+    "{{$ctrl.UI.noItem}}\n" +
     "</div>\n" +
     "");
 }]);
 
-angular.module("components/cs-main/cs-main-template.html", []).run(["$templateCache", function($templateCache) {
+angular.module("components/cs-main/cs-main-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-main/cs-main-template.html",
     "<cs-menu></cs-menu>\n" +
     "<cs-alert></cs-alert>\n" +
     "<div class='container'>\n" +
-    "  <ui-view></ui-view>\n" +
+    "<ui-view></ui-view>\n" +
     "</div>\n" +
     "");
 }]);
 
-angular.module("components/cs-menu/cs-menu-template.html", []).run(["$templateCache", function($templateCache) {
+angular.module("components/cs-menu/cs-menu-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-menu/cs-menu-template.html",
     "<div class='flex nav'>\n" +
-    "  <div class='navElement appTitle'>\n" +
-    "    {{title}}\n" +
-    "  </div>\n" +
-    "  <div class='navElement nav' ng-class='{selected : isSelected(resource.descriptor.type)}' ng-click='select(resource.descriptor.type)' ng-repeat='(key, resource) in resources'>\n" +
-    "    {{resource.descriptor.name}}\n" +
-    "  </div>\n" +
+    "<div class='navElement appTitle'>\n" +
+    "{{title}}\n" +
+    "</div>\n" +
+    "<div class='navElement nav' ng-class='{selected : isSelected(resource.descriptor.type)}' ng-click='select(resource.descriptor.type)' ng-repeat='(key, resource) in resources'>\n" +
+    "{{resource.descriptor.name}}\n" +
+    "</div>\n" +
     "</div>\n" +
     "");
 }]);
 
-angular.module("components/cs-table/cs-table-container/cs-table-container-template.html", []).run(["$templateCache", function($templateCache) {
+angular.module("components/cs-table/cs-table-container/cs-table-container-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-table/cs-table-container/cs-table-container-template.html",
     "<div class='table-responsive'>\n" +
-    "  <div class='cs-table table table-striped table-hover'>\n" +
-    "    <div class='cs-table-body'>\n" +
-    "      <cs-table-header column-visible_='$ctrl.columnVisible(column, index)' columns='$ctrl.columns' cs-index-options='$ctrl.csIndexOptions' sort_='$ctrl.sort(column, direction)'></cs-table-header>\n" +
-    "    </div>\n" +
-    "    <div class='cs-table-body'>\n" +
-    "      <cs-table-row columns='$ctrl.columns' cs-index-options='$ctrl.csIndexOptions' destroy-item_='$ctrl.destroyItem(event, item)' item='item' ng-class=\" {  'selected-row' : $ctrl.csIndexOptions.selectedItem.id == item.id, &#x000A;'selectable-row' : $ctrl.csIndexOptions.selectedItem != null }\" ng-click='$ctrl.clickRow(item)' ng-repeat='item in $ctrl.collection track by $index' select-item_='$ctrl.selectItem(item)' show-item_='$ctrl.showItem(item)'></cs-table-row>\n" +
-    "    </div>\n" +
-    "  </div>\n" +
+    "<div class='cs-table table table-striped table-hover'>\n" +
+    "<div class='cs-table-body'>\n" +
+    "<cs-table-header column-visible_='$ctrl.columnVisible(column, index)' columns='$ctrl.columns' cs-index-options='$ctrl.csIndexOptions' sort_='$ctrl.sort(column, direction)'></cs-table-header>\n" +
+    "</div>\n" +
+    "<div class='cs-table-body'>\n" +
+    "<cs-table-row columns='$ctrl.columns' cs-index-options='$ctrl.csIndexOptions' destroy-item_='$ctrl.destroyItem(event, item)' item='item' ng-class=' {  &#39;selected-row&#39; : $ctrl.csIndexOptions.selectedItem.id == item.id, \n" +
+    "&#39;selectable-row&#39; : $ctrl.csIndexOptions.selectedItem != null }' ng-click='$ctrl.clickRow(item)' ng-repeat='item in $ctrl.collection track by $index' select-item_='$ctrl.selectItem(item)' show-item_='$ctrl.showItem(item)'></cs-table-row>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div class='row no-result' ng-if='$ctrl.collection.length == 0'>\n" +
-    "  <div class='col-lg-12'>\n" +
-    "    {{ $ctrl.i18n.t('info.no_item') }}\n" +
-    "  </div>\n" +
+    "<div class='col-lg-12'>\n" +
+    "{{ $ctrl.i18n.t('info.no_item') }}\n" +
+    "</div>\n" +
     "</div>\n" +
     "");
 }]);
 
-angular.module("components/cs-table/cs-table-header/cs-table-header-template.html", []).run(["$templateCache", function($templateCache) {
+angular.module("components/cs-table/cs-table-header/cs-table-header-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-table/cs-table-header/cs-table-header-template.html",
     "<!-- .tRow is the style of the component template -->\n" +
     "<div class='cs-table-header-cell' ng-click='$ctrl.changeSorting(column)' ng-if='$ctrl.columnVisible(column, $index)' ng-repeat='column in $ctrl.columns track by $index'>\n" +
-    "  <div class='inline'>\n" +
-    "    {{column.label}}\n" +
-    "  </div>\n" +
-    "  <div class='inline arrow-container'>\n" +
-    "    <span class='glyphicon glyphicon-triangle-top' ng-if='$ctrl.asc(column)'></span>\n" +
-    "    <span class='glyphicon glyphicon-triangle-bottom' ng-if='$ctrl.desc(column)'></span>\n" +
-    "  </div>\n" +
+    "<div class='inline'>\n" +
+    "{{column.label}}\n" +
     "</div>\n" +
-    "<div class='cs-table-header-cell actions' ng-hide=\"csIndexOptions['hide-actions']\"></div>\n" +
+    "<div class='inline arrow-container'>\n" +
+    "<span class='glyphicon glyphicon-triangle-top' ng-if='$ctrl.asc(column)'></span>\n" +
+    "<span class='glyphicon glyphicon-triangle-bottom' ng-if='$ctrl.desc(column)'></span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class='cs-table-header-cell actions' ng-hide='csIndexOptions[&#39;hide-actions&#39;]'></div>\n" +
     "");
 }]);
 
-angular.module("components/cs-table/cs-table-row/cs-table-row-template.html", []).run(["$templateCache", function($templateCache) {
+angular.module("components/cs-table/cs-table-row/cs-table-row-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-table/cs-table-row/cs-table-row-template.html",
     "<div class='cs-table-cell' ng-repeat='column in $ctrl.columns track by $index'>\n" +
-    "  <!-- {{ $ctrl.fieldValue(column) }} -->\n" +
-    "  <cs-field cs-field-options='$ctrl.fieldOptions' field='column' form-item='$ctrl.item' form-mode=\"'tableView'\"></cs-field>\n" +
-    "  <!-- \"ng-if\" => \"$ctrl.columnVisible(column, $index) || true\" -->\n" +
+    "<!-- {{ $ctrl.fieldValue(column) }} -->\n" +
+    "<cs-field cs-field-options='$ctrl.fieldOptions' field='column' form-item='$ctrl.item' form-mode='&#39;tableView&#39;'></cs-field>\n" +
+    "<!-- \"ng-if\" => \"$ctrl.columnVisible(column, $index) || true\" -->\n" +
     "</div>\n" +
     "<div class='cs-table-cell actions'>\n" +
-    "  <!-- SHOW -->\n" +
-    "  <div class='action edit-action' ng-click='$ctrl.showItem()'>\n" +
-    "    {{ $ctrl.i18n.t('buttons.show') }}\n" +
-    "  </div>\n" +
-    "  <!-- EDIT -->\n" +
-    "  <div class='action edit-action' ng-click='$ctrl.selectItem()'>\n" +
-    "    {{ $ctrl.i18n.t('buttons.edit') }}\n" +
-    "  </div>\n" +
-    "  <!-- DELETE -->\n" +
-    "  <div class='action delete-action' ng-click='$ctrl.destroyItem($event)'>\n" +
-    "    {{ $ctrl.i18n.t('buttons.delete') }}\n" +
-    "  </div>\n" +
+    "<!-- SHOW -->\n" +
+    "<div class='action edit-action' ng-click='$ctrl.showItem()'>\n" +
+    "{{ $ctrl.i18n.t('buttons.show') }}\n" +
+    "</div>\n" +
+    "<!-- EDIT -->\n" +
+    "<div class='action edit-action' ng-click='$ctrl.selectItem()'>\n" +
+    "{{ $ctrl.i18n.t('buttons.edit') }}\n" +
+    "</div>\n" +
+    "<!-- DELETE -->\n" +
+    "<div class='action delete-action' ng-click='$ctrl.destroyItem($event)'>\n" +
+    "{{ $ctrl.i18n.t('buttons.delete') }}\n" +
+    "</div>\n" +
     "</div>\n" +
     "");
 }]);
 
-angular.module("components/cs-wizard/cs-wizard-panel-template.html", []).run(["$templateCache", function($templateCache) {
+angular.module("components/cs-wizard/cs-wizard-component/cs-wizard-component-template.html", []).run(["$templateCache", function ($templateCache) {
+  $templateCache.put("components/cs-wizard/cs-wizard-component/cs-wizard-component-template.html",
+    "<div class='aligner'>\n" +
+    "<div class='alignerItem'>\n" +
+    "<div class='wizardContainer'>\n" +
+    "<div cs-wizard='' item-id='$ctrl.itemId' page-type='$ctrl.pageType' resource-type='$ctrl.resourceType'></div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "");
+}]);
+
+angular.module("components/cs-wizard/cs-wizard-panel-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-wizard/cs-wizard-panel-template.html",
-    "<div autocomplete='off' create-resources='shouldShowNewButton()' cs-form-options='csWizardOptions' cs-form='' form-item='panel.item' form-mode='{{panel.formMode}}' form-parent='panel.parent' form-resource-descriptor='resource_descriptor(panel)' form-resource='panel.resource' ng-class='formClass()' role='form' wizard-panel-index='panelIndex'></div>\n" +
+    "<div autocomplete='off' create-resources='shouldShowNewButton()' cs-form-options='csWizardOptions' cs-form='' form-item='panel.item' form-mode='{{panel.formMode}}' form-parent='panel.parent' form-resource-descriptor='resource_descriptor(panel)' form-resource='panel.resource' ng-class='formClass()' role='form' subform-attribute='panel.attribute' wizard-panel-index='panelIndex'></div>\n" +
     "");
 }]);
 
-angular.module("components/cs-wizard/cs-wizard-template.html", []).run(["$templateCache", function($templateCache) {
+angular.module("components/cs-wizard/cs-wizard-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("components/cs-wizard/cs-wizard-template.html",
-    "<div class='form-panel animation' ng-class=\"{'active' : $index==panelStack.length-1,&#x000A;'pre-hover' : panel.hoverOrder &lt; 0,&#x000A;'hover' : panel.hoverOrder==0, 'post-hover' : panel.hoverOrder &gt; 0 }\" ng-init='panelIndex = $index' ng-mouseover='panelHover($index)' ng-repeat='panel in panelStack track by $index'>\n" +
-    "  <cs-wizard-panel></cs-wizard-panel>\n" +
+    "<cs-error errors='errors'></cs-error>\n" +
+    "<cs-loader enabled='loading'></cs-loader>\n" +
+    "<div class='form-panel animation' ng-class='{&#39;active&#39; : $index==panelStack.length-1,\n" +
+    "&#39;pre-hover&#39; : panel.hoverOrder &lt; 0,\n" +
+    "&#39;hover&#39; : panel.hoverOrder==0, &#39;post-hover&#39; : panel.hoverOrder &gt; 0 }' ng-if='!loading' ng-init='panelIndex = $index' ng-mouseover='panelHover($index)' ng-repeat='panel in panelStack track by $index'>\n" +
+    "<cs-wizard-panel></cs-wizard-panel>\n" +
     "</div>\n" +
     "");
 }]);
 
-angular.module("cs-route-provider/router-component/cs-page-router-template.html", []).run(["$templateCache", function($templateCache) {
+angular.module("cs-route-provider/router-component/cs-page-router-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("cs-route-provider/router-component/cs-page-router-template.html",
     "<cs-loader ng-if='$ctrl.loading'></cs-loader>\n" +
     "<div ng-if='!$ctrl.loading'>\n" +
-    "  <cs-error errors='$ctrl.errors'></cs-error>\n" +
-    "  <div ng-if='$ctrl.errors.length == 0' ng-switch='$ctrl.pageType'>\n" +
-    "    <cs-index cs-index-options='options' item-id='null' items='$ctrl.items' ng-switch-when='index' resource-type='$ctrl.resourceType' resource='$ctrl.resource'></cs-index>\n" +
-    "    <div class='aligner' ng-switch-when='show'>\n" +
-    "      <div class='alignerItem'>\n" +
-    "        <div class='wizardContainer'>\n" +
-    "          <div cs-wizard-options='$ctrl.wizardOptions' cs-wizard=''></div>\n" +
-    "        </div>\n" +
-    "      </div>\n" +
-    "    </div>\n" +
-    "    <div class='aligner' ng-switch-when='edit'>\n" +
-    "      <div class='alignerItem'>\n" +
-    "        <div class='wizardContainer'>\n" +
-    "          <div cs-wizard-options='$ctrl.wizardOptions' cs-wizard=''></div>\n" +
-    "        </div>\n" +
-    "      </div>\n" +
-    "    </div>\n" +
-    "    <div class='aligner' ng-switch-when='create'>\n" +
-    "      <div class='alignerItem'>\n" +
-    "        <div class='wizardContainer'>\n" +
-    "          <div cs-wizard-options='$ctrl.wizardOptions' cs-wizard=''></div>\n" +
-    "        </div>\n" +
-    "      </div>\n" +
-    "    </div>\n" +
-    "  </div>\n" +
+    "<cs-error errors='$ctrl.errors'></cs-error>\n" +
+    "<div ng-if='$ctrl.errors.length == 0' ng-switch='$ctrl.pageType'>\n" +
+    "<cs-index cs-index-options='options' item-id='null' items='$ctrl.items' ng-switch-when='index' resource-type='$ctrl.resourceType' resource='$ctrl.resource'></cs-index>\n" +
+    "<div class='aligner' ng-switch-when='show'>\n" +
+    "<div class='alignerItem'>\n" +
+    "<div class='wizardContainer'>\n" +
+    "<div cs-wizard-options='$ctrl.wizardOptions' cs-wizard=''></div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class='aligner' ng-switch-when='edit'>\n" +
+    "<div class='alignerItem'>\n" +
+    "<div class='wizardContainer'>\n" +
+    "<div cs-wizard-options='$ctrl.wizardOptions' cs-wizard=''></div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class='aligner' ng-switch-when='create'>\n" +
+    "<div class='alignerItem'>\n" +
+    "<div class='wizardContainer'>\n" +
+    "<div cs-wizard-options='$ctrl.wizardOptions' cs-wizard=''></div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "</div>\n" +
     "");
 }]);
 
-angular.module("cs-utils/cs-error-template/cs-error-template.html", []).run(["$templateCache", function($templateCache) {
+angular.module("cs-utils/cs-error-template/cs-error-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("cs-utils/cs-error-template/cs-error-template.html",
-    "<div class='alert alert-danger errorMsg' ng-repeat='error in $ctrl.errors'>\n" +
-    "  <strong>\n" +
-    "    Error!\n" +
-    "  </strong>\n" +
-    "  {{error}}\n" +
+    "<div class='alert alert-danger error-msg' ng-repeat='error in $ctrl.errors'>\n" +
+    "<strong class='error'>\n" +
+    "Error!\n" +
+    "</strong>\n" +
+    "{{error}}\n" +
     "</div>\n" +
     "");
 }]);
 
-angular.module("cs-utils/cs-loader/cs-loader-template.html", []).run(["$templateCache", function($templateCache) {
+angular.module("cs-utils/cs-loader/cs-loader-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("cs-utils/cs-loader/cs-loader-template.html",
-    "<div class='middle'>\n" +
-    "  <div class='loader'></div>\n" +
+    "<div class='middle' ng-if='$ctrl.enabled'>\n" +
+    "<div class='loader'></div>\n" +
     "</div>\n" +
     "");
 }]);

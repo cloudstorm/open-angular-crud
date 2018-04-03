@@ -21,7 +21,10 @@
   cursor: pointer; }
 
 pre {
-  background-color: #eeeeee; }
+  background-color: #eeeeee;
+  margin: 0;
+  padding: 6px 12px;
+  word-break: keep-all; }
 
 .form-control {
   height: auto;
@@ -129,18 +132,15 @@ body > .ui-select-bootstrap.open {
   height: 100%;
   display: flex;
   flex-direction: column; }
-  .cs-form .form-header {
-    flex: 1; }
-    .cs-form .form-header h4.divided {
-      border-bottom-style: solid;
-      border-bottom-width: 2px;
-      border-bottom-color: lightslategrey;
-      padding-bottom: 5px;
-      width: 372px;
-      margin-bottom: 20px; }
+  .cs-form .form-header h4.divided {
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+    border-bottom-color: lightslategrey;
+    padding-bottom: 5px;
+    width: 372px;
+    margin-bottom: 20px; }
   .cs-form form {
     flex-basis: auto;
-    height: 100%;
     overflow: auto; }
     .cs-form form .cs-field {
       position: relative;
@@ -344,7 +344,7 @@ div.table-striped > div.cs-table-body > .cs-table-row:nth-of-type(odd) {
   display: table-row; }
   .cs-table-row .cs-table-cell {
     display: table-cell;
-    padding: 8px;
+    padding: 3px 6px;
     line-height: 1.42857143;
     border-top: 1px solid #ddd;
     vertical-align: middle; }
@@ -556,9 +556,6 @@ div.table-striped > div.cs-table-body > .cs-table-row:nth-of-type(odd) {
 .alignerItem {
   min-width: 50%; }
 
-.errorMsg {
-  margin-top: 30px; }
-
 .loader {
   border: 16px solid #f3f3f3;
   border-radius: 50%;
@@ -578,5 +575,7 @@ div.table-striped > div.cs-table-body > .cs-table-row:nth-of-type(odd) {
     transform: rotate(0deg); }
   100% {
     transform: rotate(360deg); } }
+cs-error .error-msg {
+  margin-top: 15px; }
 
 /*# sourceMappingURL=cloudstorm.css.map */
