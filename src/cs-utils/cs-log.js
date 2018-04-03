@@ -10,7 +10,6 @@ app.factory('csLog', [
 
       diff : function(){
         //Returns the difference in second to the last log in the following format
-        //i.e [0.352 s]
         var now = new Date().getTime()
         if(csLog.last){
           diff = (now - csLog.last)/1000
@@ -26,6 +25,8 @@ app.factory('csLog', [
           scope.logEnabled = false || enabled
           scope.log = function(msg){
             if(scope.logEnabled){
+              //Format i.e.:
+              //0,342 (sec) | cs-form - Started
               console.log(csLog.diff()+ " | " + componentName + " - " , msg)
             }
           }
