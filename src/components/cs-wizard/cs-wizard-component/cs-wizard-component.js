@@ -149,21 +149,20 @@ app.component("csWizardComponent", {
       $scope.$on('form-cancel', (function(event, resource, attribute) {
         this.popPanel();
         if (this.panelStack.length === 0) {
-          return notify_listeners($scope, 'wizard-canceled', resource);
+          return this.notify_listeners($scope, 'wizard-canceled', resource);
         }
       }).bind(this));
 
       $scope.$on('wizard-cancel', (function(event, resource, attribute) {
         this.popAllPanels();
         if (this.panelStack.length === 0) {
-          return notify_listeners($scope, 'wizard-canceled', resource);
+          return this.notify_listeners($scope, 'wizard-canceled', resource);
         }
       }).bind(this));
 
       $scope.$on('form-submit', (function(event, resource, attribute) {
-        $scope.log("form-submit-event");
         if (this.panelStack.length === 1) {
-          notify_listeners($scope, 'wizard-submited', resource);
+          this.notify_listeners($scope, 'wizard-submited', resource);
           if (!this.csWizardOptions['keep-first']) {
             return this.popPanel();
           }
@@ -302,10 +301,9 @@ app.component("csWizardComponent", {
         }
       };
 
-      var notify_listeners = function($scope, event, resource) {
+      this.notify_listeners = function($scope, event, resource) {
 
         $scope.$emit(event);
-        this.log("notify_listeners");
         if (this.csWizardOptions && this.csWizardOptions.events) {
           if (this.csWizardOptions.events[event]) {
             this.csWizardOptions.events[event](resource);
