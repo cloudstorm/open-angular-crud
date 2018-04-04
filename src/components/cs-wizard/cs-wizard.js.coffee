@@ -29,7 +29,7 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDesc
   link = ($scope, element, attrs, controller) ->
 
     #Setting csLog
-    csLog.set($scope, "csWizard")
+    csLog.set($scope, "csWizard", true)
     #csLog.enable($scope)
 
     $scope.loading = true
@@ -135,17 +135,25 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDesc
 
     # ===== WATCHES =======================================
 
-    $scope.$watch "csWizardOptions['form-item']", (newValue, oldValue) ->
-      if (newValue != oldValue) && ($scope.panelStack.length > 0)
-        $scope.panelStack[0].item = $scope.csWizardOptions['form-item']
+    # $scope.$watch "csWizardOptions['form-item']", (newValue, oldValue) ->
+    #
+    #   $scope.addLog("watch - csWizardOptions['form-item']")
+    #   if (newValue != oldValue) && ($scope.panelStack.length > 0)
+    #     $scope.log("in")
+    #     $scope.panelStack[0].item = $scope.csWizardOptions['form-item']
+    #   else
+    #     $scope.log("not in")
+    #
+    # $scope.$watchCollection 'panelStack', (newPanelStack, oldPanelStack) ->
+    #
+    #   $scope.addLog("watchCollection - panelStack")
+    #   if newPanelStack
+    #     $scope.log("newPanelStack")
+    #     attrs.$set 'numberOfPanels', newPanelStack.length
+    #     $scope.numberOfPanels = newPanelStack.length
+    #   else
+    #     $scope.log("notNewPanelStack")
 
-    $scope.$watchCollection 'panelStack', (newPanelStack, oldPanelStack) ->
-
-      if newPanelStack
-        attrs.$set 'numberOfPanels', newPanelStack.length
-        $scope.numberOfPanels = newPanelStack.length
-      else
-        $scope.log("NotPanelStack")
 
     # ===== LIFECYCLE EVENTS ==============================
 
@@ -162,7 +170,6 @@ app.directive "csWizard", ['$rootScope', 'ResourceService', '$document', 'csDesc
       notify_listeners($scope, 'wizard-canceled', resource) if $scope.panelStack.length == 0
 
     $scope.$on 'form-submit', (event, resource, attribute) ->
-
       $scope.log("form-submit-event")
       if $scope.panelStack.length == 1
         notify_listeners($scope, 'wizard-submited', resource)
@@ -337,10 +344,12 @@ app.directive "csWizardPanel", ['$rootScope', 'ResourceService', '$compile', 'cs
 
     # ===== COMPILE DOM WITH APPROPRIATE DIRECTIVE ========
 
-    csLog.set($scope, "csWizardPanel")
-    #csLog.enable($scope)
+    csLog.set($scope, "csWizardPanel", true)
+
+
 
     $scope.log("Start")
+    $scope.log($scope)
 
     if $scope.panel.directive
       $scope.log("Directive render")
