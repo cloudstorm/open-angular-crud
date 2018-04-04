@@ -1,7 +1,26 @@
 .aligner
   .alignerItem
-    .wizardContainer
-      %div{ "cs-wizard" => "",
-            "resource-type" => "$ctrl.resourceType",
-            "item-id" => "$ctrl.itemId",
-            "page-type" => "$ctrl.pageType" }
+    %cs-error{ "errors" => "$ctrl.errors"}
+    %cs-loader{ "enabled" => "$ctrl.loading"}
+    .wizard-container
+      .cs-wizard
+        .form-panel.animation{ "ng-if" => "!$ctrl.loading",
+                               "ng-repeat" => "panel in $ctrl.panelStack track by $index",
+                               "ng-init" => "panelIndex = $index",
+                               "ng-class" => "{'active' : $index==$ctrl.panelStack.length-1,
+                                'pre-hover' : panel.hoverOrder < 0,
+                                'hover' : panel.hoverOrder==0, 'post-hover' : panel.hoverOrder > 0 }",
+                               "ng-mouseover" => "$ctrl.panelHover($index)" }
+          %div{ "cs-form" => "",
+               "form-resource" => "panel.resource",
+               "subform-attribute" => "panel.attribute",
+               "form-resource-descriptor" => "$ctrl.resource_descriptor(panel)",
+               "form-item" => "panel.item",
+               "form-parent" => "panel.parent",
+               "form-mode" => "{{panel.formMode}}",
+               "wizard-panel-index" => "panelIndex",
+               "cs-form-options" => "$ctrl.csWizardOptions",
+               "create-resources" => "$ctrl.shouldShowNewButton()",
+               "role" => 'form',
+               "autocomplete" => "off",
+               'ng-class' => '$ctrl.csWizardOptions["form-class"]' }
