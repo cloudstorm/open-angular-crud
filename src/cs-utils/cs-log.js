@@ -17,17 +17,26 @@ app.factory('csLog', [
           diff = 0
         }
         csLog.last = now
-        return diff + " (sec)"
+        return diff + "s "
       },
 
       set : function(scope, componentName, enabled){
           //Initially the log is disabled
+          scope.logBuffer = []
           scope.logEnabled = false || enabled
+
+          scope.addLog = function(msg){
+            scope.logBuffer.push(msg)
+          }
+
           scope.log = function(msg){
             if(scope.logEnabled){
-              //Format i.e.:
-              //0,342 (sec) | cs-form - Started
-              console.log(csLog.diff()+ " | " + componentName + " - " , msg)
+              scope.addLog(msg)
+              //Format:
+              //0,342s  cs-form  |  Started  >>  ...  >>  ...
+              console.log(csLog.diff() + componentName + "  |  " +
+                scope.logBuffer.join("  >>  "))
+              scope.logBuffer = []
             }
           }
       },
