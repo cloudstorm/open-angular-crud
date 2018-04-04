@@ -142,47 +142,46 @@ app.component("csWizardComponent", {
 
       //================= Lifecycle events =====================
 
-      $scope.$on('create-resource', function(event, resource, attribute, parent) {
-        console.log("attribute", attribute);
+      $scope.$on('create-resource', (function(event, resource, attribute, parent) {
         return this.pushPanel(resource, attribute, parent);
-      });
+      }).bind(this));
 
-      $scope.$on('form-cancel', function(event, resource, attribute) {
-        popPanel($scope);
+      $scope.$on('form-cancel', (function(event, resource, attribute) {
+        this.popPanel();
         if (this.panelStack.length === 0) {
           return notify_listeners($scope, 'wizard-canceled', resource);
         }
-      });
+      }).bind(this));
 
-      $scope.$on('wizard-cancel', function(event, resource, attribute) {
-        popAllPanels($scope);
+      $scope.$on('wizard-cancel', (function(event, resource, attribute) {
+        this.popAllPanels();
         if (this.panelStack.length === 0) {
           return notify_listeners($scope, 'wizard-canceled', resource);
         }
-      });
+      }).bind(this));
 
-      $scope.$on('form-submit', function(event, resource, attribute) {
+      $scope.$on('form-submit', (function(event, resource, attribute) {
         $scope.log("form-submit-event");
         if (this.panelStack.length === 1) {
           notify_listeners($scope, 'wizard-submited', resource);
           if (!this.csWizardOptions['keep-first']) {
-            return popPanel($scope);
+            return this.popPanel();
           }
         } else {
-          return popPanel($scope);
+          return this.popPanel();
         }
-      });
+      }).bind(this));
 
-      $scope.$on('form-error', function(event, resource, attribute) {
+      $scope.$on('form-error', (function(event, resource, attribute) {
         if (resource.status !== 422) {
           $scope.$emit('wizard-error', resource.data);
           if (this.csWizardOptions.events['wizard-error'] && this.panelStack.length === 1) {
             return this.csWizardOptions.events['wizard-error'](resource);
           }
         }
-      });
+      }).bind(this));
 
-      $scope.$on('transitioned', function(event, child, parent) {
+      $scope.$on('transitioned', (function(event, child, parent) {
         var i, len, results, transition, transitions;
         if (child && parent) {
           if (this.csWizardOptions.transitions) {
@@ -196,7 +195,7 @@ app.component("csWizardComponent", {
             }
           }
         }
-      });
+      }).bind(this));
 
       //$document.on('keydown', keyPressed);
 
@@ -280,7 +279,7 @@ app.component("csWizardComponent", {
         }
       };
 
-      var popPanel = function($scope) {
+      this.popPanel = function() {
 
         var panelIndex;
         this.panelStack.pop();
@@ -296,7 +295,7 @@ app.component("csWizardComponent", {
         }
       };
 
-      var popAllPanels = function($scope) {
+      this.popAllPanels = function($scope) {
         this.panelStack = [];
         if (this.panelNumberCallback) {
           return this.panelNumberCallback(this.panelStack.length);
