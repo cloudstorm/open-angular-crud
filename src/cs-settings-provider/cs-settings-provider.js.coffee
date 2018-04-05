@@ -18,7 +18,7 @@ app.provider 'csSettings', ['csLocalizationProvider', (csLocalizationProvider) -
     },{
       name: @settings['router-path-prefix'] + 'show'
       url: '/{resourceType}/{id}'
-      component: 'csWizardComponent'
+      component: 'csWizard'
       resolve:
         resourceType: ['$transition$', ($transition$) ->
           $transition$.params().resourceType
@@ -32,7 +32,7 @@ app.provider 'csSettings', ['csLocalizationProvider', (csLocalizationProvider) -
     },{
       name: @settings['router-path-prefix'] + 'cmd'
       url: '/{resourceType}/{id}/{cmd}'
-      component: 'csWizardComponent'
+      component: 'csWizard'
       resolve:
         resourceType: ['$transition$', ($transition$) ->
           $transition$.params().resourceType
