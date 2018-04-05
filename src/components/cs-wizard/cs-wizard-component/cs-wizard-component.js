@@ -53,6 +53,7 @@ app.component("csWizardComponent", {
 
 
         if (this.csWizardOptions) {
+          this.singlePage = false
           this.log("wizardOptions branch");
           resource_type = this.csWizardOptions['resource-type'];
           var resource = angular.copy(ResourceService.get(resource_type));
@@ -73,6 +74,7 @@ app.component("csWizardComponent", {
 
           var formMode, wizardMaxDepth;
 
+          this.singlePage = true
           this.log("singlePage branch");
           this.csWizardOptions = {};
 

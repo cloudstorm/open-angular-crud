@@ -1,6 +1,5 @@
 .panel-close
   %span{ "ng-click" => "closePanel()"} &#10006;
-%div{ "ng-if" => "editWizardOptions",
-	  "cs-wizard" => "",
+%cs-wizard-component{ "ng-if" => "editWizardOptions",
 	  "cs-wizard-options" => "editWizardOptions",
     "panel-number-callback" => "panelNumberCallback" }
