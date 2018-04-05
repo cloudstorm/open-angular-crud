@@ -11,7 +11,7 @@ app.component("csWizard", {
         itemId: "=",
         resourceType: "=?",
     },
-    templateUrl : "components/cs-wizard/cs-wizard-component/cs-wizard-component-template.html",
+    templateUrl : "components/cs-wizard/cs-wizard-component/cs-wizard-template.html",
     controller : ['$scope', '$rootScope', 'ResourceService', '$document', 'csDescriptorService', 'csLog', 'csAlertService', 'csRoute', function($scope, $rootScope, ResourceService, $document, csDescriptorService, csLog, csAlertService, csRoute){
 
       csLog.set(this, 'csWizard')
