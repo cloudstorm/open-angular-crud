@@ -16,7 +16,7 @@ app.component("csWizardComponent", {
 
       csLog.set(this, 'csWizardComponent', true)
 
-      var _this_ = this
+      var self = this
       var resource_type, wizardMaxDepth;
 
       this.loading = true
@@ -97,12 +97,12 @@ app.component("csWizardComponent", {
               _resource_ = ResourceService.get(resource_type);
             } catch (error) {
               var errorMsg = "'" + resource_type + "' is not a registered resource.";
-              _this_.finish(errorMsg);
+              self.finish(errorMsg);
             }
 
             var resource = angular.copy(_resource_)
 
-            resource.$get(_this_.itemId, {include: '*'})
+            resource.$get(self.itemId, {include: '*'})
             .then(function(_item_) {
 
               var item = _item_;
@@ -125,18 +125,18 @@ app.component("csWizardComponent", {
                 });
               }).bind(formMode, resource);
 
-              _this_.csWizardOptions.events = {
+              self.csWizardOptions.events = {
                 'wizard-canceled': wizardCanceled,
                 'wizard-submited': wizardSubmitted
               };
 
-              _this_.setOptions(resource, item, formMode, wizardMaxDepth);
-              return _this_.finish();
+              self.setOptions(resource, item, formMode, wizardMaxDepth);
+              return self.finish();
 
             }).catch(function(error) {
               // Process the reason
-              var errorMsg = "There is no " + resource.descriptor.name + " with the id: " + _this_.itemId;
-              _this_.finish(errorMsg);
+              var errorMsg = "There is no " + resource.descriptor.name + " with the id: " + self.itemId;
+              self.finish(errorMsg);
             })
           });
         }
