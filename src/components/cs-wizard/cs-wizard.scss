@@ -1,3 +1,24 @@
+
+.wizard-container {
+  position : fixed;
+  height : calc(100% - #{$navbar-height});
+}
+
+.middle {
+    display: table;
+    margin: 10px auto;
+}
+
+.aligner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.aligner-item {
+  min-width : 50%;
+}
+
 .cs-wizard {
   position: relative;
   left: 0px;
