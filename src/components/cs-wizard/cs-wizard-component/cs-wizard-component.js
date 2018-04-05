@@ -1,8 +1,8 @@
 var app
 
-app = angular.module("cloudStorm.wizardComponent", [])
+app = angular.module("cloudStorm.wizard", [])
 
-app.component("csWizardComponent", {
+app.component("csWizard", {
 
     bindings : {
         csWizardOptions: '=?',
