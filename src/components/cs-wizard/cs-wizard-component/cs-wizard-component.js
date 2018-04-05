@@ -9,15 +9,15 @@ app.component("csWizard", {
         panelNumberCallback: '=',
         pageType: "=",
         itemId: "=",
-        resourceType: "=",
+        resourceType: "=?",
     },
     templateUrl : "components/cs-wizard/cs-wizard-component/cs-wizard-component-template.html",
     controller : ['$scope', '$rootScope', 'ResourceService', '$document', 'csDescriptorService', 'csLog', 'csAlertService', 'csRoute', function($scope, $rootScope, ResourceService, $document, csDescriptorService, csLog, csAlertService, csRoute){
 
-      csLog.set(this, 'csWizardComponent', true)
+      csLog.set(this, 'csWizard')
 
       var self = this
-      var resource_type, wizardMaxDepth;
+      var formMode, item, resource, wizardMaxDepth;
 
       this.loading = true
       this.errors = []
@@ -48,18 +48,15 @@ app.component("csWizard", {
 
       //Runs on the development
       var override = null;
-
       this.$onInit = function() {
-
 
         if (this.csWizardOptions) {
           this.singlePage = false
           this.log("wizardOptions branch");
-          resource_type = this.csWizardOptions['resource-type'];
-          var resource = angular.copy(ResourceService.get(resource_type));
-          var item = this.csWizardOptions['form-item'];
-          var formMode = this.formMode || this.csWizardOptions['form-mode'];
-          var parent = null;
+          this.resourceType = this.csWizardOptions['resource-type'];
+          resource = angular.copy(ResourceService.get(this.resourceType));
+          item = this.csWizardOptions['form-item'];
+          formMode = this.formMode || this.csWizardOptions['form-mode'];
           wizardMaxDepth = this.csWizardOptions['max-depth'] || 5;
           if(this.csWizardOptions['resource-overrides']){
             override = this.csWizardOptions['resource-overrides'][resource_type]
@@ -67,51 +64,47 @@ app.component("csWizard", {
               override = override.directive;
             }
           }
-
           this.setOptions(resource, item, formMode, wizardMaxDepth, null, override);
           this.finish();
+
         } else {
 
-          var formMode, wizardMaxDepth;
+          //This branch sets the following fields of the csWizardOptions object:
+          // [form-mode, events]
 
-          this.singlePage = true
           this.log("singlePage branch");
+          this.singlePage = true
           this.csWizardOptions = {};
 
-          var formMode = this.pageType;
-          resource_type = this.resourceType;
-
-          if (formMode !== 'show' && formMode !== 'edit') {
+          if (this.pageType !== 'show' && this.pageType !== 'edit') {
             //It throws an error
             this.finish("'" + formMode + "' is not a valid page type!");
           }
 
-          wizardMaxDepth = 5;
-          this.csWizardOptions['form-mode'] = formMode
+          this.csWizardOptions['form-mode'] = this.pageType
 
-          var _resource_;
           csDescriptorService.getPromises()
           .then(function(){
             var error;
             try {
-              _resource_ = ResourceService.get(resource_type);
+              resource = ResourceService.get(self.resourceType);
             } catch (error) {
-              var errorMsg = "'" + resource_type + "' is not a registered resource.";
+              var errorMsg = "'" + self.resourceType + "' is not a registered resource.";
               self.finish(errorMsg);
             }
 
-            var resource = angular.copy(_resource_)
+            resource = angular.copy(resource)
 
             resource.$get(self.itemId, {include: '*'})
-            .then(function(_item_) {
+            .then(function(item) {
 
-              var item = _item_;
               var wizardCanceled = (function() {
                 return csRoute.go("index", {
                   resourceType: resource.descriptor.type
                 });
               }).bind(resource);
 
+              formMode = self.pageType
               var wizardSubmitted = (function() {
                 switch (formMode) {
                   case "create":
@@ -130,6 +123,7 @@ app.component("csWizard", {
                 'wizard-submited': wizardSubmitted
               };
 
+              wizardMaxDepth = 5;
               self.setOptions(resource, item, formMode, wizardMaxDepth);
               return self.finish();
 
@@ -198,7 +192,21 @@ app.component("csWizard", {
         }
       }).bind(this));
 
-      //$document.on('keydown', keyPressed);
+      var keyPressed = function(keyEvent) {
+        if (keyEvent.keyCode === 27) {
+          popPanel($scope);
+          if ($scope.panelStack.length === 0) {
+            notify_listeners($scope, 'wizard-canceled', null);
+          }
+          return $scope.$apply();
+        }
+      };
+
+      $document.on('keydown', keyPressed);
+
+      $scope.$on('$destroy', function() {
+        return $document.off('keydown', keyPressed);
+      });
 
       $scope.$on('$destroy', function() {
         return $document.off('keydown', keyPressed);
