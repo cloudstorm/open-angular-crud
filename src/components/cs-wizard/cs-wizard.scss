@@ -1,17 +1,17 @@
 
 .wizard-container {
-  position : fixed;
-  height : calc(100% - #{$navbar-height});
+  height: calc(100% - #{$navbar-height});
+  position: fixed;
 }
 
 .middle {
-    display: table;
-    margin: 10px auto;
+  display: table;
+  margin: 10px auto;
 }
 
 .aligner {
-  display: flex;
   align-items: center;
+  display: flex;
   justify-content: center;
 }
 
@@ -20,11 +20,11 @@
 }
 
 .cs-wizard {
-  position: relative;
-  left: 0px;
-  width: $wizard-width;
   height: 100%;
+  left: 0px;
   overflow-x: hidden;
+  position: relative;
+  width: $wizard-width;
 
   .form-panel {
     position: absolute;

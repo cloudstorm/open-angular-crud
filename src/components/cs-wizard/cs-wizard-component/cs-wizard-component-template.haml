@@ -3,8 +3,8 @@
   %div{ "ng-class" => "{'aligner-item' : $ctrl.singlePage }" }
     %div{ "ng-class" => "{ 'wizard-container' : $ctrl.singlePage }" }
       %div{ "ng-class" => "{ 'cs-wizard' : $ctrl.singlePage }" }
-        %cs-error{ "errors" => "$ctrl.errors"}
-        %cs-loader{ "enabled" => "$ctrl.loading"}
+        %cs-error{ "errors" => "$ctrl.errors" }
+        %cs-loader{ "enabled" => "$ctrl.loading" }
         .form-panel.animation{ "ng-if" => "!$ctrl.loading",
                                "ng-repeat" => "panel in $ctrl.panelStack track by $index",
                                "ng-init" => "panelIndex = $index",

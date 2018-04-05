@@ -11,9 +11,9 @@
   .navElement {
     color: #555555;
     display: block;
-    padding : 0 20px; //Aligns text horizontally center
-    height : $navbar-height;
+    height: $navbar-height;
     line-height: $navbar-height; //Aligns text vertically center
+    padding: 0 20px; //Aligns text horizontally center
   }
 
   .navElement:focus {
