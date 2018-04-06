@@ -11,13 +11,6 @@ app.component("csLoader", {
     },
     templateUrl : 'cs-utils/cs-loader/cs-loader-template.html',
     controller : [ 'csInputBase', function(csInputBase){
-
-      console.log("-------------- CS LOADER --------------")
-      this.x = "kutya"
       csInputBase(this)
-      this.testFunction = function(){
-        this.x = "mutya"
-      }
-      this.testFunction()
     }]
 })
