@@ -2,6 +2,7 @@ describe('csFilterRow', function(){
 
   var compile, $rootScope, $component, controller, csFilterRow;
 
+  var csResourceService;
   var element;
   var scope;
 
@@ -37,18 +38,19 @@ describe('csFilterRow', function(){
 
   var civilization = JSON.parse(civilizationRaw)
 
-  console.log("Civilization I")
-  console.log(JSON.stringify(civilization))
-
-
   var myService;
   var deferred;
   var csDescriptorService;
 
-  beforeEach(inject(function($q, _csDescriptorService_){
+  beforeEach(inject(function($q, _csDescriptorService_, _ResourceService_){
     deferred = $q.defer()
     csDescriptorService = _csDescriptorService_
+    csDescriptorService.registerDescriptor(civilization)
+
+    csResourceService = _ResourceService_
     //spyOn(csDescriptorService, '$onInit').and.callThrough();
+    var data = ['something', 'on', 'success'];
+    deferred.resolve(data);
     spyOn(csDescriptorService, 'getPromises').and.returnValue(deferred.promise);
   }))
 
@@ -63,6 +65,8 @@ describe('csFilterRow', function(){
       $scope: scope,
       csDescriptorService: csDescriptorService,
       $element: angular.element('<cs-filter-row></cs-filter-row>'),
+    }, {
+      resourceType: "civilizations"
     });
     csFilterRow.$onInit()
   }))
@@ -73,6 +77,14 @@ describe('csFilterRow', function(){
 
   it('csFilterRow controller exists', function(){
     expect(csFilterRow).toBeDefined();
+  })
+
+  it('set Descriptor setting', function(){
+    var data = ['something', 'on', 'success'];
+    deferred.resolve(data);
+    scope.$digest();
+    expect(csFilterRow.resource).toBeDefined()
+    //expect(csFilterRow.resource.descriptor.type).toBe("civilizations")
   })
 
   // beforeEach(inject(function($rootScope, $componentController, $compile){
@@ -90,10 +102,13 @@ describe('csFilterRow', function(){
 
   it('create resource', function(){
 
-    expect(csFilterRow.x).toBe("x")
-    //var civResource = csDescriptorService.registerDescriptor(civilization)
+    //expect(csFilterRow.x).toBe("x")
+    civResource = csDescriptorService.registerDescriptor(civilization)
     //expect(csResourceService.get("civilizations").descriptor.type).toEqual(civilization.type)
   })
+
+
+
 
   // var element, rootScope;
   // beforeEach(inject(function($rootScope, $compile){
