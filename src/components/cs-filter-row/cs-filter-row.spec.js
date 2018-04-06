@@ -2,7 +2,7 @@ describe('csFilterRow', function(){
 
   var compile, $rootScope, $component, controller, csFilterRow;
 
-  var csResourceService;
+  var ResourceService;
   var element;
   var scope;
 
@@ -46,7 +46,7 @@ describe('csFilterRow', function(){
     csDescriptorService = _csDescriptorService_
     csDescriptorService.registerDescriptor(civilization)
 
-    csResourceService = _ResourceService_
+    ResourceService = _ResourceService_
     //spyOn(csDescriptorService, '$onInit').and.callThrough();
     var data = ['something', 'on', 'success'];
     deferred.resolve(data);
@@ -63,8 +63,8 @@ describe('csFilterRow', function(){
     csFilterRow = $componentController('csFilterRow', {
       $scope: scope,
       csDescriptorService: csDescriptorService,
-      $element: angular.element('<cs-filter-row></cs-filter-row>'),
-    }, {
+      $element: angular.element('<div></div>')
+        }, {
       resourceType: "civilizations"
     });
     csFilterRow.$onInit()
@@ -92,6 +92,23 @@ describe('csFilterRow', function(){
 
   it('csFilterRow resource type matches', function(){
     expect(csFilterRow.resource.descriptor.type).toBe("civilizations")
+  })
+
+  /*
+   * Component testing
+   */
+  beforeEach(inject(function($rootScope, $compile){
+
+    scope = $rootScope.$new();
+    element = angular.element('<cs-filter-row resource="resource"></cs-filterRow>');
+    element = $compile(element)(scope);
+    //Setting scope variables
+    scope.resource = ResourceService.get("civilizations")
+    scope.$apply();
+  }))
+
+  it('Header text', function(){
+    expect(element.html()).toContain("Civilization");
   })
 
 })
