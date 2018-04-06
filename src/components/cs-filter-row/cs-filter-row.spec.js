@@ -60,6 +60,7 @@ describe('csFilterRow', function(){
   beforeEach(inject(function($rootScope, $componentController, $compile){
 
     scope = $rootScope.$new()
+
     csFilterRow = $componentController('csFilterRow', {
       $scope: scope,
       csDescriptorService: csDescriptorService,
@@ -99,16 +100,29 @@ describe('csFilterRow', function(){
    */
   beforeEach(inject(function($rootScope, $compile){
 
+    //refreshIndex="refreshSpy
     scope = $rootScope.$new();
     element = angular.element('<cs-filter-row resource="resource"></cs-filterRow>');
     element = $compile(element)(scope);
     //Setting scope variables
     scope.resource = ResourceService.get("civilizations")
+    scope.refreshSpy = function(){
+      console.log("call")
+    }
+    spyOn(scope, 'refreshSpy')
     scope.$apply();
   }))
 
   it('Header text', function(){
     expect(element.html()).toContain("Civilization");
   })
+
+  it('Find refresh button text', function(){
+    expect(element[0].querySelector('#refreshButton')).toBeDefined();
+  })
+
+  // it('Filter called', function(){
+  //   expect(scope, 'filterSpy').toHaveBeenCalled()
+  // })
 
 })
