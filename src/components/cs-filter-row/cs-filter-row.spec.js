@@ -113,7 +113,6 @@ describe('csFilterRow', function(){
     //   callback: jasmine.createSpy('callback')
     // };
 
-
   }))
 
 
@@ -133,11 +132,11 @@ describe('csFilterRow', function(){
     console.log("Controller", controller)
     //controller.refreshIndexII = jasmine.createSpy('refreshIndexII')
 
-    spyOn(controller, "refreshIndexII")
+    spyOn(controller, "refreshIndex_")
     scope.$digest()
     element[0].querySelector('#refreshButton').click()
 
-    expect(controller.refreshIndexII).toHaveBeenCalled();
+    expect(controller.refreshIndex_).toHaveBeenCalled();
   })
 
 
