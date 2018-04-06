@@ -98,31 +98,48 @@ describe('csFilterRow', function(){
   /*
    * Component testing
    */
+   var controller;
   beforeEach(inject(function($rootScope, $compile){
 
-    //refreshIndex="refreshSpy
     scope = $rootScope.$new();
-    element = angular.element('<cs-filter-row resource="resource"></cs-filterRow>');
+    element = angular.element('<cs-filter-row resource="resource", ></cs-filterRow>');
     element = $compile(element)(scope);
+
     //Setting scope variables
     scope.resource = ResourceService.get("civilizations")
-    scope.refreshSpy = function(){
-      console.log("call")
-    }
-    spyOn(scope, 'refreshSpy')
     scope.$apply();
+    //
+    // scope.ctrl = {
+    //   callback: jasmine.createSpy('callback')
+    // };
+
+
   }))
+
 
   it('Header text', function(){
     expect(element.html()).toContain("Civilization");
   })
 
+  var refreshButton
   it('Find refresh button text', function(){
-    expect(element[0].querySelector('#refreshButton')).toBeDefined();
+    refreshButton = element[0].querySelector('#refreshButton')
+    expect(refreshButton).toBeDefined();
+  })
+  //
+
+  it('Find refresh button text II', function(){
+    controller = element.controller('csFilterRow');
+    console.log("Controller", controller)
+    //controller.refreshIndexII = jasmine.createSpy('refreshIndexII')
+
+    spyOn(controller, "refreshIndexII")
+    scope.$digest()
+    element[0].querySelector('#refreshButton').click()
+
+    expect(controller.refreshIndexII).toHaveBeenCalled();
   })
 
-  // it('Filter called', function(){
-  //   expect(scope, 'filterSpy').toHaveBeenCalled()
-  // })
+
 
 })
