@@ -108,13 +108,8 @@ describe('csFilterRow', function(){
     //Setting scope variables
     scope.resource = ResourceService.get("civilizations")
     scope.$apply();
-    //
-    // scope.ctrl = {
-    //   callback: jasmine.createSpy('callback')
-    // };
 
   }))
-
 
   it('Header text', function(){
     expect(element.html()).toContain("Civilization");
@@ -125,20 +120,14 @@ describe('csFilterRow', function(){
     refreshButton = element[0].querySelector('#refreshButton')
     expect(refreshButton).toBeDefined();
   })
-  //
 
-  it('Find refresh button text II', function(){
+  it('Find the refresh button text II', function(){
     controller = element.controller('csFilterRow');
-    console.log("Controller", controller)
-    //controller.refreshIndexII = jasmine.createSpy('refreshIndexII')
-
     spyOn(controller, "refreshIndex_")
     scope.$digest()
     element[0].querySelector('#refreshButton').click()
-
     expect(controller.refreshIndex_).toHaveBeenCalled();
   })
-
 
 
 })
