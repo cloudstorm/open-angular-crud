@@ -39,7 +39,6 @@ describe('csFilterRow', function(){
   var civilization = JSON.parse(civilizationRaw)
 
   var myService;
-  var deferred;
   var csDescriptorService;
 
   beforeEach(inject(function($q, _csDescriptorService_, _ResourceService_){
@@ -79,58 +78,20 @@ describe('csFilterRow', function(){
     expect(csFilterRow).toBeDefined();
   })
 
-  it('set Descriptor setting', function(){
-    var data = ['something', 'on', 'success'];
-    deferred.resolve(data);
+  beforeEach(inject(function(){
+    //This line makes the csDescriptorService.getPromises promise to run
+    deferred.resolve();
+    //The csFilterRow controller runs the $onInit()
     scope.$digest();
+  }))
+
+  it('csFilterRow resource exists', function(){
+    //It is set in the $onInit
     expect(csFilterRow.resource).toBeDefined()
-    //expect(csFilterRow.resource.descriptor.type).toBe("civilizations")
   })
 
-  // beforeEach(inject(function($rootScope, $componentController, $compile){
-  //
-  //   scope = $rootScope.$new()
-  //   csFilterRow = $componentController('csFilterRow', {
-  //     $scope: scope,
-  //     csDescriptorService: csDescriptorService,
-  //     $element: angular.element('<cs-filter-row></cs-filter-row>'),
-  //   }, {
-  //
-  //   });
-  //   csFilterRow.$onInit()
-  // }))
-
-  it('create resource', function(){
-
-    //expect(csFilterRow.x).toBe("x")
-    civResource = csDescriptorService.registerDescriptor(civilization)
-    //expect(csResourceService.get("civilizations").descriptor.type).toEqual(civilization.type)
+  it('csFilterRow resource type matches', function(){
+    expect(csFilterRow.resource.descriptor.type).toBe("civilizations")
   })
 
-
-
-
-  // var element, rootScope;
-  // beforeEach(inject(function($rootScope, $compile){
-  //
-  //   rootScope = $rootScope
-  //   scope = $rootScope.$new();
-  //   element = angular.element('<cs-filter-row resource="inputresource"></cs-filter-row>');
-  //   //element = angular.element('<cs-filter-row></cs-filter-row>');
-  //   element = $compile(element)(scope);
-  //   scope.outside = '1.5';
-  //
-  //   scope.inputresource = {
-  //     descriptor : {
-  //       name : "Kutya"
-  //     }
-  //   }
-  //   scope.$apply();
-  //
-  // }));
-  //
-  // it('UI test', function(){
-  //   rootScope.$digest()
-  //   expect(element.html()).toContain("Kutya");
-  // })
 })
