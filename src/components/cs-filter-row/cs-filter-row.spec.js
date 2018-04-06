@@ -33,27 +33,57 @@ describe('csFilterRow', function(){
   //   expect(controller).toBeDefined()
   // })
 
-  var element, rootScope;
-  beforeEach(inject(function($rootScope, $compile){
+  var myService;
+  var deferred;
+  var csDescriptorService;
 
-    rootScope = $rootScope
-    scope = $rootScope.$new();
-    element = angular.element('<cs-filter-row resource="{{inputresource}}"></cs-filter-row>');
-    //element = angular.element('<cs-filter-row></cs-filter-row>');
-    element = $compile(element)(scope);
-    scope.outside = '1.5';
+  beforeEach(inject(function($q, _csDescriptorService_){
+    deferred = $q.defer()
+    csDescriptorService = _csDescriptorService_
+    //spyOn(csDescriptorService, '$onInit').and.callThrough();
+    spyOn(csDescriptorService, 'getPromises').and.returnValue(deferred.promise);
+  }))
 
-    scope.inputresource = {
-      descriptor : {
-        name : "Kutya"
-      }
-    }
-    scope.$apply();
-
-  }));
-
-  it('UI test', function(){
-    rootScope.$digest()
-    expect(element.html()).toContain("Kutya");
+  it("descriptorService", function(){
+    expect(csDescriptorService).toBeDefined()
   })
+
+  beforeEach(inject(function($rootScope, $componentController, $compile){
+
+    scope = $rootScope.$new()
+    csFilterRow = $componentController('csFilterRow', {
+      $scope: scope,
+      csDescriptorService: csDescriptorService,
+      $element: angular.element('<div></div>'),
+    });
+    csFilterRow.$onInit()
+  }))
+
+  it('getPromises called', function(){
+    expect(csDescriptorService.getPromises).toHaveBeenCalled();
+  })
+
+  // var element, rootScope;
+  // beforeEach(inject(function($rootScope, $compile){
+  //
+  //   rootScope = $rootScope
+  //   scope = $rootScope.$new();
+  //   element = angular.element('<cs-filter-row resource="inputresource"></cs-filter-row>');
+  //   //element = angular.element('<cs-filter-row></cs-filter-row>');
+  //   element = $compile(element)(scope);
+  //   scope.outside = '1.5';
+  //
+  //   scope.inputresource = {
+  //     descriptor : {
+  //       name : "Kutya"
+  //     }
+  //   }
+  //   scope.$apply();
+  //
+  // }));
+  //
+  // it('UI test', function(){
+  //   rootScope.$digest()
+  //   expect(element.html()).toContain("Kutya");
+  // })
 })
