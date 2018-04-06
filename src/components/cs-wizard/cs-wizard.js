@@ -14,16 +14,15 @@ app.component("csWizard", {
     templateUrl : "components/cs-wizard/cs-wizard-template.html",
     controller : ['$scope', 'ResourceService', '$document', 'csDescriptorService', 'csLog', 'csAlertService', 'csRoute', function($scope, ResourceService, $document, csDescriptorService, csLog, csAlertService, csRoute){
 
-      csLog.set(this, 'csWizard')
+      csLog.set(this, 'csWizard');
 
-      var self = this
+      var self = this;
       var formMode, item, resource, wizardMaxDepth;
 
-      this.loading = true
-      this.errors = []
+      this.loading = true;
+      this.errors = [];
 
-      this.setOptions = function(resource, item, formMode, wizardMaxDepth, parent, directive){
-
+      this.setOptions = function(resource, item, formMode, wizardMaxDepth, parent, directive) {
         this.log("setOptions");
         var panelDescriptor = {
           resource: resource,
@@ -34,10 +33,9 @@ app.component("csWizard", {
           directive: directive
         };
         this.panelStack = [panelDescriptor];
-      }
+      };
 
       this.finish = function(error) {
-
         this.log("finished: " + error);
         this.loading = false;
         if (error) {
@@ -49,7 +47,6 @@ app.component("csWizard", {
       //Runs on the development
       var override = null;
       this.$onInit = function() {
-
         if (this.csWizardOptions) {
           this.singlePage = false
           this.log("wizardOptions branch");
@@ -66,25 +63,19 @@ app.component("csWizard", {
           }
           this.setOptions(resource, item, formMode, wizardMaxDepth, null, override);
           this.finish();
-
         } else {
-
           //This branch sets the following fields of the csWizardOptions object:
           // [form-mode, events]
-
           this.log("singlePage branch");
           this.singlePage = true
           this.csWizardOptions = {};
-
           if (this.pageType !== 'show' && this.pageType !== 'edit') {
             //It throws an error
             this.finish("'" + formMode + "' is not a valid page type!");
           }
+          this.csWizardOptions['form-mode'] = this.pageType;
 
-          this.csWizardOptions['form-mode'] = this.pageType
-
-          csDescriptorService.getPromises()
-          .then(function(){
+          csDescriptorService.getPromises().then(function() {
             var error;
             try {
               resource = ResourceService.get(self.resourceType);
@@ -93,18 +84,14 @@ app.component("csWizard", {
               self.finish(errorMsg);
             }
 
-            resource = angular.copy(resource)
-
-            resource.$get(self.itemId, {include: '*'})
-            .then(function(item) {
-
+            resource = angular.copy(resource);
+            resource.$get(self.itemId, { include: '*' }).then(function(item) {
               var wizardCanceled = (function() {
                 return csRoute.go("index", {
                   resourceType: resource.descriptor.type
                 });
               }).bind(resource);
-
-              formMode = self.pageType
+              formMode = self.pageType;
               var wizardSubmitted = (function() {
                 switch (formMode) {
                   case "create":
@@ -117,16 +104,13 @@ app.component("csWizard", {
                   resourceType: resource.descriptor.type
                 });
               }).bind(formMode, resource);
-
               self.csWizardOptions.events = {
                 'wizard-canceled': wizardCanceled,
                 'wizard-submited': wizardSubmitted
               };
-
               wizardMaxDepth = 5;
               self.setOptions(resource, item, formMode, wizardMaxDepth);
               return self.finish();
-
             }).catch(function(error) {
               // Process the reason
               var errorMsg = "There is no " + resource.descriptor.name + " with the id: " + self.itemId;
@@ -208,10 +192,6 @@ app.component("csWizard", {
         return $document.off('keydown', keyPressed);
       });
 
-      $scope.$on('$destroy', function() {
-        return $document.off('keydown', keyPressed);
-      });
-
       this.shouldShowNewButton = function() {
         if (this.panelStack.length >= wizardMaxDepth) {
           return false;
@@ -232,7 +212,6 @@ app.component("csWizard", {
       };
 
       this.pushPanel = function(resource_type, attribute, parent) {
-
         var override, panelIndex;
         panelIndex = this.panelStack.length - 1;
         _.forEach(this.panelStack[panelIndex].resource.descriptor.fields, function(value) {
@@ -289,7 +268,6 @@ app.component("csWizard", {
       };
 
       this.popPanel = function() {
-
         var panelIndex;
         this.panelStack.pop();
         panelIndex = this.panelStack.length - 1;
@@ -312,7 +290,6 @@ app.component("csWizard", {
       };
 
       this.notify_listeners = function($scope, event, resource) {
-
         $scope.$emit(event);
         if (this.csWizardOptions && this.csWizardOptions.events) {
           if (this.csWizardOptions.events[event]) {

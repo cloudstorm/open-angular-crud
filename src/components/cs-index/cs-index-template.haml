@@ -12,17 +12,16 @@
       .well.well-lg{ "ng-show" => "$ctrl.listIsEmpty()" }
         {{$ctrl.header}} {{ $ctrl.i18n.t('index.empty') }}
       %cs-table-container{ "ng-show" => "!$ctrl.listIsEmpty()",
-                          "ng-class" => "{ 'col-lg-8' : $ctrl.sidePanelIsVisible() && !$ctrl.viewIsCompressed(),
-                                           'col-lg-6' : $ctrl.viewIsCompressed() }",
-                          "resource" => "$ctrl.resource",
-                          "collection" => "$ctrl.items",
-                          "columns" => "$ctrl.columns",
-                          "cs-index-options" => "$ctrl.csIndexOptions",
-                          "column-visible_" => "$ctrl.columnVisible(column, index)",
-                          "show-item_" => "$ctrl.showItem(item)",
-                          "select-item_" => "$ctrl.selectItem(item)",
-                          "destroy-item_" => "$ctrl.destroyItem(event, item)" }
-
+                           "ng-class" => "{ 'col-lg-8' : $ctrl.sidePanelIsVisible() && !$ctrl.viewIsCompressed(),
+                                            'col-lg-6' : $ctrl.viewIsCompressed() }",
+                           "resource" => "$ctrl.resource",
+                           "collection" => "$ctrl.items",
+                           "columns" => "$ctrl.columns",
+                           "cs-index-options" => "$ctrl.csIndexOptions",
+                           "column-visible_" => "$ctrl.columnVisible(column, index)",
+                           "show-item_" => "$ctrl.showItem(item)",
+                           "select-item_" => "$ctrl.selectItem(item)",
+                           "destroy-item_" => "$ctrl.destroyItem(event, item)" }
       %cs-index-sidepanel{ "ng-if" => "$ctrl.sidePanelIsVisible() && !$ctrl.loading",
                            "cs-index-sidepanel-options" => "$ctrl.csIndexOptions",
                            "resource-type" => "$ctrl.resourceType",
