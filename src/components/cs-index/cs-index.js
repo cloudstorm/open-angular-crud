@@ -230,7 +230,7 @@ app.component('csIndex', {
         keyboard: false,
         backdrop: 'static',
         windowTopClass: 'modal-wizard',
-        template: "<div cs-wizard cs-wizard-options=$ctrl.wizardOptions></div>",
+        template: "<cs-wizard cs-wizard-options=$ctrl.wizardOptions></cs-wizard>",
         resolve: {
           dummy: function() {
             return $scope.dummy;
