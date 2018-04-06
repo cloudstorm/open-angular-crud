@@ -4,7 +4,7 @@ app = angular.module('cloudStorm.form', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csForm", ['csSettings', (csSettings) ->
+app.directive "csForm", ['csSettings', 'csLog', (csSettings, csLog) ->
 
   # ===== COMPILE =============================================================
 
@@ -26,9 +26,14 @@ app.directive "csForm", ['csSettings', (csSettings) ->
 
   link = ($scope, element, attrs, controller) ->
 
+    csLog.set($scope, "csForm")
+    #csLog.enable($scope)
+
     $scope.i18n = csSettings.settings['i18n-engine']
 
     $scope.fields = $scope.formResourceDescriptor.fields
+
+    $scope.log("Start")
 
     if $scope.formMode == 'create'
       if $scope.formItem
@@ -102,6 +107,7 @@ app.directive "csForm", ['csSettings', (csSettings) ->
         api_action = $scope.editableItem.$create
 
       api_action.call($scope.editableItem).then(
+
         # successCallback
         (item) ->
 

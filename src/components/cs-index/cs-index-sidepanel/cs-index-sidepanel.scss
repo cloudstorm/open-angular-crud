@@ -17,6 +17,9 @@
   }
 
   .cs-wizard {
+    width: auto;
+    max-width: $wizard-width;
+
     .form-panel {
       height: auto; // buttons (Save, Cancel) are better (?) positioned this way
       padding-top: 0;

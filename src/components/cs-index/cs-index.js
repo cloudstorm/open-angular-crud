@@ -14,8 +14,11 @@ app.component('csIndex', {
 
   templateUrl : 'components/cs-index/cs-index-template.html',
   controller : ['$scope', '$document', '$timeout', 'ResourceService','csSettings','$uibModal','csAlertService','csDescriptorService','csRoute', function($scope, $document, $timeout, ResourceService, csSettings, $uibModal, csAlertService, csDescriptorService, csRoute){
+
     var vm = this;
-    this.loading = false;
+
+    this.pageLoading = true
+    this.tableLoading = false
 
     this.$onChanges = function(changesObj) {
       if (changesObj.items && changesObj.items.currentValue && changesObj.items.previousValue != changesObj.items.currentValue) {
@@ -27,17 +30,22 @@ app.component('csIndex', {
     }
 
     this.loadData = function() {
-      this.loading = true;
+      if(!this.pageLoading) this.tableLoading = true;
       csDescriptorService.getPromises().then( function() {
         return vm.resource.$index({ include: '*'}).then( function(items) {
           vm.items = items;
-          vm.loading = false;
+          vm.loaded()
         }).catch(function(error) {
           // TODO: log or throw - handle this error somehow
           vm.items = null;
-          vm.loading = false;
+          vm.loaded()
         })
       });
+    }
+
+    this.loaded = function(){
+      vm.pageLoading = false;
+      vm.tableLoading = false
     }
 
     this.$onInit = function() {
@@ -61,6 +69,8 @@ app.component('csIndex', {
         // Load resource and items when not bound (index-only mode)
         if (!vm.resource) {
           vm.resource = ResourceService.get(vm.resourceType);
+          vm.csIndexOptions['hide-attributes'] = vm.resource.descriptor.attributes_to_hide || {}
+          vm.csIndexOptions['sortAttribute'] = vm.resource.descriptor.fields[0].attribute
         }
         if (!vm.items) {
           // console.log("CS-INDEX: onInit()")
@@ -220,7 +230,7 @@ app.component('csIndex', {
         keyboard: false,
         backdrop: 'static',
         windowTopClass: 'modal-wizard',
-        template: "<div cs-wizard cs-wizard-options=$ctrl.wizardOptions></div>",
+        template: "<cs-wizard cs-wizard-options=$ctrl.wizardOptions></cs-wizard>",
         resolve: {
           dummy: function() {
             return $scope.dummy;

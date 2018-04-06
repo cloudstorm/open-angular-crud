@@ -37,10 +37,10 @@ app = angular.module 'cloudStorm', [
   'cloudStorm.templateService'
   'cloudStorm.templates'
   'cloudStorm.descriptorService'
+  'cloudStorm.log'
   'ui.router'
   'cloudStorm.routeProvider'
   'ui.bootstrap'
   'cloudStorm.loader'
   'cloudStorm.error'
-  'cloudStorm.uiPageRouter'
 ]

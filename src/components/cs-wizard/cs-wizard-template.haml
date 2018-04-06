@@ -1,7 +1,27 @@
-.form-panel.animation{ "ng-repeat" => "panel in panelStack track by $index",
-                       "ng-init" => "panelIndex = $index",
-                       "ng-class" => "{'active' : $index==panelStack.length-1,
-                        'pre-hover' : panel.hoverOrder < 0,
-                        'hover' : panel.hoverOrder==0, 'post-hover' : panel.hoverOrder > 0 }",
-                       "ng-mouseover" => "panelHover($index)" }
-  %cs-wizard-panel
+%div{ "ng-class" => "{'aligner' : $ctrl.singlePage,
+       'cs-wizard' : !$ctrl.singlePage }" }
+  %div{ "ng-class" => "{'aligner-item' : $ctrl.singlePage }" }
+    %div{ "ng-class" => "{ 'wizard-container' : $ctrl.singlePage }" }
+      %div{ "ng-class" => "{ 'cs-wizard' : $ctrl.singlePage }" }
+        %cs-error{ "errors" => "$ctrl.errors" }
+        %cs-loader{ "enabled" => "$ctrl.loading" }
+        .form-panel.animation{ "ng-if" => "!$ctrl.loading",
+                               "ng-repeat" => "panel in $ctrl.panelStack track by $index",
+                               "ng-init" => "panelIndex = $index",
+                               "ng-class" => "{'active' : $index==$ctrl.panelStack.length-1,
+                                'pre-hover' : panel.hoverOrder < 0,
+                                'hover' : panel.hoverOrder==0, 'post-hover' : panel.hoverOrder > 0 }",
+                               "ng-mouseover" => "$ctrl.panelHover($index)" }
+          %div{ "cs-form" => "",
+               "form-resource" => "panel.resource",
+               "subform-attribute" => "panel.attribute",
+               "form-resource-descriptor" => "$ctrl.resource_descriptor(panel)",
+               "form-item" => "panel.item",
+               "form-parent" => "panel.parent",
+               "form-mode" => "{{panel.formMode}}",
+               "wizard-panel-index" => "panelIndex",
+               "cs-form-options" => "$ctrl.csWizardOptions",
+               "create-resources" => "$ctrl.shouldShowNewButton()",
+               "role" => 'form',
+               "autocomplete" => "off",
+               'ng-class' => '$ctrl.csWizardOptions["form-class"]' }

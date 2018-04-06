@@ -1,9 +1,31 @@
+
+.wizard-container {
+  height: calc(100% - #{$navbar-height});
+  position: fixed;
+}
+
+.middle {
+  display: table;
+  margin: 10px auto;
+}
+
+.aligner {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.aligner-item {
+  min-width : 50%;
+}
+
 .cs-wizard {
-  position: relative;
-  left: 0px;
-  width: $wizard-width;
   height: 100%;
+  left: 0px;
   overflow-x: hidden;
+  position: relative;
+  width: $wizard-width;
+  max-width: $wizard-width;
 
   .form-panel {
     position: absolute;
@@ -11,17 +33,19 @@
     height: 100%;
     top: 0px;
     left: 0px;
-    padding: 15px;
+
+    .cs-form {
+      padding: 15px;
+    }
 
     // Create CSS rules n panels deep
     $wizard-max-depth: 5;  // NB! duplicated in JS
     $form-base-margin: 100px;
     $peek-width: 50px;
 
-    @for $i from 1 through $wizard-max-depth {
+    @for $i from 1 through ($wizard-max-depth + 3) {
 
       &:nth-child(#{$i}) {
-        // margin-left: 75px * $i;
         background-color: white;
         border-radius: 6px;
         z-index: $i;
@@ -30,15 +54,19 @@
           @include cs-panel-shadow;
 
           &.pre-hover {
-            margin-left: ($form-base-margin - $peek-width) * $i;
+            margin-left: ($form-base-margin - $peek-width) * ($i - 3);
           }
 
           &.hover {
-            margin-left: ($form-base-margin - $peek-width) * $i;
+            margin-left: ($form-base-margin - $peek-width) * ($i - 3);
           }
 
           &.post-hover {
-            margin-left: ($form-base-margin) * $i;
+            margin-left: calc(100% - #{$peek-width * ($wizard-max-depth + 3 - $i)});
+          }
+
+          .cs-form {
+            width: calc(100% - #{($form-base-margin - $peek-width) * ($i - 3)});
           }
         }
       }

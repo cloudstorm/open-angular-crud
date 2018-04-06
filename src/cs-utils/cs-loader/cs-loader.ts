@@ -8,6 +8,7 @@ app.component("csLoader", {
   bindings : {
       color : '<',
       radius : '<',
+      enabled : "<",
     },
     templateUrl : 'cs-utils/cs-loader/cs-loader-template.html',
     controller : [ 'csInputBase', function(csInputBase){
