@@ -13,10 +13,12 @@
               :type => "text" }
 
       %button.btn.btn-default{ :type => "button",
+                               :id => "refreshButton",
                                "ng-click" => "$ctrl.refreshIndex_()" }
         %span.glyphicon.glyphicon-refresh
 
       %button.btn.btn-primary.create-button{ :type => "button",
+                                 :id => "openNewButton",
                                  "ng-click" => "$ctrl.openNewResourcePanel_()",
                                  "ng-disabled" => "$ctrl.createDisabled" }
         {{ $ctrl.i18n.t('buttons.new') }}
