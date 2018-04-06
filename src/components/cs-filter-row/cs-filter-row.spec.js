@@ -108,7 +108,7 @@ describe('csFilterRow', function(){
     //Setting scope variables
     scope.resource = ResourceService.get("civilizations")
     scope.$apply();
-
+    controller = element.controller('csFilterRow');
   }))
 
   it('Header text', function(){
@@ -121,13 +121,20 @@ describe('csFilterRow', function(){
     expect(refreshButton).toBeDefined();
   })
 
-  it('Find the refresh button text II', function(){
-    controller = element.controller('csFilterRow');
-    spyOn(controller, "refreshIndex_")
-    scope.$digest()
-    element[0].querySelector('#refreshButton').click()
-    expect(controller.refreshIndex_).toHaveBeenCalled();
-  })
+  var clickTests = {
+    "refreshButton": "$ctrl.refreshIndex_",
+    "openNewButton": "openNewResourcePanel_"
+  }
+
+  for(buttonID in clickTests){
+    var fcn = clickTests[buttonID]
+    it('Click test : #' + buttonID, function(){
+      spyOn(controller, fcn)
+      scope.$digest()
+      element[0].querySelector('#' + buttonID).click()
+      expect(controller[fcn]).toHaveBeenCalled();
+    })
+  }
 
 
 })
