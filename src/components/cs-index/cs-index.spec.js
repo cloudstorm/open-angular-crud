@@ -132,22 +132,6 @@ describe('csIndex', function(){
     expect(controller.openNewResourcePanel).toHaveBeenCalled()
   })
 
-  // it('refresh button', function(){
-  //   element[0].querySelector('#refreshButton').click()
-  // })
-
-  it('#' + buttonID + " - exists!", function(){
-    expect(element[0].querySelector('#testClick')).toBeDefined();
-  })
-
-  it('#' + buttonID + ' - click works!', function(){
-    spyOn(controller, 'openNewResourcePanel')
-    scope.$digest()
-    element[0].querySelector('#testClick').click()
-    expect(controller.openNewResourcePanel).toHaveBeenCalled();
-  })
-
-
   // var indexClickTests = {
   //   "testClick": "openNewResourcePanel"
   // }
