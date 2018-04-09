@@ -10,7 +10,7 @@ describe('csIndex', function(){
   var controller;
   var deferred;
   var $uibModal;
-
+  var scope;
   var element;
 
   var inj = {
@@ -82,15 +82,6 @@ describe('csIndex', function(){
     // // });
     // csDescriptorService.registerDescriptor(civilization)
 
-    //scope = _$rootScope_.$new();
-    //element = angular.element('<cs-index resource="resource"></cs-index>');
-    //element = _$compile_(element)(scope);
-
-    // //Setting scope variables
-    //scope.resourceType = "civilizations" //= ResourceService.get("civilizations")
-    //scope.resourceType = ResourceService.get("civilizations")
-    //scope.$apply();
-    // controller = element.controller('csFilterRow');
   }))
 
   //Index component controller
@@ -134,31 +125,51 @@ describe('csIndex', function(){
     expect(element.html()).toContain("Civilization");
   })
 
+  it('call controller function', function(){
+    spyOn(controller, 'openNewResourcePanel')
+    scope.$digest()
+    controller.openNewResourcePanel()
+    expect(controller.openNewResourcePanel).toHaveBeenCalled()
+  })
+
   // it('refresh button', function(){
   //   element[0].querySelector('#refreshButton').click()
   // })
 
-  var clickTests = {
-    "refreshButton": "refreshIndex",
-    "openNewButton": "openNewResourcePanel"
-  }
+  it('#' + buttonID + " - exists!", function(){
+    expect(element[0].querySelector('#testClick')).toBeDefined();
+  })
 
-  for(buttonID in clickTests){
+  it('#' + buttonID + ' - click works!', function(){
+    spyOn(controller, 'openNewResourcePanel')
+    scope.$digest()
+    element[0].querySelector('#testClick').click()
+    expect(controller.openNewResourcePanel).toHaveBeenCalled();
+  })
 
-    console.log(angular.isArray(element))
-    it('#' + buttonID + " - exists!", function(){
-      var button = element[0].querySelector('#' + buttonID)
-      expect(button).toBeDefined();
-    })
 
-    var fcn = clickTests[buttonID]
-    it('#' + buttonID + ' - click works!', function(){
-      spyOn(controller, fcn)
-      scope.$digest()
-      element.querySelector('#' + buttonID).click()
-      expect(controller[fcn]).toHaveBeenCalled();
-    })
-  }
+  // var indexClickTests = {
+  //   "testClick": "openNewResourcePanel"
+  // }
+  //
+  //
+  // var xElement = element
+  // var xController = controller
+  // for(buttonID in indexClickTests){
+  //
+  //   console.log(angular.isArray(element))
+  //   it('#' + buttonID + " - exists!", function(){
+  //     expect(xElement[0].querySelector('#' + buttonID)).toBeDefined();
+  //   })
+  //
+  //   var indexFcn = indexClickTests[buttonID]
+  //   it('#' + buttonID + ' - click works!', function(){
+  //     spyOn(controller, indexFcn)
+  //     scope.$digest()
+  //     xElement[0].querySelector('#' + buttonID).click()
+  //     expect(xController[indexFcn]).toHaveBeenCalled();
+  //   })
+  // }
 
   // it('index controller', function(){
   //   expect(indexController).toBeDefined()
