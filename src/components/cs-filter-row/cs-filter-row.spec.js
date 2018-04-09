@@ -86,7 +86,7 @@ describe('csFilterRow', function(){
   beforeEach(inject(function($rootScope, $compile){
 
     scope = $rootScope.$new();
-    element = angular.element('<cs-filter-row resource="resource"></cs-filterRow>');
+    element = angular.element('<cs-filter-row resource="resource", ></cs-filterRow>');
     element = $compile(element)(scope);
 
     //Setting scope variables
@@ -106,13 +106,9 @@ describe('csFilterRow', function(){
   })
 
   var clickTests = {
-    "refreshButton": "refreshIndex_",
+    "refreshButton": "$ctrl.refreshIndex_",
     "openNewButton": "openNewResourcePanel_"
   }
-
-  /*
-   * Click tests
-   */
 
   for(buttonID in clickTests){
     var fcn = clickTests[buttonID]
