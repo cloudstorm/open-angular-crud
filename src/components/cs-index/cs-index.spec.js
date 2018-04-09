@@ -9,8 +9,18 @@ describe('csIndex', function(){
   var loadDataSpy;
   var controller;
   var deferred;
+  var $uibModal;
+
+  var element;
+
+  var inj = {
+    "uibModal" : null,
+  }
+
+  //beforeEach(module("$uibModal"))
 
   beforeEach(angular.mock.module('hamlTemplates'));
+  beforeEach(angular.mock.module('ui.bootstrap'))
 
   beforeEach(angular.mock.module('cloudStorm.localizationProvider'));
   beforeEach(angular.mock.module('cloudStorm.resource'))
@@ -36,7 +46,14 @@ describe('csIndex', function(){
   //   csDescriptorService.registerDescriptor(civilization)
   // }))
 
-  beforeEach(inject(function($q, _csDescriptorService_, _ResourceService_){
+  //beforeEach(inject(function($q, _$uibModal_, _csDescriptorService_, _ResourceService_){
+  beforeEach(inject(function($q, _$uibModal_, _csDescriptorService_, _ResourceService_){
+
+    // inj.uibModal = _$uibModal_
+    // console.log("---------------------------------------------")
+    // console.log(_$uibModal_)
+    $uibModal = _$uibModal_
+    spyOn($uibModal, 'open')
 
     csDescriptorService = _csDescriptorService_
     csDescriptorService.registerDescriptor(civilization)
@@ -47,6 +64,16 @@ describe('csIndex', function(){
     deferred.resolve(data);
     spyOn(csDescriptorService, 'getPromises').and.returnValue(deferred.promise);
   }))
+
+  // it('uibModal defined', function(){
+  //   expect(inj.uibModal).toBeDefined()
+  // })
+
+  // for(key in inj){
+  //   it(key + " is defined", function(){
+  //     expect(inj[key]).toBeDefined()
+  //   })
+  // }
 
   it('ResourceService defined', function(){
     expect(ResourceService).toBeDefined()
@@ -81,28 +108,31 @@ describe('csIndex', function(){
   }))
 
   //Index component controller
-  beforeEach(inject(function($rootScope, $componentController, $compile){
+  // beforeEach(inject(function($rootScope, $componentController, $uibModal, $compile){
+  //
+  //   uibModal = $uibModal
+  //   scope = $rootScope.$new()
+  //   csIndex = $componentController('csIndex', {
+  //     $scope: scope,
+  //     csDescriptorService: csDescriptorService,
+  //     $uibModal : inj.uibModal,
+  //     //ResourceService: ResourceService,
+  //     $element: angular.element('<div></div>')
+  //       }, {
+  //     resourceType: "civilizations"
+  //   });
+  //   csIndex.$onInit()
+  // }))
 
-    scope = $rootScope.$new()
-    csIndex = $componentController('csIndex', {
-      $scope: scope,
-      csDescriptorService: csDescriptorService,
-      //ResourceService: ResourceService,
-      $element: angular.element('<div></div>')
-        }, {
-      resourceType: "civilizations"
-    });
-    csIndex.$onInit()
-  }))
 
   beforeEach(inject(function($compile, $rootScope, $componentController){
 
     scope = $rootScope.$new();
     element = angular.element('<cs-index resource="resource"></cs-index>');
+    //angular.extend(scope, _$uibModal_)
     element = $compile(element)(scope);
 
     //Setting scope variables
-    scope.resourceType = "civilizations" //= ResourceService.get("civilizations")
     scope.resource = ResourceService.get("civilizations")
     scope.$apply();
     controller = element.controller('csFilterRow');
