@@ -110,12 +110,10 @@ describe('csIndex', function(){
   //   csIndex.$onInit()
   // }))
 
-
   beforeEach(inject(function($compile, $rootScope, $componentController){
 
     scope = $rootScope.$new();
     element = angular.element('<cs-index resource="resource"></cs-index>');
-    //angular.extend(scope, _$uibModal_)
     element = $compile(element)(scope);
 
     //Setting scope variables
@@ -128,6 +126,10 @@ describe('csIndex', function(){
     expect(controller).toBeDefined()
   })
 
+  it('csIndex element', function(){
+    expect(element).toBeDefined()
+  })
+
   it('Header text', function(){
     expect(element.html()).toContain("Civilization");
   })
@@ -135,6 +137,28 @@ describe('csIndex', function(){
   // it('refresh button', function(){
   //   element[0].querySelector('#refreshButton').click()
   // })
+
+  var clickTests = {
+    "refreshButton": "refreshIndex",
+    "openNewButton": "openNewResourcePanel"
+  }
+
+  for(buttonID in clickTests){
+
+    console.log(angular.isArray(element))
+    it('#' + buttonID + " - exists!", function(){
+      var button = element[0].querySelector('#' + buttonID)
+      expect(button).toBeDefined();
+    })
+
+    var fcn = clickTests[buttonID]
+    it('#' + buttonID + ' - click works!', function(){
+      spyOn(controller, fcn)
+      scope.$digest()
+      element.querySelector('#' + buttonID).click()
+      expect(controller[fcn]).toHaveBeenCalled();
+    })
+  }
 
   // it('index controller', function(){
   //   expect(indexController).toBeDefined()
