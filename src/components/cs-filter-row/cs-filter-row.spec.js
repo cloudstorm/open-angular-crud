@@ -107,8 +107,8 @@ describe('csFilterRow', function(){
   })
 
   var clickTests = {
-    "refreshButton": "refreshIndex_",
-    "openNewButton": "openNewResourcePanel_"
+    "refreshButton": "refreshIndex",
+    "openNewButton": "openNewResourcePanel"
   }
 
   for(buttonID in clickTests){
