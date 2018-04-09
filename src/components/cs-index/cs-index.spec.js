@@ -53,7 +53,6 @@ describe('csIndex', function(){
     spyOn(csDescriptorService, 'getPromises').and.returnValue(deferred.promise);
   }))
 
-
   //Test injected modules
   for(key in inj){
     it(key + " is defined", function(){
@@ -70,6 +69,7 @@ describe('csIndex', function(){
   })
 
   beforeEach(inject(function(_$compile_, _$rootScope_, $componentController){
+
     // loadDataSpy = jasmine.createSpy('loadData');
     // var scope = _$rootScope_.$new()
     // indexController = $componentController("csIndex", {
@@ -121,12 +121,20 @@ describe('csIndex', function(){
     //Setting scope variables
     scope.resource = ResourceService.get("civilizations")
     scope.$apply();
-    controller = element.controller('csFilterRow');
+    controller = element.controller('csIndex');
   }))
+
+  it('csIndex controller', function(){
+    expect(controller).toBeDefined()
+  })
 
   it('Header text', function(){
     expect(element.html()).toContain("Civilization");
   })
+
+  // it('refresh button', function(){
+  //   element[0].querySelector('#refreshButton').click()
+  // })
 
   // it('index controller', function(){
   //   expect(indexController).toBeDefined()
