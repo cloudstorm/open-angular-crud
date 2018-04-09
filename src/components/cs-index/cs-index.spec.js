@@ -8,6 +8,7 @@ describe('csIndex', function(){
   var indexController;
   var loadDataSpy;
   var controller;
+  var deferred;
 
   beforeEach(angular.mock.module('hamlTemplates'));
 
@@ -19,23 +20,8 @@ describe('csIndex', function(){
   beforeEach(angular.mock.module('cloudStorm.settings'));
   beforeEach(angular.mock.module('cloudStorm.descriptorService'))
   beforeEach(angular.mock.module('cloudStorm.resourceService'))
-  //beforeEach(angular.mock.module('cloudStorm.index'));
-
-  // beforeEach(inject(function(_$compile_, $rootScope, $componentController){
-  //
-  //   //loadDataSpy = jasmine.createSpy('loadData');
-  //   scope = $rootScope.$new()
-  //   indexController = $componentController("csIndex", {
-  //     scope : scope
-  //   }, null)
-  //   // },{
-  //   //   loadData : loadDataSpy
-  //   // });
-  // }))
-  //
-  // it('index controller', function(){
-  //   expect(indexController).toBeDefined()
-  // })
+  //beforeEach(angular.mock.module('cloudStorm.routeProvider'))
+  beforeEach(angular.mock.module('cloudStorm.index'));
 
   var civilizationRaw = "{\"name\":\"Civilization\",\"type\":\"civilizations\",\"hint\":\"list\",\"base_url\":\"http://web.csnodeapptemplate.docker\",\"endpoint\":\"api/v1/civilizations\",\"fields\":[{\"attribute\":\"id\",\"cardinality\":\"one\",\"label\":\"Identifier\",\"read_only\":true,\"required\":false,\"type\":\"integer\"},{\"attribute\":\"name\",\"cardinality\":\"one\",\"label\":\"Name\",\"read_only\":false,\"required\":true,\"type\":\"string\"},{\"attribute\":\"kardashev_scale\",\"cardinality\":\"one\",\"label\":\"Kardashev Scale\",\"read_only\":false,\"required\":false,\"type\":\"string\"},{\"attribute\":\"data\",\"cardinality\":\"one\",\"label\":\"Data\",\"read_only\":false,\"required\":false,\"type\":\"code\"},{\"attribute\":\"planets\",\"cardinality\":\"many\",\"label\":\"Planets\",\"read_only\":false,\"required\":false,\"relationship\":\"planets\",\"resource\":\"planets\",\"type\":\"resource\"},{\"attribute\":\"home_planet_id\",\"cardinality\":\"one\",\"label\":\"Home Planet\",\"read_only\":false,\"required\":false,\"relationship\":\"home_planet\",\"resource\":\"planets\",\"type\":\"resource\"},{\"attribute\":\"created_at\",\"cardinality\":\"one\",\"label\":\"Created at\",\"read_only\":false,\"required\":false,\"type\":\"datetime\"},{\"attribute\":\"updated_at\",\"cardinality\":\"one\",\"label\":\"Updated at\",\"read_only\":false,\"required\":false,\"type\":\"datetime\"},{\"attribute\":\"deleted_at\",\"cardinality\":\"one\",\"label\":\"Deleted at\",\"read_only\":false,\"required\":false,\"type\":\"datetime\"}],\"attributes_to_hide\":{\"create\":[\"id\",\"created_at\",\"updated_at\",\"deleted_at\"],\"edit\":[\"id\",\"created_at\",\"updated_at\",\"deleted_at\"],\"index\":[\"deleted_at\"],\"show\":[]},\"display\":{\"name\":\"name\"}}";
 
@@ -44,16 +30,20 @@ describe('csIndex', function(){
   var myService, ResourceService;
   var csDescriptorService;
 
-  beforeEach(inject(function($q, _csDescriptorService_, _ResourceService_){
-    deferred = $q.defer()
-    csDescriptorService = _csDescriptorService_
-    csDescriptorService.registerDescriptor(civilization)
-  }))
+  // beforeEach(inject(function($q, _csDescriptorService_, _ResourceService_){
+  //   deferred = $q.defer()
+  //   csDescriptorService = _csDescriptorService_
+  //   csDescriptorService.registerDescriptor(civilization)
+  // }))
 
-  beforeEach(inject(function(_csDescriptorService_, _ResourceService_){
+  beforeEach(inject(function($q, _csDescriptorService_, _ResourceService_){
     csDescriptorService = _csDescriptorService_
     ResourceService = _ResourceService_
-    csDescriptorService.registerDescriptor(civilization)
+
+    var data = ['something', 'on', 'success'];
+    deferred = $q.defer()
+    deferred.resolve(data);
+    spyOn(csDescriptorService, 'getPromises').and.returnValue(deferred.promise);
   }))
 
   it('ResourceService defined', function(){
@@ -64,31 +54,47 @@ describe('csIndex', function(){
     expect(csDescriptorService).toBeDefined()
   })
 
-  // beforeEach(inject(function(_$compile_, _$rootScope_, _$componentController_){
-  //   loadDataSpy = jasmine.createSpy('loadData');
-  //   indexController = _$componentController_("csIndex", null, {
-  //     loadData : loadDataSpy
-  //   });
-  //   // loadDataSpy = jasmine.createSpy('loadData');
-  //   // indexController = _$componentController_("csIndex", null, {
-  //   //   loadData : loadDataSpy
-  //   // });
-  //
-  //   scope = _$rootScope_.$new();
-  //   element = angular.element('<cs-index resource="resource"></cs-index>');
-  //   element = _$compile_(element)(scope);
-  //
-  //   //Setting scope variables
-  //   //scope.resourceType = "civilizations" //= ResourceService.get("civilizations")
-  //   scope.resourceType = ResourceService.get("civilizations")
-  //   scope.$apply();
-  //   controller = element.controller('csFilterRow');
-  // }))
+  beforeEach(inject(function(_$compile_, _$rootScope_, $componentController){
+    // loadDataSpy = jasmine.createSpy('loadData');
+    // var scope = _$rootScope_.$new()
+    // indexController = $componentController("csIndex", {
+    //   scope : scope
+    // }, null);
+    //
+    // // loadDataSpy = jasmine.createSpy('loadData');
+    // // indexController = _$componentController_("csIndex", null, {
+    // //   loadData : loadDataSpy
+    // // });
+    // csDescriptorService.registerDescriptor(civilization)
+
+    //scope = _$rootScope_.$new();
+    //element = angular.element('<cs-index resource="resource"></cs-index>');
+    //element = _$compile_(element)(scope);
+
+    // //Setting scope variables
+    //scope.resourceType = "civilizations" //= ResourceService.get("civilizations")
+    //scope.resourceType = ResourceService.get("civilizations")
+    //scope.$apply();
+    // controller = element.controller('csFilterRow');
+  }))
+
+  //Index component controller
+  beforeEach(inject(function($rootScope, $componentController, $compile){
+
+    scope = $rootScope.$new()
+    csIndex = $componentController('csIndex', {
+      $scope: scope,
+      csDescriptorService: csDescriptorService,
+      $element: angular.element('<div></div>')
+        }, {
+      resourceType: "civilizations"
+    });
+    csIndex.$onInit()
+  }))
 
   // it('index controller', function(){
-  //   expect(controller).toBeDefined()
+  //   expect(indexController).toBeDefined()
   // })
-
 
   //   it('csIndex existlist', function(){
   //     expect(csIndex).toBeDefined()
