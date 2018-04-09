@@ -40,21 +40,9 @@ describe('csIndex', function(){
   var myService, ResourceService;
   var csDescriptorService;
 
-  // beforeEach(inject(function($q, _csDescriptorService_, _ResourceService_){
-  //   deferred = $q.defer()
-  //   csDescriptorService = _csDescriptorService_
-  //   csDescriptorService.registerDescriptor(civilization)
-  // }))
-
-  //beforeEach(inject(function($q, _$uibModal_, _csDescriptorService_, _ResourceService_){
   beforeEach(inject(function($q, _$uibModal_, _csDescriptorService_, _ResourceService_){
 
-    // inj.uibModal = _$uibModal_
-    // console.log("---------------------------------------------")
-    // console.log(_$uibModal_)
-    $uibModal = _$uibModal_
-    spyOn($uibModal, 'open')
-
+    inj.uibModal = _$uibModal_
     csDescriptorService = _csDescriptorService_
     csDescriptorService.registerDescriptor(civilization)
 
@@ -65,15 +53,13 @@ describe('csIndex', function(){
     spyOn(csDescriptorService, 'getPromises').and.returnValue(deferred.promise);
   }))
 
-  // it('uibModal defined', function(){
-  //   expect(inj.uibModal).toBeDefined()
-  // })
 
-  // for(key in inj){
-  //   it(key + " is defined", function(){
-  //     expect(inj[key]).toBeDefined()
-  //   })
-  // }
+  //Test injected modules
+  for(key in inj){
+    it(key + " is defined", function(){
+      expect(inj[key]).toBeDefined()
+    })
+  }
 
   it('ResourceService defined', function(){
     expect(ResourceService).toBeDefined()
