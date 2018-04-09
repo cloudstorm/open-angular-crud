@@ -5,15 +5,16 @@ var app = angular.module('cloudStorm.index', [])
 app.component('csIndex', {
 
   bindings : {
-    csIndexOptions: '=',
-    resourceType: '=',
-    itemId : '=',
+    csIndexOptions: '=?',
+    resourceType: '=?',
+    itemId : '=?',
     items : "<",
     resource : "<",
   },
 
   templateUrl : 'components/cs-index/cs-index-template.html',
-  controller : ['$scope','ResourceService','csSettings','$uibModal','csAlertService','csDescriptorService','csRoute', function($scope, ResourceService, csSettings, $uibModal, csAlertService, csDescriptorService, csRoute){
+  controller : ['$scope','ResourceService','csSettings','$uibModal','csAlertService','csDescriptorService',/*'csRoute',*/ function($scope, ResourceService, csSettings, $uibModal, csAlertService, csDescriptorService/*, csRoute*/){
+
     var vm = this;
 
     this.pageLoading = true
@@ -48,6 +49,7 @@ app.component('csIndex', {
     }
 
     this.$onInit = function() {
+      console.log("CS INDEX - $onInit")
       var defaultOptions, indexOptions;
       defaultOptions = {
         'selectedItem': null,
@@ -171,10 +173,10 @@ app.component('csIndex', {
 
     this.showItem = function(item) {
       if (this.csIndexOptions.selectedItem === null) {
-        return csRoute.go("show", {
-          resourceType: this.resourceType,
-          id: item.attributes.id
-        });
+        // return csRoute.go("show", {
+        //   resourceType: this.resourceType,
+        //   id: item.attributes.id
+        // });
       } else {
         return this.selectItem(item);
       }
@@ -224,18 +226,18 @@ app.component('csIndex', {
       angular.merge(this.wizardOptions, this.csIndexOptions);
 
       var scp = $scope
-      modalInstance = $uibModal.open({
-        scope: $scope,
-        keyboard: false,
-        backdrop: 'static',
-        windowTopClass: 'modal-wizard',
-        template: "<cs-wizard cs-wizard-options=$ctrl.wizardOptions></cs-wizard>",
-        resolve: {
-          dummy: function() {
-            return $scope.dummy;
-          }
-        }
-      });
+      // modalInstance = $uibModal.open({
+      //   scope: $scope,
+      //   keyboard: false,
+      //   backdrop: 'static',
+      //   windowTopClass: 'modal-wizard',
+      //   template: "<cs-wizard cs-wizard-options=$ctrl.wizardOptions></cs-wizard>",
+      //   resolve: {
+      //     dummy: function() {
+      //       return $scope.dummy;
+      //     }
+      //   }
+      // });
       return modalInstance.result.then((function(selectedItem) {
         return this.selected = selectedItem;
       }).bind(this), (function() {
