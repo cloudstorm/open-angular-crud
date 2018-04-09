@@ -21,12 +21,3 @@ app.controller('MainCtrl', function($scope, csAlertService, csSettings, csDescri
   csSettings.set('app-title', 'cs-node-app-template');
   csRoute.init();
 });
-
-
-// app.controller('MainCtrl', function($scope, csAlertService, csSettings, csDescriptorService, csRoute) {
-//   csDescriptorService.registerDescriptorUrl('http://web.csnodeapptemplate.docker/api/v1/descriptors');
-
-//   csAlertService.addAlert('Welcome to CloudStorm', 'info');
-//   csSettings.set('app-title', 'cs-node-app-template');
-//   csRoute.init();
-// });
