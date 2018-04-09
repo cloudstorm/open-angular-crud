@@ -26,6 +26,7 @@ describe('csFilterRow', function(){
   var csDescriptorService;
 
   beforeEach(inject(function($q, _csDescriptorService_, _ResourceService_){
+
     deferred = $q.defer()
     csDescriptorService = _csDescriptorService_
     csDescriptorService.registerDescriptor(civilization)
@@ -111,8 +112,14 @@ describe('csFilterRow', function(){
   }
 
   for(buttonID in clickTests){
+
+    it('#' + buttonID + " - exists!", function(){
+      var button = element[0].querySelector('#' + buttonID)
+      expect(button).toBeDefined();
+    })
+
     var fcn = clickTests[buttonID]
-    it('Click test : #' + buttonID, function(){
+    it('#' + buttonID + ' - click works!', function(){
       spyOn(controller, fcn)
       scope.$digest()
       element[0].querySelector('#' + buttonID).click()
