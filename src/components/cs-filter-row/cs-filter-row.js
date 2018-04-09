@@ -6,6 +6,7 @@ app.component('csFilterRow', {
 
   bindings : {
     resource : "<",
+    resourceType : "<",
     filterValue : "<",
     filter : "&",
     openNewResourcePanel : "&",
@@ -14,19 +15,20 @@ app.component('csFilterRow', {
 
   templateUrl : "components/cs-filter-row/cs-filter-row-template.html",
 
-  controller : [ '$element','csSettings', 'csDescriptorService', function($element, csSettings, csDescriptorService) {
+  controller : [ '$element','csSettings', 'csDescriptorService', 'ResourceService', function($element, csSettings, csDescriptorService, ResourceService) {
 
     var vm = this;
-
     this.$onInit = function() {
+
       csDescriptorService.getPromises().then( function() {
         $element.addClass('cs-filter-row');
         vm.filterVal = "";
-        if (vm.resource) {
-          vm.header  = vm.resource.descriptor.name;
-          vm.subHeader  = vm.resource.descriptor.hint;
-          vm.createDisabled = vm.resource.descriptor.create_disabled;
+        if (!vm.resource){
+          vm.resource = ResourceService.get(vm.resourceType)
         }
+        vm.header  = vm.resource.descriptor.name;
+        vm.subHeader  = vm.resource.descriptor.hint;
+        vm.createDisabled = vm.resource.descriptor.create_disabled;
       });
     };
 
@@ -41,7 +43,7 @@ app.component('csFilterRow', {
     };
 
     this.refreshIndex_ = function() {
-      // console.log("CS-FILTER-ROW: refreshIndex()")
+      console.log("CS-FILTER-ROW: refreshIndex()")
       this.refreshIndex();
     };
 
