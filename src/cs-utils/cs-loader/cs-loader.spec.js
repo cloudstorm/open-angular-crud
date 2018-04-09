@@ -5,17 +5,17 @@ describe('csLoader', function(){
   var csLoaderController;
   var testFunctionSpy;
   var compController;
+  var csLoader;
 
   beforeEach(angular.mock.module('hamlTemplates'));
-  beforeEach(angular.mock.module('cloudStorm.inputBase'));
   beforeEach(angular.mock.module('cloudStorm.loader'));
+  beforeEach(angular.mock.module('cloudStorm.inputBase'));
 
   beforeEach(inject(function(_$compile_, _$rootScope_, _$componentController_){
 
       $compile = _$compile_
       $rootScope = _$rootScope_
       compController = _$componentController_
-
       // testFunctionSpy = jasmine.createSpy('testFunction');
       // csLoaderController = _$componentController_("csLoader", null, {
       //   testFunction : testFunctionSpy
@@ -31,26 +31,30 @@ describe('csLoader', function(){
   it('compile test', function(){
 
     var html = '<cs-loader enabled="true"></cs-loader>';
-    testFunctionSpy = jasmine.createSpy('testFunction');
-
+    //testFunctionSpy = jasmine.createSpy('testFunction');
+    var scope = $rootScope.$new();
 
     var element = angular.element(html);
     console.log("1")
-    var compiled = $compile(element)($rootScope);
+    var compiled = $compile(element)(scope);
 
+    var csLoaderController = element.controller('csLoader');
+    scope.$apply()
 
+    console.log("csLoaderController")
+    console.log(csLoaderController)
 
-    console.log("2")
-
-    csLoaderController = compController("csLoader", {$scope : $rootScope})
+    //csLoaderController = compController("csLoader", {$scope : $rootScope})
     //  , {
     //   testFunction : testFunctionSpy
     // });
 
-    csLoaderController.testFunction = jasmine.createSpy()
+    //csLoaderController.testFunction = jasmine.createSpy('testFunction')
 
-    $rootScope.$digest();
-    expect(csLoaderController.testFunction).toHaveBeenCalled();
+    //spyOn(csLoaderController, 'testFunction')
+
+    //expect(csLoaderController.testFunction).toHaveBeenCalled();
+    expect(csLoaderController.testFunction).toBeDefined();
 
   })
 
