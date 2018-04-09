@@ -49,7 +49,6 @@ app.component('csIndex', {
     }
 
     this.$onInit = function() {
-      console.log("CS INDEX - $onInit")
       var defaultOptions, indexOptions;
       defaultOptions = {
         'selectedItem': null,
