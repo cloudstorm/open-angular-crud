@@ -37,9 +37,11 @@ describe('csIndex', function(){
   // }))
 
   beforeEach(inject(function($q, _csDescriptorService_, _ResourceService_){
-    csDescriptorService = _csDescriptorService_
-    ResourceService = _ResourceService_
 
+    csDescriptorService = _csDescriptorService_
+    csDescriptorService.registerDescriptor(civilization)
+
+    ResourceService = _ResourceService_
     var data = ['something', 'on', 'success'];
     deferred = $q.defer()
     deferred.resolve(data);
@@ -85,12 +87,30 @@ describe('csIndex', function(){
     csIndex = $componentController('csIndex', {
       $scope: scope,
       csDescriptorService: csDescriptorService,
+      //ResourceService: ResourceService,
       $element: angular.element('<div></div>')
         }, {
       resourceType: "civilizations"
     });
     csIndex.$onInit()
   }))
+
+  beforeEach(inject(function($compile, $rootScope, $componentController){
+
+    scope = $rootScope.$new();
+    element = angular.element('<cs-index resource="resource"></cs-index>');
+    element = $compile(element)(scope);
+
+    //Setting scope variables
+    scope.resourceType = "civilizations" //= ResourceService.get("civilizations")
+    scope.resource = ResourceService.get("civilizations")
+    scope.$apply();
+    controller = element.controller('csFilterRow');
+  }))
+
+  it('Header text', function(){
+    expect(element.html()).toContain("Civilization");
+  })
 
   // it('index controller', function(){
   //   expect(indexController).toBeDefined()
