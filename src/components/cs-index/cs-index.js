@@ -172,10 +172,10 @@ app.component('csIndex', {
 
     this.showItem = function(item) {
       if (this.csIndexOptions.selectedItem === null) {
-        // return csRoute.go("show", {
-        //   resourceType: this.resourceType,
-        //   id: item.attributes.id
-        // });
+        return csRoute.go("show", {
+          resourceType: this.resourceType,
+          id: item.attributes.id
+        });
       } else {
         return this.selectItem(item);
       }
