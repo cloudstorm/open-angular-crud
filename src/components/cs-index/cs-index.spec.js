@@ -23,6 +23,7 @@ describe('csIndex', function(){
   beforeEach(angular.mock.module('ui.bootstrap'))
   beforeEach(angular.mock.module('ui.router'))
 
+  beforeEach(angular.mock.module('cloudStorm.log'));
   beforeEach(angular.mock.module('cloudStorm.localizationProvider'));
   beforeEach(angular.mock.module('cloudStorm.resource'))
   beforeEach(angular.mock.module('cloudStorm.alertService'));
@@ -72,24 +73,52 @@ describe('csIndex', function(){
     expect(csDescriptorService).toBeDefined()
   })
 
-  //Index component controller
-  // beforeEach(inject(function($rootScope, $componentController, $uibModal, $compile){
+  //Load some data into the cs-index
+  // beforeEach(inject(function($q){
   //
-  //   uibModal = $uibModal
-  //   scope = $rootScope.$new()
-  //   csIndex = $componentController('csIndex', {
-  //     $scope: scope,
-  //     csDescriptorService: csDescriptorService,
-  //     $uibModal : inj.uibModal,
-  //     //ResourceService: ResourceService,
-  //     $element: angular.element('<div></div>')
-  //       }, {
-  //     resourceType: "civilizations"
-  //   });
-  //   csIndex.$onInit()
+  //   //Create mock for the loadData promise
+  //
+  //   scope.resource = ResourceService.get('civilizations')
+  //
+  //
+  //   var deferred = $q.defer()
+  //
+  //   var data = ['something', 'on', 'success'];
+  //   deferred.resolve(data);
+  //   spyOn(resource, '$index').and.returnValue(deferred.promise);
+  //   //The Resource function gets a mock
+  //
   // }))
 
-  beforeEach(inject(function($compile, $rootScope, $componentController){
+  beforeEach(inject(function($rootScope, $componentController, $uibModal, $compile){
+
+    uibModal = $uibModal
+    scope = $rootScope.$new()
+    csIndex = $componentController('csIndex', {
+      $scope: scope,
+      csDescriptorService: csDescriptorService,
+      $uibModal : inj.uibModal,
+      //ResourceService: ResourceService,
+      $element: angular.element('<div></div>')
+        }, {
+      resourceType: "civilizations"
+    });
+    csIndex.$onInit()
+  }))
+
+  it('csIndex controller existist', function(){
+    expect(csIndex).toBeDefined()
+  })
+
+  it('csIndex controller existist', function(){
+    expect(csIndex.kutya).toBeDefined()
+  })
+
+  it('csIndex controller existist', function(){
+    expect(csIndex.kutya).toBe("Mutya")
+  })
+
+  beforeEach(inject(function($q, $compile, $rootScope, $componentController){
 
     scope = $rootScope.$new();
     element = angular.element('<cs-index resource="resource"></cs-index>');
@@ -97,8 +126,17 @@ describe('csIndex', function(){
 
     //Setting scope variables
     scope.resource = ResourceService.get("civilizations")
+    //spyOn(scope.resource, '$index')
     scope.$apply();
     controller = element.controller('csIndex');
+
+    //controller.service("csDescriptorService", csDescriptorService)
+    // descriptorService.registerDescriptor(civilization)
+    // var def = $q.defer()
+    // def.resolve("someThing");
+    // spyOn(descriptorService, 'getPromises').and.returnValue(def.promise);
+    //contoller['inject'] = [csDescriptorService]
+
   }))
 
   it('csIndex controller', function(){
@@ -113,11 +151,23 @@ describe('csIndex', function(){
     expect(element.html()).toContain("Civilization");
   })
 
+  // it('call $onInit', function(){
+  //   spyOn(controller, 'loadData')
+  //   scope.$digest()
+  //   controller.injector("csDescriptorService", [csDescriptorService])
+  //   controller.$onInit()
+  //   expect(controller.loadData).toHaveBeenCalled()
+  // })
+
   it('call controller function', function(){
     spyOn(controller, 'openNewResourcePanel')
     scope.$digest()
     controller.openNewResourcePanel()
     expect(controller.openNewResourcePanel).toHaveBeenCalled()
+  })
+
+  it('call show function', function(){
+
   })
 
   // var indexClickTests = {
