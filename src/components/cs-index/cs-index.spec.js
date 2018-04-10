@@ -21,16 +21,19 @@ describe('csIndex', function(){
 
   beforeEach(angular.mock.module('hamlTemplates'));
   beforeEach(angular.mock.module('ui.bootstrap'))
+  beforeEach(angular.mock.module('ui.router'))
 
   beforeEach(angular.mock.module('cloudStorm.localizationProvider'));
   beforeEach(angular.mock.module('cloudStorm.resource'))
   beforeEach(angular.mock.module('cloudStorm.alertService'));
   beforeEach(angular.mock.module('cloudStorm.restApi'));
   beforeEach(angular.mock.module('cloudStorm.dataStore'));
+
   beforeEach(angular.mock.module('cloudStorm.settings'));
+  beforeEach(angular.mock.module('cloudStorm.routeProvider'))
+
   beforeEach(angular.mock.module('cloudStorm.descriptorService'))
   beforeEach(angular.mock.module('cloudStorm.resourceService'))
-  //beforeEach(angular.mock.module('cloudStorm.routeProvider'))
   beforeEach(angular.mock.module('cloudStorm.index'));
 
   var civilizationRaw = "{\"name\":\"Civilization\",\"type\":\"civilizations\",\"hint\":\"list\",\"base_url\":\"http://web.csnodeapptemplate.docker\",\"endpoint\":\"api/v1/civilizations\",\"fields\":[{\"attribute\":\"id\",\"cardinality\":\"one\",\"label\":\"Identifier\",\"read_only\":true,\"required\":false,\"type\":\"integer\"},{\"attribute\":\"name\",\"cardinality\":\"one\",\"label\":\"Name\",\"read_only\":false,\"required\":true,\"type\":\"string\"},{\"attribute\":\"kardashev_scale\",\"cardinality\":\"one\",\"label\":\"Kardashev Scale\",\"read_only\":false,\"required\":false,\"type\":\"string\"},{\"attribute\":\"data\",\"cardinality\":\"one\",\"label\":\"Data\",\"read_only\":false,\"required\":false,\"type\":\"code\"},{\"attribute\":\"planets\",\"cardinality\":\"many\",\"label\":\"Planets\",\"read_only\":false,\"required\":false,\"relationship\":\"planets\",\"resource\":\"planets\",\"type\":\"resource\"},{\"attribute\":\"home_planet_id\",\"cardinality\":\"one\",\"label\":\"Home Planet\",\"read_only\":false,\"required\":false,\"relationship\":\"home_planet\",\"resource\":\"planets\",\"type\":\"resource\"},{\"attribute\":\"created_at\",\"cardinality\":\"one\",\"label\":\"Created at\",\"read_only\":false,\"required\":false,\"type\":\"datetime\"},{\"attribute\":\"updated_at\",\"cardinality\":\"one\",\"label\":\"Updated at\",\"read_only\":false,\"required\":false,\"type\":\"datetime\"},{\"attribute\":\"deleted_at\",\"cardinality\":\"one\",\"label\":\"Deleted at\",\"read_only\":false,\"required\":false,\"type\":\"datetime\"}],\"attributes_to_hide\":{\"create\":[\"id\",\"created_at\",\"updated_at\",\"deleted_at\"],\"edit\":[\"id\",\"created_at\",\"updated_at\",\"deleted_at\"],\"index\":[\"deleted_at\"],\"show\":[]},\"display\":{\"name\":\"name\"}}";
@@ -40,8 +43,9 @@ describe('csIndex', function(){
   var myService, ResourceService;
   var csDescriptorService;
 
-  beforeEach(inject(function($q, _$uibModal_, _csDescriptorService_, _ResourceService_){
+  beforeEach(inject(function($q, _$state_, _$uibModal_, _csDescriptorService_, _ResourceService_){
 
+    var $state = _$state_
     inj.uibModal = _$uibModal_
     csDescriptorService = _csDescriptorService_
     csDescriptorService.registerDescriptor(civilization)
@@ -67,22 +71,6 @@ describe('csIndex', function(){
   it('DescriptorService defined', function(){
     expect(csDescriptorService).toBeDefined()
   })
-
-  beforeEach(inject(function(_$compile_, _$rootScope_, $componentController){
-
-    // loadDataSpy = jasmine.createSpy('loadData');
-    // var scope = _$rootScope_.$new()
-    // indexController = $componentController("csIndex", {
-    //   scope : scope
-    // }, null);
-    //
-    // // loadDataSpy = jasmine.createSpy('loadData');
-    // // indexController = _$componentController_("csIndex", null, {
-    // //   loadData : loadDataSpy
-    // // });
-    // csDescriptorService.registerDescriptor(civilization)
-
-  }))
 
   //Index component controller
   // beforeEach(inject(function($rootScope, $componentController, $uibModal, $compile){
