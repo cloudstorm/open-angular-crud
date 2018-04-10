@@ -13,9 +13,11 @@ app.component('csIndex', {
   },
 
   templateUrl : 'components/cs-index/cs-index-template.html',
-  controller : ['$scope', '$document', '$timeout', 'ResourceService','csSettings','$uibModal','csAlertService','csDescriptorService','csRoute', function($scope, $document, $timeout, ResourceService, csSettings, $uibModal, csAlertService, csDescriptorService, csRoute){
+  controller : ['$scope', 'csLog', '$element', 'ResourceService','csSettings','$uibModal','csAlertService','csDescriptorService','csRoute', function($scope, csLog, $element, ResourceService, csSettings, $uibModal, csAlertService, csDescriptorService, csRoute){
 
     var vm = this;
+
+    csLog.set(this, "cs-index", true)
 
     this.pageLoading = true
     this.tableLoading = false
@@ -49,6 +51,9 @@ app.component('csIndex', {
     }
 
     this.$onInit = function() {
+
+      this.kutya = "Mutya"
+      this.log("$onInit")
       var defaultOptions, indexOptions;
       defaultOptions = {
         'selectedItem': null,
@@ -66,14 +71,17 @@ app.component('csIndex', {
       angular.merge(vm.csIndexOptions, defaultOptions, indexOptions);
 
       csDescriptorService.getPromises().then( function() {
+
+        vm.log("getPromises")
         // Load resource and items when not bound (index-only mode)
         if (!vm.resource) {
+          vm.log("noResource")
           vm.resource = ResourceService.get(vm.resourceType);
           vm.csIndexOptions['hide-attributes'] = vm.resource.descriptor.attributes_to_hide || {}
           vm.csIndexOptions['sortAttribute'] = vm.resource.descriptor.fields[0].attribute
         }
         if (!vm.items) {
-          // console.log("CS-INDEX: onInit()")
+          vm.log("noItems")
           vm.loadData();
         }
         vm.filterValue = ""
