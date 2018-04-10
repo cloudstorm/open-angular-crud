@@ -13,7 +13,7 @@ app.component('csIndex', {
   },
 
   templateUrl : 'components/cs-index/cs-index-template.html',
-  controller : ['$scope','ResourceService','csSettings','$uibModal','csAlertService','csDescriptorService',/*'csRoute',*/ function($scope, ResourceService, csSettings, $uibModal, csAlertService, csDescriptorService/*, csRoute*/){
+  controller : ['$scope', '$document', '$timeout', 'ResourceService','csSettings','$uibModal','csAlertService','csDescriptorService','csRoute', function($scope, $document, $timeout, ResourceService, csSettings, $uibModal, csAlertService, csDescriptorService, csRoute){
 
     var vm = this;
 
@@ -225,18 +225,18 @@ app.component('csIndex', {
       angular.merge(this.wizardOptions, this.csIndexOptions);
 
       var scp = $scope
-      // modalInstance = $uibModal.open({
-      //   scope: $scope,
-      //   keyboard: false,
-      //   backdrop: 'static',
-      //   windowTopClass: 'modal-wizard',
-      //   template: "<cs-wizard cs-wizard-options=$ctrl.wizardOptions></cs-wizard>",
-      //   resolve: {
-      //     dummy: function() {
-      //       return $scope.dummy;
-      //     }
-      //   }
-      // });
+      modalInstance = $uibModal.open({
+        scope: $scope,
+        keyboard: false,
+        backdrop: 'static',
+        windowTopClass: 'modal-wizard',
+        template: "<cs-wizard cs-wizard-options=$ctrl.wizardOptions></cs-wizard>",
+        resolve: {
+          dummy: function() {
+            return $scope.dummy;
+          }
+        }
+      });
       return modalInstance.result.then((function(selectedItem) {
         return this.selected = selectedItem;
       }).bind(this), (function() {

@@ -4,7 +4,7 @@ app = angular.module('cloudStorm.form', [])
 
 # ===== DIRECTIVE =============================================================
 
-app.directive "csForm", ['csSettings', (csSettings) ->
+app.directive "csForm", ['csSettings', 'csLog', (csSettings, csLog) ->
 
   # ===== COMPILE =============================================================
 
@@ -12,6 +12,7 @@ app.directive "csForm", ['csSettings', (csSettings) ->
 
     # Only modify the DOM in compile, use (pre/post) link for others
     $templateElement.addClass "cs-form"
+
 
     # Pre-link: gets called for parent first
     pre: ($scope, element, attrs, controller) ->
@@ -25,9 +26,14 @@ app.directive "csForm", ['csSettings', (csSettings) ->
 
   link = ($scope, element, attrs, controller) ->
 
+    csLog.set($scope, "csForm")
+    #csLog.enable($scope)
+
     $scope.i18n = csSettings.settings['i18n-engine']
 
     $scope.fields = $scope.formResourceDescriptor.fields
+
+    $scope.log("Start")
 
     if $scope.formMode == 'create'
       if $scope.formItem
@@ -91,19 +97,28 @@ app.directive "csForm", ['csSettings', (csSettings) ->
       $scope.$broadcast 'field-cancel', $scope.formItem
 
     $scope.submit = () ->
+
       api_action = null
+
       if $scope.formMode == 'edit'
+
         api_action = $scope.editableItem.$save
       else if $scope.formMode == 'create'
         api_action = $scope.editableItem.$create
 
       api_action.call($scope.editableItem).then(
+
         # successCallback
         (item) ->
+
           $scope.formItem.$assign($scope.editableItem) unless $scope.editableItem == $scope.formItem
 
-          $scope.$emit 'form-submit', $scope.formItem
+          $scope.$emit 'form-submit', $scope.formItem, {
+              panelIndex : $scope.wizardPanelIndex,
+              attribute : $scope.subformAttribute
+          }
           $scope.$broadcast 'field-submit', $scope.formItem
+
 
           if $scope.csFormOptions['reset-on-submit']
             angular.copy($scope.formResource.$new(), $scope.formItem)
@@ -157,6 +172,8 @@ app.directive "csForm", ['csSettings', (csSettings) ->
       formResource: '=' # The resource which the form is working with
       formResourceDescriptor: '=' # The resource which the form is working with
       formItem: '=?' # The resource item which the form is working with
+      subformAttribute : "=" # The relationship between the resources of the parent and current form
+      # It gets a value only on subforms
       formParent: '=?' # The resource item which the form is working with
       formMode: '@' # 'show' / 'edit' / 'create'
       wizardPanelIndex: '=' # Cardinality of the wizard panel in which this form is rendered

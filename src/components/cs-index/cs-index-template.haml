@@ -1,27 +1,28 @@
-.row
-  .col-lg-12{ "ng-switch" => "$ctrl.listIsEmpty()"}
+%cs-loader{ "enabled" => "$ctrl.pageLoading" }
+.row{ "ng-if" => "!$ctrl.pageLoading" }
+  .col-lg-12
     %cs-filter-row{ "resource" => "$ctrl.resource",
                     "filterValue" => "$ctrl.filterValue",
                     "filter" => "$ctrl.filter(filterValue)",
                     "open-new-resource-panel" => "$ctrl.openNewResourcePanel()",
                     "refresh-index" => "$ctrl.refreshIndex()"}
-    .row{ "ng-switch-when" => "true" }
-      .well.well-lg
+    .row{ "ng-show" => "$ctrl.tableLoading" }
+      %cs-loader{ "enabled" => "true" }
+    .row{ "ng-show" => "!$ctrl.tableLoading" }
+      .well.well-lg{ "ng-show" => "$ctrl.listIsEmpty()" }
         {{$ctrl.header}} {{ $ctrl.i18n.t('index.empty') }}
-
-    .row{ "ng-switch-when" => "false" }
-      %cs-table-container{"ng-class" => "{ 'col-lg-8' : $ctrl.sidePanelIsVisible() && !$ctrl.viewIsCompressed(),
-                                           'col-lg-6' : $ctrl.viewIsCompressed() }",
-                          "resource" => "$ctrl.resource",
-                          "collection" => "$ctrl.items",
-                          "columns" => "$ctrl.columns",
-                          "cs-index-options" => "$ctrl.csIndexOptions",
-                          "column-visible_" => "$ctrl.columnVisible(column, index)",
-                          "show-item_" => "$ctrl.showItem(item)",
-                          "select-item_" => "$ctrl.selectItem(item)",
-                          "destroy-item_" => "$ctrl.destroyItem(event, item)"}
-
-      %cs-index-sidepanel{ "ng-if" => "$ctrl.sidePanelIsVisible()",
+      %cs-table-container{ "ng-show" => "!$ctrl.listIsEmpty()",
+                           "ng-class" => "{ 'col-lg-8' : $ctrl.sidePanelIsVisible() && !$ctrl.viewIsCompressed(),
+                                            'col-lg-6' : $ctrl.viewIsCompressed() }",
+                           "resource" => "$ctrl.resource",
+                           "collection" => "$ctrl.items",
+                           "columns" => "$ctrl.columns",
+                           "cs-index-options" => "$ctrl.csIndexOptions",
+                           "column-visible_" => "$ctrl.columnVisible(column, index)",
+                           "show-item_" => "$ctrl.showItem(item)",
+                           "select-item_" => "$ctrl.selectItem(item)",
+                           "destroy-item_" => "$ctrl.destroyItem(event, item)" }
+      %cs-index-sidepanel{ "ng-if" => "$ctrl.sidePanelIsVisible() && !$ctrl.loading",
                            "cs-index-sidepanel-options" => "$ctrl.csIndexOptions",
                            "resource-type" => "$ctrl.resourceType",
                            "item" => "$ctrl.csIndexOptions.selectedItem",

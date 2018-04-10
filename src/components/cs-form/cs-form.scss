@@ -1,14 +1,12 @@
 .cs-form {
-  // TODO: IE compatibility issue 
+  // TODO: IE compatibility issue
   // https://github.com/cloudstorm/cloudstorm/issues/42
-  width: 60%;
+  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
-  
+
   .form-header {
-    flex: 1;
-    
     h4.divided {
       border-bottom-style: solid;
       border-bottom-width: 2px;
@@ -17,15 +15,14 @@
       width: 372px;
       margin-bottom: 20px;
     }
-
   }
 
   form {
     flex-basis: auto;
-    height:100%;
-    overflow: auto;
-  
-    
+    //height:100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+
     // This concerns cs-field only within a cs-form, so it seems ok to leave here
     .cs-field {
       position: relative;
@@ -63,8 +60,6 @@
       .create-another{
         display: inline-block;
       }
-
     }
   }
-
 }

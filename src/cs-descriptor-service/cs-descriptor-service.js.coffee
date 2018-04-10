@@ -3,7 +3,8 @@
 app = angular.module('cloudStorm.descriptorService', [])
 
 # ===== SERVICE ===============================================================
-app.service 'csDescriptorService', [ '$q', '$http', 'ResourceService', 'csResource', ($q, $http, ResourceService, csResource) ->
+app.service 'csDescriptorService', [ '$q', '$http', 'csResource', 'ResourceService'
+($q, $http, csResource, ResourceService) ->
   @descriptors = []
 
   @getDescriptors = () ->
@@ -36,7 +37,7 @@ app.service 'csDescriptorService', [ '$q', '$http', 'ResourceService', 'csResour
       else
         @registerDescriptor(response.data);
     ).catch( (response) =>
-      console.log("CS-002: Error while receiving descriptor from '#{descriptorUrl}'")
+      console.log("CS-002: Error while receiving descriptor from '#{descriptorUrl}', error:", response)
     );
 
     @descriptors.push descriptorPromise
@@ -48,7 +49,10 @@ app.service 'csDescriptorService', [ '$q', '$http', 'ResourceService', 'csResour
       @descriptor = _.omit data, ['endpoint', 'base_url']
       @loaded = false
       @data = null
-    ResourceService.register Resource.descriptor.type, Resource
+    try
+      ResourceService.register Resource.descriptor.type, Resource
+    catch ex
+
 
   # For debug purposes
   window.csDescriptors = this
