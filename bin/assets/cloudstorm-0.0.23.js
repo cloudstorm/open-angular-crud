@@ -4231,4 +4231,4 @@ angular.module("cs-utils/cs-loader/cs-loader-template.html", []).run(["$template
     "");
 }]);
 
-//# sourceMappingURL=cloudstorm.js.map
+//# sourceMappingURL=cloudstorm-0.0.23.js.map

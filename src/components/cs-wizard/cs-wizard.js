@@ -178,9 +178,9 @@ app.component("csWizard", {
 
       var keyPressed = function(keyEvent) {
         if (keyEvent.keyCode === 27) {
-          popPanel($scope);
-          if ($scope.panelStack.length === 0) {
-            notify_listeners($scope, 'wizard-canceled', null);
+          self.popPanel($scope);
+          if ($scope.$ctrl.panelStack.length === 0) {
+            self.notify_listeners($scope, 'wizard-canceled', null);
           }
           return $scope.$apply();
         }
