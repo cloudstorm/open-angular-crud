@@ -1,4 +1,4 @@
-# CloudStorm Basics
+# CloudStorm API Basics
 > [**Home**](../README.md) ▸ [**Reference**](../docs/README.md) ▸ **CloudStorm Basics**
 
 ## Data format / API requirement
