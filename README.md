@@ -2,28 +2,18 @@
 [![devDependency Status](https://david-dm.org/cloudstorm/cloudstorm/dev-status.svg)](https://david-dm.org/cloudstorm/cloudstorm#info=devDependencies)
 [![Code Climate](https://codeclimate.com/github/cloudstorm/cloudstorm/badges/gpa.svg)](https://codeclimate.com/github/cloudstorm/cloudstorm)
 
-<a href="http://cloudstorm.io"><img src="./docs/images/logo.png" height="140" align="right"></a>
-Welcome to CloudStorm - the open-source enterprise software framework for web developers.
-
-:octocat: We are currently looking for contributors and beta testers :octocat:
-
-## What is CloudStorm?
-CloudStorm creates all administration and data manipulation screens and forms for any resource in a database.
+## What is Open Angular Crud?
+It creates all administration and data manipulation screens and forms for any resource in a database.
 The following are automatically generated for You:
 * Index pages with in-place editing
 * Resource creation forms
 * Resource edit forms
-* CloudStorm Wizards -> forms within forms to create related resources in-place
+* Wizards -> forms within forms to create related resources in-place
 
 For documentation geared towards our automation and integration business, we recommend starting with the [CloudStorm website](http://cloudstorm.io).
 
-### Philosophy
-While CloudStorm is an opinionated framework, we always strive for easy and straightforward customization.
-If you find otherwise, please file an [Issue](../../issues) without hesitation.
-We're promoting the _Devagement_ principle: empowering _developers_ to be their own project _managers_ in corporate relationships.
-
 ## Resources
-This is the main source of documentation for **developers** working with (or contributing to) the CloudStorm project.
+This is the main source of documentation for **developers** working with (or contributing to) the project.
 * [Basic How-To](docs/basics.md)
 * [Reference](docs/README.md)
 * [Releases](../../releases)
